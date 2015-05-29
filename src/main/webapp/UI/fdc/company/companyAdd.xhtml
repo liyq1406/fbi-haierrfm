@@ -1,0 +1,129 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                template="/templates/ui.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+            .input-col-m {
+                width: 60px;
+            }
+
+            .input-col-l {
+                width: 80px;
+            }
+
+            .input-col-xxl {
+                width: 1%;
+                text-align: right;
+            }
+
+            .col-95 {
+                text-align: right;
+            }
+
+            .col-5 {
+                text-align: left;
+            }
+        </style>
+        <script type="text/javascript" language="javascript">
+            document.onkeydown = function TabReplace() {
+                if (event.keyCode == 13) {
+                    if (event.srcElement.tagName != 'BUTTON')
+                        event.keyCode = 9;
+                }
+            }
+        </script>
+
+    </ui:define>
+
+    <ui:define name="content">
+        <div style="margin:5px;">
+            <p:growl id="msgs" showDetail="false"/>
+            <h:form id="form">
+
+                <p:panel id="input" header="【房地产开发商基本信息】新增表单">
+                    <h:panelGrid columns="2" cellspacing="3" style="width: 100%">
+                        <h:panelGrid columns="2" cellspacing="3" style="width: 80%" columnClasses="col-95,col-5">
+
+                            <h:outputLabel value="* 【房产商名称】:" for="companyName"/>
+                            <h:inputText autocomplete="off" id="companyName" style="width:260px;" required="true"
+                                         requiredMessage="房产商名称不能为空！" value="#{companyAction.fdccompany.companyName}"
+                                         onfocus="this.select()">
+                            </h:inputText>
+
+                            <h:outputLabel value="房产商简称:" for="shortName"/>
+                            <p:inputText autocomplete="off" id="shortName" style="width:260px;"
+                                         value="#{companyAction.fdccompany.companyShrtName}">
+                            </p:inputText>
+
+                            <h:outputLabel value="法定代表人:" for="mngrName"/>
+                            <h:inputText autocomplete="off" id="mngrName" style="width:260px;"
+                                         value="#{companyAction.fdccompany.mngrName}">
+                            </h:inputText>
+
+                            <h:outputLabel value="营业执照:"/>
+                            <p:inputText id="tradLicenceNo" value="#{companyAction.fdccompany.tradLicenceNo}"
+                                         style="width:260px;"/>
+
+                            <h:outputLabel value="公司地址:"/>
+                            <p:inputText id="address" value="#{companyAction.fdccompany.address}"
+                                         style="width:260px;"/>
+
+                        </h:panelGrid>
+                        <h:panelGrid style="width: 20%">
+                            <p:commandButton id="saveBtn" ajax="true" value="保存"
+                                             action="#{companyAction.insertNewFdccompany}"
+                                             style="margin-left:15px;width:90px"
+                                             update="input,pdt,msgs">
+                            </p:commandButton>
+                            <p:commandButton ajax="true" id="resetBtn" type="reset" value="重置"
+                                             style="width:90px;margin-left:15px" update="input,msgs"/>
+                        </h:panelGrid>
+                    </h:panelGrid>
+                </p:panel>
+                <p:ajaxStatus style="width:16px;height:16px;">
+                    <f:facet name="start">
+                        <h:graphicImage value="/images/ajaxloading.gif"/>
+                    </f:facet>
+                    <f:facet name="complete">
+                        <h:outputText value=""/>
+                    </f:facet>
+                </p:ajaxStatus>
+
+                <p:dataTable id="pdt" style="width:100%;align:center;"
+                             dynamic="true" selectionMode="single"
+                             value="#{companyAction.fdccompanyList}" var="record"
+                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             paginator="true" rows="15" paginatorPosition="bottom"
+                             rowsPerPageTemplate="100,50,30,15,5"
+                             emptyMessage="数据记录为空...">
+
+                    <p:column headerText="房产商名称">
+                        <h:outputText value="#{record.companyName}"/>
+                    </p:column>
+
+                    <p:column headerText="简称">
+                        <h:outputText value="#{record.companyShrtName}"/>
+                    </p:column>
+
+                    <p:column headerText="法定代表人">
+                        <h:outputText value="#{record.mngrName}"/>
+                    </p:column>
+
+                    <p:column headerText="营业执照">
+                        <h:outputText value="#{record.tradLicenceNo}"/>
+                    </p:column>
+
+                    <p:column headerText="公司地址">
+                        <h:outputText value="#{record.address}"/>
+                    </p:column>
+
+                </p:dataTable>
+            </h:form>
+        </div>
+    </ui:define>
+
+</ui:composition>

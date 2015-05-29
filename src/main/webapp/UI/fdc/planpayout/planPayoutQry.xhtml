@@ -1,0 +1,184 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                template="/templates/ui.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+            .input-col-m {
+                width: 60px;
+            }
+
+            .input-col-l {
+                width: 80px;
+            }
+
+            .input-col-xxl {
+                width: 1%;
+                text-align: right;
+            }
+
+            .col-95 {
+                text-align: right;
+            }
+
+            .col-5 {
+                text-align: left;
+            }
+        </style>
+        <script type="text/javascript" language="javascript">
+            document.onkeydown = function TabReplace() {
+                if (event.keyCode == 13) {
+                    if (event.srcElement.tagName != 'BUTTON')
+                        event.keyCode = 9;
+                    else
+                        event.srcElement.click();
+                }
+            }
+
+             function doPopupWindow(obj) {
+                var pkid = obj.parentNode.parentNode.childNodes[0].innerHTML;
+                popupwindow = window.open("planPayoutQryDetl.xhtml?action=query&amp;pkid=" + pkid, "popupwindow", "height=600,width=800,left=200,top=100,toolbar=no,menubar=no,scrollbars=yes,location=no");
+                popupwindow.focus;
+            }
+        </script>
+
+    </ui:define>
+
+    <ui:define name="content">
+        <div style="margin:5px;">
+            <p:growl id="msgs" showDetail="false"/>
+            <h:form id="form">
+
+                <p:panel id="input" header="【实际用款情况】查询条件">
+                    <h:panelGrid columns="2" cellspacing="2" style="width: 100%">
+                        <h:panelGrid columns="4" cellspacing="2" style="width: 80%"
+                                     columnClasses="col-95,col-5,col-95,col-5">
+
+                            <h:outputLabel value=" 付款房产商:" for="companyName"/>
+                            <h:inputText autocomplete="off" id="companyName" style="width:160px;"
+                                         value="#{payoutQryAction.paramPlan.companyName}"
+                                         onfocus="this.select()">
+                            </h:inputText>
+
+                            <h:outputLabel value="付款监管账号:" for="accountCode"/>
+                            <p:inputText autocomplete="off" id="accountCode" style="width:160px;"
+                                         value="#{payoutQryAction.paramPlan.accountCode}">
+                            </p:inputText>
+
+                            <h:outputLabel value="收款方户名:" for="toAccountName"/>
+                            <h:inputText autocomplete="off" id="toAccountName" style="width:160px;"
+                                         value="#{payoutQryAction.paramPlan.toAccountName}">
+                            </h:inputText>
+
+                            <h:outputLabel value="收款方账号:" for="toAccountCode"/>
+                            <p:inputText autocomplete="off" id="toAccountCode"
+                                         value="#{payoutQryAction.paramPlan.toAccountCode}"
+                                         style="width:160px;"/>
+
+                            <h:outputLabel value="状态标志:" for="tradeStatusFlag"/>
+                            <h:selectOneMenu id="tradeStatusFlag" style="width:165px;"
+                                             value="#{payoutQryAction.paramPlan.tradeStatusFlag}">
+                                <f:selectItems value="#{payoutQryAction.refundStatusList}"/>
+                            </h:selectOneMenu>
+
+                            <h:outputLabel value="凭证号:" for="docNo"/>
+                            <p:inputText id="docNo" value="#{payoutQryAction.paramPlan.docNo}"
+                                         style="width:160px;"/>
+
+                            <h:outputLabel value="申请金额大于:"/>
+                            <p:inputText id="applyStartAmt" value="#{payoutQryAction.paramPlan.applyStartAmt}"
+                                         style="width:160px;">
+                                <f:convertNumber pattern="#,###,###,###,##0.00"/>
+                            </p:inputText>
+
+                            <h:outputLabel value="申请金额小于:"/>
+                            <p:inputText id="applyEndAmt" value="#{payoutQryAction.paramPlan.applyEndAmt}"
+                                         style="width:160px;">
+                                <f:convertNumber pattern="#,###,###,###,##0.00"/>
+                            </p:inputText>
+
+                            <h:outputLabel value="申请起始日期:"/>
+                            <p:inputMask mask="9999-99-99" value="#{payoutQryAction.paramPlan.applyStartDate}"
+                                         style="width:160px;"/>
+
+                            <h:outputLabel value="申请截止日期:"/>
+                            <p:inputMask mask="9999-99-99" value="#{payoutQryAction.paramPlan.applyEndDate}"
+                                         style="width:160px;"/>
+
+                        </h:panelGrid>
+                        <h:panelGrid style="width: 20%">
+                            <p:commandButton id="saveBtn" ajax="true" value="查询"
+                                             action="#{payoutQryAction.onQuery}"
+                                             style="margin-left:15px;width:90px"
+                                             update="input,pdt,msgs">
+                            </p:commandButton>
+                            <p:commandButton ajax="true" id="resetBtn" value="重置" type="reset" action="#{payoutQryAction.onPrint}"
+                                             style="width:90px;margin-left:15px" update="input,msgs"/>
+                        </h:panelGrid>
+                    </h:panelGrid>
+                </p:panel>
+                <p:ajaxStatus style="width:16px;height:16px;">
+                    <f:facet name="start">
+                        <h:graphicImage value="/images/ajaxloading.gif"/>
+                    </f:facet>
+                    <f:facet name="complete">
+                        <h:outputText value=""/>
+                    </f:facet>
+                </p:ajaxStatus>
+
+                <p:dataTable id="pdt" style="width:100%;"
+                             dynamic="true" selectionMode="single"
+                             value="#{payoutQryAction.payoutList}" var="record"
+                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             paginator="true" rows="15" paginatorPosition="bottom"
+                             rowsPerPageTemplate="100,50,30,15,5"
+                             emptyMessage="数据记录为空...">
+
+                    <p:column style="display:none;" headerText="pkid">
+                        <h:outputText value="#{record.pkId}"/>
+                    </p:column>
+
+                    <p:column headerText="凭证号" style="text-align:center">
+                        <h:outputText value="#{record.docNo}"/>
+                    </p:column>
+
+                    <p:column headerText="付款开发商" style="text-align:center" >
+                        <h:outputText value="#{record.payCompanyName}"/>
+                    </p:column>
+
+                    <p:column headerText="付款监管账号" style="text-align:center">
+                        <h:outputText value="#{record.payAccount}"/>
+                    </p:column>
+
+                    <p:column headerText="收款方户名" style="text-align:left" >
+                        <h:outputText value="#{record.recCompanyName}"/>
+                    </p:column>
+
+                    <p:column headerText="收款方账号" style="text-align:center" >
+                        <h:outputText value="#{record.recAccount}"/>
+                    </p:column>
+
+                    <p:column headerText="申请金额" style="text-align:center" >
+                        <h:outputText value="#{record.plAmount}" style="float:right">
+                            <f:convertNumber pattern="#,###,###,###,##0.00"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="状态标志" style="text-align:center">
+                        <h:outputText value="#{payoutQryAction.statusFlag.valueOfAlias(record.statusFlag).title}"/>
+                    </p:column>
+
+                    <p:column headerText="操作" style="text-align:center">
+                        <p:commandLink value="详细" style="color:blue" update="popupwindow"
+                                       onclick="doPopupWindow(this);"/>
+                    </p:column>
+
+                </p:dataTable>
+            </h:form>
+        </div>
+    </ui:define>
+
+</ui:composition>

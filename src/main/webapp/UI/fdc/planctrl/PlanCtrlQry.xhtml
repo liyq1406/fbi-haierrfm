@@ -1,0 +1,142 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                template="/templates/ui.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+             .col-95 {
+                text-align: right;
+            }
+
+            .col-5 {
+                text-align: left;
+            }
+
+            .col-80 {
+            }
+
+            .col-20 {
+                width: 5%;
+            }
+        </style>
+        <script type="text/javascript" language="javascript">
+             function doPopupWindow(obj) {
+                var pkid = obj.parentNode.parentNode.childNodes[0].innerHTML;
+                popupwindow = window.open("planQryDetl.xhtml?action=query&amp;pkid=" + pkid, "popupwindow", "height=600,width=800,left=200,top=100,toolbar=no,menubar=no,scrollbars=yes,location=no");
+                popupwindow.focus;
+            }
+        </script>
+    </ui:define>
+
+    <ui:define name="content">
+        <div style="margin:5px;">
+            <p:messages id="msgs" showDetail="false"/>
+            <h:form id="form">
+                <div id="header">
+                    <p:panel header="【用款计划】查询条件">
+                        <h:panelGrid columns="2" cellspacing="5" columnClasses="col-80,col-20">
+                            <h:panelGrid columns="4" cellspacing="5"
+                                         columnClasses="col-95,col-5,col-95,col-5">
+                                <h:outputLabel value="房产商名称:" for="companyName"/>
+                                <h:inputText id="companyName" size="30"
+                                             value="#{expensesPlanQryAction.rsPlanCtrl.companyName}"/>
+                                 <h:outputLabel value="监管账号:" for="accountCode"/>
+                                <h:inputText id="accountCode" size="30"
+                                             value="#{expensesPlanQryAction.rsPlanCtrl.accountCode}"/>
+                                <h:outputLabel value="付款合同号:" for="payContractNo"/>
+                                <h:inputText id="payContractNo" size="30"
+                                             value="#{expensesPlanQryAction.rsPlanCtrl.payContractNo}"/>
+                                 <h:outputLabel value="计划日期:" for="planDate"/>
+                                <p:inputMask id="planDate" size="25"
+                                                                             value="#{expensesPlanQryAction.rsPlanCtrl.planDate}" mask="9999-99-99">
+                                                                </p:inputMask>
+                                 <h:outputLabel value="用款说明:" for="planDesc"/>
+                                <h:inputText id="planDesc" size="30"
+                                             value="#{expensesPlanQryAction.rsPlanCtrl.planDesc}"/>
+                                 <h:outputLabel/><h:outputLabel/>
+                            </h:panelGrid>
+
+                            <h:panelGrid>
+                                <p:commandButton id="qrybtn" style="width:80px;" value="查询"
+                                                 action="#{expensesPlanQryAction.onQuery}"
+                                                 update="pdt,msgs">
+                                </p:commandButton>
+                                <p:commandButton ajax="false" id="btnprt" value="重置"
+                                                 type="reset"
+                                                 style="width:80px;"/>
+                            </h:panelGrid>
+                        </h:panelGrid>
+                    </p:panel>
+                </div>
+
+                <p:ajaxStatus style="height:20px;text-align:center">
+                    <f:facet name="start">
+                        <h:graphicImage value="/images/ajaxloadingbar.gif"/>
+                    </f:facet>
+                    <f:facet name="complete">
+                        <h:outputText value=""/>
+                    </f:facet>
+                </p:ajaxStatus>
+
+                <p:dataTable id="pdt" style="width:100%;"
+                             dynamic="true" selectionMode="single"
+                             value="#{expensesPlanQryAction.rsPlanCtrlList}" var="record"
+                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             paginator="true" rows="10" paginatorPosition="bottom"
+                             rowsPerPageTemplate="100,50,30,15,5"
+                             emptyMessage="数据记录为空...">
+
+                    <p:column style="display:none;" headerText="pkid">
+                        <h:outputText value="#{record.pkId}"/>
+                    </p:column>
+
+                    <p:column headerText="单位名称">
+                        <h:outputText value="#{record.companyName}"/>
+                    </p:column>
+
+                    <p:column headerText="监管账号" style="text-align:center">
+                        <h:outputText value="#{record.accountCode}"/>
+                    </p:column>
+
+                    <p:column headerText="计划控制编号" style="text-align:center">
+                        <h:outputText value="#{record.planCtrlNo}"/>
+                    </p:column>
+
+                   <!-- <p:column headerText="付款合同号" style="text-align:center">
+                        <h:outputText value="#{record.payContractNo}"/>
+                    </p:column>-->
+
+                    <p:column headerText="计划日期" style="text-align:center">
+                        <h:outputText value="#{record.planDate}">
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="用款说明">
+                        <h:outputText value="#{record.planDesc}"/>
+                    </p:column>
+
+                    <p:column headerText="计划金额">
+                        <h:outputText value="#{record.plAmount}" style="float: right">
+                            <f:convertNumber pattern="#,###,###,##0.00"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="可用金额">
+                        <h:outputText value="#{record.avAmount}" style="float: right">
+                            <f:convertNumber pattern="#,###,###,##0.00"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="操作" style="text-align:center">
+                        <p:commandLink value="详细" style="color:blue" update="popupwindow"
+                                       onclick="doPopupWindow(this);"/>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+        </div>
+    </ui:define>
+
+</ui:composition>

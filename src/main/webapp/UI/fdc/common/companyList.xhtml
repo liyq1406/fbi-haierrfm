@@ -1,0 +1,33 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                template="/templates/ui.xhtml">
+
+    <ui:define name="head">
+        <script type="text/javascript" language="javascript">
+            function selCom(obj) {
+                var companyID = obj.value;
+                var companyName = obj.options[obj.selectedIndex].innerText;
+                var arg = new Object();
+                arg.companyid = companyID;
+                arg.companyname = companyName;
+                window.returnValue = arg;
+                window.close();
+            }
+        </script>
+    </ui:define>
+    <ui:define name="content">
+        <div class="entry" id="top">
+            <h:form id="selFrom">
+                <p:fieldset legend="房产商列表(双击选择)">
+                    <h:selectOneListbox ondblclick="selCom(this)" id="selListBoxCom" style="height:300px;width:200px;">
+                        <f:selectItem itemLabel="" itemValue=""/>
+                        <f:selectItems value="#{accountEditAction.companyList}"></f:selectItems>
+                    </h:selectOneListbox>
+                </p:fieldset>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

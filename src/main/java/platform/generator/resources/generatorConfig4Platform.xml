@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <classPathEntry location="/svn-brzfdc/ref/ojdbc6.jar"/>
+
+    <!--信息-->
+    <context id="AllInfo" targetRuntime="MyBatis3">
+        <jdbcConnection driverClass="oracle.jdbc.driver.OracleDriver"
+                        connectionURL="jdbc:oracle:thin:@localhost:1521:orcl"
+                        userId="fdc"
+                        password="fdc">
+        </jdbcConnection>
+
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <javaModelGenerator targetPackage="platform.repository.model" targetProject="main/java">
+            <property name="enableSubPackages" value="true"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <sqlMapGenerator targetPackage="platform.repository.mapper" targetProject="main/java">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+
+        <javaClientGenerator type="XMLMAPPER" targetPackage="platform.repository.dao" targetProject="main/java">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+
+        <!--平台类 -->
+        <!--
+        <table tableName="ptdept"/>
+        <table tableName="ptenudetail"/>
+        <table tableName="ptenumain"/>
+        <table tableName="pterror"/>
+        <table tableName="ptlogicact"/>
+        <table tableName="ptmenu"/>
+        <table tableName="ptoper"/>
+        <table tableName="ptoperrole"/>
+        <table tableName="ptresource"/>
+        <table tableName="sys_lock"/>
+        <table tableName="sys_scheduler"/>
+        <table tableName="sys_scheduler_log"/>
+        <table tableName="cp_sequence"/>
+        -->
+
+
+    </context>
+
+</generatorConfiguration>

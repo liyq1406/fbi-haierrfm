@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="rfm.qd.repository.dao.common.CommonMapper">
+      <resultMap id="BaseResultMap" type="rfm.qd.repository.model.RsPayout">
+    <id column="PK_ID" jdbcType="VARCHAR" property="pkId" />
+    <result column="DOC_NO" jdbcType="VARCHAR" property="docNo" />
+    <result column="PAY_COMPANY_ID" jdbcType="VARCHAR" property="payCompanyId" />
+    <result column="PAY_COMPANY_NAME" jdbcType="VARCHAR" property="payCompanyName" />
+    <result column="PAY_ACCOUNT_ID" jdbcType="VARCHAR" property="payAccountId" />
+    <result column="PAY_ACCOUNT" jdbcType="VARCHAR" property="payAccount" />
+    <result column="REC_COMPANY_ID" jdbcType="VARCHAR" property="recCompanyId" />
+    <result column="REC_COMPANY_NAME" jdbcType="VARCHAR" property="recCompanyName" />
+    <result column="REC_ACCOUNT_ID" jdbcType="VARCHAR" property="recAccountId" />
+    <result column="REC_ACCOUNT" jdbcType="VARCHAR" property="recAccount" />
+    <result column="REC_BANK_ID" jdbcType="VARCHAR" property="recBankId" />
+    <result column="REC_BANK_CODE" jdbcType="VARCHAR" property="recBankCode" />
+    <result column="REC_BANK_NAME" jdbcType="VARCHAR" property="recBankName" />
+    <result column="BUSINESS_ID" jdbcType="VARCHAR" property="businessId" />
+    <result column="BUSINESS_NO" jdbcType="VARCHAR" property="businessNo" />
+    <result column="PUBLIC_FLAG" jdbcType="VARCHAR" property="publicFlag" />
+    <result column="PURPOSE" jdbcType="VARCHAR" property="purpose" />
+    <result column="PL_AMOUNT" jdbcType="DECIMAL" property="plAmount" />
+    <result column="AP_AMOUNT" jdbcType="DECIMAL" property="apAmount" />
+    <result column="BACK_DESC" jdbcType="VARCHAR" property="backDesc" />
+    <result column="SERIAL" jdbcType="VARCHAR" property="serial" />
+    <result column="BANK_SERIAL" jdbcType="VARCHAR" property="bankSerial" />
+    <result column="TRADE_DATE" jdbcType="TIMESTAMP" property="tradeDate" />
+    <result column="TRADE_RESULT" jdbcType="VARCHAR" property="tradeResult" />
+    <result column="PASS_FLAG" jdbcType="CHAR" property="passFlag" />
+    <result column="STATUS_FLAG" jdbcType="VARCHAR" property="statusFlag" />
+    <result column="STATUS_NAME" jdbcType="VARCHAR" property="statusName" />
+    <result column="WORK_RESULT" jdbcType="VARCHAR" property="workResult" />
+    <result column="APPLY_USER_ID" jdbcType="VARCHAR" property="applyUserId" />
+    <result column="APPLY_USER_NAME" jdbcType="VARCHAR" property="applyUserName" />
+    <result column="APPLY_DATE" jdbcType="TIMESTAMP" property="applyDate" />
+    <result column="AUDIT_USER_ID" jdbcType="VARCHAR" property="auditUserId" />
+    <result column="AUDIT_USER_NAME" jdbcType="VARCHAR" property="auditUserName" />
+    <result column="AUDIT_DATE" jdbcType="TIMESTAMP" property="auditDate" />
+    <result column="EXEC_USER_ID" jdbcType="VARCHAR" property="execUserId" />
+    <result column="EXEC_USER_NAME" jdbcType="VARCHAR" property="execUserName" />
+    <result column="EXEC_DATE" jdbcType="TIMESTAMP" property="execDate" />
+    <result column="WF_INSTANCE_ID" jdbcType="VARCHAR" property="wfInstanceId" />
+    <result column="ATTACH_FLAG" jdbcType="CHAR" property="attachFlag" />
+    <result column="REMARK" jdbcType="VARCHAR" property="remark" />
+    <result column="DELETED_FLAG" jdbcType="CHAR" property="deletedFlag" />
+    <result column="ORIGIN_FLAG" jdbcType="CHAR" property="originFlag" />
+    <result column="ORIGIN_APP" jdbcType="VARCHAR" property="originApp" />
+    <result column="CREATED_BY" jdbcType="VARCHAR" property="createdBy" />
+    <result column="CREATED_DATE" jdbcType="TIMESTAMP" property="createdDate" />
+    <result column="LAST_UPD_BY" jdbcType="VARCHAR" property="lastUpdBy" />
+    <result column="LAST_UPD_DATE" jdbcType="TIMESTAMP" property="lastUpdDate" />
+    <result column="MODIFICATION_NUM" jdbcType="DECIMAL" property="modificationNum" />
+  </resultMap>
+
+    <select id="selectRsPayoutsByParamPlan" parameterType="rfm.qd.view.payout.ParamPlan"
+            resultMap="BaseResultMap">
+        <![CDATA[
+         select * from rs_payout t where t.deleted_flag = '0'
+         ]]>
+        <if test="companyName != null and companyName != ''">
+            and t.pay_company_name like CONCAT('%',CONCAT(trim(#{companyName}),'%'))
+        </if>
+        <if test="accountCode != null and accountCode != ''">
+            and t.pay_account like CONCAT('%',CONCAT(trim(#{accountCode}),'%'))
+        </if>
+        <if test="toAccountName != null and toAccountName != ''">
+            and t.rec_company_name like CONCAT('%',CONCAT(trim(#{toAccountName}),'%'))
+        </if>
+        <if test="toAccountCode != null and toAccountCode != ''">
+            and t.rec_account like CONCAT('%',CONCAT(trim(#{toAccountCode}),'%'))
+        </if>
+        <if test="tradeStatusFlag != null and tradeStatusFlag != ''">
+            and t.status_flag = #{tradeStatusFlag}
+        </if>
+        <if test="docNo != null and docNo != ''">
+            and t.doc_no like CONCAT('%',CONCAT(trim(#{docNo}),'%'))
+        </if>
+
+        <if test=" applyStartDate != null and applyStartDate != ''">
+            <![CDATA[
+                    and t.apply_date  >= TO_DATE(trim(#{applyStartDate}),'yyyy-MM-dd')
+            ]]>
+        </if>
+        <if test=" applyEndDate != null and applyEndDate != ''">
+            <![CDATA[
+                 and t.apply_date  <= TO_DATE(trim(#{applyEndDate}),'yyyy-MM-dd')
+            ]]>
+        </if>
+        <if test=" applyStartAmt != null and applyStartAmt != ''">
+            <![CDATA[
+                 and t.pl_amount  >= #{applyStartAmt}
+            ]]>
+        </if>
+        <if test=" applyEndAmt != null and applyEndAmt != ''">
+            <![CDATA[
+                 and t.pl_amount  <= #{applyEndAmt}
+            ]]>
+        </if>
+    </select>
+</mapper>

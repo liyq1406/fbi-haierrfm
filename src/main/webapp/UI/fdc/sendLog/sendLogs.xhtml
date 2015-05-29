@@ -1,0 +1,118 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                template="/templates/ui.xhtml">
+
+    <ui:define name="head">
+        <script type="text/javascript">
+            document.onkeydown = function TabReplace() {
+                if (event.keyCode == 13) {
+                    if (event.srcElement.tagName != 'BUTTON')
+                        event.keyCode = 9;
+                }
+            }
+        </script>
+        <style type="text/css">
+            .input-col-m {
+                width: 60px;
+            }
+
+            .input-col-l {
+                width: 80px;
+            }
+
+            .input-col-xxl {
+                width: 1%;
+                text-align: right;
+            }
+
+            .col-80 {
+            }
+
+            .col-20 {
+                width: 5%;
+            }
+        </style>
+
+    </ui:define>
+
+    <ui:define name="content">
+        <div style="margin:5px;">
+            <p:tabView style="font-weight:normal;font-style:normal" dynamic="true" cache="false">
+                <p:tab title="贷款汇总数据发送日志记录">
+                    <p:growl id="msgs" showDetail="false"/>
+                    <h:form id="form">
+                        <p:panel style="margin-top:10px">
+                            <h:panelGrid columns="2" cellspacing="5" columnClasses="col-95,col-5">
+                                <h:panelGrid columns="6" cellspacing="5" style="text-align: right;">
+                                    <h:outputLabel value="起始日期:"/>
+                                    <p:inputText required="true"
+                                                 requiredMessage="起始日期不能为空。"
+                                                 onclick="WdatePicker({dateFmt:'yyyyMMdd'})"
+                                                 value="#{sendLogAction.startDate}"/>
+                                    <h:outputLabel value="截止日期:"/>
+                                    <p:inputText required="true"
+                                                 requiredMessage="截止日期不能为空。"
+                                                 onclick="WdatePicker({dateFmt:'yyyyMMdd'})"
+                                                 value="#{sendLogAction.endDate}"/>
+
+                                    <h:outputLabel value="交易结果:"/>
+                                    <h:selectOneMenu value="#{sendLogAction.txnResult}">
+                                    <f:selectItems value="#{sendLogAction.txnResultOptions}"/>
+                                    </h:selectOneMenu>
+
+                                </h:panelGrid>
+                                <h:panelGrid columns="1">
+                                    <p:commandButton style="width:90px;" value="查询"
+                                                     action="#{sendLogAction.onQuery}"
+                                                     update="pdt,msgs">
+                                    </p:commandButton>
+                                </h:panelGrid>
+                            </h:panelGrid>
+                        </p:panel>
+                        <p:ajaxStatus style="height:18px;text-align:center">
+                            <f:facet name="start">
+                                <h:graphicImage value="/images/ajaxloadingbar.gif"/>
+                            </f:facet>
+                            <f:facet name="complete">
+                                <h:outputText value=""/>
+                            </f:facet>
+                        </p:ajaxStatus>
+                        <p:dataTable id="pdt" style="width:100%;"
+                                     dynamic="true"
+                                     value="#{sendLogAction.sendLogList}" var="record"
+                                     paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     paginator="true" rows="15" paginatorPosition="bottom"
+                                     rowsPerPageTemplate="100,50,30,15,5"
+                                     emptyMessage="数据记录为空...">
+                            <p:column headerText="操作日期" style="text-align:center">
+                                <h:outputText
+                                        value="#{record.sysDate}"/>
+                            </p:column>
+                            <p:column headerText="交易运行日期" style="text-align:center">
+                                <h:outputText
+                                        value="#{record.txnDate}">
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="交易名称" style="text-align:left">
+                                <h:outputText
+                                        value="#{record.txnNam}"/>
+                            </p:column>
+                            <p:column headerText="交易码" style="text-align:center">
+                                <h:outputText
+                                        value="#{record.txnCode}"/>
+                            </p:column>
+                            <p:column headerText="交易结果" style="text-align:center">
+                                <h:outputText
+                                        value="#{sendLogAction.sendLogResult.valueOfAlias(record.txnResult).title}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+                </p:tab>
+            </p:tabView>
+        </div>
+    </ui:define>
+
+</ui:composition>

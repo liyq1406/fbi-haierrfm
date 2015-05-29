@@ -1,0 +1,133 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                template="/templates/ui.xhtml">
+
+<ui:define name="head">
+    <style type="text/css">
+        .input-col-m {
+            width: 60px;
+        }
+
+        .input-col-l {
+            width: 80px;
+        }
+
+        .input-col-xxl {
+            width: 1%;
+            text-align: right;
+        }
+
+        .col-95 {
+            text-align: right;
+        }
+
+        .col-5 {
+            text-align: left;
+        }
+    </style>
+    <script type="text/javascript" language="javascript">
+        document.onkeydown = function TabReplace() {
+            if (event.keyCode == 13) {
+                if (event.srcElement.tagName != 'BUTTON')
+                    event.keyCode = 9;
+                else
+                    event.srcElement.click();
+            }
+        }
+    </script>
+
+</ui:define>
+
+<ui:define name="content">
+    <div style="margin:5px;">
+        <p:growl id="msgs" showDetail="false"/>
+        <h:form id="form">
+
+            <p:panel id="input" header="【交易退票】表单">
+                <h:panelGrid columns="1" cellspacing="2" style="width: 100%">
+                    <h:panelGrid columns="1" cellspacing="2" style="width: 100%">
+
+                        <p:fieldset legend="对方账户信息">
+                            <h:panelGrid columns="1">
+                                <h:panelGrid columns="4" cellpadding="2" columnClasses="col-95,col-5,col-95,col-5"
+                                             style="width: 100%">
+                                    <h:outputLabel value="对方账号:" for="toAccountCode" style="margin-left: 16px;" size="30"/>
+                                    <p:inputText id="toAccountCode" value="#{accDetailBackAction.accDetail.toAccountCode}"
+                                                readonly="true" size="30"/>
+                                    <h:outputLabel value="对方户名:" for="toAccountName" style="margin-left: 29px;" size="30"/>
+                                    <p:inputText id="toAccountName" value="#{accDetailBackAction.accDetail.toAccountName}"
+                                                readonly="true" size="30"/>
+
+                                    <h:outputLabel value="对方开户行:" for="toBankCode" style="margin-left: 16px;" size="30"/>
+                                    <p:inputText id="toBankCode" value="#{accDetailBackAction.accDetail.toHsBankName}"
+                                               readonly="true"  size="30"/>
+
+                                </h:panelGrid>
+
+                            </h:panelGrid>
+                        </p:fieldset>
+                         <p:fieldset legend="监管账户信息">
+                            <h:panelGrid columns="1">
+                                <h:panelGrid columns="4" cellspacing="2" style="width: 100%"
+                                             columnClasses="col-95,col-5,col-95,col-5">
+
+                                    <h:outputLabel value="付款房产商:" for="companyName" style="margin-left:16px;" size="30"/>
+                                    <p:inputText autocomplete="off" id="companyName" size="30" readonly="true"
+                                                 value="#{accDetailBackAction.accDetail.accountName}">
+                                    </p:inputText>
+
+                                    <h:outputLabel value="付款监管账号:" for="accountCode" style="margin-left: 17px;" size="30"/>
+                                    <p:inputText autocomplete="off" id="accountCode" size="30" readonly="true"
+                                                 value="#{accDetailBackAction.accDetail.accountCode}">
+                                    </p:inputText>
+
+                                    <h:outputLabel value="交易时间:" for="tradeDate" style="margin-left: 16px;" size="30"/>
+                                    <p:inputText id="tradeDate" value="#{accDetailBackAction.accDetail.tradeDate}" readonly="true" size="30">
+                                    </p:inputText>
+
+                                    <h:outputLabel value="交易金额:" for="tradeAmt" size="30" style="margin-left: 17px;"/>
+                                    <p:inputText autocomplete="off" id="tradeAmt" size="30" readonly="true"
+                                                 value="#{accDetailBackAction.accDetail.tradeAmt}">
+                                        <f:convertNumber pattern="#,###,###,###,##0.00"/>
+                                    </p:inputText>
+
+                                    <h:outputLabel value="收支标志:" for="inoutflag" size="30" style="margin-left: 16px;"/>
+                                    <h:inputText autocomplete="off" id="inoutflag" size="36" readonly="true"
+                                                 value="#{accDetailBackAction.inoutFlag.valueOfAlias(accDetailBackAction.accDetail.inoutFlag).title}">
+                                    </h:inputText>
+                                    <h:outputLabel value="交易类型:" for="tradeType" size="30" style="margin-left: 17px;"/>
+                                    <h:inputText autocomplete="off" id="tradeType" size="36" readonly="true"
+                                                 value="#{accDetailBackAction.tradeType.valueOfAlias(accDetailBackAction.accDetail.tradeType).title}">
+                                    </h:inputText>
+                                    <h:outputLabel value="交易状态:" for="statusFlag" size="30" style="margin-left: 16px;"/>
+                                    <h:inputText autocomplete="off" id="statusFlag" size="36" readonly="true"
+                                                 value="#{accDetailBackAction.tradeStatus.valueOfAlias(accDetailBackAction.accDetail.statusFlag).title}">
+                                    </h:inputText>
+                                    <h:outputLabel value="申请人:" for="lastUpdBy" size="30" style="margin-left: 16px;"/>
+                                    <h:inputText autocomplete="off" id="lastUpdBy" size="36" readonly="true"
+                                                 value="#{accDetailBackAction.accDetail.lastUpdBy}">
+                                    </h:inputText>
+                                </h:panelGrid>
+
+                            </h:panelGrid>
+                        </p:fieldset>
+                    </h:panelGrid>
+                    <h:panelGrid style="width: 20%" columns="2" >
+                        <p:commandButton id="saveBtn" ajax="true" value="退票"
+                                         action="#{accDetailBackAction.onBack}"
+                                         style="margin-left:235px;width:90px"
+                                         update="msgs,input">
+                        </p:commandButton>
+                        <p:commandButton ajax="true" id="clsBtn" value="关闭"  onclick="window.close();"
+                                         style="width:90px;margin-left:15px" update="input,msgs"/>
+                    </h:panelGrid>
+                </h:panelGrid>
+            </p:panel>
+        </h:form>
+    </div>
+</ui:define>
+
+</ui:composition>

@@ -1,0 +1,58 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                template="/templates/ui.xhtml">
+
+    <ui:define name="head">
+        <script type="text/javascript" language="javascript">
+            document.onkeydown = function TabReplace() {
+                if (event.keyCode == 13) {
+                    if (event.srcElement.tagName != 'BUTTON')
+                        event.keyCode = 9;
+                    else
+                        event.srcElement.click();
+                }
+            }
+            function selectBank(obj) {
+                var bankCode = obj.value;
+                var bankName = obj.options[obj.selectedIndex].innerText;
+                var arg = new Object();
+                arg.bankCode = bankCode;
+                arg.bankName = bankName;
+                window.returnValue = arg;
+                window.close();
+            }
+        </script>
+    </ui:define>
+    <ui:define name="content">
+        <div class="entry" id="top">
+            <p:growl id="msgs" showDetail="false" life="2000"/>
+            <h:form id="selFrom">
+                <p:fieldset legend="银行信息查询列表(双击选择)">
+                    <h:panelGrid columns="5" cellpadding="2" style="width: 95%">
+                        <h:outputLabel value="银行代号:" for="bankCode" style="width: 80px;text-align: right;"/>
+                        <p:inputText id="bankCode" value="#{bankInfoAction.code}"/>
+                        <h:outputLabel value="银行名称:" for="bankName" style="width: 80px;text-align: right;"/>
+                        <p:inputText id="bankName" value="#{bankInfoAction.name}" size="40"/>
+                        <p:commandButton action="#{bankInfoAction.onQuery}" value="查询"
+                                         ajax="true" style="margin-left:20px;" update="selListBox,selFrom,msgs"/>
+                    </h:panelGrid>
+                    <p:ajaxStatus style="width:16px;height:16px;">
+                        <f:facet name="start">
+                            <h:graphicImage value="/images/ajaxloading.gif"/>
+                        </f:facet>
+                        <f:facet name="complete">
+                            <h:outputText value=""/>
+                        </f:facet>
+                    </p:ajaxStatus>
+                    <h:selectOneListbox ondblclick="selectBank(this)" id="selListBox" style="width: 95%;">
+                        <f:selectItem itemLabel="" itemValue=""/>
+                        <f:selectItems value="#{bankInfoAction.bankList}"/>
+                    </h:selectOneListbox>
+                </p:fieldset>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

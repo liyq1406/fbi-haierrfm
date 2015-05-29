@@ -1,0 +1,56 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                template="/templates/ui.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+            .prdsetColumn {
+                width: 100%;
+            }
+        </style>
+    </ui:define>
+    <ui:define name="content">
+        <h:form id="trackFrom">
+        <div style="margin:5px">
+            <p:messages id="msgs" showDetail="true"/>
+            <p:tabView style="font-weight:normal;font-style:normal">
+
+                <p:tab title="系统运行状态">
+                    <p:dataTable id="pdt" style="width:100%;"
+                                 dynamic="true"
+                                 value="#{sendLogAction.sendLogList}" var="record"
+                                 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 paginator="true" rows="15" paginatorPosition="bottom"
+                                 rowsPerPageTemplate="100,50,30,15,5"
+                                 emptyMessage="数据记录为空...">
+                        <p:column headerText="操作日期" style="text-align:center">
+                            <h:outputText
+                                    value="#{record.sysDate}"/>
+                        </p:column>
+                        <p:column headerText="交易运行日期" style="text-align:center">
+                            <h:outputText
+                                    value="#{record.txnDate}">
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="交易名称" style="text-align:left">
+                            <h:outputText
+                                    value="#{record.txnNam}"/>
+                        </p:column>
+                        <p:column headerText="交易码" style="text-align:center">
+                            <h:outputText
+                                    value="#{record.txnCode}"/>
+                        </p:column>
+                        <p:column headerText="交易结果" style="text-align:center">
+                            <h:outputText value="#{sendLogAction.sendLogResult.valueOfAlias(record.txnResult).title}"/>
+                        </p:column>
+                    </p:dataTable>
+
+                </p:tab>
+            </p:tabView>
+        </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

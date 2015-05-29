@@ -1,0 +1,152 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                template="/templates/ui.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+            .col-label {
+                width: 100px;
+                text-align: right;
+            }
+
+            .col-label2 {
+                width: 200px;
+                text-align: right;
+            }
+
+            .col-input {
+                width: 30px;
+            }
+
+            .col_remark {
+                width: 100px;
+                text-align: right;
+            }
+
+        </style>
+    </ui:define>
+    <ui:define name="content">
+        <div style="margin:5px;">
+            <p:growl id="msgs" showDetail="false"/>
+            <h:form id="form">
+                <p:fieldset legend="合同明细信息">
+                    <h:panelGrid id="detailPanel1" columns="1" cellpadding="3" border="0" style="margin-top: 15px;">
+                        <h:panelGrid columns="4" cellpadding="2" border="0"
+                                     columnClasses="col-label,col-input,col-label2,col-input">
+                            <h:outputLabel value="合同号:"/>
+                            <h:inputText value="#{refundDetlAction.contract.contractNo}"
+                                         size="30" disabled="true"/>
+                        </h:panelGrid>
+                        <p:separator/>
+                        <h:panelGrid columns="4" cellpadding="2"
+                                     columnClasses="col-label,col-input,col-label2,col-input">
+                            <h:outputLabel value="房产商:"/>
+                            <h:inputText value="#{refundDetlAction.contract.companyName}" size="30"
+                                         disabled="true"/>
+                            <h:outputLabel value="监管账户户名:"/>
+                            <h:inputText value="#{refundDetlAction.contract.accountName}" size="30"
+                                         disabled="true"/>
+                            <h:outputLabel value="监管账号:"/>
+                            <h:inputText value="#{refundDetlAction.contract.accountCode}" size="30"
+                                         disabled="true"/>
+                            <h:outputLabel value="开户行:"/>
+                            <h:inputText value="#{refundDetlAction.contract.hsBankName}" size="30"
+                                         disabled="true"/>
+                            <h:outputLabel value="买方姓名:"/>
+                            <h:inputText value="#{refundDetlAction.contract.buyerName}" size="30"
+                                         disabled="true"/>
+                            <h:outputLabel value="买方证件类型:"/>
+                            <h:inputText value="#{refundDetlAction.contract.buyerCertType}" size="30"
+                                         disabled="true"/>
+                            <h:outputLabel value="买方证件号:"/>
+                            <h:inputText value="#{refundDetlAction.contract.buyerCertNo}" size="30"
+                                         disabled="true"/>
+                            <h:outputLabel value="买方户名:"/>
+                            <h:inputText value="#{refundDetlAction.contract.buyerAccName}" size="30"
+                                         disabled="true"/>
+                            <h:outputLabel value="买方账号:"/>
+                            <h:inputText value="#{refundDetlAction.contract.buyerAccCode}" size="30"
+                                         disabled="true"/>
+                            <h:outputLabel value="买方开户行:"/>
+                            <h:inputText value="#{refundDetlAction.contract.buyerBankName}" size="30"
+                                         disabled="true"/>
+                        </h:panelGrid>
+                        <p:separator/>
+
+                        <h:panelGrid columns="4" cellpadding="2"
+                                     columnClasses="col-label,col-input,col-label2,col-input">
+                            <h:outputLabel value="房屋地址:"/>
+                            <h:inputText value="#{refundDetlAction.contract.houseAddress}" size="30"
+                                         disabled="true"/>
+                            <h:outputLabel value="房屋类型:"/>
+                            <h:inputText value="#{refundDetlAction.contract.houseType}" size="30"
+                                         disabled="true"/>
+                            <h:outputLabel value="房屋楼栋号:"/>
+                            <h:inputText valu..e="#{refundDetlAction.contract.houseNo}" size="30"
+                                         disabled="true"/>
+                            <h:outputLabel value="房屋总价:"/>
+                            <h:inputText value="#{refundDetlAction.contract.totalAmt}" size="30"
+                                         disabled="true">
+                                <f:convertNumber pattern="###,##0.00"/>
+                            </h:inputText>
+                            <h:outputLabel value="定金:"/>
+                            <h:inputText value="#{refundDetlAction.contract.earnestAmt}" size="30"
+                                         disabled="true">
+                                <f:convertNumber pattern="###,##0.00"/>
+                            </h:inputText>
+                            <h:outputLabel value="首付款:"/>
+                            <h:inputText value="#{refundDetlAction.contract.firstAmt}" size="30"
+                                         disabled="true">
+                                <f:convertNumber pattern="###,##0.00"/>
+                            </h:inputText>
+                            <h:outputLabel value="贷款:"/>
+                            <h:inputText value="#{refundDetlAction.contract.loanAmt}" size="30" disabled="true">
+                                <f:convertNumber pattern="###,##0.00"/>
+                            </h:inputText>
+
+                            <h:outputLabel value="退款金额:"/>
+                            <h:inputText value="#{refundDetlAction.contract.transbuyeramt}" size="30" disabled="true">
+                                <f:convertNumber pattern="###,##0.00"/>
+                            </h:inputText>
+                        </h:panelGrid>
+
+                    </h:panelGrid>
+                </p:fieldset>
+
+                <p:fieldset legend="退款信息">
+                    <h:panelGrid id="detailPanel2" columns="1" cellpadding="8" border="0" style="margin-top: 15px;">
+                        <h:panelGrid columns="4" cellpadding="2" border="0"
+                                     columnClasses="col-label,col-input,col-label2,col-input">
+                            <h:outputLabel value="凭证号:"/>
+                            <h:inputText value="#{refundDetlAction.refund.docNo}"  size="30" disabled="true"/>
+                            <h:outputLabel value="合同号:"/>
+                            <h:inputText value="#{refundDetlAction.refund.businessNo}"
+                                         size="30" readonly="true" disabled="true"/>
+                            <h:outputLabel value="退款金额:"/>
+                            <h:inputText value="#{refundDetlAction.refund.plAmount}" size="30"
+                                         disabled="true" readonly="true">
+                                <f:convertNumber pattern="###,##0.00"/>
+                            </h:inputText>
+
+                            <h:outputLabel value="收款账户名:"/>
+                            <h:inputText value="#{refundDetlAction.refund.recCompanyName}" size="30"
+                                         disabled="true"/>
+                            <h:outputLabel value="收款账户号:"/>
+                            <h:inputText value="#{refundDetlAction.refund.recAccount}" size="30"
+                                         disabled="true"/>
+                            <h:outputLabel value="收款方开户行:"/>
+                            <h:inputText value="#{refundDetlAction.refund.recBankName}" size="30"
+                                         disabled="true"/>
+
+                        </h:panelGrid>
+                        <p:separator/>
+
+                    </h:panelGrid>
+                </p:fieldset>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,110 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                template="/templates/ui.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+            .input-col-m {
+                width: 60px;
+            }
+
+            .input-col-l {
+                width: 80px;
+            }
+
+            .input-col-xxl {
+                width: 1%;
+                text-align: right;
+            }
+
+            .col-95 {
+                text-align: right;
+            }
+
+            .col-5 {
+                text-align: left;
+            }
+        </style>
+        <script type="text/javascript" language="javascript">
+            function doPopupWindow(obj) {
+                var pkid = obj.parentNode.parentNode.childNodes[0].innerHTML;
+                popupwindow = window.open("cbusPayoutDetl.xhtml?action=insert&amp;pkid=" + pkid, "popupwindow", "height=600,width=800,left=200,top=100,toolbar=no,menubar=no,scrollbars=yes,location=no");
+                popupwindow.focus;
+            }
+
+            document.onkeydown = function TabReplace() {
+                if (event.keyCode == 13) {
+                    if (event.srcElement.tagName != 'BUTTON')
+                        event.keyCode = 9;
+                    else
+                        event.srcElement.click();
+                }
+            }
+
+        </script>
+
+    </ui:define>
+
+    <ui:define name="content">
+        <div style="margin:5px;">
+            <p:growl id="msgs" showDetail="false"/>
+            <h:form id="form">
+                <p:dataTable id="pdt" style="width:100%;"
+                             dynamic="true" selectionMode="single"
+                             value="#{payoutAction.rsPlanCtrlList}" var="record"
+                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             paginator="true" rows="10" paginatorPosition="bottom"
+                             rowsPerPageTemplate="100,50,30,15,5"
+                             emptyMessage="数据记录为空...">
+                    <f:facet name="header">
+                        房产监管系统计划明细控制表
+                    </f:facet>
+                    <p:column style="display:none;" headerText="pkid">
+                        <h:outputText value="#{record.pkId}"/>
+                    </p:column>
+
+                    <p:column headerText="单位名称" filterBy="#{record.companyName}">
+                        <h:outputText value="#{record.companyName}"/>
+                    </p:column>
+
+                    <p:column headerText="监管账号" style="text-align:center" filterBy="#{record.accountCode}">
+                        <h:outputText value="#{record.accountCode}"/>
+                    </p:column>
+
+                    <p:column headerText="收款方账号" style="text-align:center" filterBy="#{record.toAccountCode}">
+                        <h:outputText value="#{record.toAccountCode}"/>
+                    </p:column>
+
+                    <p:column headerText="收款方户名" filterBy="#{record.toAccountName}">
+                        <h:outputText value="#{record.toAccountName}"/>
+                    </p:column>
+
+                    <p:column headerText="用款说明" filterBy="#{record.planDesc}">
+                        <h:outputText value="#{record.planDesc}"/>
+                    </p:column>
+
+                    <p:column headerText="计划金额">
+                        <h:outputText value="#{record.plAmount}" style="float: right">
+                            <f:convertNumber pattern="#,###,###,##0.00"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="可用金额">
+                        <h:outputText value="#{record.avAmount}" style="float: right">
+                            <f:convertNumber pattern="#,###,###,##0.00"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="操作" style="text-align:center;width:60px">
+                        <p:commandLink value="申请付款" style="color:blue" update="popupwindow"
+                                       onclick="doPopupWindow(this);"/>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+        </div>
+    </ui:define>
+
+</ui:composition>

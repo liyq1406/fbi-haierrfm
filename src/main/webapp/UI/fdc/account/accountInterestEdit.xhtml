@@ -1,0 +1,133 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                xmlns:fbi="http://www.fbifaces.org"
+                template="/templates/ui.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+            .input-col-m {
+                width: 60px;
+            }
+
+            .input-col-l {
+                width: 80px;
+            }
+
+            .input-col-xxl {
+                width: 1%;
+                text-align: right;
+            }
+
+            .col-95 {
+                text-align: right;
+            }
+
+            .col-5 {
+                text-align: left;
+            }
+        </style>
+        <script type="text/javascript" src="#{request.contextPath}/UI/support/dialogwindow.js"/>
+        <script type="text/javascript" language="javascript">
+            document.onkeydown = function TabReplace() {
+                if (event.keyCode == 13) {
+                    if (event.srcElement.tagName != 'BUTTON')
+                        event.keyCode = 9;
+                }
+            }
+            function recordEdit(obj) {
+                var pkid = obj.parentNode.parentNode.children[7].innerHTML;
+                var acctno = obj.parentNode.parentNode.children[1].innerHTML;
+                var acctname = obj.parentNode.parentNode.children[0].innerHTML;
+                var companyid = obj.parentNode.parentNode.children[8].innerHTML;
+                var sfeature = "dialogwidth:800px; dialogheight:520px;center:yes;help:yes;resizable:yes;scroll:yes;status:yes";
+                var arg = new Object();
+                arg.doType = "edit";
+                arg.companyid = companyid;
+                arg.acctno = acctno;
+                arg.pkid = pkid;
+                var rtn = dialog("interestBook.xhtml?acctno=" + acctno + "&amp;acctname=" + acctname + "&amp;companyid=" + companyid
+                        + "&amp;doType=edit" + "&amp;pkid=" + pkid, arg, sfeature);
+                if (rtn == "1") {
+                    document.getElementById("editForm:btnQuery").click();
+                }
+            }
+        </script>
+
+    </ui:define>
+
+    <ui:define name="content">
+        <div style="margin:5px;" id="top">
+            <p:tabView style="font-weight:normal;font-style:normal" dynamic="true" cache="false">
+                <p:tab title="利息录入管理">
+                    <h:form id="editForm">
+                        <p:growl id="msgs" showDetail="false"/>
+                        <p:commandButton id="btnQuery" style="display:none" action="#{accountTradeDetlAction.init}"/>
+                        <p:dataTable id="pdt1" style="width:100%;"
+                                     dynamic="true" selectionMode="single"
+                                     value="#{accountTradeDetlAction.rsAccDetailsInit}" var="record"
+                                     paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     paginator="true" rows="10" paginatorPosition="bottom"
+                                     rowsPerPageTemplate="100,50,30,10,5"
+                                     emptyMessage="数据记录为空...">
+                            <p:column headerText="账户名称" filterBy="#{record.accountName}" filterMatchMode="contains">
+                                <h:outputText value="#{record.accountName}"/>
+                            </p:column>
+                            <p:column filterBy="#{record.accountCode}" filterMatchMode="contains">
+                                <f:facet name="header">
+                                    <h:outputText value="监管账号"/>
+                                </f:facet>
+                                <h:outputText value="#{record.accountCode}"></h:outputText>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="公司"/>
+                                </f:facet>
+                                <h:outputText
+                                        value="#{flagStatusForMap.companyMap[record.companyId]}"></h:outputText>
+                            </p:column>
+                            <p:column style="text-align:center;" sortBy="#{record.tradeDate}">
+                                <f:facet name="header">
+                                    <h:outputText value="交易时间"/>
+                                </f:facet>
+                                <h:outputText value="#{record.tradeDate}">
+                                </h:outputText>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="利息金额"/>
+                                </f:facet>
+                                <h:outputText style="float:right;" value="#{record.tradeAmt}">
+                                    <f:convertNumber pattern="###,##0.00"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column style="text-align:center;" filterBy="#{record.statusFlag}"
+                                      filterOptions="#{accountTradeDetlAction.actDetlStatusOptions}">
+                                <f:facet name="header">
+                                    <h:outputText value="交易状态"/>
+                                </f:facet>
+                                <h:outputText value="#{flagStatusForMap.actDetlStatusFlagMap[record.statusFlag]}"/>
+                            </p:column>
+                            <p:column headerText="操作" style="text-align:center">
+                                <h:commandLink onclick="recordEdit(this)" value="修改" style="color: blue"/>
+                                <h:commandLink onclick="if (confirm('确定删除账号 '+this.parentNode.parentNode.children[1].innerHTML+'的利息？'))
+                                 {document.getElementById('editForm:btnQuery').click(); return true;}else return false;" action="#{accountTradeDetlAction.onDelete}"
+                                               value="删除" style="color: blue;margin-left: 6px" ajax="false">
+                                        <f:param name="pkid" value="#{record.pkId}"/>
+                                </h:commandLink>
+                            </p:column>
+                            <p:column headerText="pkid" style="display:none">
+                                <h:outputText value="#{record.pkId}"/>
+                            </p:column>
+                            <p:column headerText="companyid" style="display:none;">
+                                <h:outputText value="#{record.companyId}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+                </p:tab>
+            </p:tabView>
+        </div>
+    </ui:define>
+</ui:composition>

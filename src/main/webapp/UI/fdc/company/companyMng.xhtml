@@ -1,0 +1,135 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                template="/templates/ui.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+            .input-col-m {
+                width: 60px;
+            }
+
+            .input-col-l {
+                width: 80px;
+            }
+
+            .input-col-xxl {
+                width: 1%;
+                text-align: right;
+            }
+
+            .col-95 {
+                text-align: right;
+            }
+
+            .col-5 {
+                text-align: left;
+            }
+        </style>
+        <script type="text/javascript" src="#{request.contextPath}/UI/support/dialogwindow.js"/>
+        <script type="text/javascript" language="javascript">
+
+
+            document.onkeydown = function TabReplace() {
+                if (event.keyCode == 13) {
+                    if (event.srcElement.id != 'BUTTON')
+                        event.keyCode = 9;
+                }
+            }
+            function recordEdit(obj) {
+                var pkid = obj.parentNode.parentNode.children[0].innerHTML;
+                var sfeature = "dialogwidth:800px; dialogheight:520px;center:yes;help:yes;resizable:yes;scroll:yes;status:yes";
+                var arg = new Object();
+                arg.doType = "edit";
+                var rtn = dialog("companyEdit.xhtml?cmpnyPKID=" + pkid + "&amp;doType=eidt", arg, sfeature);
+                if (rtn == "1") {
+                    document.getElementById("queryForm:qryBtn").click();
+                }
+            }
+        </script>
+
+    </ui:define>
+
+    <ui:define name="content">
+        <div style="margin:5px;" id="top">
+            <p:growl id="msgs" showDetail="false"/>
+            <h:form id="queryForm">
+                <p:panel id="query" header="【房地产开发商基本信息】查询条件">
+                    <h:panelGrid columns="2" style="width:100%">
+                        <h:panelGrid columns="2" cellspacing="3" style="width:90%" columnClasses="col-95,col-5">
+
+                            <h:outputLabel value="房产商名称:" for="companyName"/>
+                            <h:inputText autocomplete="off" id="companyName" style="width:262px;" value="#{companyAction.companyName}"
+                                         onfocus="this.select()">
+                            </h:inputText>
+
+                        </h:panelGrid>
+                        <h:panelGrid columns="1" style="width:100%;margin-left: 215px">
+                            <h:panelGroup>
+                                <p:commandButton style="margin-left:15px;width:80px" ajax="false" action="#{companyAction.qryFdccompanys}"
+                                                 id="qryBtn"  value="查询">
+                                </p:commandButton>
+                                <p:commandButton type="reset" id="resetBtn" value="重置"
+                                                 style="width:80px;margin-left:15px"/>
+                            </h:panelGroup>
+                        </h:panelGrid>
+                    </h:panelGrid>
+                </p:panel>
+                <p:ajaxStatus style="width:16px;height:16px;">
+                    <f:facet name="start">
+                        <h:graphicImage value="/images/ajaxloading.gif"/>
+                    </f:facet>
+                    <f:facet name="complete">
+                        <h:outputText value=""/>
+                    </f:facet>
+                </p:ajaxStatus>
+
+                <p:dataTable id="pdt" style="width:100%;align:center;"
+                             dynamic="true" selectionMode="single"
+                             value="#{companyAction.fdccompanyList}" var="record"
+                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             paginator="true" rows="15" paginatorPosition="bottom"
+                             rowsPerPageTemplate="100,50,30,15,5"
+                             emptyMessage="数据记录为空...">
+                    <p:column headerText="pkid" style="display:none;">
+                        <h:outputText value="#{record.pkId}"/>
+                    </p:column>
+                    <p:column headerText="房产商名称">
+                        <h:outputText value="#{record.companyName}"/>
+                    </p:column>
+
+                    <p:column headerText="简称">
+                        <h:outputText value="#{record.companyShrtName}"/>
+                    </p:column>
+
+                    <p:column headerText="法定代表人">
+                        <h:outputText value="#{record.mngrName}"/>
+                    </p:column>
+
+                    <p:column headerText="营业执照">
+                        <h:outputText value="#{record.tradLicenceNo}"/>
+                    </p:column>
+
+                    <p:column headerText="公司地址">
+                        <h:outputText value="#{record.address}"/>
+                    </p:column>
+
+                    <p:column headerText="操作" style="text-align:center">
+                        <h:commandLink onclick="recordEdit(this)" value="修改" style="color: blue"/>
+                        <h:commandLink id="btnDelete" immediate="false"
+                                       onclick="if (confirm('确定删除 '+this.parentNode.parentNode.children[1].innerHTML+'？')) return true;else return false;"
+                                       action="#{companyAction.updateNewFdccompany}"
+                                       value="删除" style="margin-left: 7px;color:blue">
+                            <f:param name="pkid" value="#{record.pkId}"/>
+                            <f:param name="modno" value="#{record.modificationNum}"/>
+                        </h:commandLink>
+                    </p:column>
+
+                </p:dataTable>
+            </h:form>
+        </div>
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,127 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                template="/templates/ui.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+            .input-col-m {
+                width: 60px;
+            }
+
+            .input-col-l {
+                width: 80px;
+            }
+
+            .input-col-xxl {
+                width: 1%;
+                text-align: right;
+            }
+
+            .col-95 {
+                text-align: right;
+            }
+
+            .col-5 {
+                text-align: left;
+            }
+        </style>
+        <script type="text/javascript" language="javascript">
+            document.onkeydown = function TabReplace() {
+                if (event.keyCode == 13) {
+                    if (event.srcElement.tagName != 'BUTTON')
+                        event.keyCode = 9;
+                    else
+                        event.srcElement.click();
+                }
+            }
+        </script>
+
+    </ui:define>
+
+    <ui:define name="content">
+        <div style="margin:5px;">
+            <p:growl id="msgs" showDetail="false"/>
+            <h:form id="form">
+
+                <p:panel id="input" header="【监管账户】冻结表单">
+                    <h:panelGrid columns="1" cellspacing="2" style="width: 100%">
+                        <h:panelGrid columns="1" cellspacing="2" style="width: 100%">
+
+                            <p:fieldset legend="账户详细信息">
+                                <h:panelGrid columns="1">
+                                    <h:panelGrid columns="4" cellpadding="2" columnClasses="col-95,col-5,col-95,col-5"
+                                                 style="width: 100%">
+                                        <h:outputLabel value="监管账号:" for="accountCode" style="margin-left: 28px;"/>
+                                        <p:inputText id="accountCode" value="#{accountLockAction.rsAccount.accountCode}"
+                                                     readonly="true" disabled="true" style="width:160px;"/>
+                                        <h:outputLabel value="账户名称:" for="accountName" style="margin-left: 30px;"/>
+                                        <p:inputText id="accountName" value="#{accountLockAction.rsAccount.accountName}"
+                                                     readonly="true" disabled="true" style="width:160px;">
+                                        </p:inputText>
+                                        <h:outputLabel value="项目名称:" for="proName" style="margin-left: 28px;"/>
+                                        <p:inputText id="proName" value="#{accountLockAction.rsAccount.proName}"
+                                                     readonly="true" disabled="true" style="width:160px;"/>
+                                        <h:outputLabel value="项目地址:" for="proAddr" style="margin-left: 30px;"/>
+                                        <p:inputText id="proAddr" value="#{accountLockAction.rsAccount.proAddr}"
+                                                     readonly="true" disabled="true" style="width:160px;">
+                                        </p:inputText>
+                                        <h:outputLabel value="账户余额:" for="balance" style="margin-left: 28px;"/>
+                                        <p:inputText id="balance" value="#{accountLockAction.rsAccount.balance}"
+                                                     readonly="true" disabled="true" style="width:160px;">
+                                            <f:convertNumber pattern="#,###,###,###,##0.00"/>
+                                        </p:inputText>
+                                        <h:outputLabel value="冻结金额:" for="balanceLock" style="margin-left: 28px;"/>
+                                        <p:inputText id="balanceLock" value="#{accountLockAction.rsAccount.balanceLock}"
+                                                     readonly="true" disabled="true" style="width:160px;">
+                                            <f:convertNumber pattern="#,###,###,###,##0.00"/>
+                                        </p:inputText>
+                                        <h:outputLabel value="可用金额:" for="balanceUsable" style="margin-left: 28px;"/>
+                                        <p:inputText id="balanceUsable" value="#{accountLockAction.rsAccount.balanceUsable}"
+                                                     readonly="true" disabled="true" style="width:160px;">
+                                            <f:convertNumber pattern="#,###,###,###,##0.00"/>
+                                        </p:inputText>
+                                        <h:outputLabel/><h:outputLabel/>
+                                    </h:panelGrid>
+                                </h:panelGrid>
+                            </p:fieldset>
+                            <p:fieldset legend="冻结金额录入">
+                                <h:panelGrid columns="1">
+                                    <h:panelGrid columns="4" cellspacing="2" style="width: 100%"
+                                                 columnClasses="col-95,col-5,col-95,col-5">
+
+                                        <h:outputLabel value="冻结金额:" for="detailBalanceLock" style="margin-left:30px"/>
+                                        <p:inputText autocomplete="off" id="detailBalanceLock" style="width:160px;"
+                                                     value="#{accountLockAction.rsLockedaccDetail.balanceLock}">
+                                            <f:convertNumber pattern="#,###,###,###,##0.00"/>
+                                        </p:inputText>
+
+                                        <h:outputLabel value="确认冻结金额:" for="confirmBalanceLock" style="margin-left:15px"/>
+                                        <p:inputText autocomplete="off" id="confirmBalanceLock" style="width:160px;"
+                                                     value="#{accountLockAction.lockConfirmAmt}">
+                                            <f:convertNumber pattern="#,###,###,###,##0.00"/>
+                                        </p:inputText>
+
+                                    </h:panelGrid>
+                                </h:panelGrid>
+                            </p:fieldset>
+                        </h:panelGrid>
+                        <h:panelGroup>
+                            <p:separator/>
+                        </h:panelGroup>
+                        <h:panelGrid style="width: 20%" columns="2">
+                            <p:commandButton ajax="true" id="saveBtn" value="提交" action="#{accountLockAction.onSave}"
+                                             style="width:90px;margin-left:250px" update="input,msgs"/>
+
+                            <p:commandButton ajax="true" id="resetBtn" value="关闭" onclick="window.close();"
+                                             style="width:90px;margin-left:10px" update="input,msgs"/>
+                        </h:panelGrid>
+                    </h:panelGrid>
+                </p:panel>
+            </h:form>
+        </div>
+    </ui:define>
+
+</ui:composition>

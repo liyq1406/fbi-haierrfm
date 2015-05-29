@@ -1,0 +1,120 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                template="/templates/ui.xhtml">
+
+    <ui:define name="head">
+        <script type="text/javascript">
+             function doPopupWindow(obj) {
+                var pkid = obj.parentNode.parentNode.childNodes[0].innerHTML;
+                popupwindow = window.open("contractDetlForm.xhtml?pkid=" + pkid, "popupwindow", "height=600,width=800,left=200,top=100,toolbar=no,menubar=no,scrollbars=yes,location=no");
+                popupwindow.focus;
+            }
+            function doPopupAddWindow(obj) {
+                var pkid = obj.parentNode.parentNode.childNodes[0].innerHTML;
+                var contractNo = obj.parentNode.parentNode.childNodes[1].innerHTML;
+                popupwindow = window.open("refundAddForm.xhtml?pkid=" + pkid + "&amp;contractNo=" + contractNo, "popupwindow", "height=600,width=800,left=200,top=100,toolbar=no,menubar=no,scrollbars=yes,location=no");
+                popupwindow.focus;
+            }
+
+
+        </script>
+        <style type="text/css">
+            .input-col-m {
+                width: 60px;
+            }
+
+            .input-col-l {
+                width: 80px;
+            }
+
+            .input-col-xxl {
+                width: 1%;
+                text-align: right;
+            }
+
+            .col-80 {
+            }
+
+            .col-20 {
+                width: 5%;
+            }
+        </style>
+
+    </ui:define>
+
+    <ui:define name="content">
+        <div style="margin:5px;">
+            <p:tabView style="font-weight:normal;font-style:normal">
+                <p:tab title="合同记录清单">
+                    <p:messages id="msgs" showDetail="false"/>
+                    <h:form id="form">
+
+                        <p:ajaxStatus style="height:18px;text-align:center">
+                            <f:facet name="start">
+                                <h:graphicImage value="/images/ajaxloadingbar.gif"/>
+                            </f:facet>
+                            <f:facet name="complete">
+                                <h:outputText value=""/>
+                            </f:facet>
+                        </p:ajaxStatus>
+                        <p:dataTable id="pdt" style="width:100%;"
+                                     dynamic="true" selectionMode="single"
+                                     value="#{refundAction.detlList}" var="record"
+                                     paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     paginator="true" rows="15" paginatorPosition="bottom"
+                                     rowsPerPageTemplate="100,50,30,15,5"
+                                     emptyMessage="数据记录为空...">
+                            <p:column style="display:none;" headerText="pkid">
+                                <h:outputText value="#{record.pkId}"/>
+                            </p:column>
+
+                            <p:column headerText="合同号" style="text-align:center" filterBy="#{record.contractNo}"
+                                      filterMatchMode="contains">
+                                <h:outputText value="#{record.contractNo}"/>
+                            </p:column>
+                            <p:column headerText="账户名" style="text-align:center" filterBy="#{record.companyName}"
+                                      filterMatchMode="contains">
+                                <h:outputText value="#{record.accountName}"/>
+                            </p:column>
+                            <p:column headerText="监管帐号" style="text-align:center" filterBy="#{record.accountCode}"
+                                      filterMatchMode="contains">
+                                <h:outputText value="#{record.accountCode}"/>
+                            </p:column>
+                            <p:column headerText="买方姓名" style="text-align:center" filterBy="#{record.buyerName}"
+                                      filterMatchMode="contains">
+                                <h:outputText value="#{record.buyerName}"/>
+                            </p:column>
+                            <p:column headerText="房屋类型" style="text-align:center" filterBy="#{record.houseType}"
+                                      filterOptions="#{refundAction.houseTypeOptions}"
+                                      filterMatchMode="exact">
+                                <h:outputText value="#{refundAction.houseType.valueOfAlias(record.houseType).title}"/>
+                            </p:column>
+                            <p:column headerText="房款总价">
+                                <h:outputText value="#{record.totalAmt}" style="float: right">
+                                    <f:convertNumber type="number" pattern="#,###,###,###,##0.00"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="交易状态" style="text-align:center">
+                                <h:outputText
+                                        value="#{refundAction.contractStatus.valueOfAlias(record.statusFlag).title}"/>
+                            </p:column>
+                            <p:column headerText="操作" style="width:70px;text-align:center">
+                                <p:commandLink style="color:blue;" value="详细" update="popupwindow"
+                                               onclick="doPopupWindow(this);">
+                                </p:commandLink>
+                                <p:commandLink style="color:blue;margin-left:6px;" value="退款" update="popupwindow"
+                                               onclick="doPopupAddWindow(this);">
+                                </p:commandLink>
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+                </p:tab>
+            </p:tabView>
+        </div>
+
+    </ui:define>
+
+</ui:composition>

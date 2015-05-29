@@ -1,0 +1,177 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                template="/templates/ui.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+            .col-label {
+                width: 100px;
+                text-align: right;
+            }
+
+            .col-label2 {
+                width: 200px;
+                text-align: right;
+            }
+
+            .col-input {
+                width: 30px;
+            }
+
+            .col_remark {
+                width: 100px;
+                text-align: right;
+            }
+
+        </style>
+        <script type="text/javascript">
+            function reback() {
+                window.location.replace("contractInfoQry.xhtml");
+//                document.location.href = "contractInfoQry.xhtml";
+            }
+        </script>
+    </ui:define>
+    <ui:define name="content">
+        <div style="margin:5px;">
+            <h:form id="form">
+                <p:fieldset legend="缴款明细信息">
+                    <h:panelGrid id="detailPanel1" columns="1" cellpadding="3" border="0" style="margin-top: 15px;">
+                        <h:panelGrid columns="4" cellpadding="2" border="0"
+                                     columnClasses="col-label,col-input,col-label2,col-input">
+                            <h:outputLabel value="凭证号:"/>
+                            <h:inputText value="#{contractRecvDetlAction.selectedRecord.docNo}"
+                                         size="30" disabled="true"/>
+                            <h:outputLabel value="合同号:"/>
+                            <h:inputText value="#{contractRecvDetlAction.selectedRecord.businessNo}"
+                                         size="30" disabled="true"/>
+                            <h:outputLabel value="缴款金额:"/>
+                            <h:inputText value="#{contractRecvDetlAction.selectedRecord.plAmount}" size="30" disabled="true">
+                                <f:convertNumber pattern="###,##0.00"/>
+                            </h:inputText>
+
+                            <h:outputLabel value="申请时间:"/>
+                            <h:inputText value="#{contractRecvDetlAction.selectedRecord.applyDate}" size="30"
+                                         disabled="true">
+                                    </h:inputText>
+                            <h:outputLabel value="缴款类型:"/>
+                            <h:outputText value="#{contractRecvDetlAction.receiveType.valueOfAlias(contractRecvDetlAction.selectedRecord.receiveType).title}" size="30"
+                                         disabled="true"/>
+                        </h:panelGrid>
+                    </h:panelGrid>
+                </p:fieldset>
+                <p:fieldset legend="合同明细信息">
+                    <h:panelGrid id="detailPanel2" columns="1" cellpadding="3" border="0" style="margin-top: 15px;">
+                        <h:panelGrid columns="4" cellpadding="2" border="0"
+                                     columnClasses="col-label,col-input,col-label2,col-input">
+                            <h:outputLabel value="合同号:"/>
+                            <h:inputText value="#{contractRecvDetlAction.contract.contractNo}"
+                                         size="30" disabled="true"/>
+                            <h:outputLabel value="累计交款:"/>
+                            <h:inputText value="#{contractRecvDetlAction.contract.receiveAmt}" size="30" disabled="true">
+                                <f:convertNumber pattern="###,##0.00"/>
+                            </h:inputText>
+                        </h:panelGrid>
+                        <p:separator/>
+                        <h:panelGrid columns="4" cellpadding="2"
+                                     columnClasses="col-label,col-input,col-label2,col-input">
+                            <h:outputLabel value="房产商:"/>
+                            <h:inputText value="#{contractRecvDetlAction.contract.companyName}" size="30"
+                                         disabled="true"/>
+                            <h:outputLabel value="监管账户户名:"/>
+                            <h:inputText value="#{contractRecvDetlAction.contract.accountName}" size="30"
+                                         disabled="true"/>
+                            <h:outputLabel value="监管账号:"/>
+                            <h:inputText value="#{contractRecvDetlAction.contract.accountCode}" size="30"
+                                         disabled="true"/>
+                            <h:outputLabel value="开户行:"/>
+                            <h:inputText value="#{contractRecvDetlAction.contract.hsBankName}" size="30"
+                                         disabled="true"/>
+                            <h:outputLabel value="买方姓名:"/>
+                            <h:inputText value="#{contractRecvDetlAction.contract.buyerName}" size="30"
+                                         disabled="true"/>
+                            <h:outputLabel value="买方证件类型:"/>
+                            <h:inputText value="#{contractRecvDetlAction.contract.buyerCertType}" size="30"
+                                         disabled="true"/>
+                            <h:outputLabel value="买方证件号:"/>
+                            <h:inputText value="#{contractRecvDetlAction.contract.buyerCertNo}" size="30"
+                                         disabled="true"/>
+                            <h:outputLabel value="买方户名:"/>
+                            <h:inputText value="#{contractRecvDetlAction.contract.buyerAccName}" size="30"
+                                         disabled="true"/>
+                            <h:outputLabel value="买方账号:"/>
+                            <h:inputText value="#{contractRecvDetlAction.contract.buyerAccCode}" size="30"
+                                         disabled="true"/>
+                            <h:outputLabel value="买方开户行:"/>
+                            <h:inputText value="#{contractRecvDetlAction.contract.buyerBankName}" size="30"
+                                         disabled="true"/>
+                        </h:panelGrid>
+                        <p:separator/>
+
+                        <h:panelGrid columns="4" cellpadding="2"
+                                     columnClasses="col-label,col-input,col-label2,col-input">
+                            <h:outputLabel value="房屋地址:"/>
+                            <h:inputText value="#{contractRecvDetlAction.contract.houseAddress}" size="30"
+                                         disabled="true"/>
+                            <h:outputLabel value="房屋类型:"/>
+                            <h:inputText value="#{contractRecvDetlAction.contract.houseType}" size="30"
+                                         disabled="true"/>
+                            <h:outputLabel value="房屋楼栋号:"/>
+                            <h:inputText valu..e="#{contractRecvDetlAction.contract.houseNo}" size="30"
+                                         disabled="true"/>
+                        </h:panelGrid>
+                        <p:separator/>
+
+                        <h:panelGrid columns="4" cellpadding="2"
+                                     columnClasses="col-label,col-input,col-label2,col-input">
+                            <h:outputLabel value="房屋总价:"/>
+                            <h:inputText value="#{contractRecvDetlAction.contract.totalAmt}" size="30"
+                                         disabled="true">
+                                <f:convertNumber pattern="###,##0.00"/>
+                            </h:inputText>
+                            <h:outputLabel value="定金:"/>
+                            <h:inputText value="#{contractRecvDetlAction.contract.earnestAmt}" size="30"
+                                         disabled="true">
+                                <f:convertNumber pattern="###,##0.00"/>
+                            </h:inputText>
+                            <h:outputLabel value="首付款:"/>
+                            <h:inputText value="#{contractRecvDetlAction.contract.firstAmt}" size="30"
+                                         disabled="true">
+                                <f:convertNumber pattern="###,##0.00"/>
+                            </h:inputText>
+                            <h:outputLabel value="贷款:"/>
+                            <h:inputText value="#{contractRecvDetlAction.contract.loanAmt}" size="30" disabled="true">
+                                <f:convertNumber pattern="###,##0.00"/>
+                            </h:inputText>
+
+                        </h:panelGrid>
+                        <h:panelGrid columns="4" cellpadding="2"
+                                     columnClasses="col-label,col-input,col-label2,col-input">
+                            <h:outputLabel value="超标金额:"/>
+                            <h:inputText value="#{contractRecvDetlAction.contract.overAmt}" size="30" disabled="true">
+                                <f:convertNumber pattern="###,##0.00"/>
+                            </h:inputText>
+                            <h:outputLabel value="财政专户账号:"/>
+                            <h:inputText value="#{contractRecvDetlAction.contract.treAccCode}" size="30"
+                                         disabled="true"/>
+                            <h:outputLabel value="财政专户户名:"/>
+                            <h:inputText value="#{contractRecvDetlAction.contract.treAccName}" size="30"
+                                         disabled="true"/>
+                            <h:outputLabel value="财政专户开户行:"/>
+                            <h:inputText value="#{contractRecvDetlAction.contract.treBankName}" size="30"
+                                         disabled="true"/>
+                        </h:panelGrid>
+                        <h:panelGrid columns="2" cellpadding="2" border="0"
+                                     columnClasses="col_remark" width="100%">
+                            <h:outputLabel value="备注:"/>
+                            <h:inputTextarea value="#{contractRecvDetlAction.contract.remark}"
+                                             style="height:50px;width:100%;" disabled="true"></h:inputTextarea>
+                        </h:panelGrid>
+                    </h:panelGrid>
+                </p:fieldset>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

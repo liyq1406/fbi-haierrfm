@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xmlns:jms="http://www.springframework.org/schema/jms"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation=" http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+             http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+             http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.0.xsd
+             http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+             http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+             http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms-3.0.xsd">
+
+    <context:property-placeholder location="classpath:credit.properties"/>
+    <!-- 配置数据库连接池 -->
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${pub.platform.db.ConnectionManager.sDBDriver}"/>
+        <property name="url" value="${pub.platform.db.ConnectionManager.sConnStr}"/>
+        <property name="username" value="${pub.platform.db.ConnectionManager.user}"/>
+        <property name="password" value="${pub.platform.db.ConnectionManager.passwd}"/>
+        <property name="maxActive" value="15"/>
+        <property name="maxIdle" value="5"/>
+    </bean>
+
+    <!-- transaction manager, use JtaTransactionManager for global tx -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!-- enable component scanning (beware that this does not enable mapper scanning!) -->
+    <context:component-scan base-package="fdc,platform"/>
+
+    <!-- enable autowire -->
+    <context:annotation-config/>
+
+    <!--<tx:jta-transaction-manager />-->
+
+    <!-- enable transaction demarcation with annotations -->
+    <tx:annotation-driven/>
+
+    <!-- define the SqlSessionFactory, notice that configLocation is not needed when you use MapperFactoryBean -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <!--<property name="configLocation" value="classpath:mybatisConfig.xml"/>-->
+        <property name="mapperLocations">
+            <list>
+                <value>classpath:rfm/qd/repository/mapper/**/*.xml</value>
+                <value>classpath:platform/repository/mapper/**/*.xml</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- scan for mappers and let them be autowired -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="platform.repository.dao,rfm.qd.repository.dao"/>
+    </bean>
+
+    <!--quartz-->
+    <bean id="autoSendLoanTxnsJobDetailBean"
+          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="cbusFdcActtxnService"/>
+        <property name="targetMethod" value="autoSendLoanTxns"/>
+        <property name="concurrent" value="false"/>
+    </bean>
+    <bean id="autoSendLoanTxnsCronTriggerBean" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail" ref="autoSendLoanTxnsJobDetailBean"/>
+        <property name="cronExpression" value="0 0 8 * * ?"/>
+    </bean>
+
+    <bean id="autoQryTxnsJobDetailBean"
+          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="cbusFdcActtxnService"/>
+        <property name="targetMethod" value="qrySaveTodayCbusTxnsAndBals"/>
+        <property name="concurrent" value="false"/>
+    </bean>
+    <bean id="autoQryTxnsCronTriggerBean" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail" ref="autoQryTxnsJobDetailBean"/>
+        <!--  每隔一小时 8：30 到 17：30 -->
+        <!--<property name="cronExpression" value="0 30 8-17 * * ?"/>-->
+        <property name="cronExpression" value="0 30 8-17 * * ?"/>
+    </bean>
+
+    <!-- 设置调度 -->
+    <bean id="myScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="autoSendLoanTxnsCronTriggerBean"/>
+                <ref bean="autoQryTxnsCronTriggerBean"/>
+            </list>
+        </property>
+        <property name="quartzProperties">
+            <props>
+                <prop key="org.quartz.threadPool.threadCount">1</prop>
+                <prop key="org.quartz.scheduler.instanceId">AUTO</prop>
+            </props>
+        </property>
+    </bean>
+</beans>

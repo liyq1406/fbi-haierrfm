@@ -1,0 +1,133 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                template="/templates/ui.xhtml">
+
+    <ui:define name="head">
+        <script type="text/javascript" src="#{request.contextPath}/UI/support/pub.js" charset="GBK"/>
+        <script type="text/javascript">
+            function doPopupWindow(obj) {
+                var pkid = obj.parentNode.parentNode.childNodes[0].innerHTML;
+                popupwindow = window.open("cbusPayoutPrintDetl.xhtml?action=print&amp;pkid=" + pkid, "popupwindow", "height=600,width=800,left=200,top=100,toolbar=no,menubar=no,scrollbars=yes,location=no");
+                popupwindow.focus;
+            }
+        </script>
+        <style type="text/css">
+            .input-col-m {
+                width: 60px;
+            }
+
+            .input-col-l {
+                width: 80px;
+            }
+
+            .input-col-xxl {
+                width: 1%;
+                text-align: right;
+            }
+
+            .col-80 {
+            }
+
+            .col-20 {
+                width: 5%;
+            }
+        </style>
+
+    </ui:define>
+
+    <ui:define name="content">
+        <div style="margin:5px;">
+            <p:tabView style="font-weight:normal;font-style:normal" id="tabview" dynamic="true" cache="false">
+                <p:tab title="入账结果不明记录清单">
+                    <div>
+                        <p:growl life="2000" id="msgs" showDetail="false"/>
+                        <h:form id="form5">
+                            <p:menubar>
+                                <p:menuitem type="push" value="重新复核" icon="ui-icon ui-icon-document"
+                                            action="#{cbusPayoutExecAction.onReCheck}"
+                                            update="msgs, pdt"
+                                            ajax="true"/>
+                                <p:menuitem type="push" value="已入账" icon="ui-icon ui-icon-document"
+                                            action="#{cbusPayoutExecAction.onAlreadyExec}"
+                                            update="msgs, pdt"
+                                            ajax="true"/>
+                            </p:menubar>
+                            <p:ajaxStatus style="height:18px;text-align:center">
+                                <f:facet name="start">
+                                    <h:graphicImage value="/images/ajaxloadingbar.gif"/>
+                                </f:facet>
+                                <f:facet name="complete">
+                                    <h:outputText value=""/>
+                                </f:facet>
+                            </p:ajaxStatus>
+                            <p:dataTable id="pdt" style="width:100%;"
+                                         dynamic="true" selection="#{cbusPayoutExecAction.selectedRecords}"
+                                         value="#{cbusPayoutExecAction.payFailList}" var="record"
+                                         paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         paginator="true" rows="15" paginatorPosition="bottom"
+                                         rowsPerPageTemplate="100,50,30,15,5"
+                                         emptyMessage="数据记录为空...">
+                                <f:facet name="header">
+                                    实际用款入账未发送记录
+                                </f:facet>
+                                <p:column style="display:none;" headerText="pkid">
+                                    <h:outputText value="#{record.pkId}"/>
+                                </p:column>
+
+                                <p:column selectionMode="multiple"/>
+
+                                <p:column headerText="凭证号" style="text-align:center">
+                                    <h:outputText value="#{record.docNo}"/>
+                                </p:column>
+
+                                <p:column headerText="付款开发商" style="text-align:center"
+                                          filterBy="#{record.payCompanyName}">
+                                    <h:outputText value="#{record.payCompanyName}"/>
+                                </p:column>
+
+                                <p:column headerText="付款监管账号" style="text-align:center" filterBy="#{record.payAccount}">
+                                    <h:outputText value="#{record.payAccount}"/>
+                                </p:column>
+
+                                <p:column headerText="收款方户名" style="text-align:left"
+                                          filterBy="#{record.recCompanyName}">
+                                    <h:outputText value="#{record.recCompanyName}"/>
+                                </p:column>
+
+                                <p:column headerText="收款方账号" style="text-align:center" filterBy="#{record.recAccount}">
+                                    <h:outputText value="#{record.recAccount}"/>
+                                </p:column>
+
+                                <p:column headerText="申请金额" style="text-align:center">
+                                    <h:outputText value="#{record.plAmount}" style="float:right">
+                                        <f:convertNumber pattern="#,###,###,###,##0.00"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="记账日期" style="text-align:center;">
+                                    <h:outputText value="#{record.createdDate}">
+                                        <f:convertDateTime pattern="yyyyMMdd HH:mm:ss"
+                                                           timeZone="GMT+08:00"/>
+                                    </h:outputText>
+                                </p:column>
+
+                                <p:column headerText="状态标志" style="text-align:right">
+                                    <h:outputText
+                                            value="#{payoutAction.workResult.valueOfAlias(record.workResult).title}"/>
+                                </p:column>
+
+                                <p:column headerText="操作" style="text-align:center">
+                                    <p:commandLink value="详细" style="color:blue" update="popupwindow"
+                                                   onclick="doPopupWindow(this);"/>
+                                </p:column>
+
+                            </p:dataTable>
+                        </h:form>
+                    </div>
+                </p:tab>
+            </p:tabView>
+        </div>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,120 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                template="/templates/ui.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+            .col-label {
+                width: 130px;
+                text-align: right;
+            }
+
+            .col-label2 {
+                width: 130px;
+                text-align: right;
+            }
+
+            .col-input {
+                width: 30px;
+            }
+
+            .col_remark {
+                width: 100px;
+                text-align: right;
+            }
+
+            .buttontab {
+                margin-top: 15px;
+                text-align: center;
+            }
+        </style>
+        <script type="text/javascript" src="#{request.contextPath}/js/jquery-1.6.js"/>
+        <script type="text/javascript">
+            var Flag = "none";
+            function changeRtnFlag(param) {
+                Flag = param;
+            }
+            function rtnScript(rtnflag) {
+                if (rtnflag == "true") {
+                    alert("操作成功！");
+                    window.returnValue = "1";
+                    window.close();
+                } else {
+                    alert("操作失败！");
+                    window.returnValue = "0";
+                    window.close();
+                }
+            }
+            document.onkeydown = function TabReplace() {
+                if (event.keyCode == 13) {
+                    if (event.srcElement.getAttribute("id") != 'editForm:btnSave')
+                        event.keyCode = 9;
+                }
+            }
+            function form_Init() {
+                var arg = window.dialogArguments;
+                if (arg) {
+                    var operation = arg.doType;
+                    if (operation != "add") {
+                        if (operation == "select") {
+                            $("input").disabled = "true";
+                        }
+                    }
+                }
+            }
+        </script>
+        <base target="_self"/>
+    </ui:define>
+    <ui:define name="content">
+        <div style="margin:5px;">
+            <h:messages id="msgs" showDetail="true"/>
+            <h:form id="editForm">
+                <h:inputHidden value="#{companyEditAction.fdccompany.pkId}"/>
+                <h:outputText id="rntFlag" escape="false" value="#{companyEditAction.rtnFlag}"/>
+                <p:fieldset legend="【房地产开发商基本信息】表单">
+                    <h:panelGrid id="detailPanel1" columns="1" cellpadding="3" border="0" style="margin-top: 15px;">
+                        <h:panelGrid columns="4" cellpadding="2"
+                                     columnClasses="col-label,col-input,col-label2,col-input">
+                            <h:outputLabel value="* 【房产商名称】:"/>
+                            <h:inputText autocomplete="off" id="companyName" size="40" required="true"
+                                         requiredMessage="房产商名称不能为空！"
+                                         value="#{companyEditAction.fdccompany.companyName}"
+                                         onfocus="this.select()"/>
+                            <h:outputLabel value="房产商简称:" for="shortName"/>
+                            <h:inputText autocomplete="off" id="shortName" size="40"
+                                         value="#{companyEditAction.fdccompany.companyShrtName}">
+                            </h:inputText>
+
+                            <h:outputLabel value="法定代表人:" for="mngrName"/>
+                            <h:inputText autocomplete="off" id="mngrName" size="40" value="#{companyEditAction.fdccompany.mngrName}">
+                            </h:inputText>
+
+                            <h:outputLabel value="营业执照:"/>
+                            <h:inputText id="tradLicenceNo" value="#{companyEditAction.fdccompany.tradLicenceNo}"
+                                         size="40"/>
+
+                            <h:outputLabel value="公司地址:"/>
+                            <h:inputText id="address" value="#{companyEditAction.fdccompany.address}"
+                                         size="40"/>
+                            <h:outputLabel/><h:outputLabel/>
+                        </h:panelGrid>
+                    </h:panelGrid>
+                </p:fieldset>
+                <p:fieldset legend="操作">
+                    <h:panelGrid styleClass="buttontab" columns="1" border="0" width="100%">
+                        <h:panelGroup>
+                            <h:commandButton id="btnSave" rendered="true"
+                                             action="#{companyEditAction.onBtnSaveClick}" value="保存"/>
+                            <h:commandButton immediate="true" rendered="true" value="取消" style="margin-left: 10px"
+                                             onclick="window.close();return false;"/>
+                        </h:panelGroup>
+
+                    </h:panelGrid>
+                </p:fieldset>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

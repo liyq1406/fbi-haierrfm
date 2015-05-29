@@ -1,0 +1,9 @@
+open 188.168.1.141
+bbc
+bbc
+cd ////
+bin
+mput *.rar
+y
+by
+ 
