@@ -22,7 +22,6 @@
 <%@page import="java.util.*"%>
 <%
 OperatorManager omgr = (OperatorManager) session.getAttribute(SystemAttributeNames.USER_INFO_NAME);
-
     //TODO 需先检测是否已存在此cookie
     Cookie cookie = new Cookie("usernamecookie", "aaa1");
     cookie.setMaxAge(365 * 24 * 60 * 60); //保存365天
@@ -32,8 +31,6 @@ OperatorManager omgr = (OperatorManager) session.getAttribute(SystemAttributeNam
     cookie.setPath("/pages");
     cookie.setMaxAge(365 * 24 * 60 * 60); //保存365天
     response.addCookie(cookie);
-
-
 %>
 <html>
   <head>

@@ -1,4 +1,4 @@
-package platform.generator;
+package generator;
 
 import org.mybatis.generator.api.MyBatisGenerator;
 import org.mybatis.generator.config.Configuration;

@@ -10,22 +10,19 @@
     <script type="text/javascript">
         var status = 1;
         function switchSysBar() {
-
             if (1 == window.status) {
                 window.status = 0;
-                //                document.getElementById("switchPoint").innerHTML = '<img src="<%=path%>/images/rightarrow.gif" title="Õ¹¿ª×óÀ¸" />';
+                //document.getElementById("switchPoint").innerHTML = '<img src="<%=path%>/images/rightarrow.gif" title="Õ¹¿ª×óÀ¸" />';
                 document.getElementById("switchPoint").innerHTML = '<img src="../../images/splitter_r.gif" title="Õ¹¿ª×óÀ¸" />';
                 parent.document.getElementById("menuFrame").cols = "0,12,*";
             }
             else {
                 window.status = 1;
-                //                document.getElementById("switchPoint").innerHTML = '<img src="<%=path%>/images/leftarrow.gif" title="Òþ²Ø×óÀ¸" />';
+                //document.getElementById("switchPoint").innerHTML = '<img src="<%=path%>/images/leftarrow.gif" title="Òþ²Ø×óÀ¸" />';
                 document.getElementById("switchPoint").innerHTML = '<img src="../../images/splitter_l.gif" title="Òþ²Ø×óÀ¸" align="right" />';
                 parent.document.getElementById("menuFrame").cols = "200,12,*";
             }
         }
-
-
     </script>
 </head>
 <%--<body leftmargin="0" topmargin="0" rightmargin="0" bottommargin="0" scroll="no" style="background-color:#cddcf0">--%>
@@ -39,8 +36,8 @@
                     <td onmouseover="this.style.cursor='hand'" onmouseout="this.style.cursor='default'" title="Òþ²Ø²Ëµ¥"
                         align="right" id="switchPoint">
                         <%--<span id="switchPoint"><img src="<%=contextPath%>/images/leftarrow.gif" title="Òþ²Ø×óÀ¸">--%>
-                        <span id="switchPoint"><img src="<%=path %>/images/splitter_l.gif" title="Òþ²Ø×óÀ¸"
-                                                    align="right"></span>
+                        <span id="switchPoint">
+                            <img src="<%=path %>/images/splitter_l.gif" title="Òþ²Ø×óÀ¸" align="right"></span>
                     </td>
                 </tr>
             </table>

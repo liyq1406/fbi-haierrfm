@@ -44,7 +44,7 @@ public class SendLogAction {
         logger.info(monthAgo);
         logger.info(today);
         sendLogList = sendLogService.qrySendLogs(monthAgo, today, "");
-        txnResultOptions = new ArrayList<SelectItem>();
+        txnResultOptions = new ArrayList<>();
         txnResultOptions.add(new SelectItem("", ""));
         txnResultOptions.add(new SelectItem(SendLogResult.SEND_ERR.getCode(), SendLogResult.SEND_ERR.getTitle()));
         txnResultOptions.add(new SelectItem(SendLogResult.QRYED_ERR.getCode(), SendLogResult.QRYED_ERR.getTitle()));
