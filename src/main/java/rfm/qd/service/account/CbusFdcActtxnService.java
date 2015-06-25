@@ -7,7 +7,7 @@ import rfm.qd.gateway.cbus.domain.txn.QDJG01Res;
 import rfm.qd.gateway.cbus.domain.txn.QDJG02Res;
 import rfm.qd.gateway.domain.CommonRes;
 import rfm.qd.gateway.domain.T000.T0007Req;
-import rfm.qd.gateway.service.CbusTxnService;
+import rfm.qd.gateway.service.QdSbsTxnService;
 import rfm.qd.gateway.utils.StringUtil;
 import rfm.qd.repository.dao.QdCbsAccTxnMapper;
 import rfm.qd.repository.dao.QdRsSendLogMapper;
@@ -37,7 +37,7 @@ public class CbusFdcActtxnService {
     @Autowired
     private AccountService accountService;
     @Autowired
-    private CbusTxnService cbusTxnService;
+    private QdSbsTxnService qdSbsTxnService;
     @Autowired
     private QdCbsAccTxnMapper qdCbsAccTxnMapper;
     @Autowired
@@ -109,7 +109,7 @@ public class CbusFdcActtxnService {
         String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
         List<QdRsAccount> accountList = accountService.qryAllMonitRecords();
         for (QdRsAccount account : accountList) {
-            QDJG01Res res01 = cbusTxnService.qdjg01QryActbal(account.getAccountCode());
+            QDJG01Res res01 = qdSbsTxnService.qdjg01QryActbal(account.getAccountCode());
             account.setBalance(new BigDecimal(res01.actbal));
             account.setBalanceUsable(new BigDecimal(res01.avabal));
             accountService.updateRecord(account);
@@ -124,7 +124,7 @@ public class CbusFdcActtxnService {
         int cnt = 0;
         try {
             for (QdRsAccount account : accountList) {
-                List<QDJG02Res> resList = cbusTxnService.qdjg02qryActtxnsByParams(account.getAccountCode(), startDate, endDate);
+                List<QDJG02Res> resList = qdSbsTxnService.qdjg02qryActtxnsByParams(account.getAccountCode(), startDate, endDate);
                 for (QDJG02Res res : resList) {
                     for (QDJG02Res.TxnRecord txnRecord : res.recordList) {
                         QdCbsAccTxn qdCbsAccTxn = new QdCbsAccTxn();

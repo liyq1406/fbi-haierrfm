@@ -38,10 +38,10 @@ public class ClientTest {
     static String miStr = "bd0f42ed9acbce34291ef663b47bd46f49850abf36e3f68265126a7c9d09bcd135b6e7c45d4c0d45f808b7098d3e5c42740996637d565bf54c21bc6392770c9b4a49c88b7ab2d4c0d5d27ddb0bc42b337fdba3fc75c4bb53d16b356cede675df37a9b20fc6cc574a1c65b0e02c84da8cce407b0233f002dc51e6bb2ef4546625ef41674a0f3cfee3e0030c949048debc989fb3cd082d6311e8583358dab2beac397dda02da0e8cfe2e6249fc5b9c78c82644711bdc0c039108fa29678cd5a6e4a411911cc80c1cb1d4a015403ce9ec68505622bbed1557aa72b9b8f34375d378db437eff353986e146f39be3f2c1d18e7fd8bbaca8ea3df17fcf86409fb209ec3a0a9e27ba761af4a0460c3be1aa37054c47c52f128eb7d04de430d5524be1f04c12e3690ff73b8ec6c8873eb22179b55ffae9576361b5a14c12e3690ff73b8e72b9b8f34375d378e1df92b50e3dc41740fc776615209ceafcce38584c3718a807ea9e0c6665ee69ce99d37d9eb1a141a6e751206b80b63700b7a9e03b14c76905498b5e84a4070cce99d37d9eb1a14114bea955baeb65e6e4db6ac602905d18b4e2dfa1ea64ee85380144c5a49fd29ffc83ddf6f495f21f5896f9ec7308c75d9316f8d861f1f087ec76a7001bd37dfc7931af06b10406959e88d59619f841a8fba3a61298c07e2f6e5865ce6ad4a43b97e87612290ce72083a525c7cb59451e0742d4d3c9696630477b1a2b0d1bf33075bec893738e3d10dd7ee84251ad61fa310b142b9826a03875bec893738e3d1009a9fea0b278868be6f517c5d4f0ce4c";
 
     public static void testSendData(String dataGram) {
-        XSocketComponent xSocketComponent = new XSocketComponent();
+        TaSocketComponent taSocketComponent = new TaSocketComponent();
         String recvMsg = null;
         try {
-            recvMsg = xSocketComponent.sendAndRecvDataByBlockConn(dataGram);
+            recvMsg = taSocketComponent.sendAndRecvDataByBlockConn(dataGram);
         } catch (Exception e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }

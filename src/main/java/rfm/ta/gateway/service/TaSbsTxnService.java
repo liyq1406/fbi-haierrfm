@@ -23,8 +23,8 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 @Service
-public class CbusTxnService {
-    private static Logger logger = LoggerFactory.getLogger(CbusTxnService.class);
+public class TaSbsTxnService {
+    private static Logger logger = LoggerFactory.getLogger(TaSbsTxnService.class);
 
     private static final String CBUS_SERVER_IP = PropertyManager.getProperty("bank.core.server.ip");
     private static final int CBUS_SERVER_PORT = PropertyManager.getIntProperty("bank.core.server.port");

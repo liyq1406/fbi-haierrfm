@@ -48,6 +48,7 @@
         <property name="mapperLocations">
             <list>
                 <value>classpath:rfm/qd/repository/mapper/**/*.xml</value>
+                <value>classpath:rfm/ta/repository/mapper/**/*.xml</value>
                 <value>classpath:platform/repository/mapper/**/*.xml</value>
             </list>
         </property>
@@ -55,7 +56,7 @@
 
     <!-- scan for mappers and let them be autowired -->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="platform.repository.dao,rfm.qd.repository.dao"/>
+        <property name="basePackage" value="platform.repository.dao,rfm.qd.repository.dao,rfm.ta.repository.dao"/>
     </bean>
 
     <!--quartz-->

@@ -16,7 +16,7 @@ public class ContainerManager {
     public static void init() {
         logger.info("... Container Manager 初始化开始.......");
         context = new ClassPathXmlApplicationContext(new String[]{"applicationContext-socket.xml"});
-        XSocketManager manager = (XSocketManager)getBean("xSocketManager");
+        TaXSocketManager manager = (TaXSocketManager)getBean("taXSocketManager");
         manager.init();
     }
 

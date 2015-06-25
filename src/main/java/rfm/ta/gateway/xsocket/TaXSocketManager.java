@@ -5,24 +5,24 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import platform.service.SystemService;
-import rfm.ta.gateway.xsocket.server.XSocketServer;
+import rfm.ta.gateway.xsocket.server.TaXSocketServer;
 
-@Component("xSocketManager")
-public class XSocketManager {
+@Component("taXSocketManager")
+public class TaXSocketManager {
 
-    private static final Logger logger = LoggerFactory.getLogger(XSocketManager.class);
+    private static final Logger logger = LoggerFactory.getLogger(TaXSocketManager.class);
     private static final long serialVersionUID = -5534543207744847501L;
     @Autowired
-    private XSocketServer xSocketServer;
+    private TaXSocketServer taXSocketServer;
 
-    public XSocketManager() {
+    public TaXSocketManager() {
     }
 
     // 初始化
     public void init() {
         printLine();
         try {
-            xSocketServer.start();
+            taXSocketServer.start();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -35,20 +35,20 @@ public class XSocketManager {
     public void destroy() {
         printLine();
         try {
-            xSocketServer.stop();
-            xSocketServer = null;
+            taXSocketServer.stop();
+            taXSocketServer = null;
         } catch (Exception e) {
             throw new RuntimeException("Socket Server 销毁时发生异常 !");
         }
         printLine();
     }
 
-    public XSocketServer getxSocketServer() {
-        return xSocketServer;
+    public TaXSocketServer getTaXSocketServer() {
+        return taXSocketServer;
     }
 
-    public void setxSocketServer(XSocketServer xSocketServer) {
-        this.xSocketServer = xSocketServer;
+    public void setTaXSocketServer(TaXSocketServer taXSocketServer) {
+        this.taXSocketServer = taXSocketServer;
     }
 
     private static void printLine() {

@@ -3,7 +3,7 @@ package rfm.qd.view.account;
 import rfm.qd.common.constant.AccountStatus;
 import rfm.qd.common.constant.LimitStatus;
 import rfm.qd.gateway.cbus.domain.txn.QDJG01Res;
-import rfm.qd.gateway.service.CbusTxnService;
+import rfm.qd.gateway.service.QdSbsTxnService;
 import rfm.qd.repository.model.QdRsAccount;
 import rfm.qd.service.account.AccountService;
 import rfm.qd.service.company.CompanyService;
@@ -35,8 +35,8 @@ public class AccountAction {
     private AccountService accountService;
     @ManagedProperty(value = "#{companyService}")
     private CompanyService companyService;
-    @ManagedProperty(value = "#{cbusTxnService}")
-    private CbusTxnService cbusTxnService;
+    @ManagedProperty(value = "#{qdSbsTxnService}")
+    private QdSbsTxnService qdSbsTxnService;
     private QdRsAccount account;
     private List<QdRsAccount> accountList;
     private String confirmAccountNo;
@@ -53,7 +53,7 @@ public class AccountAction {
 
     public String qrybal() {
         try {
-            QDJG01Res res = cbusTxnService.qdjg01QryActbal(account.getAccountCode());
+            QDJG01Res res = qdSbsTxnService.qdjg01QryActbal(account.getAccountCode());
             if (!"00".equals(res.getHeader().getRtnCode())) {
                 MessageUtil.addError("≤È—Ø”‡∂Ó ß∞‹." + res.rtnMsg);
                 return null;
@@ -118,12 +118,12 @@ public class AccountAction {
         return null;
     }
 
-    public CbusTxnService getCbusTxnService() {
-        return cbusTxnService;
+    public QdSbsTxnService getQdSbsTxnService() {
+        return qdSbsTxnService;
     }
 
-    public void setCbusTxnService(CbusTxnService cbusTxnService) {
-        this.cbusTxnService = cbusTxnService;
+    public void setQdSbsTxnService(QdSbsTxnService qdSbsTxnService) {
+        this.qdSbsTxnService = qdSbsTxnService;
     }
 
     public AccountService getAccountService() {

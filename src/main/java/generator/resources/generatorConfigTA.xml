@@ -58,10 +58,6 @@
             <property name="ignoreQualifiersAtRuntime" value="true"/>
             <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
         </table>
-        <table tableName="TA_BI_TRADE">
-            <property name="ignoreQualifiersAtRuntime" value="true" />
-            <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
-        </table>
         <table tableName="TA_BI_TRADE_LOG">
             <property name="ignoreQualifiersAtRuntime" value="true" />
             <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>

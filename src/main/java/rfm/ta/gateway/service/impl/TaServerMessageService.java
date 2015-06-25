@@ -12,19 +12,19 @@ import rfm.qd.common.constant.ContractStatus;
 import rfm.qd.common.constant.TradeType;
 import rfm.qd.repository.model.*;
 import rfm.qd.service.account.CbusFdcActtxnService;
-import rfm.ta.gateway.sbs.domain.txn.QDJG01Res;
-import rfm.ta.gateway.fdc.BaseBean;
-import rfm.ta.gateway.fdc.CommonRes;
-import rfm.ta.gateway.fdc.T000.T0001Req;
-import rfm.ta.gateway.fdc.T000.T0001Res;
-import rfm.ta.gateway.fdc.T000.T0002Req;
-import rfm.ta.gateway.fdc.T000.T0002Res;
-import rfm.ta.gateway.fdc.T200.*;
-import rfm.ta.gateway.service.BiDbService;
-import rfm.ta.gateway.service.CbusTxnService;
-import rfm.ta.gateway.service.IMessageService;
-import rfm.ta.gateway.utils.BiRtnCode;
-import rfm.ta.gateway.utils.StringUtil;
+import rfm.qd.gateway.cbus.domain.txn.QDJG01Res;
+import rfm.qd.gateway.domain.BaseBean;
+import rfm.qd.gateway.domain.CommonRes;
+import rfm.qd.gateway.domain.T000.T0001Req;
+import rfm.qd.gateway.domain.T000.T0001Res;
+import rfm.qd.gateway.domain.T000.T0002Req;
+import rfm.qd.gateway.domain.T000.T0002Res;
+import rfm.qd.gateway.domain.T200.*;
+import rfm.qd.gateway.service.QdBiDbService;
+import rfm.qd.gateway.service.QdSbsTxnService;
+import rfm.qd.gateway.service.IMessageService;
+import rfm.qd.gateway.utils.BiRtnCode;
+import rfm.qd.gateway.utils.StringUtil;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -38,13 +38,13 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 @Service
-public class ServerMessageService implements IMessageService {
+public class TaServerMessageService implements IMessageService {
 
-    private static final Logger logger = LoggerFactory.getLogger(ServerMessageService.class);
+    private static final Logger logger = LoggerFactory.getLogger(TaServerMessageService.class);
     @Autowired
-    private BiDbService biDbService;
+    private QdBiDbService biDbService;
     @Autowired
-    private CbusTxnService cbusTxnService;
+    private QdSbsTxnService cbusTxnService;
     @Autowired
     private CbusFdcActtxnService cbusFdcActtxnService;
 

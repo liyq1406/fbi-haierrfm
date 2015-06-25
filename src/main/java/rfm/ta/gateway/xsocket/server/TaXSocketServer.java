@@ -8,7 +8,7 @@ import org.xsocket.connection.IConnection.FlushMode;
 import org.xsocket.connection.IServer;
 import org.xsocket.connection.Server;
 import pub.platform.advance.utils.PropertyManager;
-import rfm.ta.gateway.xsocket.server.impl.ServerHandler;
+import rfm.ta.gateway.xsocket.server.impl.TaServerHandlerTa;
 
 import java.io.IOException;
 
@@ -18,19 +18,19 @@ import java.io.IOException;
  * @author zxb
  */
 @Component
-public class XSocketServer {
+public class TaXSocketServer {
 
-    private static final Logger logger = LoggerFactory.getLogger(XSocketServer.class);
+    private static final Logger logger = LoggerFactory.getLogger(TaXSocketServer.class);
     private static final int PORT = PropertyManager.getIntProperty("socket_server_monitor_port");
 
     private IServer server;
     @Autowired
-    private ServerHandler serverHandler;
+    private TaServerHandlerTa taServerHandler;
 
-    public XSocketServer() {
+    public TaXSocketServer() {
     }
     private void init() throws IOException {
-        this.server = new Server(PORT, serverHandler);
+        this.server = new Server(PORT, taServerHandler);
         this.server.setFlushmode(FlushMode.ASYNC);   // “Ï≤Ω
     }
 

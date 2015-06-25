@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xsocket.connection.INonBlockingConnection;
 import rfm.ta.gateway.service.IMessageService;
-import rfm.ta.gateway.service.impl.ClientMessageService;
+import rfm.ta.gateway.service.impl.TaClientMessageService;
 import rfm.ta.gateway.xsocket.client.IClientHandler;
 
 import java.io.IOException;
@@ -19,7 +19,7 @@ import java.nio.BufferUnderflowException;
 public class ClientHandler implements IClientHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(ClientHandler.class);
-    private IMessageService messageService = new ClientMessageService();
+    private IMessageService messageService = new TaClientMessageService();
 
     /**
      * 连接的成功时的操作

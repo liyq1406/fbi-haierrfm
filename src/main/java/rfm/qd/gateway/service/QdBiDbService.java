@@ -1,14 +1,15 @@
-package rfm.ta.gateway.service;
+package rfm.qd.gateway.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import rfm.qd.common.constant.ChangeFlag;
 import rfm.qd.common.constant.ContractStatus;
 import rfm.qd.repository.dao.*;
 import rfm.qd.repository.model.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.List;
 
 /**
@@ -19,7 +20,7 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 @Service
-public class BiDbService {
+public class QdBiDbService {
 
     @Autowired
     private QdRsAccountMapper accountMapper;
@@ -234,7 +235,7 @@ public class BiDbService {
      * @param fromDate
      * @param toDate
      * @return
-     * @throws java.text.ParseException
+     * @throws ParseException
      */
     public List<QdRsAccDetail> selectAccDetailsByCodeNameDate(String accountCode, String accountName, String fromDate, String toDate) {
         QdRsAccDetailExample example = new QdRsAccDetailExample();

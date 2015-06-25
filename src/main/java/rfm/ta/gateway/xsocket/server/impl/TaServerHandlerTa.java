@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.xsocket.connection.IDataHandler;
 import org.xsocket.connection.INonBlockingConnection;
-import rfm.ta.gateway.service.impl.ServerMessageService;
+import rfm.ta.gateway.service.impl.TaServerMessageService;
 import rfm.ta.gateway.xsocket.crypt.des.DesCrypter;
-import rfm.ta.gateway.xsocket.server.IServerHandler;
+import rfm.ta.gateway.xsocket.server.TaIServerHandler;
 
 import java.io.IOException;
 import java.nio.BufferUnderflowException;
@@ -19,11 +19,11 @@ import java.nio.BufferUnderflowException;
  * @author zxb
  */
 @Component
-public class ServerHandler implements IServerHandler {
+public class TaServerHandlerTa implements TaIServerHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(ServerHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(TaServerHandlerTa.class);
     @Autowired
-    private ServerMessageService serverMessageService;
+    private TaServerMessageService taServerMessageService;
 
     /**
      * 连接的成功时的操作
@@ -52,7 +52,7 @@ public class ServerHandler implements IServerHandler {
         dataLength = Integer.parseInt(connection.readStringByDelimiter("\r\n"));
         logger.info("【本地服务端】待接收密文长度：" + dataLength);
 
-        connection.setHandler(new ContentHandler(this, serverMessageService, dataLength));
+        connection.setHandler(new TaContentHandler(this, taServerMessageService, dataLength));
 
         return true;
     }
@@ -82,26 +82,26 @@ public class ServerHandler implements IServerHandler {
         return true;
     }
 
-    public ServerMessageService getServerMessageService() {
-        return serverMessageService;
+    public TaServerMessageService getTaServerMessageService() {
+        return taServerMessageService;
     }
 
-    public void setServerMessageService(ServerMessageService serverMessageService) {
-        this.serverMessageService = serverMessageService;
+    public void setTaServerMessageService(TaServerMessageService taServerMessageService) {
+        this.taServerMessageService = taServerMessageService;
     }
 }
 
-class ContentHandler implements IDataHandler {
-    private static Logger logger = LoggerFactory.getLogger(ContentHandler.class);
+class TaContentHandler implements IDataHandler {
+    private static Logger logger = LoggerFactory.getLogger(TaContentHandler.class);
     private StringBuilder encrypedStrBuilder = new StringBuilder();
-    private ServerMessageService serverMessageService;
+    private TaServerMessageService taServerMessageService;
     private int remaining = 0;
-    private ServerHandler hdl = null;
+    private TaServerHandlerTa hdl = null;
 
-    public ContentHandler(ServerHandler hdl, ServerMessageService serverMessageService, int dataLength) {
+    public TaContentHandler(TaServerHandlerTa hdl, TaServerMessageService taServerMessageService, int dataLength) {
         this.hdl = hdl;
         remaining = dataLength;
-        this.serverMessageService = serverMessageService;
+        this.taServerMessageService = taServerMessageService;
     }
 
     public boolean onData(INonBlockingConnection nbc) throws IOException {
@@ -131,7 +131,7 @@ class ContentHandler implements IDataHandler {
                 throw new RuntimeException("【本地服务端】接收到密文解码异常！");
             }
             // 处理接收到的报文，并生成响应报文
-            String responseMsg = serverMessageService.handleMessage(datagram);
+            String responseMsg = taServerMessageService.handleMessage(datagram);
             logger.info("【本地服务端】发送报文内容:" + responseMsg);
             String miStr = null;
             try {

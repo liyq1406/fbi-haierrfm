@@ -15,9 +15,9 @@ import rfm.ta.gateway.service.IMessageService;
  * To change this template use File | Settings | File Templates.
  */
 @Service
-public class ClientMessageService implements IMessageService {
+public class TaClientMessageService implements IMessageService {
 
-    private static final Logger logger = LoggerFactory.getLogger(ClientMessageService.class);
+    private static final Logger logger = LoggerFactory.getLogger(TaClientMessageService.class);
 
     public CommonRes transMsgToBean(String message) {
         return (CommonRes) BaseBean.toObject(CommonRes.class, message);

@@ -13,7 +13,7 @@ import rfm.ta.gateway.xsocket.client.impl.ClientFactory;
  * To change this template use File | Settings | File Templates.
  */
 @Component
-public class XSocketComponent {
+public class TaSocketComponent {
 
     /**
      * 发送报文，返回接收到的响应报文
@@ -21,7 +21,7 @@ public class XSocketComponent {
      * @return
      * @throws java.io.IOException
      */
-    private Logger logger = LoggerFactory.getLogger(XSocketComponent.class);
+    private Logger logger = LoggerFactory.getLogger(TaSocketComponent.class);
 
     public String sendAndRecvDataByBlockConn(String datagram) throws Exception {
 

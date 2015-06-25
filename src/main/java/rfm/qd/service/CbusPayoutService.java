@@ -3,7 +3,7 @@ package rfm.qd.service;
 import rfm.qd.common.constant.*;
 import rfm.qd.gateway.cbus.domain.txn.QDJG03Res;
 import rfm.qd.gateway.cbus.domain.txn.QDJG04Res;
-import rfm.qd.gateway.service.CbusTxnService;
+import rfm.qd.gateway.service.QdSbsTxnService;
 import rfm.qd.repository.dao.QdRsPayoutMapper;
 import rfm.qd.repository.dao.common.CommonMapper;
 import rfm.qd.repository.model.QdRsAccDetail;
@@ -48,7 +48,7 @@ public class CbusPayoutService {
     @Autowired
     private RsAccDetailService rsAccDetailService;
     @Autowired
-    private CbusTxnService cbusTxnService;
+    private QdSbsTxnService qdSbsTxnService;
 
     private SimpleDateFormat sdf10 = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -115,7 +115,7 @@ public class CbusPayoutService {
             //  ÐÐÄÚ×ªÕË
             if ("10".equals(qdRsPayout.getTransType())) {
                 try {
-                    QDJG03Res res03 = cbusTxnService.qdjg03payAmtInBank(qdRsPayout.getPayAccount(), qdRsPayout.getRecAccount(),
+                    QDJG03Res res03 = qdSbsTxnService.qdjg03payAmtInBank(qdRsPayout.getPayAccount(), qdRsPayout.getRecAccount(),
                             String.format("%.2f", qdRsPayout.getPlAmount()), qdRsPayout.getPurpose());
 
                     if ("00".equals(res03.getHeader().getRtnCode())) {
@@ -149,7 +149,7 @@ public class CbusPayoutService {
             */
             if ("20".equals(qdRsPayout.getTransType())) {
                 try {
-                    QDJG04Res res04 = cbusTxnService.qdjg04payAmtBtwnBank(qdRsPayout.getRecBankCode(),
+                    QDJG04Res res04 = qdSbsTxnService.qdjg04payAmtBtwnBank(qdRsPayout.getRecBankCode(),
                             qdRsPayout.getPayCompanyName(), qdRsPayout.getPayAccount(),
                             qdRsPayout.getRecCompanyName(), qdRsPayout.getRecAccount(),
                             String.format("%.2f", qdRsPayout.getPlAmount()), qdRsPayout.getPurpose(),

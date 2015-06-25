@@ -11,8 +11,8 @@ import rfm.qd.gateway.domain.T000.T0001Res;
 import rfm.qd.gateway.domain.T000.T0002Req;
 import rfm.qd.gateway.domain.T000.T0002Res;
 import rfm.qd.gateway.domain.T200.*;
-import rfm.qd.gateway.service.BiDbService;
-import rfm.qd.gateway.service.CbusTxnService;
+import rfm.qd.gateway.service.QdBiDbService;
+import rfm.qd.gateway.service.QdSbsTxnService;
 import rfm.qd.gateway.service.IMessageService;
 import rfm.qd.gateway.utils.BiRtnCode;
 import rfm.qd.gateway.utils.StringUtil;
@@ -42,9 +42,9 @@ public class ServerMessageService implements IMessageService {
 
     private static final Logger logger = LoggerFactory.getLogger(ServerMessageService.class);
     @Autowired
-    private BiDbService biDbService;
+    private QdBiDbService qdBiDbService;
     @Autowired
-    private CbusTxnService cbusTxnService;
+    private QdSbsTxnService qdSbsTxnService;
     @Autowired
     private CbusFdcActtxnService cbusFdcActtxnService;
 
@@ -64,7 +64,7 @@ public class ServerMessageService implements IMessageService {
                 T0001Req t0001Req = (T0001Req) BaseBean.toObject(T0001Req.class, message);
                 logger.info(t0001Req.head.OpDate + t0001Req.head.OpTime + "==接收交易：" + t0001Req.head.OpCode);
 
-                List<QdRsAccount> accountList = biDbService.selectAccountByCodeName(t0001Req.param.Acct, t0001Req.param.AcctName);
+                List<QdRsAccount> accountList = qdBiDbService.selectAccountByCodeName(t0001Req.param.Acct, t0001Req.param.AcctName);
 
                 T0001Res t0001Res = new T0001Res();
 
@@ -77,7 +77,7 @@ public class ServerMessageService implements IMessageService {
                     QDJG01Res qdjg01Res = null;
                     try {
                         if ("cbus".equals(PropertyManager.getProperty("bank.act.flag"))) {
-                            qdjg01Res = cbusTxnService.qdjg01QryActbal(t0001Req.param.Acct);
+                            qdjg01Res = qdSbsTxnService.qdjg01QryActbal(t0001Req.param.Acct);
                             t0001Res.param.Balance = StringUtil.toBiformatAmt(new BigDecimal(qdjg01Res.actbal));
                             t0001Res.param.UsableBalance = StringUtil.toBiformatAmt(new BigDecimal(qdjg01Res.avabal));
                         } else {
@@ -100,7 +100,7 @@ public class ServerMessageService implements IMessageService {
 
                 T0002Res t0002Res = new T0002Res();
 
-                if (!biDbService.isAccountExistByCodeName(t0002Req.param.Acct, t0002Req.param.AcctName)) {
+                if (!qdBiDbService.isAccountExistByCodeName(t0002Req.param.Acct, t0002Req.param.AcctName)) {
                     t0002Res.head.RetCode = BiRtnCode.BI_RTN_CODE_NO_ACCOUNT.getCode();
                     t0002Res.head.RetMsg = "没有查到账户，请检查账户信息。";
                     responseMsg = t0002Res.toFDCDatagram();
@@ -152,7 +152,7 @@ public class ServerMessageService implements IMessageService {
                 }
                 // 非核心
                 else {
-                    List<QdRsAccDetail> accDetailList = biDbService.selectAccDetailsByCodeNameDate(t0002Req.param.Acct,
+                    List<QdRsAccDetail> accDetailList = qdBiDbService.selectAccDetailsByCodeNameDate(t0002Req.param.Acct,
                             t0002Req.param.AcctName, StringUtil.transDate8ToDate10(t0002Req.param.BeginDate),
                             StringUtil.transDate8ToDate10(t0002Req.param.EndDate));
                     if (!accDetailList.isEmpty()) {
@@ -185,7 +185,7 @@ public class ServerMessageService implements IMessageService {
                 T2001Req t2001Req = (T2001Req) BaseBean.toObject(T2001Req.class, message);
                 logger.info(t2001Req.head.OpDate + t2001Req.head.OpTime + "==接收交易：" + t2001Req.head.OpCode);
 
-                List<QdRsAccount> initAccountList = biDbService.selectAccountByCodeName(t2001Req.param.Acct, t2001Req.param.AcctName);
+                List<QdRsAccount> initAccountList = qdBiDbService.selectAccountByCodeName(t2001Req.param.Acct, t2001Req.param.AcctName);
 
                 T2001Res t2001Res = new T2001Res();
 
@@ -193,7 +193,7 @@ public class ServerMessageService implements IMessageService {
                     QdRsAccount account = initAccountList.get(0);
                     account.setStatusFlag(AccountStatus.WATCH.getCode());
                     account.setAgrnum(t2001Req.param.AgrNum);
-                    if (biDbService.updateAccount(account) != 1) {
+                    if (qdBiDbService.updateAccount(account) != 1) {
                         t2001Res.head.RetCode = BiRtnCode.BI_RTN_CODE_FAILED.getCode();
                         t2001Res.head.RetMsg = "操作 失败，请重试。";
                     }
@@ -207,14 +207,14 @@ public class ServerMessageService implements IMessageService {
                 T2002Req t2002Req = (T2002Req) BaseBean.toObject(T2002Req.class, message);
                 logger.info(t2002Req.head.OpDate + t2002Req.head.OpTime + "==接收交易：" + t2002Req.head.OpCode);
 
-                List<QdRsAccount> limitAccountList = biDbService.selectAccountByCodeName(t2002Req.param.Acct, t2002Req.param.AcctName);
+                List<QdRsAccount> limitAccountList = qdBiDbService.selectAccountByCodeName(t2002Req.param.Acct, t2002Req.param.AcctName);
 
                 T2002Res t2002Res = new T2002Res();
 
                 if (!limitAccountList.isEmpty()) {
                     QdRsAccount account = limitAccountList.get(0);
                     account.setLimitFlag(t2002Req.param.LockFlag);
-                    if (biDbService.updateAccount(account) != 1) {
+                    if (qdBiDbService.updateAccount(account) != 1) {
                         t2002Res.head.RetCode = BiRtnCode.BI_RTN_CODE_FAILED.getCode();
                         t2002Res.head.RetMsg = "操作失败，请重试。";
                     }
@@ -252,7 +252,7 @@ public class ServerMessageService implements IMessageService {
 
                 T2003Res t2003Res = new T2003Res();
 
-                if (biDbService.updateDBContractByBiContract(contract) != 1) {
+                if (qdBiDbService.updateDBContractByBiContract(contract) != 1) {
                     t2003Res.head.RetCode = BiRtnCode.BI_RTN_CODE_FAILED.getCode();
                     t2003Res.head.RetMsg = "操作失败，请重试。";
                 }
@@ -262,14 +262,14 @@ public class ServerMessageService implements IMessageService {
                 T2006Req t2006Req = (T2006Req) BaseBean.toObject(T2006Req.class, message);
                 logger.info(t2006Req.head.OpDate + t2006Req.head.OpTime + "==接收交易：" + t2006Req.head.OpCode);
 
-                List<QdRsAccount> overAccountList = biDbService.selectAccountByCodeName(t2006Req.param.Acct, t2006Req.param.AcctName);
+                List<QdRsAccount> overAccountList = qdBiDbService.selectAccountByCodeName(t2006Req.param.Acct, t2006Req.param.AcctName);
 
                 T2006Res t2006Res = new T2006Res();
 
                 if (!overAccountList.isEmpty()) {
                     QdRsAccount account = overAccountList.get(0);
                     account.setStatusFlag(AccountStatus.CLOSE.getCode());
-                    if (biDbService.updateAccount(account) == 1) {
+                    if (qdBiDbService.updateAccount(account) == 1) {
                         t2006Res.param.CancelDate = SystemService.getSdfdate8();
                         t2006Res.param.CancelTime = SystemService.getSdftime6();
                         t2006Res.param.FinalBalance = StringUtil.toBiformatAmt(account.getBalance());
@@ -304,14 +304,14 @@ public class ServerMessageService implements IMessageService {
 
 
                 T2007Res t2007Res = new T2007Res();
-                QdRsContract originContract = biDbService.selectContractByCloseInfo(contractClose);
+                QdRsContract originContract = qdBiDbService.selectContractByCloseInfo(contractClose);
                 if (ContractStatus.TRANS.getCode().equalsIgnoreCase(originContract.getStatusFlag())
                         || ContractStatus.CANCEL.getCode().equalsIgnoreCase(originContract.getStatusFlag())
                         || ContractStatus.CANCELING.getCode().equalsIgnoreCase(originContract.getStatusFlag())) {
                     t2007Res.head.RetCode = BiRtnCode.BI_RTN_CODE_FAILED.getCode();
                     t2007Res.head.RetMsg = "该合同已经撤销，不可重复撤销！";
                 } else {
-                    if (biDbService.recvCloseContractInfo(contractClose) != 1) {
+                    if (qdBiDbService.recvCloseContractInfo(contractClose) != 1) {
                         t2007Res.head.RetCode = BiRtnCode.BI_RTN_CODE_FAILED.getCode();
                         t2007Res.head.RetMsg = "操作失败，请重试。";
                     }
@@ -370,7 +370,7 @@ public class ServerMessageService implements IMessageService {
                             planDetail.setRemark(record.Remark);
                             qdBiPlanDetailList.add(planDetail);
                         }
-                        if (biDbService.storeFdcAllPlanInfos(qdBiPlan, qdBiPlanDetailList) == -1) {
+                        if (qdBiDbService.storeFdcAllPlanInfos(qdBiPlan, qdBiPlanDetailList) == -1) {
                             throw new RuntimeException("接收保存数据操作失败！");
                         }
                     } else throw new RuntimeException("计划明细为空！");
