@@ -1,6 +1,6 @@
 package rfm.qd.view.accdetail;
 
-import rfm.qd.repository.model.RsAccDetail;
+import rfm.qd.repository.model.QdRsAccDetail;
 import rfm.qd.service.ClientBiService;
 import rfm.qd.service.RsAccDetailService;
 import rfm.qd.service.TradeService;
@@ -29,8 +29,8 @@ public class AccDetailAction {
     private RsAccDetailService accDetailService;
     @ManagedProperty(value = "#{clientBiService}")
     private ClientBiService clientBiService;
-    private List<RsAccDetail> todayAccDetailList;
-    private List<RsAccDetail> todayLoanAccDetailList;
+    private List<QdRsAccDetail> todayAccDetailList;
+    private List<QdRsAccDetail> todayLoanAccDetailList;
     @ManagedProperty(value = "#{tradeService}")
     private TradeService tradeService;
 
@@ -104,19 +104,19 @@ public class AccDetailAction {
         this.accDetailService = accDetailService;
     }
 
-    public List<RsAccDetail> getTodayAccDetailList() {
+    public List<QdRsAccDetail> getTodayAccDetailList() {
         return todayAccDetailList;
     }
 
-    public void setTodayAccDetailList(List<RsAccDetail> todayAccDetailList) {
+    public void setTodayAccDetailList(List<QdRsAccDetail> todayAccDetailList) {
         this.todayAccDetailList = todayAccDetailList;
     }
 
-    public List<RsAccDetail> getTodayLoanAccDetailList() {
+    public List<QdRsAccDetail> getTodayLoanAccDetailList() {
         return todayLoanAccDetailList;
     }
 
-    public void setTodayLoanAccDetailList(List<RsAccDetail> todayLoanAccDetailList) {
+    public void setTodayLoanAccDetailList(List<QdRsAccDetail> todayLoanAccDetailList) {
         this.todayLoanAccDetailList = todayLoanAccDetailList;
     }
 

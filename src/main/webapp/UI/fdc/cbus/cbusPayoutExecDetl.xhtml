@@ -55,7 +55,7 @@
                                 <h:panelGrid columns="4" cellpadding="2" columnClasses="col-95,col-5,col-95,col-5"
                                              style="width: 100%">
                                     <h:outputLabel value="计划编号:" for="planNo" style="margin-left: 28px;" size="30"/>
-                                    <p:inputText id="planNo" value="#{cbusPayoutExecAction.rsPayout.businessNo}"
+                                    <p:inputText id="planNo" value="#{cbusPayoutExecAction.qdRsPayout.businessNo}"
                                                  readonly="true" style="width:160px;"/>
                                     <h:outputLabel value="计划金额:" for="planAmt" style="margin-left: 30px;" size="30"/>
                                     <p:inputText id="planAmt" value="#{cbusPayoutExecAction.planCtrl.plAmount}"
@@ -78,22 +78,22 @@
                                              style="width: 100%">
                                     <h:outputLabel value="收款方账号:" for="toAccountCode" style="margin-left: 3px;"
                                                    size="30"/>
-                                    <p:inputText id="toAccountCode" value="#{cbusPayoutExecAction.rsPayout.recAccount}"
+                                    <p:inputText id="toAccountCode" value="#{cbusPayoutExecAction.qdRsPayout.recAccount}"
                                                  readonly="true" style="width:160px;" disabled="true"/>
                                     <h:outputLabel value="收款方户名:" for="toAccountName" style="margin-left: 3px;"
                                                    size="30"/>
                                     <p:inputText id="toAccountName"
-                                                 value="#{cbusPayoutExecAction.rsPayout.recCompanyName}"
+                                                 value="#{cbusPayoutExecAction.qdRsPayout.recCompanyName}"
                                                  readonly="true" disabled="true"
                                                  style="width:260px;"/>
 
                                     <h:outputLabel value="收款行:" for="toBankCode" size="30"/>
                                     <p:inputText id="toBankCode" style="width:165px;" disabled="true"
-                                                 value="#{cbusPayoutExecAction.rsPayout.recBankCode}">
+                                                 value="#{cbusPayoutExecAction.qdRsPayout.recBankCode}">
                                     </p:inputText>
 
                                     <h:outputLabel value="收款行全称:" for="toBankName" style="margin-left: 3px;" size="30"/>
-                                    <p:inputText id="toBankName" value="#{cbusPayoutExecAction.rsPayout.recBankName}"
+                                    <p:inputText id="toBankName" value="#{cbusPayoutExecAction.qdRsPayout.recBankName}"
                                                  readonly="false" disabled="true"
                                                  style="width:260px;"/>
                                 </h:panelGrid>
@@ -109,24 +109,24 @@
                                                    size="30"/>
                                     <h:inputText autocomplete="off" id="companyName" style="width:160px;"
                                                  readonly="true" disabled="true"
-                                                 value="#{cbusPayoutExecAction.rsPayout.payCompanyName}">
+                                                 value="#{cbusPayoutExecAction.qdRsPayout.payCompanyName}">
                                     </h:inputText>
 
                                     <h:outputLabel value="付款监管账号:" for="accountCode" size="30"/>
                                     <p:inputText autocomplete="off" id="accountCode" style="width:250px;"
                                                  readonly="true" disabled="true"
-                                                 value="#{cbusPayoutExecAction.rsPayout.payAccount}">
+                                                 value="#{cbusPayoutExecAction.qdRsPayout.payAccount}">
                                     </p:inputText>
 
                                     <h:outputLabel value="凭证号:" for="docNo" size="30"/>
-                                    <p:inputText id="docNo" value="#{cbusPayoutExecAction.rsPayout.docNo}"
+                                    <p:inputText id="docNo" value="#{cbusPayoutExecAction.qdRsPayout.docNo}"
                                                  disabled="true"
                                                  style="width:160px;"
                                                  onfocus="this.select()"/>
 
                                     <h:outputLabel value="申请金额:" for="applyAmt" style="margin-left:20px" size="30"/>
                                     <p:inputText autocomplete="off" id="applyAmt" style="width:250px;" disabled="true"
-                                                 value="#{cbusPayoutExecAction.rsPayout.plAmount}">
+                                                 value="#{cbusPayoutExecAction.qdRsPayout.plAmount}">
                                     </p:inputText>
                                 </h:panelGrid>
                                 <h:panelGrid columns="2" cellspacing="2" style="width: 100%"
@@ -134,7 +134,7 @@
                                     <h:outputLabel value="申请事由:" for="applyReason" size="30"
                                                    style="text-align: right;margin-left: 32px;"/>
                                     <p:inputText autocomplete="off" id="applyReason" style="width:528px;"
-                                                 value="#{cbusPayoutExecAction.rsPayout.purpose}" disabled="true">
+                                                 value="#{cbusPayoutExecAction.qdRsPayout.purpose}" disabled="true">
                                     </p:inputText>
                                 </h:panelGrid>
                             </h:panelGrid>

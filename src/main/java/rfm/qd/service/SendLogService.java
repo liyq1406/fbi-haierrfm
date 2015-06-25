@@ -1,8 +1,8 @@
 package rfm.qd.service;
 
-import rfm.qd.repository.dao.RsSendLogMapper;
-import rfm.qd.repository.model.RsSendLog;
-import rfm.qd.repository.model.RsSendLogExample;
+import rfm.qd.repository.dao.QdRsSendLogMapper;
+import rfm.qd.repository.model.QdRsSendLog;
+import rfm.qd.repository.model.QdRsSendLogExample;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,15 +20,15 @@ import java.util.List;
 public class SendLogService {
 
     @Autowired
-    private RsSendLogMapper sendLogMapper;
+    private QdRsSendLogMapper sendLogMapper;
 
     /*public List<RsSendLog> qryNotSendDays() {
         RsSendLogExample example = new RsSendLogExample();
         example.createCriteria().andTxnResultNotEqualTo("2");
     }*/
 
-    public List<RsSendLog> qrySendLogs(String startdate, String enddate, String txnResult) {
-        RsSendLogExample example = new RsSendLogExample();
+    public List<QdRsSendLog> qrySendLogs(String startdate, String enddate, String txnResult) {
+        QdRsSendLogExample example = new QdRsSendLogExample();
         if (StringUtils.isEmpty(txnResult)) {
             example.createCriteria().andTxnDateBetween(startdate, enddate);
         } else {

@@ -42,20 +42,20 @@
                                          columnClasses="col-95,col-5,col-95,col-5">
                                 <h:outputLabel value="房产商名称:" for="companyName"/>
                                 <h:inputText id="companyName" size="30"
-                                             value="#{expensesPlanQryAction.rsPlanCtrl.companyName}"/>
+                                             value="#{expensesPlanQryAction.qdRsPlanCtrl.companyName}"/>
                                  <h:outputLabel value="监管账号:" for="accountCode"/>
                                 <h:inputText id="accountCode" size="30"
-                                             value="#{expensesPlanQryAction.rsPlanCtrl.accountCode}"/>
+                                             value="#{expensesPlanQryAction.qdRsPlanCtrl.accountCode}"/>
                                 <h:outputLabel value="付款合同号:" for="payContractNo"/>
                                 <h:inputText id="payContractNo" size="30"
-                                             value="#{expensesPlanQryAction.rsPlanCtrl.payContractNo}"/>
+                                             value="#{expensesPlanQryAction.qdRsPlanCtrl.payContractNo}"/>
                                  <h:outputLabel value="计划日期:" for="planDate"/>
                                 <p:inputMask id="planDate" size="25"
-                                                                             value="#{expensesPlanQryAction.rsPlanCtrl.planDate}" mask="9999-99-99">
+                                                                             value="#{expensesPlanQryAction.qdRsPlanCtrl.planDate}" mask="9999-99-99">
                                                                 </p:inputMask>
                                  <h:outputLabel value="用款说明:" for="planDesc"/>
                                 <h:inputText id="planDesc" size="30"
-                                             value="#{expensesPlanQryAction.rsPlanCtrl.planDesc}"/>
+                                             value="#{expensesPlanQryAction.qdRsPlanCtrl.planDesc}"/>
                                  <h:outputLabel/><h:outputLabel/>
                             </h:panelGrid>
 
@@ -83,7 +83,7 @@
 
                 <p:dataTable id="pdt" style="width:100%;"
                              dynamic="true" selectionMode="single"
-                             value="#{expensesPlanQryAction.rsPlanCtrlList}" var="record"
+                             value="#{expensesPlanQryAction.qdRsPlanCtrlList}" var="record"
                              paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                              paginator="true" rows="10" paginatorPosition="bottom"
                              rowsPerPageTemplate="100,50,30,15,5"

@@ -1,7 +1,7 @@
 package rfm.qd.gateway.cbus;
 
-import rfm.qd.repository.dao.CbsBankInfoMapper;
-import rfm.qd.repository.model.CbsBankInfo;
+import rfm.qd.repository.dao.QdCbsBankInfoMapper;
+import rfm.qd.repository.model.QdCbsBankInfo;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -23,19 +23,19 @@ public class ReadBankInfos {
             FileInputStream fis = new FileInputStream(file);
             InputStreamReader isr = new InputStreamReader(fis);
             BufferedReader br = new BufferedReader(isr);
-            CbsBankInfoMapper bankInfoMapper = (CbsBankInfoMapper) context.getBean("cbsBankInfoMapper");
+            QdCbsBankInfoMapper bankInfoMapper = (QdCbsBankInfoMapper) context.getBean("qdCbsBankInfoMapper");
             String line = null;
             while ((line = br.readLine()) != null) {
                 String[] fields = line.split("!");
-                CbsBankInfo cbsBankInfo = new CbsBankInfo();
-                cbsBankInfo.setCode(fields[0]);
-                cbsBankInfo.setUpCode(fields[1]);
-                cbsBankInfo.setAreaCode(fields[2]);
-                cbsBankInfo.setFullName(fields[3]);
-                cbsBankInfo.setShortName(fields[4]);
-                cbsBankInfo.setAddress(fields[5]);
-                cbsBankInfo.setStatus(fields[6]);
-                bankInfoMapper.insert(cbsBankInfo);
+                QdCbsBankInfo qdCbsBankInfo = new QdCbsBankInfo();
+                qdCbsBankInfo.setCode(fields[0]);
+                qdCbsBankInfo.setUpCode(fields[1]);
+                qdCbsBankInfo.setAreaCode(fields[2]);
+                qdCbsBankInfo.setFullName(fields[3]);
+                qdCbsBankInfo.setShortName(fields[4]);
+                qdCbsBankInfo.setAddress(fields[5]);
+                qdCbsBankInfo.setStatus(fields[6]);
+                bankInfoMapper.insert(qdCbsBankInfo);
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();

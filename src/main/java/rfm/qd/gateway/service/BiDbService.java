@@ -23,57 +23,57 @@ import java.util.List;
 public class BiDbService {
 
     @Autowired
-    private RsAccountMapper accountMapper;
+    private QdRsAccountMapper accountMapper;
     @Autowired
-    private BiContractMapper biContractMapper;
+    private QdBiContractMapper qdBiContractMapper;
     @Autowired
-    private BiContractCloseMapper biContractCloseMapper;
+    private QdBiContractCloseMapper qdBiContractCloseMapper;
     @Autowired
-    private RsAccDetailMapper accDetailMapper;
+    private QdRsAccDetailMapper accDetailMapper;
     @Autowired
-    private BiPlanMapper biPlanMapper;
+    private QdBiPlanMapper qdBiPlanMapper;
     @Autowired
-    private BiPlanDetailMapper biPlanDetailMapper;
+    private QdBiPlanDetailMapper qdBiPlanDetailMapper;
     @Autowired
-    private RsContractMapper rsContractMapper;
+    private QdRsContractMapper qdRsContractMapper;
     @Autowired
-    private RsPlanCtrlMapper rsPlanCtrlMapper;
+    private QdRsPlanCtrlMapper qdRsPlanCtrlMapper;
 
     @Transactional
-    public int storeFdcAllPlanInfos(BiPlan biPlan, List<BiPlanDetail> biPlanDetailList) {
+    public int storeFdcAllPlanInfos(QdBiPlan qdBiPlan, List<QdBiPlanDetail> qdBiPlanDetailList) {
 
-        if (insertBiPlan(biPlan) == 1) {
-            RsPlanCtrl rsPlanCtrl = null;
+        if (insertBiPlan(qdBiPlan) == 1) {
+            QdRsPlanCtrl qdRsPlanCtrl = null;
             boolean isUpdate = false;
-            for (BiPlanDetail biPlanDetail : biPlanDetailList) {
-                if (isExistPlanCtlNo(biPlanDetail)) {
-                    RsPlanCtrlExample example = new RsPlanCtrlExample();
-                    example.createCriteria().andDeletedFlagEqualTo("0").andPlanCtrlNoEqualTo(biPlanDetail.getPlanCtrlNo());
-                    rsPlanCtrl = rsPlanCtrlMapper.selectByExample(example).get(0);
+            for (QdBiPlanDetail qdBiPlanDetail : qdBiPlanDetailList) {
+                if (isExistPlanCtlNo(qdBiPlanDetail)) {
+                    QdRsPlanCtrlExample example = new QdRsPlanCtrlExample();
+                    example.createCriteria().andDeletedFlagEqualTo("0").andPlanCtrlNoEqualTo(qdBiPlanDetail.getPlanCtrlNo());
+                    qdRsPlanCtrl = qdRsPlanCtrlMapper.selectByExample(example).get(0);
                     isUpdate = true;
                 } else {
-                    rsPlanCtrl = new RsPlanCtrl();
+                    qdRsPlanCtrl = new QdRsPlanCtrl();
                     isUpdate = false;
                 }
-                rsPlanCtrl.setAccountCode(biPlan.getAccountCode());
-                rsPlanCtrl.setCompanyName(biPlan.getAccountName());
-                rsPlanCtrl.setAcceptDate(biPlan.getSubmitDate());
-                rsPlanCtrl.setPlanCtrlNo(biPlanDetail.getPlanCtrlNo());
-                rsPlanCtrl.setToAccountName(biPlanDetail.getToAccountName());
-                rsPlanCtrl.setToAccountCode(biPlanDetail.getToAccountCode());
-                rsPlanCtrl.setToHsBankName(biPlanDetail.getToHsBankName());
-                rsPlanCtrl.setPlAmount(biPlanDetail.getPlAmount());
-                rsPlanCtrl.setAvAmount(rsPlanCtrl.getPlAmount());
-                rsPlanCtrl.setPlanDate(biPlanDetail.getPlanDate());
-                rsPlanCtrl.setPlanDesc(biPlanDetail.getPlanDesc());
-                rsPlanCtrl.setRemark(biPlanDetail.getRemark());
+                qdRsPlanCtrl.setAccountCode(qdBiPlan.getAccountCode());
+                qdRsPlanCtrl.setCompanyName(qdBiPlan.getAccountName());
+                qdRsPlanCtrl.setAcceptDate(qdBiPlan.getSubmitDate());
+                qdRsPlanCtrl.setPlanCtrlNo(qdBiPlanDetail.getPlanCtrlNo());
+                qdRsPlanCtrl.setToAccountName(qdBiPlanDetail.getToAccountName());
+                qdRsPlanCtrl.setToAccountCode(qdBiPlanDetail.getToAccountCode());
+                qdRsPlanCtrl.setToHsBankName(qdBiPlanDetail.getToHsBankName());
+                qdRsPlanCtrl.setPlAmount(qdBiPlanDetail.getPlAmount());
+                qdRsPlanCtrl.setAvAmount(qdRsPlanCtrl.getPlAmount());
+                qdRsPlanCtrl.setPlanDate(qdBiPlanDetail.getPlanDate());
+                qdRsPlanCtrl.setPlanDesc(qdBiPlanDetail.getPlanDesc());
+                qdRsPlanCtrl.setRemark(qdBiPlanDetail.getRemark());
 
                 if (isUpdate) {
-                    if (insertBiPlanDetail(biPlanDetail) != 1 || rsPlanCtrlMapper.updateByPrimaryKeySelective(rsPlanCtrl) != 1) {
+                    if (insertBiPlanDetail(qdBiPlanDetail) != 1 || qdRsPlanCtrlMapper.updateByPrimaryKeySelective(qdRsPlanCtrl) != 1) {
                         return -1;
                     }
                 } else {
-                    if (insertBiPlanDetail(biPlanDetail) != 1 || rsPlanCtrlMapper.insertSelective(rsPlanCtrl) != 1) {
+                    if (insertBiPlanDetail(qdBiPlanDetail) != 1 || qdRsPlanCtrlMapper.insertSelective(qdRsPlanCtrl) != 1) {
                         return -1;
                     }
                 }
@@ -83,10 +83,10 @@ public class BiDbService {
         return -1;
     }
 
-    private boolean isExistPlanCtlNo(BiPlanDetail planDetail) {
-        RsPlanCtrlExample example = new RsPlanCtrlExample();
+    private boolean isExistPlanCtlNo(QdBiPlanDetail planDetail) {
+        QdRsPlanCtrlExample example = new QdRsPlanCtrlExample();
         example.createCriteria().andDeletedFlagEqualTo("0").andPlanCtrlNoEqualTo(planDetail.getPlanCtrlNo());
-        if (rsPlanCtrlMapper.countByExample(example) >= 1) {
+        if (qdRsPlanCtrlMapper.countByExample(example) >= 1) {
             return true;
         }
         return false;
@@ -95,21 +95,21 @@ public class BiDbService {
     /**
      * 新增计划明细
      *
-     * @param biPlanDetail
+     * @param qdBiPlanDetail
      * @return
      */
-    public int insertBiPlanDetail(BiPlanDetail biPlanDetail) {
-        return biPlanDetailMapper.insertSelective(biPlanDetail);
+    public int insertBiPlanDetail(QdBiPlanDetail qdBiPlanDetail) {
+        return qdBiPlanDetailMapper.insertSelective(qdBiPlanDetail);
     }
 
     /**
      * 新增计划（主表）
      *
-     * @param biPlan
+     * @param qdBiPlan
      * @return
      */
-    public int insertBiPlan(BiPlan biPlan) {
-        return biPlanMapper.insertSelective(biPlan);
+    public int insertBiPlan(QdBiPlan qdBiPlan) {
+        return qdBiPlanMapper.insertSelective(qdBiPlan);
     }
 
     /**
@@ -119,7 +119,7 @@ public class BiDbService {
      * @return
      */
     @Transactional
-    public int recvCloseContractInfo(BiContractClose contractClose) {
+    public int recvCloseContractInfo(QdBiContractClose contractClose) {
         if (insertBiContactClose(contractClose) == 1) {
             return updateContractToClose(contractClose);
         } else return -1;
@@ -131,8 +131,8 @@ public class BiDbService {
      * @param contractClose
      * @return
      */
-    public int insertBiContactClose(BiContractClose contractClose) {
-        return biContractCloseMapper.insertSelective(contractClose);
+    public int insertBiContactClose(QdBiContractClose contractClose) {
+        return qdBiContractCloseMapper.insertSelective(contractClose);
     }
 
     /**
@@ -141,30 +141,30 @@ public class BiDbService {
      * @param contractClose
      * @return
      */
-    public int updateContractToClose(BiContractClose contractClose) {
+    public int updateContractToClose(QdBiContractClose contractClose) {
 
-        RsContract rsContract = selectContractByCloseInfo(contractClose);
-        if (rsContract != null) {
-            rsContract.setStatusFlag(ContractStatus.TRANS.getCode());
-            rsContract.setModificationNum(rsContract.getModificationNum() + 1);
-            rsContract.setTransbuyeramt(contractClose.getTransAmt());
-            return rsContractMapper.updateByPrimaryKey(rsContract);
+        QdRsContract qdRsContract = selectContractByCloseInfo(contractClose);
+        if (qdRsContract != null) {
+            qdRsContract.setStatusFlag(ContractStatus.TRANS.getCode());
+            qdRsContract.setModificationNum(qdRsContract.getModificationNum() + 1);
+            qdRsContract.setTransbuyeramt(contractClose.getTransAmt());
+            return qdRsContractMapper.updateByPrimaryKey(qdRsContract);
         }
         return -1;
     }
 
-    public RsContract selectContractByCloseInfo(BiContractClose contractClose) {
-        RsContractExample example = new RsContractExample();
+    public QdRsContract selectContractByCloseInfo(QdBiContractClose contractClose) {
+        QdRsContractExample example = new QdRsContractExample();
         example.createCriteria().andContractNoEqualTo(contractClose.getContractNo()).andAccountCodeEqualTo(contractClose.getAccountCode())
                 .andDeletedFlagEqualTo("0");
-        List<RsContract> rsContractList = rsContractMapper.selectByExample(example);
-        if (rsContractList.isEmpty() || rsContractList.size() > 1) {
+        List<QdRsContract> qdRsContractList = qdRsContractMapper.selectByExample(example);
+        if (qdRsContractList.isEmpty() || qdRsContractList.size() > 1) {
             return null;
-        } else return rsContractList.get(0);
+        } else return qdRsContractList.get(0);
     }
 
     @Transactional
-    public int updateDBContractByBiContract(BiContract contract) {
+    public int updateDBContractByBiContract(QdBiContract contract) {
         if (insertBiContract(contract) == 1) {
             return insertOrUpdateRsContract(contract);
         }
@@ -178,52 +178,52 @@ public class BiDbService {
      * @return
      */
     @Transactional
-    public int insertBiContract(BiContract contract) {
-        return biContractMapper.insertSelective(contract);
+    public int insertBiContract(QdBiContract contract) {
+        return qdBiContractMapper.insertSelective(contract);
     }
 
     @Transactional
-    public int insertOrUpdateRsContract(BiContract contract) {
-        RsContractExample example = new RsContractExample();
+    public int insertOrUpdateRsContract(QdBiContract contract) {
+        QdRsContractExample example = new QdRsContractExample();
         example.createCriteria().andDeletedFlagEqualTo("0").andContractNoEqualTo(contract.getContractNo());
-        List<RsContract> rsContracts = rsContractMapper.selectByExample(example);
-        RsContract rsContract = null;
-        if (rsContracts.isEmpty()) {
-            rsContract = new RsContract();
+        List<QdRsContract> qdRsContracts = qdRsContractMapper.selectByExample(example);
+        QdRsContract qdRsContract = null;
+        if (qdRsContracts.isEmpty()) {
+            qdRsContract = new QdRsContract();
         } else {
-            rsContract = rsContracts.get(0);
-            if(rsContract.getReceiveAmt().compareTo(new BigDecimal(0)) > 0) {
+            qdRsContract = qdRsContracts.get(0);
+            if(qdRsContract.getReceiveAmt().compareTo(new BigDecimal(0)) > 0) {
                 return 1;
             }
-            rsContract.setModificationNum(rsContract.getModificationNum() + 1);
+            qdRsContract.setModificationNum(qdRsContract.getModificationNum() + 1);
         }
-        rsContract.setContractNo(contract.getContractNo());                                     // 合同号
-        rsContract.setAccountCode(contract.getAccountCode());                               // 监管账号
-        rsContract.setAccountName(contract.getAccountName());                              // 监管账户户名
-        rsContract.setBuyerName(contract.getBuyerName());                                   // 购房人姓名
-        rsContract.setBuyerAccName(contract.getBuyerName());
-        rsContract.setBuyerAccCode(contract.getBuyerAccCode());                          // 购房人个人结算账号
-        rsContract.setBuyerBankName(contract.getBuyerBankName());                    // 购房人账户开户行
-        rsContract.setBuyerCertType(contract.getBuyerCertType());                         //购房人证件类型
-        rsContract.setBuyerCertNo(contract.getBuyerCertNo());                                // 购房人证件号码
-        rsContract.setTotalAmt(contract.getTotalAmt());                                           //房屋总价
-        rsContract.setEarnestAmt(contract.getEarnestAmt());                                    // 定金
-        rsContract.setFirstAmt(contract.getFirstAmt());                                             // 首付款
-        rsContract.setLoanAmt(contract.getLoanAmt());                                            // 贷款
-        rsContract.setHouseAddress(contract.getHouseAddress());                            // 房屋地址
-        rsContract.setHouseType(contract.getHouseType());                                      // 房屋类型
-        rsContract.setHouseNo(contract.getHouseNo());                                            // 房屋楼栋信息
-        rsContract.setOverAmt(contract.getOverAmt());                                            // 超标面积价款
-        rsContract.setTreAccName(contract.getTreAccName());                                 // 上缴财政专用账户名
-        rsContract.setTreAccCode(contract.getTreAccCode());                                   // 上缴财政专用账号
-        rsContract.setTreBankName(contract.getTreBankName());                            // 财政专户开户行
+        qdRsContract.setContractNo(contract.getContractNo());                                     // 合同号
+        qdRsContract.setAccountCode(contract.getAccountCode());                               // 监管账号
+        qdRsContract.setAccountName(contract.getAccountName());                              // 监管账户户名
+        qdRsContract.setBuyerName(contract.getBuyerName());                                   // 购房人姓名
+        qdRsContract.setBuyerAccName(contract.getBuyerName());
+        qdRsContract.setBuyerAccCode(contract.getBuyerAccCode());                          // 购房人个人结算账号
+        qdRsContract.setBuyerBankName(contract.getBuyerBankName());                    // 购房人账户开户行
+        qdRsContract.setBuyerCertType(contract.getBuyerCertType());                         //购房人证件类型
+        qdRsContract.setBuyerCertNo(contract.getBuyerCertNo());                                // 购房人证件号码
+        qdRsContract.setTotalAmt(contract.getTotalAmt());                                           //房屋总价
+        qdRsContract.setEarnestAmt(contract.getEarnestAmt());                                    // 定金
+        qdRsContract.setFirstAmt(contract.getFirstAmt());                                             // 首付款
+        qdRsContract.setLoanAmt(contract.getLoanAmt());                                            // 贷款
+        qdRsContract.setHouseAddress(contract.getHouseAddress());                            // 房屋地址
+        qdRsContract.setHouseType(contract.getHouseType());                                      // 房屋类型
+        qdRsContract.setHouseNo(contract.getHouseNo());                                            // 房屋楼栋信息
+        qdRsContract.setOverAmt(contract.getOverAmt());                                            // 超标面积价款
+        qdRsContract.setTreAccName(contract.getTreAccName());                                 // 上缴财政专用账户名
+        qdRsContract.setTreAccCode(contract.getTreAccCode());                                   // 上缴财政专用账号
+        qdRsContract.setTreBankName(contract.getTreBankName());                            // 财政专户开户行
 
-        if (rsContracts.isEmpty()) {
-            return rsContractMapper.insertSelective(rsContract);
+        if (qdRsContracts.isEmpty()) {
+            return qdRsContractMapper.insertSelective(qdRsContract);
         } else {
-            rsContract = rsContracts.get(0);
-            rsContract.setModificationNum(rsContract.getModificationNum() + 1);
-            return rsContractMapper.updateByPrimaryKey(rsContract);
+            qdRsContract = qdRsContracts.get(0);
+            qdRsContract.setModificationNum(qdRsContract.getModificationNum() + 1);
+            return qdRsContractMapper.updateByPrimaryKey(qdRsContract);
         }
     }
 
@@ -237,8 +237,8 @@ public class BiDbService {
      * @return
      * @throws ParseException
      */
-    public List<RsAccDetail> selectAccDetailsByCodeNameDate(String accountCode, String accountName, String fromDate, String toDate) {
-        RsAccDetailExample example = new RsAccDetailExample();
+    public List<QdRsAccDetail> selectAccDetailsByCodeNameDate(String accountCode, String accountName, String fromDate, String toDate) {
+        QdRsAccDetailExample example = new QdRsAccDetailExample();
         example.createCriteria().andDeletedFlagEqualTo("0")
                 .andChangeFlagNotEqualTo(ChangeFlag.CANCEL.getCode())
                 .andAccountCodeEqualTo(accountCode)
@@ -254,7 +254,7 @@ public class BiDbService {
      * @return
      */
     @Transactional
-    public int updateAccount(RsAccount account) {
+    public int updateAccount(QdRsAccount account) {
         account.setModificationNum(account.getModificationNum() + 1);
         return accountMapper.updateByPrimaryKey(account);
     }
@@ -266,7 +266,7 @@ public class BiDbService {
      * @param limitStatus
      * @return
      */
-    public int updateAccountToLimitStatus(RsAccount account, String limitStatus) {
+    public int updateAccountToLimitStatus(QdRsAccount account, String limitStatus) {
         account.setLimitFlag(limitStatus);
         account.setModificationNum(account.getModificationNum() + 1);
         return accountMapper.updateByPrimaryKey(account);
@@ -279,15 +279,15 @@ public class BiDbService {
      * @param accountName
      * @return
      */
-    public List<RsAccount> selectAccountByCodeName(String accountCode, String accountName) {
-        RsAccountExample example = new RsAccountExample();
+    public List<QdRsAccount> selectAccountByCodeName(String accountCode, String accountName) {
+        QdRsAccountExample example = new QdRsAccountExample();
         example.createCriteria().andDeletedFlagEqualTo("0")
                 .andAccountCodeEqualTo(accountCode).andAccountNameEqualTo(accountName);
         return accountMapper.selectByExample(example);
     }
 
     public boolean isAccountExistByCodeName(String accountCode, String accountName) {
-        RsAccountExample example = new RsAccountExample();
+        QdRsAccountExample example = new QdRsAccountExample();
         example.createCriteria().andDeletedFlagEqualTo("0")
                 .andAccountCodeEqualTo(accountCode).andAccountNameEqualTo(accountName);
         return accountMapper.countByExample(example) == 1;

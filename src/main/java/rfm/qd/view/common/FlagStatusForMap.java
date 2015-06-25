@@ -1,6 +1,6 @@
 package rfm.qd.view.common;
 
-import rfm.qd.repository.model.RsFdccompany;
+import rfm.qd.repository.model.QdRsFdccompany;
 import rfm.qd.service.company.CompanyService;
 
 import javax.faces.bean.ManagedBean;
@@ -75,9 +75,9 @@ public class FlagStatusForMap {
     }
 
     public Map<String, String> getCompanyMap() {
-        List<RsFdccompany> rsFdccompanyList = companyService.qryRsFdccompanyByName("");
+        List<QdRsFdccompany> qdRsFdccompanyList = companyService.qryRsFdccompanyByName("");
         companyMap = new HashMap();
-        for (RsFdccompany rf:rsFdccompanyList) {
+        for (QdRsFdccompany rf: qdRsFdccompanyList) {
             companyMap.put(rf.getCompanyId(),rf.getCompanyName());
         }
         return companyMap;

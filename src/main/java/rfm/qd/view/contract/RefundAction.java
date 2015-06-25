@@ -1,8 +1,8 @@
 package rfm.qd.view.contract;
 
 import rfm.qd.common.constant.*;
-import rfm.qd.repository.model.RsContract;
-import rfm.qd.repository.model.RsRefund;
+import rfm.qd.repository.model.QdRsContract;
+import rfm.qd.repository.model.QdRsRefund;
 import rfm.qd.service.ClientBiService;
 import rfm.qd.service.ContractRecvService;
 import rfm.qd.service.RefundService;
@@ -49,20 +49,20 @@ public class RefundAction implements Serializable {
     @ManagedProperty(value = "#{toolsService}")
     private ToolsService toolsService;
 
-    private List<RsContract> detlList;
-    private RsContract[] selectedRecords;
-    private RsContract selectedRecord;
+    private List<QdRsContract> detlList;
+    private QdRsContract[] selectedRecords;
+    private QdRsContract selectedRecord;
 
-    private List<RsRefund> detlRefundList;
-    private List<RsRefund> pendChkList;
-    private List<RsRefund> pendNotpassList;
-    private List<RsRefund> pendActList;
-    private List<RsRefund> pendToSendList;
-    private List<RsRefund> pendSentList;
-    private List<RsRefund> detlEditList;
+    private List<QdRsRefund> detlRefundList;
+    private List<QdRsRefund> pendChkList;
+    private List<QdRsRefund> pendNotpassList;
+    private List<QdRsRefund> pendActList;
+    private List<QdRsRefund> pendToSendList;
+    private List<QdRsRefund> pendSentList;
+    private List<QdRsRefund> detlEditList;
 
-    private RsRefund[] selectedRefundRecords;
-    private RsRefund selectedRefundRecord;
+    private QdRsRefund[] selectedRefundRecords;
+    private QdRsRefund selectedRefundRecord;
 
     private List<SelectItem> contractStatusOptions;
     private List<SelectItem> refundStatusOptions;
@@ -111,7 +111,7 @@ public class RefundAction implements Serializable {
         try {
             OperatorManager om = SystemService.getOperatorManager();
             String date10 = SystemService.getSdfdate10();
-            for (RsRefund record : selectedRefundRecords) {
+            for (QdRsRefund record : selectedRefundRecords) {
                 record.setWorkResult(WorkResult.PASS.getCode());
                 record.setApAmount(record.getPlAmount());
                 record.setAuditUserId(om.getOperatorId());
@@ -135,7 +135,7 @@ public class RefundAction implements Serializable {
             return null;
         }
         try {
-            for (RsRefund record : selectedRefundRecords) {
+            for (QdRsRefund record : selectedRefundRecords) {
                 record.setWorkResult(WorkResult.NOTPASS.getCode());
                 if (refundService.updateRecord(record) != 1) {
                     throw new RuntimeException("退回更新异常！");
@@ -157,7 +157,7 @@ public class RefundAction implements Serializable {
         try {
             OperatorManager om = SystemService.getOperatorManager();
             String date10 = SystemService.getSdfdate10();
-            for (RsRefund record : selectedRefundRecords) {
+            for (QdRsRefund record : selectedRefundRecords) {
                 record.setExecDate(date10);
                 record.setExecUserId(om.getOperatorId());
                 record.setExecUserName(om.getOperatorName());
@@ -179,7 +179,7 @@ public class RefundAction implements Serializable {
             return null;
         }
         try {
-            for (RsRefund record : selectedRefundRecords) {
+            for (QdRsRefund record : selectedRefundRecords) {
                 if (clientBiService.sendRsRefundMsg(record, InOutFlag.OUT.getCode()) != 1) {
                     throw new RuntimeException("发送过程发生异常！");
                 }
@@ -211,43 +211,43 @@ public class RefundAction implements Serializable {
         this.clientBiService = clientBiService;
     }
 
-    public List<RsContract> getDetlList() {
+    public List<QdRsContract> getDetlList() {
         return detlList;
     }
 
-    public List<RsRefund> getDetlEditList() {
+    public List<QdRsRefund> getDetlEditList() {
         return detlEditList;
     }
 
-    public List<RsRefund> getPendNotpassList() {
+    public List<QdRsRefund> getPendNotpassList() {
         return pendNotpassList;
     }
 
-    public void setPendNotpassList(List<RsRefund> pendNotpassList) {
+    public void setPendNotpassList(List<QdRsRefund> pendNotpassList) {
         this.pendNotpassList = pendNotpassList;
     }
 
-    public void setDetlEditList(List<RsRefund> detlEditList) {
+    public void setDetlEditList(List<QdRsRefund> detlEditList) {
         this.detlEditList = detlEditList;
     }
 
-    public void setDetlList(List<RsContract> detlList) {
+    public void setDetlList(List<QdRsContract> detlList) {
         this.detlList = detlList;
     }
 
-    public RsContract[] getSelectedRecords() {
+    public QdRsContract[] getSelectedRecords() {
         return selectedRecords;
     }
 
-    public void setSelectedRecords(RsContract[] selectedRecords) {
+    public void setSelectedRecords(QdRsContract[] selectedRecords) {
         this.selectedRecords = selectedRecords;
     }
 
-    public RsContract getSelectedRecord() {
+    public QdRsContract getSelectedRecord() {
         return selectedRecord;
     }
 
-    public void setSelectedRecord(RsContract selectedRecord) {
+    public void setSelectedRecord(QdRsContract selectedRecord) {
         this.selectedRecord = selectedRecord;
     }
 
@@ -324,27 +324,27 @@ public class RefundAction implements Serializable {
     }
 
 
-    public List<RsRefund> getDetlRefundList() {
+    public List<QdRsRefund> getDetlRefundList() {
         return detlRefundList;
     }
 
-    public void setDetlRefundList(List<RsRefund> detlRefundList) {
+    public void setDetlRefundList(List<QdRsRefund> detlRefundList) {
         this.detlRefundList = detlRefundList;
     }
 
-    public RsRefund[] getSelectedRefundRecords() {
+    public QdRsRefund[] getSelectedRefundRecords() {
         return selectedRefundRecords;
     }
 
-    public void setSelectedRefundRecords(RsRefund[] selectedRefundRecords) {
+    public void setSelectedRefundRecords(QdRsRefund[] selectedRefundRecords) {
         this.selectedRefundRecords = selectedRefundRecords;
     }
 
-    public RsRefund getSelectedRefundRecord() {
+    public QdRsRefund getSelectedRefundRecord() {
         return selectedRefundRecord;
     }
 
-    public void setSelectedRefundRecord(RsRefund selectedRefundRecord) {
+    public void setSelectedRefundRecord(QdRsRefund selectedRefundRecord) {
         this.selectedRefundRecord = selectedRefundRecord;
     }
 
@@ -381,19 +381,19 @@ public class RefundAction implements Serializable {
         this.receiveType = receiveType;
     }
 
-    public List<RsRefund> getPendChkList() {
+    public List<QdRsRefund> getPendChkList() {
         return pendChkList;
     }
 
-    public void setPendChkList(List<RsRefund> pendChkList) {
+    public void setPendChkList(List<QdRsRefund> pendChkList) {
         this.pendChkList = pendChkList;
     }
 
-    public List<RsRefund> getPendActList() {
+    public List<QdRsRefund> getPendActList() {
         return pendActList;
     }
 
-    public void setPendActList(List<RsRefund> pendActList) {
+    public void setPendActList(List<QdRsRefund> pendActList) {
         this.pendActList = pendActList;
     }
 
@@ -437,19 +437,19 @@ public class RefundAction implements Serializable {
         this.tradeService = tradeService;
     }
 
-    public List<RsRefund> getPendSentList() {
+    public List<QdRsRefund> getPendSentList() {
         return pendSentList;
     }
 
-    public void setPendSentList(List<RsRefund> pendSentList) {
+    public void setPendSentList(List<QdRsRefund> pendSentList) {
         this.pendSentList = pendSentList;
     }
 
-    public List<RsRefund> getPendToSendList() {
+    public List<QdRsRefund> getPendToSendList() {
         return pendToSendList;
     }
 
-    public void setPendToSendList(List<RsRefund> pendToSendList) {
+    public void setPendToSendList(List<QdRsRefund> pendToSendList) {
         this.pendToSendList = pendToSendList;
     }
 }

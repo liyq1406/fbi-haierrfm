@@ -4,7 +4,7 @@ import rfm.qd.common.constant.ChangeFlag;
 import rfm.qd.common.constant.InOutFlag;
 import rfm.qd.common.constant.TradeStatus;
 import rfm.qd.common.constant.TradeType;
-import rfm.qd.repository.model.RsAccDetail;
+import rfm.qd.repository.model.QdRsAccDetail;
 import rfm.qd.service.RsAccDetailService;
 import rfm.qd.service.TradeService;
 import org.apache.commons.lang.StringUtils;
@@ -35,9 +35,9 @@ public class AccDetailCancelAction {
     private RsAccDetailService accDetailService;
     @ManagedProperty(value = "#{tradeService}")
     private TradeService tradeService;
-    private RsAccDetail accDetail;
-    private List<RsAccDetail> accDetailList;
-    private List<RsAccDetail> accDetailApList;
+    private QdRsAccDetail accDetail;
+    private List<QdRsAccDetail> accDetailList;
+    private List<QdRsAccDetail> accDetailApList;
 
     private InOutFlag inoutFlag = InOutFlag.IN;
     private TradeType tradeType = TradeType.HOUSE_INCOME;
@@ -94,19 +94,19 @@ public class AccDetailCancelAction {
 
     //=================================
 
-    public RsAccDetail getAccDetail() {
+    public QdRsAccDetail getAccDetail() {
         return accDetail;
     }
 
-    public void setAccDetail(RsAccDetail accDetail) {
+    public void setAccDetail(QdRsAccDetail accDetail) {
         this.accDetail = accDetail;
     }
 
-    public List<RsAccDetail> getAccDetailList() {
+    public List<QdRsAccDetail> getAccDetailList() {
         return accDetailList;
     }
 
-    public void setAccDetailList(List<RsAccDetail> accDetailList) {
+    public void setAccDetailList(List<QdRsAccDetail> accDetailList) {
         this.accDetailList = accDetailList;
     }
 
@@ -150,11 +150,11 @@ public class AccDetailCancelAction {
         this.tradeService = tradeService;
     }
 
-    public List<RsAccDetail> getAccDetailApList() {
+    public List<QdRsAccDetail> getAccDetailApList() {
         return accDetailApList;
     }
 
-    public void setAccDetailApList(List<RsAccDetail> accDetailApList) {
+    public void setAccDetailApList(List<QdRsAccDetail> accDetailApList) {
         this.accDetailApList = accDetailApList;
     }
 }

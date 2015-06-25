@@ -48,16 +48,16 @@ public class TradeService {
 
     // R-冲正 D-退票
     @Transactional
-    public int handleCancelAccDetail(RsAccDetail record, ChangeFlag changeFlag) throws Exception {
+    public int handleCancelAccDetail(QdRsAccDetail record, ChangeFlag changeFlag) throws Exception {
         // 查询未限制已监管未删除账户
-        RsAccount account = accountService.selectCanPayAccountByNo(record.getAccountCode());
+        QdRsAccount account = accountService.selectCanPayAccountByNo(record.getAccountCode());
         if (account == null) {
             throw new RuntimeException("监管账号不存在！");
         }
 
         //-----------------------------------------------
         // 新增交易明细
-        RsAccDetail accDetail = new RsAccDetail();
+        QdRsAccDetail accDetail = new QdRsAccDetail();
         accDetail.setAccountCode(record.getAccountCode());
         accDetail.setAccountName(record.getAccountName());
         accDetail.setToAccountCode(record.getToAccountCode());
@@ -111,18 +111,18 @@ public class TradeService {
 
     //  处理业务回退
 
-    private int handleCancelBiBack(RsAccDetail record) {
+    private int handleCancelBiBack(QdRsAccDetail record) {
         // 计划付款回退
         if (StringUtils.isEmpty(record.getContractNo()) && !StringUtils.isEmpty(record.getPlanCtrlNo())) {
-            RsPayout origiPayout = payoutService.selectRecordByAccDetail(record);
-            RsPayout payout = new RsPayout();
+            QdRsPayout origiPayout = payoutService.selectRecordByAccDetail(record);
+            QdRsPayout payout = new QdRsPayout();
             BeanHelper.copy(payout, origiPayout);
             payout.setPkId(null);
             payout.setApAmount(payout.getApAmount().multiply(new BigDecimal("-1")));
             payout.setPlAmount(payout.getPlAmount().multiply(new BigDecimal("-1")));
             payout.setWorkResult(WorkResult.SENT.getCode());
 
-            RsPlanCtrl planCtrl = expensesPlanService.selectPlanCtrlByPlanNo(record.getPlanCtrlNo());
+            QdRsPlanCtrl planCtrl = expensesPlanService.selectPlanCtrlByPlanNo(record.getPlanCtrlNo());
             planCtrl.setAvAmount(planCtrl.getAvAmount().add(record.getTradeAmt()));
             if (payoutService.insertRsPayout(payout) == 1) {
                 return expensesPlanService.updatePlanCtrl(planCtrl);
@@ -133,15 +133,15 @@ public class TradeService {
         // 合同收款
         else if (!StringUtils.isEmpty(record.getContractNo()) && StringUtils.isEmpty(record.getPlanCtrlNo())
                 && InOutFlag.IN.getCode().equalsIgnoreCase(record.getInoutFlag())) {
-            RsReceive OrigiReceive = receiveService.selectRecordByAccDetail(record);
-            RsReceive newReceive = new RsReceive();
+            QdRsReceive OrigiReceive = receiveService.selectRecordByAccDetail(record);
+            QdRsReceive newReceive = new QdRsReceive();
             BeanHelper.copy(newReceive, OrigiReceive);
             newReceive.setPkId(null);
             newReceive.setWorkResult(WorkResult.SENT.getCode());
             newReceive.setApAmount(newReceive.getApAmount().multiply(new BigDecimal("-1")));
             newReceive.setPlAmount(newReceive.getPlAmount().multiply(new BigDecimal("-1")));
 
-            RsContract contract = contractService.selectContractByNo(record.getContractNo());
+            QdRsContract contract = contractService.selectContractByNo(record.getContractNo());
             contract.setReceiveAmt(contract.getReceiveAmt().subtract(record.getTradeAmt()));
             if (receiveService.insertRecord(newReceive) == 1) {
                 return contractService.updateRecord(contract);
@@ -151,14 +151,14 @@ public class TradeService {
         // 合同退款
         else if (!StringUtils.isEmpty(record.getContractNo()) && StringUtils.isEmpty(record.getPlanCtrlNo())
                 && InOutFlag.OUT.getCode().equalsIgnoreCase(record.getInoutFlag())) {
-            RsRefund originRefund = refundService.selectRecordByAccDetail(record);
-            RsRefund newRefund = new RsRefund();
+            QdRsRefund originRefund = refundService.selectRecordByAccDetail(record);
+            QdRsRefund newRefund = new QdRsRefund();
             BeanHelper.copy(newRefund, originRefund);
             newRefund.setPkId(null);
             newRefund.setWorkResult(WorkResult.SENT.getCode());
             newRefund.setApAmount(newRefund.getApAmount().multiply(new BigDecimal("-1")));
             newRefund.setPlAmount(newRefund.getPlAmount().multiply(new BigDecimal("-1")));
-            RsContract contract = contractService.selectContractByNo(record.getContractNo());
+            QdRsContract contract = contractService.selectContractByNo(record.getContractNo());
             contract.setReceiveAmt(contract.getReceiveAmt().add(record.getTradeAmt()));
             if (refundService.insertRecord(newRefund) == 1) {
                 return contractService.updateRecord(contract);
@@ -179,15 +179,15 @@ public class TradeService {
      * @return
      */
     @Transactional
-    public int handleReceiveTrade(RsReceive receive) {
+    public int handleReceiveTrade(QdRsReceive receive) {
         // 查询未限制已监管未删除账户
-        RsAccount account = accountService.selectCanRecvAccountByNo(receive.getAccountCode());
+        QdRsAccount account = accountService.selectCanRecvAccountByNo(receive.getAccountCode());
         if (account == null) {
             throw new RuntimeException("监管账号不存在！");
         }
         //------------------------------------------------
         // 新增交易明细
-        RsAccDetail accDetail = new RsAccDetail();
+        QdRsAccDetail accDetail = new QdRsAccDetail();
         accDetail.setAccountCode(receive.getAccountCode());
         accDetail.setAccountName(receive.getCompanyName());
         accDetail.setToAccountCode(receive.getTradeAccCode());
@@ -214,7 +214,7 @@ public class TradeService {
         account.setBalance(account.getBalance().add(receive.getApAmount()));
         account.setBalanceUsable(account.getBalanceUsable().add(receive.getApAmount()));
 
-        RsContract contract = contractService.selectContractByNo(receive.getBusinessNo());
+        QdRsContract contract = contractService.selectContractByNo(receive.getBusinessNo());
         contract.setReceiveAmt(receive.getApAmount());
 
         int rtnCnt = contractService.updateRecord(contract)
@@ -230,11 +230,11 @@ public class TradeService {
      * @return
      */
     @Transactional
-    public int handleRefundTrade(RsRefund refund) {
+    public int handleRefundTrade(QdRsRefund refund) {
         // 查询未限制已监管未删除账户
         int rtnCnt = 0;
-        RsAccount account = accountService.selectCanPayAccountByNo(refund.getPayAccount());
-        RsContract contract = contractService.selectContractByNo(refund.getBusinessNo());
+        QdRsAccount account = accountService.selectCanPayAccountByNo(refund.getPayAccount());
+        QdRsContract contract = contractService.selectContractByNo(refund.getBusinessNo());
         // 检查余额
         if (refund.getApAmount().compareTo(account.getBalanceUsable()) > 0) {
             throw new RuntimeException("账户余额不足！");
@@ -243,7 +243,7 @@ public class TradeService {
         //======== 开始付款 ===========
         //--------------------------------------------------
         // 新增交易明细
-        RsAccDetail accDetail = new RsAccDetail();
+        QdRsAccDetail accDetail = new QdRsAccDetail();
         accDetail.setAccountCode(refund.getPayAccount());
         accDetail.setAccountName(refund.getPayCompanyName());
         accDetail.setToAccountCode(refund.getRecAccount());
@@ -282,21 +282,21 @@ public class TradeService {
      * @return
      */
     @Transactional
-    public int handlePayoutTrade(RsPayout payout) {
+    public int handlePayoutTrade(QdRsPayout payout) {
         // 查询未限制已监管未删除账户
-        RsAccount account = accountService.selectCanPayAccountByNo(payout.getPayAccount());
+        QdRsAccount account = accountService.selectCanPayAccountByNo(payout.getPayAccount());
         // 检查余额
         if (payout.getApAmount().compareTo(account.getBalanceUsable()) > 0) {
             throw new RuntimeException("账户余额不足！");
         }
         // 相应计划扣款
-        RsPlanCtrl planCtrl = expensesPlanService.selectPlanCtrlByPlanNo(payout.getBusinessNo());
+        QdRsPlanCtrl planCtrl = expensesPlanService.selectPlanCtrlByPlanNo(payout.getBusinessNo());
         planCtrl.setAvAmount(planCtrl.getAvAmount().subtract(payout.getApAmount()));
 
         //======== 开始付款 ===========
         //--------------------------------------------------
         // 新增交易明细
-        RsAccDetail accDetail = new RsAccDetail();
+        QdRsAccDetail accDetail = new QdRsAccDetail();
         accDetail.setAccountCode(payout.getPayAccount());
         accDetail.setAccountName(payout.getPayCompanyName());
         accDetail.setToAccountCode(payout.getRecAccount());
@@ -324,30 +324,30 @@ public class TradeService {
 
     // 账户冻结
     @Transactional
-    public int handleLockAccountByDetail(RsAccount rsAccount, RsLockedaccDetail rsLockedaccDetail) {
-        rsLockedaccDetail.setAccountCode(rsAccount.getAccountCode());
-        rsLockedaccDetail.setAccountName(rsAccount.getAccountName());
-        rsLockedaccDetail.setBalance(rsAccount.getBalance());
-        rsAccount.setBalanceLock(rsAccount.getBalanceLock().add(rsLockedaccDetail.getBalanceLock()));
-        rsAccount.setBalanceUsable(rsAccount.getBalance().subtract(rsAccount.getBalanceLock()));
-        if (rsLockedaccDetail.getBalanceLock().equals(rsAccount.getBalanceUsable())) {
-            rsLockedaccDetail.setStatusFlag(LockAccStatus.FULL_LOCK.getCode());
-        } else if (rsLockedaccDetail.getBalanceLock().compareTo(rsAccount.getBalanceUsable()) < 0) {
-            rsLockedaccDetail.setStatusFlag(LockAccStatus.PART_LOCK.getCode());
+    public int handleLockAccountByDetail(QdRsAccount qdRsAccount, QdRsLockedaccDetail qdRsLockedaccDetail) {
+        qdRsLockedaccDetail.setAccountCode(qdRsAccount.getAccountCode());
+        qdRsLockedaccDetail.setAccountName(qdRsAccount.getAccountName());
+        qdRsLockedaccDetail.setBalance(qdRsAccount.getBalance());
+        qdRsAccount.setBalanceLock(qdRsAccount.getBalanceLock().add(qdRsLockedaccDetail.getBalanceLock()));
+        qdRsAccount.setBalanceUsable(qdRsAccount.getBalance().subtract(qdRsAccount.getBalanceLock()));
+        if (qdRsLockedaccDetail.getBalanceLock().equals(qdRsAccount.getBalanceUsable())) {
+            qdRsLockedaccDetail.setStatusFlag(LockAccStatus.FULL_LOCK.getCode());
+        } else if (qdRsLockedaccDetail.getBalanceLock().compareTo(qdRsAccount.getBalanceUsable()) < 0) {
+            qdRsLockedaccDetail.setStatusFlag(LockAccStatus.PART_LOCK.getCode());
         }
-        return accountService.updateRecord(rsAccount) + lockedaccDetailService.insertRecord(rsLockedaccDetail);
+        return accountService.updateRecord(qdRsAccount) + lockedaccDetailService.insertRecord(qdRsLockedaccDetail);
     }
 
     // 账户解冻
     @Transactional
-    public int handleUnlockAccountByDetail(RsAccount rsAccount, RsLockedaccDetail rsLockedaccDetail) {
-        rsLockedaccDetail.setAccountCode(rsAccount.getAccountCode());
-        rsLockedaccDetail.setAccountName(rsAccount.getAccountName());
-        rsLockedaccDetail.setBalance(rsAccount.getBalance());
-        rsAccount.setBalanceLock(rsAccount.getBalanceLock().subtract(rsLockedaccDetail.getBalanceLock()));
-        rsAccount.setBalanceUsable(rsAccount.getBalance().subtract(rsAccount.getBalanceLock()));
-        rsLockedaccDetail.setStatusFlag(LockAccStatus.UN_LOCK.getCode());
-        return accountService.updateRecord(rsAccount) + lockedaccDetailService.insertRecord(rsLockedaccDetail);
+    public int handleUnlockAccountByDetail(QdRsAccount qdRsAccount, QdRsLockedaccDetail qdRsLockedaccDetail) {
+        qdRsLockedaccDetail.setAccountCode(qdRsAccount.getAccountCode());
+        qdRsLockedaccDetail.setAccountName(qdRsAccount.getAccountName());
+        qdRsLockedaccDetail.setBalance(qdRsAccount.getBalance());
+        qdRsAccount.setBalanceLock(qdRsAccount.getBalanceLock().subtract(qdRsLockedaccDetail.getBalanceLock()));
+        qdRsAccount.setBalanceUsable(qdRsAccount.getBalance().subtract(qdRsAccount.getBalanceLock()));
+        qdRsLockedaccDetail.setStatusFlag(LockAccStatus.UN_LOCK.getCode());
+        return accountService.updateRecord(qdRsAccount) + lockedaccDetailService.insertRecord(qdRsLockedaccDetail);
     }
 
     // 检查是否有入账未发送的交易

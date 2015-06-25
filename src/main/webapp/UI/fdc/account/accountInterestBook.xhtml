@@ -81,7 +81,7 @@
                             </f:facet>
                         </p:ajaxStatus>
                         <p:dataTable id="pdt1" style="width:100%;"
-                                     dynamic="true" value="#{interestBookAction.rsAccDetailsChk}" var="record"
+                                     dynamic="true" value="#{interestBookAction.qdRsAccDetailsChk}" var="record"
                                      selection="#{interestBookAction.selectedRecords}"
                                      paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                      paginator="true" rows="10" paginatorPosition="bottom"
@@ -136,7 +136,7 @@
                             </f:facet>
                         </p:ajaxStatus>
                         <p:dataTable id="pdt2" style="width:100%;"
-                                     dynamic="true" value="#{interestBookAction.rsAccDetailsSend}" var="record"
+                                     dynamic="true" value="#{interestBookAction.qdRsAccDetailsSend}" var="record"
                                      selection="#{interestBookAction.selectedRecordsSend}"
                                      paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                      paginator="true" rows="10" paginatorPosition="bottom"
@@ -185,7 +185,7 @@
                 <p:tab title="已发送记录清单">
                     <h:form id="sendedForm">
                         <p:dataTable id="pdt3" style="width:100%;"
-                                     dynamic="true" value="#{interestBookAction.rsAccDetailsSended}" var="record"
+                                     dynamic="true" value="#{interestBookAction.qdRsAccDetailsSended}" var="record"
                                      paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                      paginator="true" rows="10" paginatorPosition="bottom"
                                      rowsPerPageTemplate="100,50,30,10,5"

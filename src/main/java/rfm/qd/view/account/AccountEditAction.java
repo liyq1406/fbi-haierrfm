@@ -1,6 +1,6 @@
 package rfm.qd.view.account;
 
-import rfm.qd.repository.model.RsAccount;
+import rfm.qd.repository.model.QdRsAccount;
 import rfm.qd.service.account.AccountService;
 import rfm.qd.service.company.CompanyService;
 import org.slf4j.Logger;
@@ -33,7 +33,7 @@ public class AccountEditAction {
     private CompanyService companyService;
     @ManagedProperty(value = "#{toolsService}")
     private ToolsService toolsService;
-    private RsAccount account;
+    private QdRsAccount account;
     private String rtnFlag;
     private List<SelectItem> companyList;
 
@@ -85,11 +85,11 @@ public class AccountEditAction {
         this.accountService = accountService;
     }
 
-    public RsAccount getAccount() {
+    public QdRsAccount getAccount() {
         return account;
     }
 
-    public void setAccount(RsAccount account) {
+    public void setAccount(QdRsAccount account) {
         this.account = account;
     }
 

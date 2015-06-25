@@ -4,7 +4,7 @@ import rfm.qd.common.constant.AccountStatus;
 import rfm.qd.common.constant.LimitStatus;
 import rfm.qd.gateway.cbus.domain.txn.QDJG01Res;
 import rfm.qd.gateway.service.CbusTxnService;
-import rfm.qd.repository.model.RsAccount;
+import rfm.qd.repository.model.QdRsAccount;
 import rfm.qd.service.account.AccountService;
 import rfm.qd.service.company.CompanyService;
 import org.apache.commons.lang.StringUtils;
@@ -37,8 +37,8 @@ public class AccountAction {
     private CompanyService companyService;
     @ManagedProperty(value = "#{cbusTxnService}")
     private CbusTxnService cbusTxnService;
-    private RsAccount account;
-    private List<RsAccount> accountList;
+    private QdRsAccount account;
+    private List<QdRsAccount> accountList;
     private String confirmAccountNo;
     private AccountStatus accountStatus = AccountStatus.INIT;
     private LimitStatus limitStatus = LimitStatus.NOT_LIMIT;
@@ -46,7 +46,7 @@ public class AccountAction {
 
     @PostConstruct
     public void init() {
-        this.account = new RsAccount();
+        this.account = new QdRsAccount();
         querySelectedRecords();
         companyList = companyService.selectItemsCompany(null);
     }
@@ -73,7 +73,7 @@ public class AccountAction {
         accountList = accountService.qryAllRecords();
     }
 
-    private void querySelectedRecords(RsAccount act) {
+    private void querySelectedRecords(QdRsAccount act) {
         accountList = accountService.selectedRecordsByCondition(act.getPresellNo(), act.getCompanyId(), act.getAccountCode(),
                 act.getAccountName());
     }
@@ -105,13 +105,13 @@ public class AccountAction {
         }
         MessageUtil.addInfo("新增数据完成。");
         querySelectedRecords();
-        this.account = new RsAccount();
+        this.account = new QdRsAccount();
         confirmAccountNo = "";
         return null;
     }
 
     public String reset() {
-        this.account = new RsAccount();
+        this.account = new QdRsAccount();
         if (!accountList.isEmpty()) {
             accountList.clear();
         }
@@ -150,19 +150,19 @@ public class AccountAction {
         this.accountService = accountService;
     }
 
-    public RsAccount getAccount() {
+    public QdRsAccount getAccount() {
         return account;
     }
 
-    public void setAccount(RsAccount account) {
+    public void setAccount(QdRsAccount account) {
         this.account = account;
     }
 
-    public List<RsAccount> getAccountList() {
+    public List<QdRsAccount> getAccountList() {
         return accountList;
     }
 
-    public void setAccountList(List<RsAccount> accountList) {
+    public void setAccountList(List<QdRsAccount> accountList) {
         this.accountList = accountList;
     }
 

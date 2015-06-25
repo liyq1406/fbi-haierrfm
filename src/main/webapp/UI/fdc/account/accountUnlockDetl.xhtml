@@ -55,31 +55,31 @@
                                     <h:panelGrid columns="4" cellpadding="2" columnClasses="col-95,col-5,col-95,col-5"
                                                  style="width: 100%">
                                         <h:outputLabel value="监管账号:" for="accountCode" style="margin-left: 28px;"/>
-                                        <p:inputText id="accountCode" value="#{accountUnlockAction.rsAccount.accountCode}"
+                                        <p:inputText id="accountCode" value="#{accountUnlockAction.qdRsAccount.accountCode}"
                                                      readonly="true" disabled="true" style="width:160px;"/>
                                         <h:outputLabel value="账户名称:" for="accountName" style="margin-left: 30px;"/>
-                                        <p:inputText id="accountName" value="#{accountUnlockAction.rsAccount.accountName}"
+                                        <p:inputText id="accountName" value="#{accountUnlockAction.qdRsAccount.accountName}"
                                                      readonly="true" disabled="true" style="width:160px;">
                                         </p:inputText>
                                         <h:outputLabel value="项目名称:" for="proName" style="margin-left: 28px;"/>
-                                        <p:inputText id="proName" value="#{accountUnlockAction.rsAccount.proName}"
+                                        <p:inputText id="proName" value="#{accountUnlockAction.qdRsAccount.proName}"
                                                      readonly="true" disabled="true" style="width:160px;"/>
                                         <h:outputLabel value="项目地址:" for="proAddr" style="margin-left: 30px;"/>
-                                        <p:inputText id="proAddr" value="#{accountUnlockAction.rsAccount.proAddr}"
+                                        <p:inputText id="proAddr" value="#{accountUnlockAction.qdRsAccount.proAddr}"
                                                      readonly="true" disabled="true" style="width:160px;">
                                         </p:inputText>
                                         <h:outputLabel value="账户余额:" for="balance" style="margin-left: 28px;"/>
-                                        <p:inputText id="balance" value="#{accountUnlockAction.rsAccount.balance}"
+                                        <p:inputText id="balance" value="#{accountUnlockAction.qdRsAccount.balance}"
                                                      readonly="true" disabled="true" style="width:160px;">
                                             <f:convertNumber pattern="#,###,###,###,##0.00"/>
                                         </p:inputText>
                                         <h:outputLabel value="冻结金额:" for="balanceLock" style="margin-left: 28px;"/>
-                                        <p:inputText id="balanceLock" value="#{accountUnlockAction.rsAccount.balanceLock}"
+                                        <p:inputText id="balanceLock" value="#{accountUnlockAction.qdRsAccount.balanceLock}"
                                                      readonly="true" disabled="true" style="width:160px;">
                                             <f:convertNumber pattern="#,###,###,###,##0.00"/>
                                         </p:inputText>
                                         <h:outputLabel value="可用金额:" for="balanceUsable" style="margin-left: 28px;"/>
-                                        <p:inputText id="balanceUsable" value="#{accountUnlockAction.rsAccount.balanceUsable}"
+                                        <p:inputText id="balanceUsable" value="#{accountUnlockAction.qdRsAccount.balanceUsable}"
                                                      readonly="true" disabled="true" style="width:160px;">
                                             <f:convertNumber pattern="#,###,###,###,##0.00"/>
                                         </p:inputText>
@@ -94,7 +94,7 @@
 
                                         <h:outputLabel value="解冻金额:" for="detailBalanceLock" style="margin-left:30px"/>
                                         <p:inputText autocomplete="off" id="detailBalanceLock" style="width:160px;"
-                                                     value="#{accountUnlockAction.rsLockedaccDetail.balanceLock}">
+                                                     value="#{accountUnlockAction.qdRsLockedaccDetail.balanceLock}">
                                             <f:convertNumber pattern="#,###,###,###,##0.00"/>
                                         </p:inputText>
 

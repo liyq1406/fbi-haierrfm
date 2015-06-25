@@ -1,6 +1,6 @@
 package rfm.qd.view.company;
 
-import rfm.qd.repository.model.RsFdccompany;
+import rfm.qd.repository.model.QdRsFdccompany;
 import rfm.qd.service.company.CompanyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +27,7 @@ public class CompanyEditAction implements Serializable {
     private static final Logger logger = LoggerFactory.getLogger(CompanyEditAction.class);
     @ManagedProperty(value = "#{companyService}")
     private CompanyService companyService;
-    private RsFdccompany fdccompany;
+    private QdRsFdccompany fdccompany;
     private String rtnFlag;
 
     @PostConstruct
@@ -69,11 +69,11 @@ public class CompanyEditAction implements Serializable {
         this.companyService = companyService;
     }
 
-    public RsFdccompany getFdccompany() {
+    public QdRsFdccompany getFdccompany() {
         return fdccompany;
     }
 
-    public void setFdccompany(RsFdccompany fdccompany) {
+    public void setFdccompany(QdRsFdccompany fdccompany) {
         this.fdccompany = fdccompany;
     }
 }

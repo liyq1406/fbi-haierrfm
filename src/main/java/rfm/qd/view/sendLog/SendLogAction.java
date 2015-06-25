@@ -1,7 +1,7 @@
 package rfm.qd.view.sendLog;
 
 import rfm.qd.common.constant.SendLogResult;
-import rfm.qd.repository.model.RsSendLog;
+import rfm.qd.repository.model.QdRsSendLog;
 import rfm.qd.service.SendLogService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +28,7 @@ public class SendLogAction {
     private Logger logger = LoggerFactory.getLogger(SendLogAction.class);
     @ManagedProperty(value = "#{sendLogService}")
     private SendLogService sendLogService;
-    private List<RsSendLog> sendLogList;
+    private List<QdRsSendLog> sendLogList;
     private String startDate;
     private String endDate;
     private SendLogResult sendLogResult = SendLogResult.SEND_OVER;
@@ -56,7 +56,7 @@ public class SendLogAction {
         try {
             sendLogList = sendLogService.qrySendLogs(startDate, endDate, txnResult);
             boolean hasErr = false;
-            for(RsSendLog record : sendLogList) {
+            for(QdRsSendLog record : sendLogList) {
                 if(SendLogResult.QRYED_ERR.getCode().equals(record.getTxnResult().trim())
                         || SendLogResult.SEND_ERR.getCode().equals(record.getTxnResult().trim())) {
                    hasErr = true;
@@ -116,11 +116,11 @@ public class SendLogAction {
         this.endDate = endDate;
     }
 
-    public List<RsSendLog> getSendLogList() {
+    public List<QdRsSendLog> getSendLogList() {
         return sendLogList;
     }
 
-    public void setSendLogList(List<RsSendLog> sendLogList) {
+    public void setSendLogList(List<QdRsSendLog> sendLogList) {
         this.sendLogList = sendLogList;
     }
 

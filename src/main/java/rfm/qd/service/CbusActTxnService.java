@@ -1,8 +1,8 @@
 package rfm.qd.service;
 
-import rfm.qd.repository.dao.CbsAccTxnMapper;
-import rfm.qd.repository.model.CbsAccTxn;
-import rfm.qd.repository.model.CbsAccTxnExample;
+import rfm.qd.repository.dao.QdCbsAccTxnMapper;
+import rfm.qd.repository.model.QdCbsAccTxn;
+import rfm.qd.repository.model.QdCbsAccTxnExample;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,13 +18,13 @@ import java.util.List;
 @Service
 public class CbusActTxnService {
     @Autowired
-    private CbsAccTxnMapper cbsAccTxnMapper;
+    private QdCbsAccTxnMapper qdCbsAccTxnMapper;
 
-    public List<CbsAccTxn> qryCbsAccTxns(String accName, String accNo, String startDate, String endDate) {
-        CbsAccTxnExample example = new CbsAccTxnExample();
+    public List<QdCbsAccTxn> qryCbsAccTxns(String accName, String accNo, String startDate, String endDate) {
+        QdCbsAccTxnExample example = new QdCbsAccTxnExample();
         example.createCriteria().andAccountNameLike("%" + accName + "%").andAccountNoLike("%" + accNo + "%")
                 .andTxnDateBetween(startDate, endDate);
         example.setOrderByClause(" txn_date desc,txn_time desc ");
-        return cbsAccTxnMapper.selectByExample(example);
+        return qdCbsAccTxnMapper.selectByExample(example);
     }
 }

@@ -1,6 +1,6 @@
 package rfm.qd.view.expensesplan;
 
-import rfm.qd.repository.model.RsPlanCtrl;
+import rfm.qd.repository.model.QdRsPlanCtrl;
 import rfm.qd.service.expensesplan.ExpensesPlanService;
 import org.apache.commons.lang.StringUtils;
 import platform.common.utils.MessageUtil;
@@ -23,8 +23,8 @@ import java.util.List;
 @ManagedBean
 @ViewScoped
 public class ExpensesPlanQryAction implements Serializable {
-    private RsPlanCtrl rsPlanCtrl;
-    private List<RsPlanCtrl> rsPlanCtrlList;
+    private QdRsPlanCtrl qdRsPlanCtrl;
+    private List<QdRsPlanCtrl> qdRsPlanCtrlList;
 
     @ManagedProperty(value = "#{expensesPlanService}")
     private ExpensesPlanService expensesPlanService;
@@ -35,43 +35,43 @@ public class ExpensesPlanQryAction implements Serializable {
         String pkid = (String) context.getExternalContext().getRequestParameterMap().get("pkid");
         //String action = (String) context.getExternalContext().getRequestParameterMap().get("action");
         if(StringUtils.isEmpty(pkid)) {
-        rsPlanCtrl = new RsPlanCtrl();
-         rsPlanCtrlList = expensesPlanService.selectPlanList();
+        qdRsPlanCtrl = new QdRsPlanCtrl();
+         qdRsPlanCtrlList = expensesPlanService.selectPlanList();
         }else {
-           rsPlanCtrl = expensesPlanService.selectPlanCtrlByPkid(pkid);
+           qdRsPlanCtrl = expensesPlanService.selectPlanCtrlByPkid(pkid);
         }
     }
 
     public String onQuery() {
-        rsPlanCtrlList = expensesPlanService.selectPlanListByFields(rsPlanCtrl.getCompanyName(),
-                rsPlanCtrl.getAccountCode(), rsPlanCtrl.getPayContractNo());
-        if(rsPlanCtrlList.isEmpty()) {
+        qdRsPlanCtrlList = expensesPlanService.selectPlanListByFields(qdRsPlanCtrl.getCompanyName(),
+                qdRsPlanCtrl.getAccountCode(), qdRsPlanCtrl.getPayContractNo());
+        if(qdRsPlanCtrlList.isEmpty()) {
             MessageUtil.addWarn("没有查询到符合条件的数据记录！");
         }
         return null;
     }
 
     public void onPrint() {
-        rsPlanCtrlList = expensesPlanService.selectPlanList();
+        qdRsPlanCtrlList = expensesPlanService.selectPlanList();
     }
 
     //======================================================================
 
 
-    public RsPlanCtrl getRsPlanCtrl() {
-        return rsPlanCtrl;
+    public QdRsPlanCtrl getQdRsPlanCtrl() {
+        return qdRsPlanCtrl;
     }
 
-    public void setRsPlanCtrl(RsPlanCtrl rsPlanCtrl) {
-        this.rsPlanCtrl = rsPlanCtrl;
+    public void setQdRsPlanCtrl(QdRsPlanCtrl qdRsPlanCtrl) {
+        this.qdRsPlanCtrl = qdRsPlanCtrl;
     }
 
-    public List<RsPlanCtrl> getRsPlanCtrlList() {
-        return rsPlanCtrlList;
+    public List<QdRsPlanCtrl> getQdRsPlanCtrlList() {
+        return qdRsPlanCtrlList;
     }
 
-    public void setRsPlanCtrlList(List<RsPlanCtrl> rsPlanCtrlList) {
-        this.rsPlanCtrlList = rsPlanCtrlList;
+    public void setQdRsPlanCtrlList(List<QdRsPlanCtrl> qdRsPlanCtrlList) {
+        this.qdRsPlanCtrlList = qdRsPlanCtrlList;
     }
 
    /* public void setPlatformService(PlatformService platformService) {

@@ -1,8 +1,8 @@
 package rfm.qd.view.contract;
 
 import rfm.qd.common.constant.*;
-import rfm.qd.repository.model.RsContract;
-import rfm.qd.repository.model.RsReceive;
+import rfm.qd.repository.model.QdRsContract;
+import rfm.qd.repository.model.QdRsReceive;
 import rfm.qd.service.ContractRecvService;
 import rfm.qd.service.contract.ContractService;
 import org.slf4j.Logger;
@@ -37,16 +37,16 @@ public class ContractRecvAction implements Serializable {
     @ManagedProperty(value = "#{toolsService}")
     private ToolsService toolsService;
 
-    private List<RsContract> detlList;
-    private RsContract[] selectedRecords;
-    private RsContract selectedRecord;
+    private List<QdRsContract> detlList;
+    private QdRsContract[] selectedRecords;
+    private QdRsContract selectedRecord;
 
-    private List<RsReceive> detlRecvList;
-    private List<RsReceive> pendChkList;
-    private List<RsReceive> pendActList;
-    private List<RsReceive> detlEditList;
-    private RsReceive[] selectedRecvRecords;
-    private RsReceive selectedRecvRecord;
+    private List<QdRsReceive> detlRecvList;
+    private List<QdRsReceive> pendChkList;
+    private List<QdRsReceive> pendActList;
+    private List<QdRsReceive> detlEditList;
+    private QdRsReceive[] selectedRecvRecords;
+    private QdRsReceive selectedRecvRecord;
 
     private List<SelectItem> contractStatusOptions;
     private List<SelectItem> recvStatusOptions;
@@ -107,27 +107,27 @@ public class ContractRecvAction implements Serializable {
         this.contractService = contractService;
     }
 
-    public List<RsContract> getDetlList() {
+    public List<QdRsContract> getDetlList() {
         return detlList;
     }
 
-    public void setDetlList(List<RsContract> detlList) {
+    public void setDetlList(List<QdRsContract> detlList) {
         this.detlList = detlList;
     }
 
-    public RsContract[] getSelectedRecords() {
+    public QdRsContract[] getSelectedRecords() {
         return selectedRecords;
     }
 
-    public void setSelectedRecords(RsContract[] selectedRecords) {
+    public void setSelectedRecords(QdRsContract[] selectedRecords) {
         this.selectedRecords = selectedRecords;
     }
 
-    public RsContract getSelectedRecord() {
+    public QdRsContract getSelectedRecord() {
         return selectedRecord;
     }
 
-    public void setSelectedRecord(RsContract selectedRecord) {
+    public void setSelectedRecord(QdRsContract selectedRecord) {
         this.selectedRecord = selectedRecord;
     }
 
@@ -219,27 +219,27 @@ public class ContractRecvAction implements Serializable {
         this.contractRecvService = contractRecvService;
     }
 
-    public List<RsReceive> getDetlRecvList() {
+    public List<QdRsReceive> getDetlRecvList() {
         return detlRecvList;
     }
 
-    public void setDetlRecvList(List<RsReceive> detlRecvList) {
+    public void setDetlRecvList(List<QdRsReceive> detlRecvList) {
         this.detlRecvList = detlRecvList;
     }
 
-    public RsReceive[] getSelectedRecvRecords() {
+    public QdRsReceive[] getSelectedRecvRecords() {
         return selectedRecvRecords;
     }
 
-    public void setSelectedRecvRecords(RsReceive[] selectedRecvRecords) {
+    public void setSelectedRecvRecords(QdRsReceive[] selectedRecvRecords) {
         this.selectedRecvRecords = selectedRecvRecords;
     }
 
-    public RsReceive getSelectedRecvRecord() {
+    public QdRsReceive getSelectedRecvRecord() {
         return selectedRecvRecord;
     }
 
-    public void setSelectedRecvRecord(RsReceive selectedRecvRecord) {
+    public void setSelectedRecvRecord(QdRsReceive selectedRecvRecord) {
         this.selectedRecvRecord = selectedRecvRecord;
     }
 
@@ -292,27 +292,27 @@ public class ContractRecvAction implements Serializable {
         this.receiveType = receiveType;
     }
 
-    public List<RsReceive> getPendChkList() {
+    public List<QdRsReceive> getPendChkList() {
         return pendChkList;
     }
 
-    public void setPendChkList(List<RsReceive> pendChkList) {
+    public void setPendChkList(List<QdRsReceive> pendChkList) {
         this.pendChkList = pendChkList;
     }
 
-    public List<RsReceive> getPendActList() {
+    public List<QdRsReceive> getPendActList() {
         return pendActList;
     }
 
-    public void setPendActList(List<RsReceive> pendActList) {
+    public void setPendActList(List<QdRsReceive> pendActList) {
         this.pendActList = pendActList;
     }
 
-    public List<RsReceive> getDetlEditList() {
+    public List<QdRsReceive> getDetlEditList() {
         return detlEditList;
     }
 
-    public void setDetlEditList(List<RsReceive> detlEditList) {
+    public void setDetlEditList(List<QdRsReceive> detlEditList) {
         this.detlEditList = detlEditList;
     }
 }

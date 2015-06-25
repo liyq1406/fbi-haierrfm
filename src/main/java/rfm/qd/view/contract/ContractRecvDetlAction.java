@@ -2,8 +2,8 @@ package rfm.qd.view.contract;
 
 import rfm.qd.common.constant.ReceiveType;
 import rfm.qd.common.constant.WorkResult;
-import rfm.qd.repository.model.RsContract;
-import rfm.qd.repository.model.RsReceive;
+import rfm.qd.repository.model.QdRsContract;
+import rfm.qd.repository.model.QdRsReceive;
 import rfm.qd.service.ContractRecvService;
 import rfm.qd.service.contract.ContractService;
 import org.apache.commons.lang.StringUtils;
@@ -43,8 +43,8 @@ public class ContractRecvDetlAction implements Serializable {
     @ManagedProperty(value = "#{toolsService}")
     private ToolsService toolsService;
 
-    private RsReceive selectedRecord;
-    private RsContract contract;
+    private QdRsReceive selectedRecord;
+    private QdRsContract contract;
 
     private List<SelectItem> recvTypeOptions;
     private List<SelectItem> purposeOptions;
@@ -68,7 +68,7 @@ public class ContractRecvDetlAction implements Serializable {
         }
         else if (!StringUtils.isEmpty(pkid)) {
             contract = contractService.selectRecordContract(pkid);
-            selectedRecord = new RsReceive();
+            selectedRecord = new QdRsReceive();
             copyFieldsFromContract();
             recvTypeOptions = toolsService.getEnuSelectItemList("RECEIVE_TYPE", false, false);
             purposeOptions = toolsService.getEnuSelectItemList("PAY_PURPOSE_TYPE", false, false);
@@ -171,11 +171,11 @@ public class ContractRecvDetlAction implements Serializable {
         this.contractService = contractService;
     }
 
-    public RsReceive getSelectedRecord() {
+    public QdRsReceive getSelectedRecord() {
         return selectedRecord;
     }
 
-    public void setSelectedRecord(RsReceive selectedRecord) {
+    public void setSelectedRecord(QdRsReceive selectedRecord) {
         this.selectedRecord = selectedRecord;
     }
 
@@ -187,11 +187,11 @@ public class ContractRecvDetlAction implements Serializable {
         this.contractRecvService = contractRecvService;
     }
 
-    public RsContract getContract() {
+    public QdRsContract getContract() {
         return contract;
     }
 
-    public void setContract(RsContract contract) {
+    public void setContract(QdRsContract contract) {
         this.contract = contract;
     }
 

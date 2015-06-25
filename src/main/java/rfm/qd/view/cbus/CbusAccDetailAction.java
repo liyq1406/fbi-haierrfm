@@ -1,7 +1,7 @@
 package rfm.qd.view.cbus;
 
 import rfm.qd.common.constant.SendFlag;
-import rfm.qd.repository.model.CbsAccTxn;
+import rfm.qd.repository.model.QdCbsAccTxn;
 import rfm.qd.service.account.CbusFdcActtxnService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.LoggerFactory;
@@ -21,7 +21,7 @@ public class CbusAccDetailAction {
 
     private String startDate;
     private String endDate;
-    private List<CbsAccTxn> cbsAccTxnList;
+    private List<QdCbsAccTxn> qdCbsAccTxnList;
     @ManagedProperty(value = "#{cbusFdcActtxnService}")
     private CbusFdcActtxnService cbusFdcActtxnService;
     private SendFlag sendFlag = SendFlag.UN_SEND;
@@ -48,8 +48,8 @@ public class CbusAccDetailAction {
             }
             MessageUtil.addInfo(endDate + "交易明细数据已从核心系统获取完成。");
 
-            cbsAccTxnList = cbusFdcActtxnService.qryCbsAccTotalTxnsByDateAndFlag(endDate);
-            if (cbsAccTxnList.isEmpty()) {
+            qdCbsAccTxnList = cbusFdcActtxnService.qryCbsAccTotalTxnsByDateAndFlag(endDate);
+            if (qdCbsAccTxnList.isEmpty()) {
                 MessageUtil.addWarn(endDate + "贷款明细数据为空！");
             }
         } catch (Exception e) {
@@ -72,13 +72,13 @@ public class CbusAccDetailAction {
             }*/
             cbusFdcActtxnService.updateCbsActtxnsUnSent(endDate);
 
-            cbsAccTxnList = cbusFdcActtxnService.qryCbsAccTotalTxnsByDateAndFlag(endDate);
-            if (cbsAccTxnList == null || cbsAccTxnList.isEmpty()) {
+            qdCbsAccTxnList = cbusFdcActtxnService.qryCbsAccTotalTxnsByDateAndFlag(endDate);
+            if (qdCbsAccTxnList == null || qdCbsAccTxnList.isEmpty()) {
                 MessageUtil.addWarn("没有待发送数据！");
                 return null;
             } else {
                 MessageUtil.addInfo(endDate + "交易明细数据已从核心系统获取完成。");
-                cbusFdcActtxnService.sendAccTotalLoanTxns(endDate, cbsAccTxnList);
+                cbusFdcActtxnService.sendAccTotalLoanTxns(endDate, qdCbsAccTxnList);
             }
             MessageUtil.addInfo(endDate + "贷款交易汇总发送成功！");
         } catch (Exception e) {
@@ -107,12 +107,12 @@ public class CbusAccDetailAction {
         this.sendFlag = sendFlag;
     }
 
-    public List<CbsAccTxn> getCbsAccTxnList() {
-        return cbsAccTxnList;
+    public List<QdCbsAccTxn> getQdCbsAccTxnList() {
+        return qdCbsAccTxnList;
     }
 
-    public void setCbsAccTxnList(List<CbsAccTxn> cbsAccTxnList) {
-        this.cbsAccTxnList = cbsAccTxnList;
+    public void setQdCbsAccTxnList(List<QdCbsAccTxn> qdCbsAccTxnList) {
+        this.qdCbsAccTxnList = qdCbsAccTxnList;
     }
 
     public CbusFdcActtxnService getCbusFdcActtxnService() {

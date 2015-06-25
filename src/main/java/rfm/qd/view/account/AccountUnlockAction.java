@@ -2,8 +2,8 @@ package rfm.qd.view.account;
 
 import rfm.qd.common.constant.LockAccStatus;
 import rfm.qd.common.constant.SendFlag;
-import rfm.qd.repository.model.RsAccount;
-import rfm.qd.repository.model.RsLockedaccDetail;
+import rfm.qd.repository.model.QdRsAccount;
+import rfm.qd.repository.model.QdRsLockedaccDetail;
 import rfm.qd.service.ClientBiService;
 import rfm.qd.service.LockedaccDetailService;
 import rfm.qd.service.TradeService;
@@ -33,11 +33,11 @@ import java.util.List;
 @ViewScoped
 public class AccountUnlockAction {
 
-    private RsAccount rsAccount;
-    private RsLockedaccDetail rsLockedaccDetail;
-    private List<RsAccount> accountLockList;
-    private List<RsLockedaccDetail> unSendLockDetailList;
-    private List<RsLockedaccDetail> sentLockDetailList;
+    private QdRsAccount qdRsAccount;
+    private QdRsLockedaccDetail qdRsLockedaccDetail;
+    private List<QdRsAccount> accountLockList;
+    private List<QdRsLockedaccDetail> unSendLockDetailList;
+    private List<QdRsLockedaccDetail> sentLockDetailList;
     @ManagedProperty(value = "#{accountService}")
     private AccountService accountService;
     @ManagedProperty(value = "#{lockedaccDetailService}")
@@ -48,16 +48,16 @@ public class AccountUnlockAction {
     private ClientBiService clientBiService;
     private BigDecimal lockConfirmAmt = new BigDecimal(0);
     private LockAccStatus lockStatus = LockAccStatus.FULL_LOCK;
-    private RsLockedaccDetail[] selectedRecords;
+    private QdRsLockedaccDetail[] selectedRecords;
 
     @PostConstruct
     public void init() {
         FacesContext context = FacesContext.getCurrentInstance();
         String pkid = (String) context.getExternalContext().getRequestParameterMap().get("pkid");
         if (!StringUtils.isEmpty(pkid)) {
-            rsAccount = accountService.selectedRecordByPkid(pkid);
+            qdRsAccount = accountService.selectedRecordByPkid(pkid);
         }
-        rsLockedaccDetail = new RsLockedaccDetail();
+        qdRsLockedaccDetail = new QdRsLockedaccDetail();
         accountLockList = accountService.qryAllLockRecords();
         initLockDetailList();
     }
@@ -84,11 +84,11 @@ public class AccountUnlockAction {
     }
 
     public String onSave() {
-        if (lockConfirmAmt.compareTo(rsLockedaccDetail.getBalanceLock()) != 0) {
+        if (lockConfirmAmt.compareTo(qdRsLockedaccDetail.getBalanceLock()) != 0) {
             MessageUtil.addError("两次输入的解冻金额不一致！");
             return null;
         }
-        if (rsLockedaccDetail.getBalanceLock().compareTo(rsAccount.getBalanceLock()) > 0) {
+        if (qdRsLockedaccDetail.getBalanceLock().compareTo(qdRsAccount.getBalanceLock()) > 0) {
             MessageUtil.addError("解冻金额数不可大于账户冻结金额！");
             return null;
         }
@@ -98,7 +98,7 @@ public class AccountUnlockAction {
         }
 
         try {
-            if (tradeService.handleUnlockAccountByDetail(rsAccount, rsLockedaccDetail) == 2) {
+            if (tradeService.handleUnlockAccountByDetail(qdRsAccount, qdRsLockedaccDetail) == 2) {
                 MessageUtil.addInfo("成功解冻账户！");
                 UIViewRoot viewRoot = FacesContext.getCurrentInstance().getViewRoot();
                 CommandButton saveBtn = (CommandButton) viewRoot.findComponent("form:saveBtn");
@@ -119,7 +119,7 @@ public class AccountUnlockAction {
             return null;
         }
         try {
-            for (RsLockedaccDetail record : unSendLockDetailList) {
+            for (QdRsLockedaccDetail record : unSendLockDetailList) {
                 if(sendOneLockDetail(record) != 1){
                    throw new RuntimeException("发送失败！账号："+record.getAccountCode());
                 }
@@ -138,7 +138,7 @@ public class AccountUnlockAction {
             return null;
         }
         try {
-            for (RsLockedaccDetail record : selectedRecords) {
+            for (QdRsLockedaccDetail record : selectedRecords) {
                 if(sendOneLockDetail(record) != 1){
                    throw new RuntimeException("发送失败！账号："+record.getAccountCode());
                 }
@@ -151,34 +151,34 @@ public class AccountUnlockAction {
         return null;
     }
 
-    private int sendOneLockDetail(RsLockedaccDetail record) throws Exception {
+    private int sendOneLockDetail(QdRsLockedaccDetail record) throws Exception {
 
         return clientBiService.sendLockAccDetail(record);
     }
 
     //==========================================
 
-    public RsAccount getRsAccount() {
-        return rsAccount;
+    public QdRsAccount getQdRsAccount() {
+        return qdRsAccount;
     }
 
-    public void setRsAccount(RsAccount rsAccount) {
-        this.rsAccount = rsAccount;
+    public void setQdRsAccount(QdRsAccount qdRsAccount) {
+        this.qdRsAccount = qdRsAccount;
     }
 
-    public List<RsLockedaccDetail> getSentLockDetailList() {
+    public List<QdRsLockedaccDetail> getSentLockDetailList() {
         return sentLockDetailList;
     }
 
-    public void setSentLockDetailList(List<RsLockedaccDetail> sentLockDetailList) {
+    public void setSentLockDetailList(List<QdRsLockedaccDetail> sentLockDetailList) {
         this.sentLockDetailList = sentLockDetailList;
     }
 
-    public List<RsLockedaccDetail> getUnSendLockDetailList() {
+    public List<QdRsLockedaccDetail> getUnSendLockDetailList() {
         return unSendLockDetailList;
     }
 
-    public void setUnSendLockDetailList(List<RsLockedaccDetail> unSendLockDetailList) {
+    public void setUnSendLockDetailList(List<QdRsLockedaccDetail> unSendLockDetailList) {
         this.unSendLockDetailList = unSendLockDetailList;
     }
 
@@ -198,12 +198,12 @@ public class AccountUnlockAction {
         this.lockConfirmAmt = lockConfirmAmt;
     }
 
-    public RsLockedaccDetail getRsLockedaccDetail() {
-        return rsLockedaccDetail;
+    public QdRsLockedaccDetail getQdRsLockedaccDetail() {
+        return qdRsLockedaccDetail;
     }
 
-    public void setRsLockedaccDetail(RsLockedaccDetail rsLockedaccDetail) {
-        this.rsLockedaccDetail = rsLockedaccDetail;
+    public void setQdRsLockedaccDetail(QdRsLockedaccDetail qdRsLockedaccDetail) {
+        this.qdRsLockedaccDetail = qdRsLockedaccDetail;
     }
 
     public LockedaccDetailService getLockedaccDetailService() {
@@ -230,11 +230,11 @@ public class AccountUnlockAction {
         this.tradeService = tradeService;
     }
 
-    public List<RsAccount> getAccountLockList() {
+    public List<QdRsAccount> getAccountLockList() {
         return accountLockList;
     }
 
-    public void setAccountLockList(List<RsAccount> accountLockList) {
+    public void setAccountLockList(List<QdRsAccount> accountLockList) {
         this.accountLockList = accountLockList;
     }
 
@@ -246,11 +246,11 @@ public class AccountUnlockAction {
         this.clientBiService = clientBiService;
     }
 
-    public RsLockedaccDetail[] getSelectedRecords() {
+    public QdRsLockedaccDetail[] getSelectedRecords() {
         return selectedRecords;
     }
 
-    public void setSelectedRecords(RsLockedaccDetail[] selectedRecords) {
+    public void setSelectedRecords(QdRsLockedaccDetail[] selectedRecords) {
         this.selectedRecords = selectedRecords;
     }
 }

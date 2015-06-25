@@ -3,7 +3,7 @@ package rfm.qd.view.contract;
 import rfm.qd.common.constant.ContractRecvStatus;
 import rfm.qd.common.constant.ContractStatus;
 import rfm.qd.common.constant.WorkResult;
-import rfm.qd.repository.model.RsReceive;
+import rfm.qd.repository.model.QdRsReceive;
 import rfm.qd.service.ContractRecvService;
 import platform.common.utils.MessageUtil;
 
@@ -26,10 +26,10 @@ public class ContractRecvChkAction {
     @ManagedProperty(value = "#{contractRecvService}")
     private ContractRecvService contractRecvService;
 
-    private List<RsReceive> pendChkList;
-    private List<RsReceive> pendChkoverList;
-    private List<RsReceive> pendChkUnpassList;
-    private RsReceive[] selectedRecords;
+    private List<QdRsReceive> pendChkList;
+    private List<QdRsReceive> pendChkoverList;
+    private List<QdRsReceive> pendChkUnpassList;
+    private QdRsReceive[] selectedRecords;
     private ContractStatus contractStatus = ContractStatus.NORMAL;
     private ContractRecvStatus recvStatus = ContractRecvStatus.BACK;
     private WorkResult workResult = WorkResult.CREATE;
@@ -47,7 +47,7 @@ public class ContractRecvChkAction {
             return null;
         }
         try {
-            for (RsReceive record : selectedRecords) {
+            for (QdRsReceive record : selectedRecords) {
 
                 if (contractRecvService.updateRsReceiveToWorkResult(record, WorkResult.PASS) != 1) {
                     throw new RuntimeException("∏¥∫À ß∞‹£°");
@@ -67,7 +67,7 @@ public class ContractRecvChkAction {
             return null;
         }
         try {
-            for (RsReceive record : selectedRecords) {
+            for (QdRsReceive record : selectedRecords) {
 
                 if (contractRecvService.updateRsReceiveToWorkResult(record, WorkResult.NOTPASS) != 1) {
                     throw new RuntimeException("ÕÀªÿ ß∞‹£°");
@@ -91,35 +91,35 @@ public class ContractRecvChkAction {
         this.contractRecvService = contractRecvService;
     }
 
-    public List<RsReceive> getPendChkList() {
+    public List<QdRsReceive> getPendChkList() {
         return pendChkList;
     }
 
-    public void setPendChkList(List<RsReceive> pendChkList) {
+    public void setPendChkList(List<QdRsReceive> pendChkList) {
         this.pendChkList = pendChkList;
     }
 
-    public List<RsReceive> getPendChkoverList() {
+    public List<QdRsReceive> getPendChkoverList() {
         return pendChkoverList;
     }
 
-    public void setPendChkoverList(List<RsReceive> pendChkoverList) {
+    public void setPendChkoverList(List<QdRsReceive> pendChkoverList) {
         this.pendChkoverList = pendChkoverList;
     }
 
-    public List<RsReceive> getPendChkUnpassList() {
+    public List<QdRsReceive> getPendChkUnpassList() {
         return pendChkUnpassList;
     }
 
-    public void setPendChkUnpassList(List<RsReceive> pendChkUnpassList) {
+    public void setPendChkUnpassList(List<QdRsReceive> pendChkUnpassList) {
         this.pendChkUnpassList = pendChkUnpassList;
     }
 
-    public RsReceive[] getSelectedRecords() {
+    public QdRsReceive[] getSelectedRecords() {
         return selectedRecords;
     }
 
-    public void setSelectedRecords(RsReceive[] selectedRecords) {
+    public void setSelectedRecords(QdRsReceive[] selectedRecords) {
         this.selectedRecords = selectedRecords;
     }
 

@@ -1,8 +1,8 @@
 package rfm.qd.repository.dao.common;
 
-import rfm.qd.repository.model.CbsAccTxn;
-import rfm.qd.repository.model.RsAccDetail;
-import rfm.qd.repository.model.RsPayout;
+import rfm.qd.repository.model.QdCbsAccTxn;
+import rfm.qd.repository.model.QdRsAccDetail;
+import rfm.qd.repository.model.QdRsPayout;
 import rfm.qd.view.payout.ParamPlan;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -25,7 +25,7 @@ public interface CommonMapper {
     @Select("select nvl(max(company_id)+1,'1000000001') from rs_fdccompany")
     String selectNewCompanyId();
 
-    List<RsPayout> selectRsPayoutsByParamPlan(ParamPlan paramPlan);
+    List<QdRsPayout> selectRsPayoutsByParamPlan(ParamPlan paramPlan);
 
     @Select("select nvl(max(SERIAL)+1,'3132000000001') from rs_payout")
     String selectMaxPayoutSerial();
@@ -49,7 +49,7 @@ public interface CommonMapper {
     @Select(" select t.account_code, t.account_name, sum(t.trade_amt) as trade_amt , t.trade_date from RS_ACC_DETAIL t " +
             " group by t.account_code, t.account_name, t.trade_date " +
             " having t.trade_date = #{txnDate}")
-    List<RsAccDetail> selectAcctLoanAmtListByDate(@Param("txnDate") String txnDate);
+    List<QdRsAccDetail> selectAcctLoanAmtListByDate(@Param("txnDate") String txnDate);
 
     @Select("select seq_no from rs_sys_ctl where SYS_NO = '1' for update")
     int selectSysSeq();
@@ -76,7 +76,7 @@ public interface CommonMapper {
             "            on acc.account_code = t.account_no  " +
             "            group by acc.account_code,t.txn_date,t.send_flag,acc.status_flag,acc.account_name  " +
             "            having acc.status_flag = '0' ")
-    public List<CbsAccTxn> qryCbsAcctxnsByDateAndFlag(@Param("date") String date);
+    public List<QdCbsAccTxn> qryCbsAcctxnsByDateAndFlag(@Param("date") String date);
 
     @Update("update CBS_ACC_TXN t set t.send_flag = '1' where t.txn_date = #{date} and t.send_flag = '0'")
     public int updateCbsActtxnsSent(@Param("date") String date);

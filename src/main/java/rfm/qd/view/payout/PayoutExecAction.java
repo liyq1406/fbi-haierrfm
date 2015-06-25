@@ -1,7 +1,7 @@
 package rfm.qd.view.payout;
 
 import rfm.qd.common.constant.WorkResult;
-import rfm.qd.repository.model.RsPayout;
+import rfm.qd.repository.model.QdRsPayout;
 import rfm.qd.service.ClientBiService;
 import rfm.qd.service.PayoutService;
 import org.slf4j.Logger;
@@ -26,22 +26,22 @@ import java.util.List;
 public class PayoutExecAction {
     private Logger logger = LoggerFactory.getLogger(PayoutExecAction.class);
 
-    private RsPayout rsPayout;
+    private QdRsPayout qdRsPayout;
     @ManagedProperty(value = "#{payoutService}")
     private PayoutService payoutService;
     @ManagedProperty(value = "#{clientBiService}")
     private ClientBiService clientBiService;
-    private List<RsPayout> passPayoutList;
-    private List<RsPayout> payOverList;
-    private List<RsPayout> sendOverList;
-    private RsPayout selectedRecord;
-    private RsPayout[] selectedRecords;
-    private RsPayout[] toSendRecords;
+    private List<QdRsPayout> passPayoutList;
+    private List<QdRsPayout> payOverList;
+    private List<QdRsPayout> sendOverList;
+    private QdRsPayout selectedRecord;
+    private QdRsPayout[] selectedRecords;
+    private QdRsPayout[] toSendRecords;
     private WorkResult workResult = WorkResult.CREATE;
 
     @PostConstruct
     public void init() {
-        rsPayout = new RsPayout();
+        qdRsPayout = new QdRsPayout();
         passPayoutList = payoutService.selectRecordsByWorkResult(WorkResult.PASS.getCode());
         payOverList = payoutService.selectRecordsByWorkResult(WorkResult.COMMIT.getCode());
         sendOverList = payoutService.selectRecordsByWorkResult(WorkResult.SENT.getCode());
@@ -52,7 +52,7 @@ public class PayoutExecAction {
             MessageUtil.addWarn("可入账记录为空！");
         } else {
             try {
-                for (RsPayout record : passPayoutList) {
+                for (QdRsPayout record : passPayoutList) {
                     if (payoutService.updateRsPayoutToExec(record) == -1) {
                         throw new RuntimeException("【记录更新失败】付款监管账号：" + record.getPayAccount());
                     }
@@ -73,7 +73,7 @@ public class PayoutExecAction {
             MessageUtil.addWarn("请至少选择一笔记录！");
         } else {
             try {
-                for (RsPayout record : selectedRecords) {
+                for (QdRsPayout record : selectedRecords) {
                     if (payoutService.updateRsPayoutToExec(record) == -1) {
                         throw new RuntimeException("【记录更新失败】付款监管账号：" + record.getPayAccount());
                     }
@@ -96,7 +96,7 @@ public class PayoutExecAction {
         } else {
             int sentResult = 1;
             try {
-                for (RsPayout record : payOverList) {
+                for (QdRsPayout record : payOverList) {
                     sentResult = clientBiService.sendRsPayoutMsg(record);
                     if (sentResult != 1) {
                         throw new RuntimeException("发送失败");
@@ -119,7 +119,7 @@ public class PayoutExecAction {
         } else {
             int sentResult = 1;
             try {
-                for (RsPayout record : toSendRecords) {
+                for (QdRsPayout record : toSendRecords) {
                     sentResult = clientBiService.sendRsPayoutMsg(record);
                     if (sentResult != 1) {
                         throw new RuntimeException("发送失败");
@@ -138,12 +138,12 @@ public class PayoutExecAction {
 
     //=========================================
 
-    public RsPayout getRsPayout() {
-        return rsPayout;
+    public QdRsPayout getQdRsPayout() {
+        return qdRsPayout;
     }
 
-    public void setRsPayout(RsPayout rsPayout) {
-        this.rsPayout = rsPayout;
+    public void setQdRsPayout(QdRsPayout qdRsPayout) {
+        this.qdRsPayout = qdRsPayout;
     }
 
     public PayoutService getPayoutService() {
@@ -154,11 +154,11 @@ public class PayoutExecAction {
         this.payoutService = payoutService;
     }
 
-    public RsPayout getSelectedRecord() {
+    public QdRsPayout getSelectedRecord() {
         return selectedRecord;
     }
 
-    public void setSelectedRecord(RsPayout selectedRecord) {
+    public void setSelectedRecord(QdRsPayout selectedRecord) {
         this.selectedRecord = selectedRecord;
     }
 
@@ -170,35 +170,35 @@ public class PayoutExecAction {
         this.workResult = workResult;
     }
 
-    public RsPayout[] getSelectedRecords() {
+    public QdRsPayout[] getSelectedRecords() {
         return selectedRecords;
     }
 
-    public void setSelectedRecords(RsPayout[] selectedRecords) {
+    public void setSelectedRecords(QdRsPayout[] selectedRecords) {
         this.selectedRecords = selectedRecords;
     }
 
-    public List<RsPayout> getPassPayoutList() {
+    public List<QdRsPayout> getPassPayoutList() {
         return passPayoutList;
     }
 
-    public void setPassPayoutList(List<RsPayout> passPayoutList) {
+    public void setPassPayoutList(List<QdRsPayout> passPayoutList) {
         this.passPayoutList = passPayoutList;
     }
 
-    public List<RsPayout> getPayOverList() {
+    public List<QdRsPayout> getPayOverList() {
         return payOverList;
     }
 
-    public void setPayOverList(List<RsPayout> payOverList) {
+    public void setPayOverList(List<QdRsPayout> payOverList) {
         this.payOverList = payOverList;
     }
 
-    public RsPayout[] getToSendRecords() {
+    public QdRsPayout[] getToSendRecords() {
         return toSendRecords;
     }
 
-    public void setToSendRecords(RsPayout[] toSendRecords) {
+    public void setToSendRecords(QdRsPayout[] toSendRecords) {
         this.toSendRecords = toSendRecords;
     }
 
@@ -210,11 +210,11 @@ public class PayoutExecAction {
         this.clientBiService = clientBiService;
     }
 
-    public List<RsPayout> getSendOverList() {
+    public List<QdRsPayout> getSendOverList() {
         return sendOverList;
     }
 
-    public void setSendOverList(List<RsPayout> sendOverList) {
+    public void setSendOverList(List<QdRsPayout> sendOverList) {
         this.sendOverList = sendOverList;
     }
 }

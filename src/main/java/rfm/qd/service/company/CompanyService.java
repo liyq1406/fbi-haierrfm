@@ -1,9 +1,9 @@
 package rfm.qd.service.company;
 
-import rfm.qd.repository.dao.RsFdccompanyMapper;
+import rfm.qd.repository.dao.QdRsFdccompanyMapper;
 import rfm.qd.repository.dao.common.CommonMapper;
-import rfm.qd.repository.model.RsFdccompany;
-import rfm.qd.repository.model.RsFdccompanyExample;
+import rfm.qd.repository.model.QdRsFdccompany;
+import rfm.qd.repository.model.QdRsFdccompanyExample;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +25,7 @@ import java.util.List;
 @Service
 public class CompanyService {
     @Autowired
-    private RsFdccompanyMapper fdccompanyMapper;
+    private QdRsFdccompanyMapper fdccompanyMapper;
     @Autowired
     private CommonMapper commonMapper;
 
@@ -35,8 +35,8 @@ public class CompanyService {
      * @param fdccompany
      * @return
      */
-    public boolean isExistInDb(RsFdccompany fdccompany) {
-        RsFdccompanyExample example = new RsFdccompanyExample();
+    public boolean isExistInDb(QdRsFdccompany fdccompany) {
+        QdRsFdccompanyExample example = new QdRsFdccompanyExample();
         example.createCriteria().andCompanyIdEqualTo(fdccompany.getCompanyId());
         int cnt = fdccompanyMapper.countByExample(example);
         return (cnt >= 1);
@@ -48,8 +48,8 @@ public class CompanyService {
      * @param fdccompany
      * @return
      */
-    public boolean isModifiable(RsFdccompany fdccompany) {
-        RsFdccompany originRecord = fdccompanyMapper.selectByPrimaryKey(fdccompany.getPkId());
+    public boolean isModifiable(QdRsFdccompany fdccompany) {
+        QdRsFdccompany originRecord = fdccompanyMapper.selectByPrimaryKey(fdccompany.getPkId());
         if (!fdccompany.getModificationNum().equals(originRecord.getModificationNum())) {
             return false;
         }
@@ -62,7 +62,7 @@ public class CompanyService {
      * @param fdccompany
      */
     @Transactional
-    public void insertRsFdccompany(RsFdccompany fdccompany) {
+    public void insertRsFdccompany(QdRsFdccompany fdccompany) {
         String newId = commonMapper.selectNewCompanyId();
         fdccompany.setCompanyId(newId);
         OperatorManager om = SystemService.getOperatorManager();
@@ -79,7 +79,7 @@ public class CompanyService {
      * @param fdccompany
      */
     @Transactional
-    public void updateRsFdccompany(RsFdccompany fdccompany) {
+    public void updateRsFdccompany(QdRsFdccompany fdccompany) {
         if (isModifiable(fdccompany)) {
             fdccompany.setModificationNum(fdccompany.getModificationNum() + 1);
             OperatorManager om = SystemService.getOperatorManager();
@@ -96,8 +96,8 @@ public class CompanyService {
      *
      * @return
      */
-    public List<RsFdccompany> qryAllRecords() {
-        RsFdccompanyExample example = new RsFdccompanyExample();
+    public List<QdRsFdccompany> qryAllRecords() {
+        QdRsFdccompanyExample example = new QdRsFdccompanyExample();
         example.createCriteria().andDeleteFlagEqualTo("0");
         return fdccompanyMapper.selectByExample(example);
     }
@@ -108,8 +108,8 @@ public class CompanyService {
      * @param companyName
      * @return
      */
-    public List<RsFdccompany> qryRsFdccompanyByName(String companyName) {
-        RsFdccompanyExample example = new RsFdccompanyExample();
+    public List<QdRsFdccompany> qryRsFdccompanyByName(String companyName) {
+        QdRsFdccompanyExample example = new QdRsFdccompanyExample();
         example.createCriteria().andCompanyNameLike("%" + companyName + "%").andDeleteFlagEqualTo("0");
         return fdccompanyMapper.selectByExample(example);
     }
@@ -119,7 +119,7 @@ public class CompanyService {
      * @param pkid
      * @return RsFdccompany
      */
-    public RsFdccompany selectedReocrdByPK(String pkid) {
+    public QdRsFdccompany selectedReocrdByPK(String pkid) {
         return fdccompanyMapper.selectByPrimaryKey(pkid);
     }
 
@@ -129,9 +129,9 @@ public class CompanyService {
             SelectItem siNew = new SelectItem("",newAdd);
             enumOptions.add(siNew);
         }
-        List<RsFdccompany> rsFdccompanies = qryAllRecords();
+        List<QdRsFdccompany> rsFdccompanies = qryAllRecords();
         if (rsFdccompanies.size() > 0) {
-            for (RsFdccompany rf:rsFdccompanies) {
+            for (QdRsFdccompany rf:rsFdccompanies) {
                 SelectItem si = new SelectItem(rf.getCompanyId(),rf.getCompanyName());
                 enumOptions.add(si);
             }

@@ -1,6 +1,6 @@
 package rfm.qd.view.contract;
 
-import rfm.qd.repository.model.RsContract;
+import rfm.qd.repository.model.QdRsContract;
 import rfm.qd.service.contract.ContractService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +26,7 @@ public class ContractDetlAction implements Serializable {
     @ManagedProperty(value = "#{contractService}")
     private ContractService contractService;
 
-    private RsContract selectedRecord;
+    private QdRsContract selectedRecord;
 
     @PostConstruct
     public void init() {
@@ -47,11 +47,11 @@ public class ContractDetlAction implements Serializable {
         this.contractService = contractService;
     }
 
-    public RsContract getSelectedRecord() {
+    public QdRsContract getSelectedRecord() {
         return selectedRecord;
     }
 
-    public void setSelectedRecord(RsContract selectedRecord) {
+    public void setSelectedRecord(QdRsContract selectedRecord) {
         this.selectedRecord = selectedRecord;
     }
 }

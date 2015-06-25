@@ -21,9 +21,7 @@ import java.util.List;
 public class Ibator {
     public static void main(String[] argv) {
         Ibator ibator = new Ibator();
-
         ibator.run("resources/generatorConfig.xml");
-
     }
 
     public void run(String configfile) {

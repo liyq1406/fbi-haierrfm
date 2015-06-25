@@ -56,22 +56,22 @@
                                                  style="width: 100%">
                                         <h:outputLabel value="计划编号:" for="planCtrlNo" style="margin-left: 16px;"/>
                                         <p:inputText id="planCtrlNo"
-                                                     value="#{expensesPlanQryAction.rsPlanCtrl.planCtrlNo}"
+                                                     value="#{expensesPlanQryAction.qdRsPlanCtrl.planCtrlNo}"
                                                      readonly="true" style="width:160px;"/>
 
                                         <h:outputLabel value="收款方户名:" for="toAccountName" style="margin-left: 10px;"/>
                                         <p:inputText id="toAccountName"
-                                                     value="#{expensesPlanQryAction.rsPlanCtrl.toAccountName}"
+                                                     value="#{expensesPlanQryAction.qdRsPlanCtrl.toAccountName}"
                                                      readonly="true" style="width:260px;"/>
 
                                         <h:outputLabel value="收款方账号:" for="toAccountCode" style="margin-left: 16px;"/>
                                         <p:inputText id="toAccountCode"
-                                                     value="#{expensesPlanQryAction.rsPlanCtrl.toAccountCode}"
+                                                     value="#{expensesPlanQryAction.qdRsPlanCtrl.toAccountCode}"
                                                      readonly="true" style="width:160px;"/>
 
                                         <h:outputLabel value="收款行:" for="toBankName" style="margin-left: 10px;"/>
                                         <p:inputText id="toBankName"
-                                                     value="#{expensesPlanQryAction.rsPlanCtrl.toHsBankName}"
+                                                     value="#{expensesPlanQryAction.qdRsPlanCtrl.toHsBankName}"
                                                      readonly="true" style="width:260px;"/>
                                     </h:panelGrid>
 
@@ -85,44 +85,44 @@
                                         <h:outputLabel value="付款房产商:" for="companyName" style="margin-left:20px;"/>
                                         <h:inputText autocomplete="off" id="companyName" style="width:160px;"
                                                      readonly="true"
-                                                     value="#{expensesPlanQryAction.rsPlanCtrl.companyName}">
+                                                     value="#{expensesPlanQryAction.qdRsPlanCtrl.companyName}">
                                         </h:inputText>
 
                                         <h:outputLabel value="付款监管账号:" for="accountCode"/>
                                         <p:inputText autocomplete="off" id="accountCode" style="width:160px;"
                                                      readonly="true"
-                                                     value="#{expensesPlanQryAction.rsPlanCtrl.accountCode}">
+                                                     value="#{expensesPlanQryAction.qdRsPlanCtrl.accountCode}">
                                         </p:inputText>
 
                                         <h:outputLabel value="计划编号:" for="planNo" style="margin-left: 28px;"/>
-                                        <p:inputText id="planNo" value="#{expensesPlanQryAction.rsPlanCtrl.planCtrlNo}"
+                                        <p:inputText id="planNo" value="#{expensesPlanQryAction.qdRsPlanCtrl.planCtrlNo}"
                                                      readonly="true" style="width:160px;"/>
 
                                         <h:outputLabel value="计划金额:" for="planAmt" style="margin-left: 30px;"/>
-                                        <p:inputText id="planAmt" value="#{expensesPlanQryAction.rsPlanCtrl.plAmount}"
+                                        <p:inputText id="planAmt" value="#{expensesPlanQryAction.qdRsPlanCtrl.plAmount}"
                                                      readonly="true" style="width:160px;">
                                             <f:convertNumber pattern="#,###,###,###,##0.00"/>
                                         </p:inputText>
 
                                         <h:outputLabel value="可用金额:" for="avAmt" style="margin-left: 28px;"/>
-                                        <p:inputText id="avAmt" value="#{expensesPlanQryAction.rsPlanCtrl.avAmount}"
+                                        <p:inputText id="avAmt" value="#{expensesPlanQryAction.qdRsPlanCtrl.avAmount}"
                                                      readonly="true" style="width:160px;">
                                             <f:convertNumber pattern="#,###,###,###,##0.00"/>
                                         </p:inputText>
 
                                         <h:outputLabel value="计划使用日期:" for="planDate" style="margin-left: 30px;"/>
-                                        <p:inputText id="planDate" value="#{expensesPlanQryAction.rsPlanCtrl.planDate}"
+                                        <p:inputText id="planDate" value="#{expensesPlanQryAction.qdRsPlanCtrl.planDate}"
                                                      readonly="true" style="width:160px;">
                                         </p:inputText>
 
                                         <h:outputLabel value="用款说明:" for="planDesc" style="margin-left: 30px;"/>
-                                        <p:inputText id="planDesc" value="#{expensesPlanQryAction.rsPlanCtrl.planDesc}"
+                                        <p:inputText id="planDesc" value="#{expensesPlanQryAction.qdRsPlanCtrl.planDesc}"
                                                      readonly="true" style="width:160px;">
                                         </p:inputText>
 
                                         <h:outputLabel value="接收日期:" for="acceptDate" style="margin-left: 30px;"/>
                                         <p:inputText id="acceptDate"
-                                                     value="#{expensesPlanQryAction.rsPlanCtrl.acceptDate}"
+                                                     value="#{expensesPlanQryAction.qdRsPlanCtrl.acceptDate}"
                                                      readonly="true" style="width:160px;">
                                         </p:inputText>
 
@@ -131,7 +131,7 @@
                                     </h:panelGrid>
                                     <h:panelGrid columns="2">
                                         <h:outputLabel value="备注:" for="remark" style="margin-left: 58px;"/>
-                                        <p:inputText id="remark" value="#{expensesPlanQryAction.rsPlanCtrl.remark}"
+                                        <p:inputText id="remark" value="#{expensesPlanQryAction.qdRsPlanCtrl.remark}"
                                                      readonly="true" style="width:445px;">
                                         </p:inputText>
                                     </h:panelGrid>

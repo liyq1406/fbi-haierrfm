@@ -1,9 +1,9 @@
 package rfm.qd.service;
 
 import rfm.qd.common.constant.SendFlag;
-import rfm.qd.repository.dao.RsLockedaccDetailMapper;
-import rfm.qd.repository.model.RsLockedaccDetail;
-import rfm.qd.repository.model.RsLockedaccDetailExample;
+import rfm.qd.repository.dao.QdRsLockedaccDetailMapper;
+import rfm.qd.repository.model.QdRsLockedaccDetail;
+import rfm.qd.repository.model.QdRsLockedaccDetailExample;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,10 +23,10 @@ import java.util.List;
 @Service
 public class LockedaccDetailService {
     @Autowired
-    private RsLockedaccDetailMapper lockedaccDetailMapper;
+    private QdRsLockedaccDetailMapper lockedaccDetailMapper;
 
     public boolean isHasUnSend() {
-        RsLockedaccDetailExample example = new RsLockedaccDetailExample();
+        QdRsLockedaccDetailExample example = new QdRsLockedaccDetailExample();
         example.createCriteria().andDeletedFlagEqualTo("0").andSendFlagEqualTo(SendFlag.UN_SEND.getCode());
         if (lockedaccDetailMapper.countByExample(example) > 0) {
             return true;
@@ -35,7 +35,7 @@ public class LockedaccDetailService {
     }
 
     @Transactional
-    public int insertRecord(RsLockedaccDetail record) {
+    public int insertRecord(QdRsLockedaccDetail record) {
         OperatorManager om = SystemService.getOperatorManager();
         String operId = om.getOperatorId();
         record.setCreatedBy(operId);
@@ -43,34 +43,34 @@ public class LockedaccDetailService {
         return lockedaccDetailMapper.insertSelective(record);
     }
 
-    public List<RsLockedaccDetail> selectRecordsBySendflagAndLockstatus(String sendflag, String lockstatus) {
-        RsLockedaccDetailExample example = new RsLockedaccDetailExample();
+    public List<QdRsLockedaccDetail> selectRecordsBySendflagAndLockstatus(String sendflag, String lockstatus) {
+        QdRsLockedaccDetailExample example = new QdRsLockedaccDetailExample();
         example.createCriteria().andDeletedFlagEqualTo("0").andSendFlagEqualTo(sendflag).andStatusFlagEqualTo(lockstatus);
         return lockedaccDetailMapper.selectByExample(example);
     }
 
-    public List<RsLockedaccDetail> selectRecordsBySendflagAndNotEqualLockstatus(String sendflag, String lockstatus) {
-        RsLockedaccDetailExample example = new RsLockedaccDetailExample();
+    public List<QdRsLockedaccDetail> selectRecordsBySendflagAndNotEqualLockstatus(String sendflag, String lockstatus) {
+        QdRsLockedaccDetailExample example = new QdRsLockedaccDetailExample();
         example.createCriteria().andDeletedFlagEqualTo("0").andSendFlagEqualTo(sendflag).andStatusFlagNotEqualTo(lockstatus);
         return lockedaccDetailMapper.selectByExample(example);
     }
 
     @Transactional
-    public int updateRecordToSendflag(RsLockedaccDetail record, String sendflag) {
+    public int updateRecordToSendflag(QdRsLockedaccDetail record, String sendflag) {
         record.setSendFlag(sendflag);
         return updateRecord(record);
     }
 
-    public boolean isSent(RsLockedaccDetail record) {
-        RsLockedaccDetail originRecord = lockedaccDetailMapper.selectByPrimaryKey(record.getPkId());
+    public boolean isSent(QdRsLockedaccDetail record) {
+        QdRsLockedaccDetail originRecord = lockedaccDetailMapper.selectByPrimaryKey(record.getPkId());
         if (SendFlag.SENT.getCode().equalsIgnoreCase(originRecord.getSendFlag())) {
             return true;
         }
         return false;
     }
 
-    public int updateRecord(RsLockedaccDetail record) {
-        RsLockedaccDetail originRecord = lockedaccDetailMapper.selectByPrimaryKey(record.getPkId());
+    public int updateRecord(QdRsLockedaccDetail record) {
+        QdRsLockedaccDetail originRecord = lockedaccDetailMapper.selectByPrimaryKey(record.getPkId());
         if (!record.getModificationNum().equals(originRecord.getModificationNum())) {
             throw new RuntimeException("并发更新异常！待冻结账号 ：" + record.getAccountCode());
         }

@@ -1,12 +1,12 @@
 package rfm.qd.service.contract;
 
 import rfm.qd.common.constant.ContractStatus;
-import rfm.qd.repository.dao.BiContractCloseMapper;
-import rfm.qd.repository.dao.RsContractMapper;
-import rfm.qd.repository.model.BiContractClose;
-import rfm.qd.repository.model.BiContractCloseExample;
-import rfm.qd.repository.model.RsContract;
-import rfm.qd.repository.model.RsContractExample;
+import rfm.qd.repository.dao.QdBiContractCloseMapper;
+import rfm.qd.repository.dao.QdRsContractMapper;
+import rfm.qd.repository.model.QdBiContractClose;
+import rfm.qd.repository.model.QdBiContractCloseExample;
+import rfm.qd.repository.model.QdRsContract;
+import rfm.qd.repository.model.QdRsContractExample;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,48 +27,48 @@ import java.util.List;
 public class ContractService {
 
     @Autowired
-    private RsContractMapper contractMapper;
+    private QdRsContractMapper contractMapper;
     @Autowired
-    private BiContractCloseMapper contractCloseMapper;
+    private QdBiContractCloseMapper contractCloseMapper;
 
-    public List<RsContract> selectContractList(){
-        RsContractExample example = new RsContractExample();
+    public List<QdRsContract> selectContractList(){
+        QdRsContractExample example = new QdRsContractExample();
         example.createCriteria().andDeletedFlagEqualTo("0");
         return  contractMapper.selectByExample(example);
     }
 
-    public RsContract selectContractByNo(String contractNo) {
-        RsContractExample example = new RsContractExample();
+    public QdRsContract selectContractByNo(String contractNo) {
+        QdRsContractExample example = new QdRsContractExample();
         example.createCriteria().andDeletedFlagEqualTo("0").andContractNoEqualTo(contractNo);
-        List<RsContract> list = contractMapper.selectByExample(example);
+        List<QdRsContract> list = contractMapper.selectByExample(example);
         if(list.isEmpty()) {
             return null;
         }else return list.get(0);
     }
-    public BiContractClose selectCloseContractByNo(String contractNo) {
-        BiContractCloseExample example = new BiContractCloseExample();
+    public QdBiContractClose selectCloseContractByNo(String contractNo) {
+        QdBiContractCloseExample example = new QdBiContractCloseExample();
         example.createCriteria().andDeletedFlagEqualTo("0").andContractNoEqualTo(contractNo);
-        List<BiContractClose> list = contractCloseMapper.selectByExample(example);
+        List<QdBiContractClose> list = contractCloseMapper.selectByExample(example);
         if(list.isEmpty()) {
             return null;
         }else return list.get(0);
     }
 
-    public List<RsContract> selectContractList(ContractStatus contractStatus){
-        RsContractExample example = new RsContractExample();
+    public List<QdRsContract> selectContractList(ContractStatus contractStatus){
+        QdRsContractExample example = new QdRsContractExample();
         example.createCriteria().andDeletedFlagEqualTo("0").andStatusFlagEqualTo(contractStatus.getCode());
         return  contractMapper.selectByExample(example);
     }
-    public RsContract selectRecordContract(String pkid) {
+    public QdRsContract selectRecordContract(String pkid) {
         return contractMapper.selectByPrimaryKey(pkid);
     }
 
     @Transactional
-    public int updateRecord(RsContract contract) {
+    public int updateRecord(QdRsContract contract) {
         OperatorManager om = SystemService.getOperatorManager();
         contract.setLastUpdBy(om.getOperatorId());
         contract.setLastUpdDate(new Date());
-        RsContract originRecord = contractMapper.selectByPrimaryKey(contract.getPkId());
+        QdRsContract originRecord = contractMapper.selectByPrimaryKey(contract.getPkId());
         if(!originRecord.getModificationNum().equals(contract.getModificationNum())) {
             throw new RuntimeException("并发更新冲突!");
         }
@@ -76,7 +76,7 @@ public class ContractService {
     }
 
     @Transactional
-    public int insertContract(RsContract contract) {
+    public int insertContract(QdRsContract contract) {
          return contractMapper.insertSelective(contract);
     }
 

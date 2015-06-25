@@ -3,8 +3,8 @@ package rfm.qd.view.account;
 import rfm.qd.common.constant.SendFlag;
 import rfm.qd.common.constant.TradeStatus;
 import rfm.qd.common.constant.TradeType;
-import rfm.qd.repository.model.RsAccDetail;
-import rfm.qd.repository.model.RsAccount;
+import rfm.qd.repository.model.QdRsAccDetail;
+import rfm.qd.repository.model.QdRsAccount;
 import rfm.qd.service.ClientBiService;
 import rfm.qd.service.account.AccountDetlService;
 import rfm.qd.service.account.AccountService;
@@ -37,23 +37,23 @@ public class InterestBookAction {
     @ManagedProperty(value = "#{clientBiService}")
     private ClientBiService clientBiService;
     //已复核数据 待入账
-    private List<RsAccDetail> rsAccDetailsChk;
-    private RsAccDetail[] selectedRecords;
+    private List<QdRsAccDetail> qdRsAccDetailsChk;
+    private QdRsAccDetail[] selectedRecords;
     //待发送数据
-    private List<RsAccDetail> rsAccDetailsSend;
-    private RsAccDetail[] selectedRecordsSend;
+    private List<QdRsAccDetail> qdRsAccDetailsSend;
+    private QdRsAccDetail[] selectedRecordsSend;
     //已发送数据
-    private List<RsAccDetail> rsAccDetailsSended;
-    private RsAccDetail[] selectedRecordsSended;
+    private List<QdRsAccDetail> qdRsAccDetailsSended;
+    private QdRsAccDetail[] selectedRecordsSended;
 
     @PostConstruct
     public void init() {
         List<String> statusfalgs = new ArrayList<String>();
         statusfalgs.add(0, TradeStatus.CHECKED.getCode());
-        rsAccDetailsChk = accountDetlService.selectedRecordsForChk(TradeType.INTEREST.getCode(),statusfalgs);
-        rsAccDetailsSend = accountDetlService.selectedRecordsForSend(TradeType.INTEREST.getCode(), TradeStatus.SUCCESS.getCode()
+        qdRsAccDetailsChk = accountDetlService.selectedRecordsForChk(TradeType.INTEREST.getCode(),statusfalgs);
+        qdRsAccDetailsSend = accountDetlService.selectedRecordsForSend(TradeType.INTEREST.getCode(), TradeStatus.SUCCESS.getCode()
                 , SendFlag.UN_SEND.getCode());
-        rsAccDetailsSended = accountDetlService.selectedRecordsForSend(TradeType.INTEREST.getCode(), TradeStatus.SUCCESS.getCode()
+        qdRsAccDetailsSended = accountDetlService.selectedRecordsForSend(TradeType.INTEREST.getCode(), TradeStatus.SUCCESS.getCode()
                 , SendFlag.SENT.getCode());
     }
 
@@ -66,18 +66,18 @@ public class InterestBookAction {
             return null;
         }
         try {
-            for (RsAccDetail record : selectedRecords) {
-                RsAccount rsAccount = new RsAccount();
-                rsAccount.setAccountCode(record.getAccountCode());
-                rsAccount.setCompanyId(record.getCompanyId());
+            for (QdRsAccDetail record : selectedRecords) {
+                QdRsAccount qdRsAccount = new QdRsAccount();
+                qdRsAccount.setAccountCode(record.getAccountCode());
+                qdRsAccount.setCompanyId(record.getCompanyId());
                 //将发生额添加到账户余额字段中
-                rsAccount.setBalance(record.getTradeAmt());
+                qdRsAccount.setBalance(record.getTradeAmt());
                 //更新监管账户余额
-                if (accountService.updateRecordBalance(rsAccount) == 1) {
+                if (accountService.updateRecordBalance(qdRsAccount) == 1) {
                     //更新账户明细余额字段、状态字段
                     record.setStatusFlag(TradeStatus.SUCCESS.getCode());
-                    rsAccount = accountService.selectCanRecvAccountByNo(record.getAccountCode());
-                    if (accountDetlService.updateSelectedRecordBook(record,rsAccount) != 1) {
+                    qdRsAccount = accountService.selectCanRecvAccountByNo(record.getAccountCode());
+                    if (accountDetlService.updateSelectedRecordBook(record, qdRsAccount) != 1) {
                         throw new RuntimeException("入账失败！");
                     }
                 } else {
@@ -94,12 +94,12 @@ public class InterestBookAction {
     }
 
     public String onSend() {
-        if(rsAccDetailsSend.isEmpty()) {
+        if(qdRsAccDetailsSend.isEmpty()) {
             MessageUtil.addWarn("没有待发送记录！");
             return null;
         }
         try {
-            for(RsAccDetail record : rsAccDetailsSend) {
+            for(QdRsAccDetail record : qdRsAccDetailsSend) {
                 if(clientBiService.sendInterestRecord(record) != 1) {
                    throw new RuntimeException("发送失败！出错记录账号："+record.getAccountCode());
                 }
@@ -122,19 +122,19 @@ public class InterestBookAction {
         this.accountDetlService = accountDetlService;
     }
 
-    public List<RsAccDetail> getRsAccDetailsChk() {
-        return rsAccDetailsChk;
+    public List<QdRsAccDetail> getQdRsAccDetailsChk() {
+        return qdRsAccDetailsChk;
     }
 
-    public void setRsAccDetailsChk(List<RsAccDetail> rsAccDetailsChk) {
-        this.rsAccDetailsChk = rsAccDetailsChk;
+    public void setQdRsAccDetailsChk(List<QdRsAccDetail> qdRsAccDetailsChk) {
+        this.qdRsAccDetailsChk = qdRsAccDetailsChk;
     }
 
-    public RsAccDetail[] getSelectedRecords() {
+    public QdRsAccDetail[] getSelectedRecords() {
         return selectedRecords;
     }
 
-    public void setSelectedRecords(RsAccDetail[] selectedRecords) {
+    public void setSelectedRecords(QdRsAccDetail[] selectedRecords) {
         this.selectedRecords = selectedRecords;
     }
 
@@ -146,35 +146,35 @@ public class InterestBookAction {
         this.accountService = accountService;
     }
 
-    public List<RsAccDetail> getRsAccDetailsSend() {
-        return rsAccDetailsSend;
+    public List<QdRsAccDetail> getQdRsAccDetailsSend() {
+        return qdRsAccDetailsSend;
     }
 
-    public void setRsAccDetailsSend(List<RsAccDetail> rsAccDetailsSend) {
-        this.rsAccDetailsSend = rsAccDetailsSend;
+    public void setQdRsAccDetailsSend(List<QdRsAccDetail> qdRsAccDetailsSend) {
+        this.qdRsAccDetailsSend = qdRsAccDetailsSend;
     }
 
-    public RsAccDetail[] getSelectedRecordsSend() {
+    public QdRsAccDetail[] getSelectedRecordsSend() {
         return selectedRecordsSend;
     }
 
-    public void setSelectedRecordsSend(RsAccDetail[] selectedRecordsSend) {
+    public void setSelectedRecordsSend(QdRsAccDetail[] selectedRecordsSend) {
         this.selectedRecordsSend = selectedRecordsSend;
     }
 
-    public List<RsAccDetail> getRsAccDetailsSended() {
-        return rsAccDetailsSended;
+    public List<QdRsAccDetail> getQdRsAccDetailsSended() {
+        return qdRsAccDetailsSended;
     }
 
-    public void setRsAccDetailsSended(List<RsAccDetail> rsAccDetailsSended) {
-        this.rsAccDetailsSended = rsAccDetailsSended;
+    public void setQdRsAccDetailsSended(List<QdRsAccDetail> qdRsAccDetailsSended) {
+        this.qdRsAccDetailsSended = qdRsAccDetailsSended;
     }
 
-    public RsAccDetail[] getSelectedRecordsSended() {
+    public QdRsAccDetail[] getSelectedRecordsSended() {
         return selectedRecordsSended;
     }
 
-    public void setSelectedRecordsSended(RsAccDetail[] selectedRecordsSended) {
+    public void setSelectedRecordsSended(QdRsAccDetail[] selectedRecordsSended) {
         this.selectedRecordsSended = selectedRecordsSended;
     }
 

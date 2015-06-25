@@ -2,9 +2,9 @@ package rfm.qd.view.contract;
 
 import rfm.qd.common.constant.ContractStatus;
 import rfm.qd.common.constant.WorkResult;
-import rfm.qd.repository.model.BiContractClose;
-import rfm.qd.repository.model.RsContract;
-import rfm.qd.repository.model.RsRefund;
+import rfm.qd.repository.model.QdBiContractClose;
+import rfm.qd.repository.model.QdRsContract;
+import rfm.qd.repository.model.QdRsRefund;
 import rfm.qd.service.RefundService;
 import rfm.qd.service.contract.ContractService;
 import org.apache.commons.lang.StringUtils;
@@ -34,8 +34,8 @@ import java.math.BigDecimal;
 public class RefundDetlAction {
 
     private static final Logger logger = LoggerFactory.getLogger(RefundDetlAction.class);
-    private RsRefund refund;
-    private RsContract contract;
+    private QdRsRefund refund;
+    private QdRsContract contract;
     @ManagedProperty(value = "#{contractService}")
     private ContractService contractService;
     @ManagedProperty(value = "#{refundService}")
@@ -58,8 +58,8 @@ public class RefundDetlAction {
         } else if (!StringUtils.isEmpty(pkid)) {
             contractNo = (String) context.getExternalContext().getRequestParameterMap().get("contractNo");
             contract = contractService.selectRecordContract(pkid);
-            BiContractClose contractClose = contractService.selectCloseContractByNo(contract.getContractNo());
-            refund = new RsRefund();
+            QdBiContractClose contractClose = contractService.selectCloseContractByNo(contract.getContractNo());
+            refund = new QdRsRefund();
             copyFields(contractClose);
             totalTransAmt = refundService.selectSumPlamount(contractNo) == null ? new BigDecimal(0) : refundService.selectSumPlamount(contractNo);
         }
@@ -149,7 +149,7 @@ public class RefundDetlAction {
         return null;
     }
 
-    private void copyFields(BiContractClose contractClose) {
+    private void copyFields(QdBiContractClose contractClose) {
         refund.setPayAccount(contractClose.getAccountCode());
         refund.setPayCompanyName(contractClose.getAccountName());
         refund.setRecAccount(contractClose.getBuyerAccCode());
@@ -164,11 +164,11 @@ public class RefundDetlAction {
     //===========================================================
 
 
-    public RsContract getContract() {
+    public QdRsContract getContract() {
         return contract;
     }
 
-    public void setContract(RsContract contract) {
+    public void setContract(QdRsContract contract) {
         this.contract = contract;
     }
 
@@ -180,11 +180,11 @@ public class RefundDetlAction {
         this.contractService = contractService;
     }
 
-    public RsRefund getRefund() {
+    public QdRsRefund getRefund() {
         return refund;
     }
 
-    public void setRefund(RsRefund refund) {
+    public void setRefund(QdRsRefund refund) {
         this.refund = refund;
     }
 

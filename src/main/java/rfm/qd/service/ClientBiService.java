@@ -69,10 +69,10 @@ public class ClientBiService {
      * @return
      * @throws Exception
      */
-    public int sendTodayAccDetails(List<RsAccDetail> accDetailList) throws Exception {
+    public int sendTodayAccDetails(List<QdRsAccDetail> accDetailList) throws Exception {
         T0007Req req = new T0007Req();
         req.head.OpCode = "0007";
-        for (RsAccDetail accDetail : accDetailList) {
+        for (QdRsAccDetail accDetail : accDetailList) {
            /* RsAccDetail originRecord = accDetailService.selectAccDetailByPkid(accDetail.getPkId());
             if ("1".equals(originRecord.getDcheckFlag())) {
                 continue;
@@ -100,7 +100,7 @@ public class ClientBiService {
         if (!"0000".equalsIgnoreCase(res.head.RetCode)) {
             return -1;
         } else {
-            for (RsAccDetail record : accDetailList) {
+            for (QdRsAccDetail record : accDetailList) {
                 record.setSendFlag(SendFlag.SENT.getCode());
                 record.setDcheckFlag("1");
                 accDetailService.updateAccDetail(record);
@@ -109,13 +109,13 @@ public class ClientBiService {
         }
     }
 
-    public int sendTodayLoanAccDetails(List<RsAccDetail> accDetailList, String txnDate) throws Exception {
+    public int sendTodayLoanAccDetails(List<QdRsAccDetail> accDetailList, String txnDate) throws Exception {
         T0007Req req = new T0007Req();
         req.head.OpCode = "0007";
         if (accDetailList.size() > 0) {
             String bankSerial = accDetailList.get(0).getBankSerial();
-            List<RsAccDetail> loanAcctList = commonMapper.selectAcctLoanAmtListByDate(txnDate);
-            for (RsAccDetail accDetail : loanAcctList) {
+            List<QdRsAccDetail> loanAcctList = commonMapper.selectAcctLoanAmtListByDate(txnDate);
+            for (QdRsAccDetail accDetail : loanAcctList) {
                 T0007Req.Param.Record record = T0007Req.getRecord();
                 record.BankSerial = bankSerial;
                 record.Date = StringUtil.transDate10ToDate8(accDetail.getTradeDate());
@@ -142,7 +142,7 @@ public class ClientBiService {
         if (!"0000".equalsIgnoreCase(res.head.RetCode)) {
             return -1;
         } else {
-            for (RsAccDetail record : accDetailList) {
+            for (QdRsAccDetail record : accDetailList) {
                 record.setSendFlag(SendFlag.SENT.getCode());
                 record.setEcheckFlag("2");
                 accDetailService.updateAccDetail(record);
@@ -159,8 +159,8 @@ public class ClientBiService {
      * @return
      * @throws Exception
      */
-    public int sendInterestRecord(RsAccDetail record) throws Exception {
-        RsAccDetail originRecord = accDetailService.selectAccDetailByPkid(record.getPkId());
+    public int sendInterestRecord(QdRsAccDetail record) throws Exception {
+        QdRsAccDetail originRecord = accDetailService.selectAccDetailByPkid(record.getPkId());
         if (SendFlag.SENT.getCode().equals(originRecord.getSendFlag())) {
             return 1;
         }
@@ -191,8 +191,8 @@ public class ClientBiService {
      * @return
      * @throws Exception
      */
-    public int sendAccDetailBack(RsAccDetail record) throws Exception {
-        RsAccDetail originRecord = accDetailService.selectAccDetailByPkid(record.getPkId());
+    public int sendAccDetailBack(QdRsAccDetail record) throws Exception {
+        QdRsAccDetail originRecord = accDetailService.selectAccDetailByPkid(record.getPkId());
         if (SendFlag.SENT.getCode().equals(originRecord.getSendFlag())) {
             return 1;
         }
@@ -221,8 +221,8 @@ public class ClientBiService {
      * @param record
      * @return
      */
-    public int sendAccDetailCancel(RsAccDetail record) throws Exception {
-        RsAccDetail originRecord = accDetailService.selectAccDetailByPkid(record.getPkId());
+    public int sendAccDetailCancel(QdRsAccDetail record) throws Exception {
+        QdRsAccDetail originRecord = accDetailService.selectAccDetailByPkid(record.getPkId());
         if (SendFlag.SENT.getCode().equals(originRecord.getSendFlag())) {
             return 1;
         }
@@ -250,8 +250,8 @@ public class ClientBiService {
      * @return
      * @throws Exception
      */
-    public int sendRsPayoutMsg(RsPayout record) throws Exception {
-        RsPayout originRecord = payoutService.selectPayoutByPkid(record.getPkId());
+    public int sendRsPayoutMsg(QdRsPayout record) throws Exception {
+        QdRsPayout originRecord = payoutService.selectPayoutByPkid(record.getPkId());
         if (WorkResult.SENT.getCode().equals(originRecord.getWorkResult())) {
             return 1;
         }
@@ -286,9 +286,9 @@ public class ClientBiService {
      * @param record , flag 收支标志
      * @return
      */
-    public int sendRsReceiveMsg(RsReceive record, String flag) throws Exception {
+    public int sendRsReceiveMsg(QdRsReceive record, String flag) throws Exception {
 
-        RsReceive originRecord = contractRecvService.selectContractRecv(record.getPkId());
+        QdRsReceive originRecord = contractRecvService.selectContractRecv(record.getPkId());
         if (WorkResult.SENT.getCode().equals(originRecord.getWorkResult())) {
             return 1;
         }
@@ -324,9 +324,9 @@ public class ClientBiService {
      * @param record , flag 收支标志
      * @return
      */
-    public int sendRsRefundMsg(RsRefund record, String flag) throws Exception {
+    public int sendRsRefundMsg(QdRsRefund record, String flag) throws Exception {
 
-        RsRefund originRecord = refundService.selectRefundByPkid(record.getPkId());
+        QdRsRefund originRecord = refundService.selectRefundByPkid(record.getPkId());
         if (WorkResult.SENT.getCode().equals(originRecord.getWorkResult())) {
             return 1;
         }
@@ -364,7 +364,7 @@ public class ClientBiService {
      * @param record
      * @return
      */
-    public int sendLockAccDetail(RsLockedaccDetail record) throws Exception {
+    public int sendLockAccDetail(QdRsLockedaccDetail record) throws Exception {
         if (lockedaccDetailService.isSent(record)) {
             return 1;
         }

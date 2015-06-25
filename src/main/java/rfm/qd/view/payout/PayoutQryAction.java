@@ -1,7 +1,7 @@
 package rfm.qd.view.payout;
 
 import rfm.qd.common.constant.RefundStatus;
-import rfm.qd.repository.model.RsPayout;
+import rfm.qd.repository.model.QdRsPayout;
 import rfm.qd.service.PayoutService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +30,7 @@ public class PayoutQryAction {
     @ManagedProperty(value = "#{toolsService}")
     private ToolsService toolsService;
     private ParamPlan paramPlan;
-    private List<RsPayout> payoutList;
+    private List<QdRsPayout> payoutList;
     private List<SelectItem> refundStatusList;
     private RefundStatus statusFlag = RefundStatus.ACCOUNT_SUCCESS;
     @PostConstruct
@@ -62,11 +62,11 @@ public class PayoutQryAction {
         this.paramPlan = paramPlan;
     }
 
-    public List<RsPayout> getPayoutList() {
+    public List<QdRsPayout> getPayoutList() {
         return payoutList;
     }
 
-    public void setPayoutList(List<RsPayout> payoutList) {
+    public void setPayoutList(List<QdRsPayout> payoutList) {
         this.payoutList = payoutList;
     }
 

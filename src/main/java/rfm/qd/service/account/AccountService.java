@@ -2,9 +2,9 @@ package rfm.qd.service.account;
 
 import rfm.qd.common.constant.AccountStatus;
 import rfm.qd.common.constant.LimitStatus;
-import rfm.qd.repository.dao.RsAccountMapper;
-import rfm.qd.repository.model.RsAccount;
-import rfm.qd.repository.model.RsAccountExample;
+import rfm.qd.repository.dao.QdRsAccountMapper;
+import rfm.qd.repository.model.QdRsAccount;
+import rfm.qd.repository.model.QdRsAccountExample;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,28 +25,28 @@ import java.util.List;
 @Service
 public class AccountService {
     @Autowired
-    private RsAccountMapper accountMapper;
+    private QdRsAccountMapper accountMapper;
 
-    public RsAccount selectedRecordByPkid(String pkId) {
+    public QdRsAccount selectedRecordByPkid(String pkId) {
         return accountMapper.selectByPrimaryKey(pkId);
     }
 
-    public RsAccount selectCanRecvAccountByNo(String accountNo) {
-        RsAccountExample accountExample = new RsAccountExample();
+    public QdRsAccount selectCanRecvAccountByNo(String accountNo) {
+        QdRsAccountExample accountExample = new QdRsAccountExample();
         accountExample.createCriteria().andDeletedFlagEqualTo("0").andStatusFlagEqualTo(AccountStatus.WATCH.getCode())
                 .andAccountCodeEqualTo(accountNo);
-        List<RsAccount> accountList = accountMapper.selectByExample(accountExample);
+        List<QdRsAccount> accountList = accountMapper.selectByExample(accountExample);
         if (accountList.isEmpty()) {
             throw new RuntimeException("没有查询到已监管账户！！");
         }
         return accountList.get(0);
     }
 
-    public RsAccount selectCanPayAccountByNo(String accountNo) {
-        RsAccountExample accountExample = new RsAccountExample();
+    public QdRsAccount selectCanPayAccountByNo(String accountNo) {
+        QdRsAccountExample accountExample = new QdRsAccountExample();
         accountExample.createCriteria().andDeletedFlagEqualTo("0").andStatusFlagEqualTo(AccountStatus.WATCH.getCode())
                 .andLimitFlagEqualTo(LimitStatus.NOT_LIMIT.getCode()).andAccountCodeEqualTo(accountNo);
-        List<RsAccount> accountList = accountMapper.selectByExample(accountExample);
+        List<QdRsAccount> accountList = accountMapper.selectByExample(accountExample);
         if (accountList.isEmpty()) {
             throw new RuntimeException("没有查询到未限制的已监管账户！请确认该账户已开启监管并未限制付款！");
         }
@@ -59,8 +59,8 @@ public class AccountService {
      * @param account
      * @return
      */
-    public boolean isExistInDb(RsAccount account) {
-        RsAccountExample example = new RsAccountExample();
+    public boolean isExistInDb(QdRsAccount account) {
+        QdRsAccountExample example = new QdRsAccountExample();
         example.createCriteria().andAccountCodeEqualTo(account.getAccountCode());
         return accountMapper.countByExample(example) >= 1;
     }
@@ -71,8 +71,8 @@ public class AccountService {
      * @param
      * @return
      */
-    public boolean isModifiable(RsAccount act) {
-        RsAccount actt = accountMapper.selectByPrimaryKey(act.getPkId());
+    public boolean isModifiable(QdRsAccount act) {
+        QdRsAccount actt = accountMapper.selectByPrimaryKey(act.getPkId());
         if (!act.getModificationNum().equals(actt.getModificationNum())) {
             return false;
         }
@@ -84,20 +84,20 @@ public class AccountService {
      *
      * @return
      */
-    public List<RsAccount> qryAllRecords() {
-        RsAccountExample example = new RsAccountExample();
+    public List<QdRsAccount> qryAllRecords() {
+        QdRsAccountExample example = new QdRsAccountExample();
         example.createCriteria().andDeletedFlagEqualTo("0");
         return accountMapper.selectByExample(example);
     }
 
-    public List<RsAccount> qryAllLockRecords() {
-        RsAccountExample example = new RsAccountExample();
+    public List<QdRsAccount> qryAllLockRecords() {
+        QdRsAccountExample example = new QdRsAccountExample();
         example.createCriteria().andDeletedFlagEqualTo("0").andBalanceLockGreaterThan(new BigDecimal(0));
         return accountMapper.selectByExample(example);
     }
 
-    public List<RsAccount> qryAllMonitRecords() {
-        RsAccountExample example = new RsAccountExample();
+    public List<QdRsAccount> qryAllMonitRecords() {
+        QdRsAccountExample example = new QdRsAccountExample();
         example.createCriteria().andDeletedFlagEqualTo("0").andStatusFlagEqualTo(AccountStatus.WATCH.getCode());
         return accountMapper.selectByExample(example);
     }
@@ -105,10 +105,10 @@ public class AccountService {
     /**
      * 查询
      */
-    public List<RsAccount> selectedRecordsByCondition(String presellNo, String companyId, String accountCode, String accountName) {
-        RsAccountExample example = new RsAccountExample();
+    public List<QdRsAccount> selectedRecordsByCondition(String presellNo, String companyId, String accountCode, String accountName) {
+        QdRsAccountExample example = new QdRsAccountExample();
         example.clear();
-        RsAccountExample.Criteria rsActCrit = example.createCriteria();
+        QdRsAccountExample.Criteria rsActCrit = example.createCriteria();
         rsActCrit.andDeletedFlagEqualTo("0");
         if (presellNo != null && !StringUtils.isEmpty(presellNo.trim())) {
             rsActCrit.andPresellNoEqualTo(presellNo);
@@ -130,7 +130,7 @@ public class AccountService {
      *
      * @param account
      */
-    public void insertRecord(RsAccount account) {
+    public void insertRecord(QdRsAccount account) {
         if (isExistInDb(account)) {
             throw new RuntimeException("该账号已存在，请重新录入！");
         } else {
@@ -147,7 +147,7 @@ public class AccountService {
     /**
      * 通过主键更新
      */
-    public int updateRecord(RsAccount account) {
+    public int updateRecord(QdRsAccount account) {
         if (isModifiable(account)) {
             try {
                 OperatorManager om = SystemService.getOperatorManager();
@@ -168,16 +168,16 @@ public class AccountService {
      * 利息入账更新余额
      */
 
-    public int updateRecordBalance(RsAccount rsAccount) {
-        BigDecimal tradeAmt = rsAccount.getBalance();
-        RsAccountExample example = new RsAccountExample();
+    public int updateRecordBalance(QdRsAccount qdRsAccount) {
+        BigDecimal tradeAmt = qdRsAccount.getBalance();
+        QdRsAccountExample example = new QdRsAccountExample();
         example.clear();
-        example.createCriteria().andAccountCodeEqualTo(rsAccount.getAccountCode()).andCompanyIdEqualTo(rsAccount.getCompanyId());
-        RsAccount tmpRact = accountMapper.selectByExample(example).get(0);
-        rsAccount.setPkId(tmpRact.getPkId());
-        rsAccount.setModificationNum(tmpRact.getModificationNum());
-        rsAccount.setBalance(tmpRact.getBalance().add(tradeAmt));
-        rsAccount.setBalanceUsable(tmpRact.getBalanceUsable().add(tradeAmt));
-        return updateRecord(rsAccount);
+        example.createCriteria().andAccountCodeEqualTo(qdRsAccount.getAccountCode()).andCompanyIdEqualTo(qdRsAccount.getCompanyId());
+        QdRsAccount tmpRact = accountMapper.selectByExample(example).get(0);
+        qdRsAccount.setPkId(tmpRact.getPkId());
+        qdRsAccount.setModificationNum(tmpRact.getModificationNum());
+        qdRsAccount.setBalance(tmpRact.getBalance().add(tradeAmt));
+        qdRsAccount.setBalanceUsable(tmpRact.getBalanceUsable().add(tradeAmt));
+        return updateRecord(qdRsAccount);
     }
 }

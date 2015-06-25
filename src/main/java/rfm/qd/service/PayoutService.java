@@ -2,11 +2,11 @@ package rfm.qd.service;
 
 import rfm.qd.common.constant.RefundStatus;
 import rfm.qd.common.constant.WorkResult;
-import rfm.qd.repository.dao.RsPayoutMapper;
+import rfm.qd.repository.dao.QdRsPayoutMapper;
 import rfm.qd.repository.dao.common.CommonMapper;
-import rfm.qd.repository.model.RsAccDetail;
-import rfm.qd.repository.model.RsPayout;
-import rfm.qd.repository.model.RsPayoutExample;
+import rfm.qd.repository.model.QdRsAccDetail;
+import rfm.qd.repository.model.QdRsPayout;
+import rfm.qd.repository.model.QdRsPayoutExample;
 import rfm.qd.service.expensesplan.ExpensesPlanService;
 import rfm.qd.view.payout.ParamPlan;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ import java.util.List;
 @Service
 public class PayoutService {
     @Autowired
-    private RsPayoutMapper rsPayoutMapper;
+    private QdRsPayoutMapper qdRsPayoutMapper;
     @Autowired
     private CommonMapper commonMapper;
     @Autowired
@@ -38,115 +38,115 @@ public class PayoutService {
     private TradeService tradeService;
     private SimpleDateFormat sdf10 = new SimpleDateFormat("yyyy-MM-dd");
 
-    public RsPayout selectPayoutByPkid(String pkid) {
-        return rsPayoutMapper.selectByPrimaryKey(pkid);
+    public QdRsPayout selectPayoutByPkid(String pkid) {
+        return qdRsPayoutMapper.selectByPrimaryKey(pkid);
     }
 
     public boolean isHasUnSend() {
-        RsPayoutExample example = new RsPayoutExample();
+        QdRsPayoutExample example = new QdRsPayoutExample();
         example.createCriteria().andDeletedFlagEqualTo("0").andWorkResultEqualTo(WorkResult.COMMIT.getCode());
-        if (rsPayoutMapper.countByExample(example) > 0) {
+        if (qdRsPayoutMapper.countByExample(example) > 0) {
             return true;
         }
         return false;
     }
 
-    public int updateRsPayout(RsPayout rsPayout) {
-        RsPayout originRecord = rsPayoutMapper.selectByPrimaryKey(rsPayout.getPkId());
-        if (!originRecord.getModificationNum().equals(rsPayout.getModificationNum())) {
+    public int updateRsPayout(QdRsPayout qdRsPayout) {
+        QdRsPayout originRecord = qdRsPayoutMapper.selectByPrimaryKey(qdRsPayout.getPkId());
+        if (!originRecord.getModificationNum().equals(qdRsPayout.getModificationNum())) {
             throw new RuntimeException("记录并发更新冲突，请重试！");
         } else {
             OperatorManager om = SystemService.getOperatorManager();
             String operId = om.getOperatorId();
-            rsPayout.setLastUpdBy(operId);
-            rsPayout.setLastUpdDate(new Date());
-            rsPayout.setModificationNum(rsPayout.getModificationNum() + 1);
-            return rsPayoutMapper.updateByPrimaryKey(rsPayout);
+            qdRsPayout.setLastUpdBy(operId);
+            qdRsPayout.setLastUpdDate(new Date());
+            qdRsPayout.setModificationNum(qdRsPayout.getModificationNum() + 1);
+            return qdRsPayoutMapper.updateByPrimaryKey(qdRsPayout);
         }
     }
 
     /**
-     * @param rsPayout
+     * @param qdRsPayout
      * @return
      */
-    public int insertRsPayout(RsPayout rsPayout) {
+    public int insertRsPayout(QdRsPayout qdRsPayout) {
         OperatorManager om = SystemService.getOperatorManager();
-        rsPayout.setApplyUserId(om.getOperatorId());
-        rsPayout.setApplyUserName(om.getOperatorName());
-        rsPayout.setApplyDate(sdf10.format(new Date()));
-        rsPayout.setCreatedBy(om.getOperatorId());
-        rsPayout.setCreatedDate(new Date());
-        return rsPayoutMapper.insertSelective(rsPayout);
+        qdRsPayout.setApplyUserId(om.getOperatorId());
+        qdRsPayout.setApplyUserName(om.getOperatorName());
+        qdRsPayout.setApplyDate(sdf10.format(new Date()));
+        qdRsPayout.setCreatedBy(om.getOperatorId());
+        qdRsPayout.setCreatedDate(new Date());
+        return qdRsPayoutMapper.insertSelective(qdRsPayout);
     }
 
     @Transactional
-    public int updateRsPayoutsToWorkResult(RsPayout[] rsPayoutList, String workResult) {
+    public int updateRsPayoutsToWorkResult(QdRsPayout[] qdRsPayoutList, String workResult) {
         OperatorManager om = SystemService.getOperatorManager();
         String operId = om.getOperatorId();
         String operName = om.getOperatorName();
         String operDate = sdf10.format(new Date());
         int rtnFlag = 1;
-        for (RsPayout rsPayout : rsPayoutList) {
-            rsPayout.setAuditDate(operDate);
-            rsPayout.setAuditUserId(operId);
-            rsPayout.setAuditUserName(operName);
-            rsPayout.setWorkResult(workResult);
-            if (updateRsPayout(rsPayout) != 1) {
+        for (QdRsPayout qdRsPayout : qdRsPayoutList) {
+            qdRsPayout.setAuditDate(operDate);
+            qdRsPayout.setAuditUserId(operId);
+            qdRsPayout.setAuditUserName(operName);
+            qdRsPayout.setWorkResult(workResult);
+            if (updateRsPayout(qdRsPayout) != 1) {
                 rtnFlag = -1;
-                throw new RuntimeException("【记录更新失败】付款监管账号：" + rsPayout.getPayAccount());
+                throw new RuntimeException("【记录更新失败】付款监管账号：" + qdRsPayout.getPayAccount());
             }
         }
         return rtnFlag;
     }
 
     @Transactional
-    public int updateRsPayoutToExec(RsPayout rsPayout) {
+    public int updateRsPayoutToExec(QdRsPayout qdRsPayout) {
         OperatorManager om = SystemService.getOperatorManager();
         String operId = om.getOperatorId();
         String operName = om.getOperatorName();
         String operDate = sdf10.format(new Date());
-        rsPayout.setExecUserId(operId);
-        rsPayout.setExecUserName(operName);
-        rsPayout.setExecDate(operDate);
-        rsPayout.setTradeDate(operDate);
-        rsPayout.setStatusFlag(RefundStatus.ACCOUNT_SUCCESS.getCode());
-        rsPayout.setWorkResult(WorkResult.COMMIT.getCode());
-        rsPayout.setSerial(commonMapper.selectMaxPayoutSerial());
-        rsPayout.setBankSerial(rsPayout.getSerial());
-        return tradeService.handlePayoutTrade(rsPayout) + updateRsPayout(rsPayout);
+        qdRsPayout.setExecUserId(operId);
+        qdRsPayout.setExecUserName(operName);
+        qdRsPayout.setExecDate(operDate);
+        qdRsPayout.setTradeDate(operDate);
+        qdRsPayout.setStatusFlag(RefundStatus.ACCOUNT_SUCCESS.getCode());
+        qdRsPayout.setWorkResult(WorkResult.COMMIT.getCode());
+        qdRsPayout.setSerial(commonMapper.selectMaxPayoutSerial());
+        qdRsPayout.setBankSerial(qdRsPayout.getSerial());
+        return tradeService.handlePayoutTrade(qdRsPayout) + updateRsPayout(qdRsPayout);
     }
 
-    public List<RsPayout> selectRecordsByWorkResult(String workResultCode) {
-        RsPayoutExample example = new RsPayoutExample();
+    public List<QdRsPayout> selectRecordsByWorkResult(String workResultCode) {
+        QdRsPayoutExample example = new QdRsPayoutExample();
         example.createCriteria().andDeletedFlagEqualTo("0").andWorkResultEqualTo(workResultCode);
-        return rsPayoutMapper.selectByExample(example);
+        return qdRsPayoutMapper.selectByExample(example);
     }
 
-    public List<RsPayout> qryCheckPayouts() {
-        RsPayoutExample example = new RsPayoutExample();
+    public List<QdRsPayout> qryCheckPayouts() {
+        QdRsPayoutExample example = new QdRsPayoutExample();
         example.createCriteria().andDeletedFlagEqualTo("0")
                 .andWorkResultEqualTo(WorkResult.CREATE.getCode());
         example.or(example.createCriteria().andDeletedFlagEqualTo("0")
                 .andWorkResultEqualTo(WorkResult.RE_CHECK.getCode()));
-        return rsPayoutMapper.selectByExample(example);
+        return qdRsPayoutMapper.selectByExample(example);
     }
 
-    public List<RsPayout> selectRsPayoutsByParamPlan(ParamPlan paramPlan) {
+    public List<QdRsPayout> selectRsPayoutsByParamPlan(ParamPlan paramPlan) {
         return commonMapper.selectRsPayoutsByParamPlan(paramPlan);
     }
 
     @Transactional
-    public int updateRsPayoutSent(RsPayout rsPayout) {
-        rsPayout.setWorkResult(WorkResult.SENT.getCode());
-        return updateRsPayout(rsPayout);
+    public int updateRsPayoutSent(QdRsPayout qdRsPayout) {
+        qdRsPayout.setWorkResult(WorkResult.SENT.getCode());
+        return updateRsPayout(qdRsPayout);
     }
 
-    public RsPayout selectRecordByAccDetail(RsAccDetail record) {
-        RsPayoutExample example = new RsPayoutExample();
+    public QdRsPayout selectRecordByAccDetail(QdRsAccDetail record) {
+        QdRsPayoutExample example = new QdRsPayoutExample();
         example.createCriteria().andDeletedFlagEqualTo("0")
                 .andPayAccountEqualTo(record.getAccountCode()).andRecAccountEqualTo(record.getToAccountCode())
                 .andApAmountEqualTo(record.getTradeAmt()).andTradeDateEqualTo(record.getTradeDate());
-        List<RsPayout> payoutList = rsPayoutMapper.selectByExample(example);
+        List<QdRsPayout> payoutList = qdRsPayoutMapper.selectByExample(example);
         if (payoutList.size() > 0) {
             return payoutList.get(0);
         } else {
@@ -155,14 +155,14 @@ public class PayoutService {
 
     }
 
-    public List<RsPayout> selectEditRecords() {
-        RsPayoutExample example = new RsPayoutExample();
+    public List<QdRsPayout> selectEditRecords() {
+        QdRsPayoutExample example = new QdRsPayoutExample();
         example.createCriteria().andDeletedFlagEqualTo("0")
                 .andWorkResultEqualTo(WorkResult.CREATE.getCode());
         example.or(example.createCriteria().andDeletedFlagEqualTo("0")
                 .andWorkResultEqualTo(WorkResult.NOTPASS.getCode()));
         example.or(example.createCriteria().andDeletedFlagEqualTo("0")
                         .andWorkResultEqualTo(WorkResult.RE_CHECK.getCode()));
-        return rsPayoutMapper.selectByExample(example);
+        return qdRsPayoutMapper.selectByExample(example);
     }
 }

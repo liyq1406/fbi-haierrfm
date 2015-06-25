@@ -2,7 +2,7 @@ package rfm.qd.view.account;
 
 import rfm.qd.common.constant.TradeStatus;
 import rfm.qd.common.constant.TradeType;
-import rfm.qd.repository.model.RsAccDetail;
+import rfm.qd.repository.model.QdRsAccDetail;
 import rfm.qd.service.account.AccountDetlService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,10 +29,10 @@ public class InterestBookChkAction {
     @ManagedProperty(value = "#{accountDetlService}")
     private AccountDetlService accountDetlService;
 
-    private List<RsAccDetail> rsAccDetails;
-    private RsAccDetail[] selectedRecords;
-    private List<RsAccDetail> rsAccDetailsChk;
-    private RsAccDetail[] selectedRecordsChk;
+    private List<QdRsAccDetail> qdRsAccDetails;
+    private QdRsAccDetail[] selectedRecords;
+    private List<QdRsAccDetail> qdRsAccDetailsChk;
+    private QdRsAccDetail[] selectedRecordsChk;
 
 
     @PostConstruct
@@ -40,11 +40,11 @@ public class InterestBookChkAction {
         List<String> statusfalg_init = new ArrayList<String>();
         statusfalg_init.add(0, TradeStatus.CANCEL.getCode());
         //´ý¸´ºË¼ÇÂ¼
-        rsAccDetails = accountDetlService.selectedRecordsForChk(TradeType.INTEREST.getCode(), statusfalg_init);
+        qdRsAccDetails = accountDetlService.selectedRecordsForChk(TradeType.INTEREST.getCode(), statusfalg_init);
         List<String> statusfalg_checked = new ArrayList<String>();
         statusfalg_checked.add(0, TradeStatus.CHECKED.getCode());
         //ÒÑ¸´ºË¼ÇÂ¼
-        rsAccDetailsChk = accountDetlService.selectedRecordsForChk(TradeType.INTEREST.getCode(), statusfalg_checked);
+        qdRsAccDetailsChk = accountDetlService.selectedRecordsForChk(TradeType.INTEREST.getCode(), statusfalg_checked);
     }
 
     public String onCheck() {
@@ -53,7 +53,7 @@ public class InterestBookChkAction {
             return null;
         }
         try {
-            for (RsAccDetail record : selectedRecords) {
+            for (QdRsAccDetail record : selectedRecords) {
                 record.setStatusFlag(TradeStatus.CHECKED.getCode());
                 if (accountDetlService.updateSelectedRecord(record) != 1) {
                     throw new RuntimeException("¸´ºËÊ§°Ü£¡");
@@ -76,7 +76,7 @@ public class InterestBookChkAction {
             return null;
         }
         try {
-            for (RsAccDetail record : selectedRecords) {
+            for (QdRsAccDetail record : selectedRecords) {
                 record.setStatusFlag(TradeStatus.BACK.getCode());
                 if (accountDetlService.updateSelectedRecord(record) != 1) {
                     throw new RuntimeException("ÍË»ØÊ§°Ü£¡");
@@ -101,7 +101,7 @@ public class InterestBookChkAction {
         }
 
         try {
-            for (RsAccDetail record : selectedRecordsChk) {
+            for (QdRsAccDetail record : selectedRecordsChk) {
                 record.setStatusFlag(TradeStatus.BACK.getCode());
                 if (accountDetlService.updateSelectedRecord(record) != 1) {
                     throw new RuntimeException("ÍË»ØÊ§°Ü£¡");
@@ -115,12 +115,12 @@ public class InterestBookChkAction {
         return null;
     }
 
-    public List<RsAccDetail> getRsAccDetailsChk() {
-        return rsAccDetailsChk;
+    public List<QdRsAccDetail> getQdRsAccDetailsChk() {
+        return qdRsAccDetailsChk;
     }
 
-    public void setRsAccDetailsChk(List<RsAccDetail> rsAccDetailsChk) {
-        this.rsAccDetailsChk = rsAccDetailsChk;
+    public void setQdRsAccDetailsChk(List<QdRsAccDetail> qdRsAccDetailsChk) {
+        this.qdRsAccDetailsChk = qdRsAccDetailsChk;
     }
 
     public AccountDetlService getAccountDetlService() {
@@ -131,27 +131,27 @@ public class InterestBookChkAction {
         this.accountDetlService = accountDetlService;
     }
 
-    public List<RsAccDetail> getRsAccDetails() {
-        return rsAccDetails;
+    public List<QdRsAccDetail> getQdRsAccDetails() {
+        return qdRsAccDetails;
     }
 
-    public void setRsAccDetails(List<RsAccDetail> rsAccDetails) {
-        this.rsAccDetails = rsAccDetails;
+    public void setQdRsAccDetails(List<QdRsAccDetail> qdRsAccDetails) {
+        this.qdRsAccDetails = qdRsAccDetails;
     }
 
-    public RsAccDetail[] getSelectedRecords() {
+    public QdRsAccDetail[] getSelectedRecords() {
         return selectedRecords;
     }
 
-    public void setSelectedRecords(RsAccDetail[] selectedRecords) {
+    public void setSelectedRecords(QdRsAccDetail[] selectedRecords) {
         this.selectedRecords = selectedRecords;
     }
 
-    public RsAccDetail[] getSelectedRecordsChk() {
+    public QdRsAccDetail[] getSelectedRecordsChk() {
         return selectedRecordsChk;
     }
 
-    public void setSelectedRecordsChk(RsAccDetail[] selectedRecordsChk) {
+    public void setSelectedRecordsChk(QdRsAccDetail[] selectedRecordsChk) {
         this.selectedRecordsChk = selectedRecordsChk;
     }
 }

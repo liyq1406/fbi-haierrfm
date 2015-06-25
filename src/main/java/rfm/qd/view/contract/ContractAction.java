@@ -4,7 +4,7 @@ import rfm.qd.common.constant.ContractStatus;
 import rfm.qd.common.constant.HouseType;
 import rfm.qd.common.constant.LoanType;
 import rfm.qd.common.constant.PayupFlag;
-import rfm.qd.repository.model.RsContract;
+import rfm.qd.repository.model.QdRsContract;
 import rfm.qd.service.contract.ContractService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,9 +39,9 @@ public class ContractAction implements Serializable{
     @ManagedProperty(value = "#{toolsService}")
     private ToolsService toolsService;
 
-    private List<RsContract> detlList;
-    private RsContract[] selectedRecords;
-    private RsContract selectedRecord;
+    private List<QdRsContract> detlList;
+    private QdRsContract[] selectedRecords;
+    private QdRsContract selectedRecord;
 
     private List<SelectItem> contractStatusOptions;
     private List<SelectItem> houseTypeOptions;
@@ -94,27 +94,27 @@ public class ContractAction implements Serializable{
         this.contractService = contractService;
     }
 
-    public List<RsContract> getDetlList() {
+    public List<QdRsContract> getDetlList() {
         return detlList;
     }
 
-    public void setDetlList(List<RsContract> detlList) {
+    public void setDetlList(List<QdRsContract> detlList) {
         this.detlList = detlList;
     }
 
-    public RsContract[] getSelectedRecords() {
+    public QdRsContract[] getSelectedRecords() {
         return selectedRecords;
     }
 
-    public void setSelectedRecords(RsContract[] selectedRecords) {
+    public void setSelectedRecords(QdRsContract[] selectedRecords) {
         this.selectedRecords = selectedRecords;
     }
 
-    public RsContract getSelectedRecord() {
+    public QdRsContract getSelectedRecord() {
         return selectedRecord;
     }
 
-    public void setSelectedRecord(RsContract selectedRecord) {
+    public void setSelectedRecord(QdRsContract selectedRecord) {
         this.selectedRecord = selectedRecord;
     }
 

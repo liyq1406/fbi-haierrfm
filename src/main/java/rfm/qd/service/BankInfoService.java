@@ -1,8 +1,8 @@
 package rfm.qd.service;
 
-import rfm.qd.repository.dao.CbsBankInfoMapper;
-import rfm.qd.repository.model.CbsBankInfo;
-import rfm.qd.repository.model.CbsBankInfoExample;
+import rfm.qd.repository.dao.QdCbsBankInfoMapper;
+import rfm.qd.repository.model.QdCbsBankInfo;
+import rfm.qd.repository.model.QdCbsBankInfoExample;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,25 +21,25 @@ import java.util.List;
 public class BankInfoService {
 
     @Autowired
-    private CbsBankInfoMapper cbsBankInfoMapper;
+    private QdCbsBankInfoMapper qdCbsBankInfoMapper;
 
     public List<SelectItem> qryBankInfoListByNoAndName(String code, String name) {
-        CbsBankInfoExample example = new CbsBankInfoExample();
+        QdCbsBankInfoExample example = new QdCbsBankInfoExample();
         List<SelectItem> items = new ArrayList<SelectItem>();
         if (!name.contains(" ")) {
             example.createCriteria().andCodeLike("%" + code + "%").andFullNameLike("%" + name + "%");
         } else {
-            CbsBankInfoExample.Criteria conditions = example.createCriteria().andCodeLike("%" + code + "%");
+            QdCbsBankInfoExample.Criteria conditions = example.createCriteria().andCodeLike("%" + code + "%");
             for (String s : name.split(" ")) {
                 conditions.andFullNameLike("%" + s + "%");
             }
         }
-        int cnt = cbsBankInfoMapper.countByExample(example);
+        int cnt = qdCbsBankInfoMapper.countByExample(example);
         if (cnt > 30) {
             throw new RuntimeException("查询到银行记录数太多，请细化查询条件！");
         }
-        List<CbsBankInfo> cbsBankInfos = cbsBankInfoMapper.selectByExample(example);
-        for (CbsBankInfo record : cbsBankInfos) {
+        List<QdCbsBankInfo> qdCbsBankInfos = qdCbsBankInfoMapper.selectByExample(example);
+        for (QdCbsBankInfo record : qdCbsBankInfos) {
             SelectItem item = new SelectItem(record.getCode(), record.getFullName());
             items.add(item);
         }

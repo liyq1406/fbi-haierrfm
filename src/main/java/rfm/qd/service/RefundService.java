@@ -2,12 +2,12 @@ package rfm.qd.service;
 
 import rfm.qd.common.constant.RefundStatus;
 import rfm.qd.common.constant.WorkResult;
-import rfm.qd.repository.dao.RsContractMapper;
-import rfm.qd.repository.dao.RsRefundMapper;
+import rfm.qd.repository.dao.QdRsContractMapper;
+import rfm.qd.repository.dao.QdRsRefundMapper;
 import rfm.qd.repository.dao.common.CommonMapper;
-import rfm.qd.repository.model.RsAccDetail;
-import rfm.qd.repository.model.RsRefund;
-import rfm.qd.repository.model.RsRefundExample;
+import rfm.qd.repository.model.QdRsAccDetail;
+import rfm.qd.repository.model.QdRsRefund;
+import rfm.qd.repository.model.QdRsRefundExample;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,15 +29,15 @@ import java.util.List;
 public class RefundService {
 
     @Autowired
-    private RsContractMapper contractMapper;
+    private QdRsContractMapper contractMapper;
     @Autowired
-    private RsRefundMapper refundMapper;
+    private QdRsRefundMapper refundMapper;
     @Autowired
     private CommonMapper commonMapper;
     private SimpleDateFormat sdf10 = new SimpleDateFormat("yyyy-MM-dd");
 
     @Transactional
-    public int insertRecord(RsRefund record) {
+    public int insertRecord(QdRsRefund record) {
         OperatorManager om = SystemService.getOperatorManager();
         record.setCreatedBy(om.getOperatorId());
         record.setCreatedDate(new Date());
@@ -58,18 +58,18 @@ public class RefundService {
         return commonMapper.selectSumPlamountExceptPkid(pkid);
     }
 
-    public List<RsRefund> selectRefundList() {
-        RsRefundExample example = new RsRefundExample();
+    public List<QdRsRefund> selectRefundList() {
+        QdRsRefundExample example = new QdRsRefundExample();
         example.createCriteria().andDeletedFlagEqualTo("0");
         return refundMapper.selectByExample(example);
     }
 
-    public RsRefund selectRecordByAccDetail(RsAccDetail record) {
-        RsRefundExample example = new RsRefundExample();
+    public QdRsRefund selectRecordByAccDetail(QdRsAccDetail record) {
+        QdRsRefundExample example = new QdRsRefundExample();
         example.createCriteria().andPayAccountEqualTo(record.getAccountCode())
                 .andRecAccountEqualTo(record.getToAccountCode()).andDeletedFlagEqualTo("0")
                 .andApAmountEqualTo(record.getTradeAmt()).andTradeDateEqualTo(record.getTradeDate());
-        List<RsRefund> recordList =  refundMapper.selectByExample(example);
+        List<QdRsRefund> recordList =  refundMapper.selectByExample(example);
         if(recordList.size() > 0) {
             return recordList.get(0);
         }else {
@@ -78,7 +78,7 @@ public class RefundService {
     }
 
     public boolean isHasUnsend() {
-        RsRefundExample example = new RsRefundExample();
+        QdRsRefundExample example = new QdRsRefundExample();
         example.createCriteria().andDeletedFlagEqualTo("0").andWorkResultEqualTo(WorkResult.COMMIT.getCode());
         if (refundMapper.countByExample(example) > 0) {
             return true;
@@ -86,25 +86,25 @@ public class RefundService {
         return false;
     }
 
-    public List<RsRefund> selectRefundList(RefundStatus status) {
-        RsRefundExample example = new RsRefundExample();
+    public List<QdRsRefund> selectRefundList(RefundStatus status) {
+        QdRsRefundExample example = new QdRsRefundExample();
         example.createCriteria().andDeletedFlagEqualTo("0").andStatusFlagEqualTo(status.getCode());
         return refundMapper.selectByExample(example);
     }
 
-    public List<RsRefund> selectRefundList(WorkResult status) {
-        RsRefundExample example = new RsRefundExample();
+    public List<QdRsRefund> selectRefundList(WorkResult status) {
+        QdRsRefundExample example = new QdRsRefundExample();
         example.createCriteria().andDeletedFlagEqualTo("0").andWorkResultEqualTo(status.getCode());
         return refundMapper.selectByExample(example);
     }
 
-    public RsRefund selectRefundByPkid(String pkId) {
+    public QdRsRefund selectRefundByPkid(String pkId) {
         return refundMapper.selectByPrimaryKey(pkId);
     }
 
     @Transactional
-    public int updateRecord(RsRefund record) {
-        RsRefund originRecord = selectRefundByPkid(record.getPkId());
+    public int updateRecord(QdRsRefund record) {
+        QdRsRefund originRecord = selectRefundByPkid(record.getPkId());
         if (!record.getModificationNum().equals(originRecord.getModificationNum())) {
             throw new RuntimeException("并发更新冲突！");
         }
@@ -115,8 +115,8 @@ public class RefundService {
         return refundMapper.updateByPrimaryKeySelective(record);
     }
 
-    public List<RsRefund> selectEditList() {
-        RsRefundExample example = new RsRefundExample();
+    public List<QdRsRefund> selectEditList() {
+        QdRsRefundExample example = new QdRsRefundExample();
         example.createCriteria().andDeletedFlagEqualTo("0").andWorkResultEqualTo(WorkResult.CREATE.getCode());
         example.or(example.createCriteria().andDeletedFlagEqualTo("0").andWorkResultEqualTo(WorkResult.NOTPASS.getCode()));
         return refundMapper.selectByExample(example);

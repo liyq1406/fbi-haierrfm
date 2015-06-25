@@ -55,7 +55,7 @@
                                 <h:panelGrid columns="4" cellpadding="2" columnClasses="col-95,col-5,col-95,col-5"
                                              style="width: 100%">
                                     <h:outputLabel value="计划编号:" for="planNo" style="margin-left: 28px;"/>
-                                    <p:inputText id="planNo" value="#{payoutAction.rsPayout.businessNo}"
+                                    <p:inputText id="planNo" value="#{payoutAction.qdRsPayout.businessNo}"
                                                  readonly="true" style="width:160px;" disabled="true"/>
                                     <h:outputLabel value="计划金额:" for="planAmt" style="margin-left: 30px;"/>
                                     <p:inputText id="planAmt" value="#{payoutAction.planCtrl.plAmount}"
@@ -77,22 +77,22 @@
                                 <h:panelGrid columns="4" cellpadding="2" columnClasses="col-95,col-5,col-95,col-5"
                                              style="width: 100%">
                                     <h:outputLabel value="收款方账号:" for="toAccountCode" style="margin-left: 16px;"/>
-                                    <p:inputText id="toAccountCode" value="#{payoutAction.rsPayout.recAccount}"
+                                    <p:inputText id="toAccountCode" value="#{payoutAction.qdRsPayout.recAccount}"
                                                  readonly="false" style="width:160px;" disabled="true"/>
                                     <h:outputLabel value="收款方户名:" for="toAccountName" style="margin-left: 17px;"/>
-                                    <p:inputText id="toAccountName" value="#{payoutAction.rsPayout.recCompanyName}"
+                                    <p:inputText id="toAccountName" value="#{payoutAction.qdRsPayout.recCompanyName}"
                                                  readonly="false" disabled="true"
                                                  style="width:260px;"/>
 
                                     <h:outputLabel value="收款行:" for="toBankCode"
                                                    style="margin-left: 16px;"/>
                                     <h:selectOneMenu id="toBankCode" style="width:165px;" disabled="true"
-                                                     value="#{payoutAction.rsPayout.recBankCode}">
+                                                     value="#{payoutAction.qdRsPayout.recBankCode}">
                                         <f:selectItems value="#{payoutAction.bankCodeList}"/>
                                     </h:selectOneMenu>
 
                                     <h:outputLabel value="收款行全称:" for="toBankName" style="margin-left: 17px;"/>
-                                    <p:inputText id="toBankName" value="#{payoutAction.rsPayout.recBankName}"
+                                    <p:inputText id="toBankName" value="#{payoutAction.qdRsPayout.recBankName}"
                                                  readonly="true" disabled="true"
                                                  style="width:260px;"/>
                                 </h:panelGrid>
@@ -107,23 +107,23 @@
                                     <h:outputLabel value="付款房产商:" for="companyName" style="margin-left:20px;"/>
                                     <h:inputText autocomplete="off" id="companyName" style="width:160px;"
                                                  readonly="false" disabled="true"
-                                                 value="#{payoutAction.rsPayout.payCompanyName}">
+                                                 value="#{payoutAction.qdRsPayout.payCompanyName}">
                                     </h:inputText>
 
                                     <h:outputLabel value="付款监管账号:" for="accountCode"/>
                                     <p:inputText autocomplete="off" id="accountCode" style="width:250px;"
                                                  readonly="true" disabled="true"
-                                                 value="#{payoutAction.rsPayout.payAccount}">
+                                                 value="#{payoutAction.qdRsPayout.payAccount}">
                                     </p:inputText>
 
                                     <h:outputLabel value="【凭证号】:" for="docNo"/>
-                                    <p:inputText id="docNo" value="#{payoutAction.rsPayout.docNo}"  style="width:160px;"
+                                    <p:inputText id="docNo" value="#{payoutAction.qdRsPayout.docNo}"  style="width:160px;"
                                                  onfocus="this.select()" disabled="true"/>
 
                                     <h:outputLabel value="【申请金额】:" for="applyAmt" style="margin-left:20px"/>
                                     <p:inputText autocomplete="off" id="applyAmt" style="width:250px;"
                                                  disabled="true"
-                                                 value="#{payoutAction.rsPayout.plAmount}">
+                                                 value="#{payoutAction.qdRsPayout.plAmount}">
                                     </p:inputText>
                                 </h:panelGrid>
                                 <h:panelGrid columns="2" cellspacing="2" style="width: 100%"
@@ -131,12 +131,12 @@
                                     <h:outputLabel value="申请事由:" for="applyReason"
                                                    style="text-align: right;margin-left: 32px;"/>
                                     <p:inputText autocomplete="off" id="applyReason" style="width:528px;"
-                                                 value="#{payoutAction.rsPayout.purpose}" disabled="true">
+                                                 value="#{payoutAction.qdRsPayout.purpose}" disabled="true">
                                     </p:inputText>
                                     <h:outputLabel value="备注:" for="remark"
                                                    style="text-align: right;margin-left: 32px;"/>
                                     <p:inputText autocomplete="off" id="remark" style="width:528px;"
-                                                 value="#{payoutAction.rsPayout.remark}" disabled="true">
+                                                 value="#{payoutAction.qdRsPayout.remark}" disabled="true">
                                     </p:inputText>
                                 </h:panelGrid>
                             </h:panelGrid>
@@ -147,7 +147,7 @@
                                          action="#{payoutAction.onDelete}"
                                          style="margin-left:235px;width:90px"
                                          update="input,pdt,msgs">
-                            <p:collector value="#{payoutAction.rsPayout}" addTo="#{payoutAction.rsPayoutList}"/>
+                            <p:collector value="#{payoutAction.qdRsPayout}" addTo="#{payoutAction.qdRsPayoutList}"/>
                         </p:commandButton>
                         <p:commandButton ajax="true" id="clsBtn" value="关闭" onclick="window.close();"
                                          style="width:90px;margin-left:15px" update="input,msgs"/>

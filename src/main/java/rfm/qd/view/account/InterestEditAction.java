@@ -1,8 +1,8 @@
 package rfm.qd.view.account;
 
 import rfm.qd.common.constant.TradeType;
-import rfm.qd.repository.model.RsAccDetail;
-import rfm.qd.repository.model.RsAccount;
+import rfm.qd.repository.model.QdRsAccDetail;
+import rfm.qd.repository.model.QdRsAccount;
 import rfm.qd.service.account.AccountDetlService;
 import rfm.qd.service.account.AccountService;
 import org.slf4j.Logger;
@@ -37,27 +37,27 @@ public class InterestEditAction {
     @ManagedProperty(value = "#{accountService}")
     private AccountService accountService;
 
-    private RsAccDetail rsAccDetail;
+    private QdRsAccDetail qdRsAccDetail;
     private String rtnFlag;
-    private List<RsAccDetail> rsAccDetailsInit;
+    private List<QdRsAccDetail> qdRsAccDetailsInit;
     private String operation;
     private String accountName;
 
     @PostConstruct
     public void init() {
-        rsAccDetail = new RsAccDetail();
+        qdRsAccDetail = new QdRsAccDetail();
         FacesContext context = FacesContext.getCurrentInstance();
         Map<String, String> paramsmap = context.getExternalContext().getRequestParameterMap();
         String paramDoType = paramsmap.get("doType");
 
         if (!paramDoType.equals("add")) {
             String paramPkid = paramsmap.get("pkid");
-            rsAccDetail = accountDetlService.selectedByPK(paramPkid);
-            accountName = rsAccDetail.getAccountName();
+            qdRsAccDetail = accountDetlService.selectedByPK(paramPkid);
+            accountName = qdRsAccDetail.getAccountName();
         } else {
             String acctPkid = paramsmap.get("acctPkid");
-            RsAccount rsAccount = accountService.selectedRecordByPkid(acctPkid);
-            accountName = rsAccount.getAccountName();
+            QdRsAccount qdRsAccount = accountService.selectedRecordByPkid(acctPkid);
+            accountName = qdRsAccount.getAccountName();
         }
         operation = paramDoType;
     }
@@ -68,16 +68,16 @@ public class InterestEditAction {
             FacesContext context = FacesContext.getCurrentInstance();
             String accountno = (String) context.getExternalContext().getRequestParameterMap().get("acctno");
             String companyid = (String) context.getExternalContext().getRequestParameterMap().get("companyid");
-            rsAccDetail.setAccountCode(accountno);
-            rsAccDetail.setAccountName(accountName);
-            rsAccDetail.setCompanyId(companyid);
-            rsAccDetail.setStatusFlag("0");
-            rsAccDetail.setInoutFlag("1");
-            rsAccDetail.setTradeType(TradeType.INTEREST.getCode());
+            qdRsAccDetail.setAccountCode(accountno);
+            qdRsAccDetail.setAccountName(accountName);
+            qdRsAccDetail.setCompanyId(companyid);
+            qdRsAccDetail.setStatusFlag("0");
+            qdRsAccDetail.setInoutFlag("1");
+            qdRsAccDetail.setTradeType(TradeType.INTEREST.getCode());
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            rsAccDetail.setTradeDate(sdf.format(new Date()));
+            qdRsAccDetail.setTradeDate(sdf.format(new Date()));
 //            rsAccDetail.setLocalSerial();
-            accountDetlService.insertSelectedRecord(rsAccDetail);
+            accountDetlService.insertSelectedRecord(qdRsAccDetail);
         } catch (Exception ex) {
             ex.printStackTrace();
             rtnFlag = "<script language='javascript'>rtnScript('false');</script>";
@@ -92,9 +92,9 @@ public class InterestEditAction {
         try {
             FacesContext context = FacesContext.getCurrentInstance();
             String pkid = (String) context.getExternalContext().getRequestParameterMap().get("pkid");
-            rsAccDetail.setPkId(pkid);
-            rsAccDetail.setStatusFlag("0");
-            accountDetlService.updateSelectedRecord(rsAccDetail);
+            qdRsAccDetail.setPkId(pkid);
+            qdRsAccDetail.setStatusFlag("0");
+            accountDetlService.updateSelectedRecord(qdRsAccDetail);
         } catch (Exception ex) {
             ex.printStackTrace();
             rtnFlag = "<script language='javascript'>rtnScript('false');</script>";
@@ -120,12 +120,12 @@ public class InterestEditAction {
         this.toolsService = toolsService;
     }
 
-    public RsAccDetail getRsAccDetail() {
-        return rsAccDetail;
+    public QdRsAccDetail getQdRsAccDetail() {
+        return qdRsAccDetail;
     }
 
-    public void setRsAccDetail(RsAccDetail rsAccDetail) {
-        this.rsAccDetail = rsAccDetail;
+    public void setQdRsAccDetail(QdRsAccDetail qdRsAccDetail) {
+        this.qdRsAccDetail = qdRsAccDetail;
     }
 
     public String getRtnFlag() {
@@ -136,12 +136,12 @@ public class InterestEditAction {
         this.rtnFlag = rtnFlag;
     }
 
-    public List<RsAccDetail> getRsAccDetailsInit() {
-        return rsAccDetailsInit;
+    public List<QdRsAccDetail> getQdRsAccDetailsInit() {
+        return qdRsAccDetailsInit;
     }
 
-    public void setRsAccDetailsInit(List<RsAccDetail> rsAccDetailsInit) {
-        this.rsAccDetailsInit = rsAccDetailsInit;
+    public void setQdRsAccDetailsInit(List<QdRsAccDetail> qdRsAccDetailsInit) {
+        this.qdRsAccDetailsInit = qdRsAccDetailsInit;
     }
 
     public String getOperation() {

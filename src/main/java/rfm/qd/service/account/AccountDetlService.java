@@ -1,10 +1,10 @@
 package rfm.qd.service.account;
 
-import rfm.qd.repository.dao.RsAccDetailMapper;
+import rfm.qd.repository.dao.QdRsAccDetailMapper;
 import rfm.qd.repository.dao.common.CommonMapper;
-import rfm.qd.repository.model.RsAccDetail;
-import rfm.qd.repository.model.RsAccDetailExample;
-import rfm.qd.repository.model.RsAccount;
+import rfm.qd.repository.model.QdRsAccDetail;
+import rfm.qd.repository.model.QdRsAccDetailExample;
+import rfm.qd.repository.model.QdRsAccount;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,16 +24,16 @@ import java.util.List;
 @Service
 public class AccountDetlService {
     @Autowired
-    private RsAccDetailMapper rsAccDetailMapper;
+    private QdRsAccDetailMapper qdRsAccDetailMapper;
     @Autowired
     private CommonMapper commonMapper;
 
     /**
      * 账户明细查询*/
-    public List<RsAccDetail> selectedRecordsByTradeDate(String acctname,String acctno,String beginDate, String endDate) {
-        RsAccDetailExample example = new RsAccDetailExample();
+    public List<QdRsAccDetail> selectedRecordsByTradeDate(String acctname,String acctno,String beginDate, String endDate) {
+        QdRsAccDetailExample example = new QdRsAccDetailExample();
         example.clear();
-        RsAccDetailExample.Criteria criteria = example.createCriteria();
+        QdRsAccDetailExample.Criteria criteria = example.createCriteria();
         if (acctname !=null && !StringUtils.isEmpty(acctname.trim())) {
             criteria.andAccountNameLike("%" + acctname + "%");
         }
@@ -45,28 +45,28 @@ public class AccountDetlService {
         }
         criteria.andDeletedFlagEqualTo("0");
         example.setOrderByClause("Trade_Date desc,account_code,local_serial");
-        return rsAccDetailMapper.selectByExample(example);
+        return qdRsAccDetailMapper.selectByExample(example);
     }
 
     /**
      * 插入*/
-    public void insertSelectedRecord(RsAccDetail rsAccDetail) {
+    public void insertSelectedRecord(QdRsAccDetail qdRsAccDetail) {
         OperatorManager om = SystemService.getOperatorManager();
-        rsAccDetail.setCreatedBy(om.getOperatorId());
-        rsAccDetail.setCreatedDate(new Date());
-        rsAccDetail.setLastUpdBy(om.getOperatorId());
-        rsAccDetail.setLastUpdDate(new Date());
-        rsAccDetail.setLocalSerial(commonMapper.selectMaxAccDetailSerial());
-        rsAccDetail.setBankSerial(rsAccDetail.getLocalSerial());
-        rsAccDetailMapper.insertSelective(rsAccDetail);
+        qdRsAccDetail.setCreatedBy(om.getOperatorId());
+        qdRsAccDetail.setCreatedDate(new Date());
+        qdRsAccDetail.setLastUpdBy(om.getOperatorId());
+        qdRsAccDetail.setLastUpdDate(new Date());
+        qdRsAccDetail.setLocalSerial(commonMapper.selectMaxAccDetailSerial());
+        qdRsAccDetail.setBankSerial(qdRsAccDetail.getLocalSerial());
+        qdRsAccDetailMapper.insertSelective(qdRsAccDetail);
     }
 
     /**
      * 未发送前数据(包括退回)*/
-    public List<RsAccDetail> selectedRecordsForChk(String tradeType, List<String> statusflags) {
-        RsAccDetailExample example = new RsAccDetailExample();
+    public List<QdRsAccDetail> selectedRecordsForChk(String tradeType, List<String> statusflags) {
+        QdRsAccDetailExample example = new QdRsAccDetailExample();
         example.clear();
-        RsAccDetailExample.Criteria criteria = example.createCriteria();
+        QdRsAccDetailExample.Criteria criteria = example.createCriteria();
         if (tradeType != null && !StringUtils.isEmpty(tradeType.trim())) {
             criteria.andTradeTypeEqualTo(tradeType);
         }
@@ -75,13 +75,13 @@ public class AccountDetlService {
         }
         criteria.andDeletedFlagEqualTo("0");
         example.setOrderByClause("account_code,local_serial");
-        return rsAccDetailMapper.selectByExample(example);
+        return qdRsAccDetailMapper.selectByExample(example);
     }
 
-    public List<RsAccDetail> selectedRecordsForSend(String tradeType,String statusflag,String sendflag) {
-        RsAccDetailExample example = new RsAccDetailExample();
+    public List<QdRsAccDetail> selectedRecordsForSend(String tradeType,String statusflag,String sendflag) {
+        QdRsAccDetailExample example = new QdRsAccDetailExample();
         example.clear();
-        RsAccDetailExample.Criteria criteria = example.createCriteria();
+        QdRsAccDetailExample.Criteria criteria = example.createCriteria();
         if (tradeType != null && !StringUtils.isEmpty(tradeType.trim())) {
             criteria.andTradeTypeEqualTo(tradeType);
         }
@@ -92,44 +92,44 @@ public class AccountDetlService {
             criteria.andSendFlagEqualTo(sendflag);
         }
         example.setOrderByClause("account_code,local_serial");
-        return rsAccDetailMapper.selectByExample(example);
+        return qdRsAccDetailMapper.selectByExample(example);
     }
 
-    public RsAccDetail selectedByPK(String pkid) {
-        return rsAccDetailMapper.selectByPrimaryKey(pkid);
+    public QdRsAccDetail selectedByPK(String pkid) {
+        return qdRsAccDetailMapper.selectByPrimaryKey(pkid);
     }
 
-    public boolean isChecked(RsAccDetail rsAccDetail) {
-        String orgn_statusflag = rsAccDetailMapper.selectByPrimaryKey(rsAccDetail.getPkId()).getStatusFlag();
-        if (orgn_statusflag.equalsIgnoreCase(rsAccDetail.getStatusFlag())) {
+    public boolean isChecked(QdRsAccDetail qdRsAccDetail) {
+        String orgn_statusflag = qdRsAccDetailMapper.selectByPrimaryKey(qdRsAccDetail.getPkId()).getStatusFlag();
+        if (orgn_statusflag.equalsIgnoreCase(qdRsAccDetail.getStatusFlag())) {
             return true;
         } else {
             return false;
         }
     }
 
-    public int updateSelectedRecord(RsAccDetail rsAccDetail) {
+    public int updateSelectedRecord(QdRsAccDetail qdRsAccDetail) {
         OperatorManager om = SystemService.getOperatorManager();
-        rsAccDetail.setLastUpdBy(om.getOperatorId());
-        rsAccDetail.setLastUpdDate(new Date());
-        return rsAccDetailMapper.updateByPrimaryKeySelective(rsAccDetail);
+        qdRsAccDetail.setLastUpdBy(om.getOperatorId());
+        qdRsAccDetail.setLastUpdDate(new Date());
+        return qdRsAccDetailMapper.updateByPrimaryKeySelective(qdRsAccDetail);
     }
 
     /**
      * 入账更新*/
-    public int updateSelectedRecordBook(RsAccDetail rsAccDetail,RsAccount rsAccount) {
+    public int updateSelectedRecordBook(QdRsAccDetail qdRsAccDetail,QdRsAccount qdRsAccount) {
         OperatorManager om = SystemService.getOperatorManager();
-        rsAccDetail.setLastUpdBy(om.getOperatorId());
-        rsAccDetail.setLastUpdDate(new Date());
-        rsAccDetail.setBalance(rsAccount.getBalance());
-        return rsAccDetailMapper.updateByPrimaryKeySelective(rsAccDetail);
+        qdRsAccDetail.setLastUpdBy(om.getOperatorId());
+        qdRsAccDetail.setLastUpdDate(new Date());
+        qdRsAccDetail.setBalance(qdRsAccount.getBalance());
+        return qdRsAccDetailMapper.updateByPrimaryKeySelective(qdRsAccDetail);
     }
 
-    public RsAccDetailMapper getRsAccDetailMapper() {
-        return rsAccDetailMapper;
+    public QdRsAccDetailMapper getQdRsAccDetailMapper() {
+        return qdRsAccDetailMapper;
     }
 
-    public void setRsAccDetailMapper(RsAccDetailMapper rsAccDetailMapper) {
-        this.rsAccDetailMapper = rsAccDetailMapper;
+    public void setQdRsAccDetailMapper(QdRsAccDetailMapper qdRsAccDetailMapper) {
+        this.qdRsAccDetailMapper = qdRsAccDetailMapper;
     }
 }

@@ -64,7 +64,7 @@ public class ServerMessageService implements IMessageService {
                 T0001Req t0001Req = (T0001Req) BaseBean.toObject(T0001Req.class, message);
                 logger.info(t0001Req.head.OpDate + t0001Req.head.OpTime + "==接收交易：" + t0001Req.head.OpCode);
 
-                List<RsAccount> accountList = biDbService.selectAccountByCodeName(t0001Req.param.Acct, t0001Req.param.AcctName);
+                List<QdRsAccount> accountList = biDbService.selectAccountByCodeName(t0001Req.param.Acct, t0001Req.param.AcctName);
 
                 T0001Res t0001Res = new T0001Res();
 
@@ -81,7 +81,7 @@ public class ServerMessageService implements IMessageService {
                             t0001Res.param.Balance = StringUtil.toBiformatAmt(new BigDecimal(qdjg01Res.actbal));
                             t0001Res.param.UsableBalance = StringUtil.toBiformatAmt(new BigDecimal(qdjg01Res.avabal));
                         } else {
-                            RsAccount account = accountList.get(0);
+                            QdRsAccount account = accountList.get(0);
                             t0001Res.param.Balance = StringUtil.toBiformatAmt(account.getBalance());
                             t0001Res.param.UsableBalance = StringUtil.toBiformatAmt(account.getBalanceUsable());
                         }
@@ -108,11 +108,11 @@ public class ServerMessageService implements IMessageService {
                 }
                 // 核心
                 if ("cbus".equals(PropertyManager.getProperty("bank.act.txn.flag"))) {
-                    List<CbsAccTxn> accTxnList = cbusFdcActtxnService.qryAccTxns(t0002Req.param.Acct, t0002Req.param.BeginDate,
+                    List<QdCbsAccTxn> accTxnList = cbusFdcActtxnService.qryAccTxns(t0002Req.param.Acct, t0002Req.param.BeginDate,
                             t0002Req.param.EndDate);
                     if (!accTxnList.isEmpty()) {
                         t0002Res.param.DetailNum = String.valueOf(accTxnList.size());
-                        for (CbsAccTxn accTxn : accTxnList) {
+                        for (QdCbsAccTxn accTxn : accTxnList) {
                             T0002Res.Param.Record record = T0002Res.getRecord();
                             record.Date = accTxn.getTxnDate();
                             record.Time = accTxn.getTxnTime();
@@ -152,12 +152,12 @@ public class ServerMessageService implements IMessageService {
                 }
                 // 非核心
                 else {
-                    List<RsAccDetail> accDetailList = biDbService.selectAccDetailsByCodeNameDate(t0002Req.param.Acct,
+                    List<QdRsAccDetail> accDetailList = biDbService.selectAccDetailsByCodeNameDate(t0002Req.param.Acct,
                             t0002Req.param.AcctName, StringUtil.transDate8ToDate10(t0002Req.param.BeginDate),
                             StringUtil.transDate8ToDate10(t0002Req.param.EndDate));
                     if (!accDetailList.isEmpty()) {
                         t0002Res.param.DetailNum = String.valueOf(accDetailList.size());
-                        for (RsAccDetail accDetail : accDetailList) {
+                        for (QdRsAccDetail accDetail : accDetailList) {
                             T0002Res.Param.Record record = T0002Res.getRecord();
                             record.Date = StringUtil.transDate10ToDate8(accDetail.getTradeDate());
                             record.Time = "121212";
@@ -185,12 +185,12 @@ public class ServerMessageService implements IMessageService {
                 T2001Req t2001Req = (T2001Req) BaseBean.toObject(T2001Req.class, message);
                 logger.info(t2001Req.head.OpDate + t2001Req.head.OpTime + "==接收交易：" + t2001Req.head.OpCode);
 
-                List<RsAccount> initAccountList = biDbService.selectAccountByCodeName(t2001Req.param.Acct, t2001Req.param.AcctName);
+                List<QdRsAccount> initAccountList = biDbService.selectAccountByCodeName(t2001Req.param.Acct, t2001Req.param.AcctName);
 
                 T2001Res t2001Res = new T2001Res();
 
                 if (!initAccountList.isEmpty()) {
-                    RsAccount account = initAccountList.get(0);
+                    QdRsAccount account = initAccountList.get(0);
                     account.setStatusFlag(AccountStatus.WATCH.getCode());
                     account.setAgrnum(t2001Req.param.AgrNum);
                     if (biDbService.updateAccount(account) != 1) {
@@ -207,12 +207,12 @@ public class ServerMessageService implements IMessageService {
                 T2002Req t2002Req = (T2002Req) BaseBean.toObject(T2002Req.class, message);
                 logger.info(t2002Req.head.OpDate + t2002Req.head.OpTime + "==接收交易：" + t2002Req.head.OpCode);
 
-                List<RsAccount> limitAccountList = biDbService.selectAccountByCodeName(t2002Req.param.Acct, t2002Req.param.AcctName);
+                List<QdRsAccount> limitAccountList = biDbService.selectAccountByCodeName(t2002Req.param.Acct, t2002Req.param.AcctName);
 
                 T2002Res t2002Res = new T2002Res();
 
                 if (!limitAccountList.isEmpty()) {
-                    RsAccount account = limitAccountList.get(0);
+                    QdRsAccount account = limitAccountList.get(0);
                     account.setLimitFlag(t2002Req.param.LockFlag);
                     if (biDbService.updateAccount(account) != 1) {
                         t2002Res.head.RetCode = BiRtnCode.BI_RTN_CODE_FAILED.getCode();
@@ -229,7 +229,7 @@ public class ServerMessageService implements IMessageService {
                 T2003Req t2003Req = (T2003Req) BaseBean.toObject(T2003Req.class, message);
                 logger.info(t2003Req.head.OpDate + t2003Req.head.OpTime + "==接收交易：" + t2003Req.head.OpCode);
 
-                BiContract contract = new BiContract();
+                QdBiContract contract = new QdBiContract();
                 contract.setContractNo(t2003Req.param.ContractNum);                                     // 合同号
                 contract.setAccountCode(t2003Req.param.Acct);                                               // 监管账号
                 contract.setAccountName(t2003Req.param.AcctName);                                     // 监管账户户名
@@ -262,12 +262,12 @@ public class ServerMessageService implements IMessageService {
                 T2006Req t2006Req = (T2006Req) BaseBean.toObject(T2006Req.class, message);
                 logger.info(t2006Req.head.OpDate + t2006Req.head.OpTime + "==接收交易：" + t2006Req.head.OpCode);
 
-                List<RsAccount> overAccountList = biDbService.selectAccountByCodeName(t2006Req.param.Acct, t2006Req.param.AcctName);
+                List<QdRsAccount> overAccountList = biDbService.selectAccountByCodeName(t2006Req.param.Acct, t2006Req.param.AcctName);
 
                 T2006Res t2006Res = new T2006Res();
 
                 if (!overAccountList.isEmpty()) {
-                    RsAccount account = overAccountList.get(0);
+                    QdRsAccount account = overAccountList.get(0);
                     account.setStatusFlag(AccountStatus.CLOSE.getCode());
                     if (biDbService.updateAccount(account) == 1) {
                         t2006Res.param.CancelDate = SystemService.getSdfdate8();
@@ -288,7 +288,7 @@ public class ServerMessageService implements IMessageService {
                 T2007Req t2007Req = (T2007Req) BaseBean.toObject(T2007Req.class, message);
                 logger.info(t2007Req.head.OpDate + t2007Req.head.OpTime + "==接收交易：" + t2007Req.head.OpCode);
 
-                BiContractClose contractClose = new BiContractClose();
+                QdBiContractClose contractClose = new QdBiContractClose();
                 contractClose.setAccountCode(t2007Req.param.Acct);
                 contractClose.setAccountName(t2007Req.param.AcctName);
                 contractClose.setBuyerName(t2007Req.param.BuyerName);
@@ -304,7 +304,7 @@ public class ServerMessageService implements IMessageService {
 
 
                 T2007Res t2007Res = new T2007Res();
-                RsContract originContract = biDbService.selectContractByCloseInfo(contractClose);
+                QdRsContract originContract = biDbService.selectContractByCloseInfo(contractClose);
                 if (ContractStatus.TRANS.getCode().equalsIgnoreCase(originContract.getStatusFlag())
                         || ContractStatus.CANCEL.getCode().equalsIgnoreCase(originContract.getStatusFlag())
                         || ContractStatus.CANCELING.getCode().equalsIgnoreCase(originContract.getStatusFlag())) {
@@ -324,17 +324,17 @@ public class ServerMessageService implements IMessageService {
 
                 T2008Res t2008Res = new T2008Res();
 
-                BiPlan biPlan = new BiPlan();
-                biPlan.setAccountCode(t2008Req.param.Acct);
-                biPlan.setAccountName(t2008Req.param.AcctName);
-                biPlan.setPlanNo(t2008Req.param.PlanNO);
-                biPlan.setPlanAmount(new BigDecimal(t2008Req.param.PlanAmt).divide(new BigDecimal(100)));
-                biPlan.setPlanNum(Integer.parseInt(t2008Req.param.PlanNum));
+                QdBiPlan qdBiPlan = new QdBiPlan();
+                qdBiPlan.setAccountCode(t2008Req.param.Acct);
+                qdBiPlan.setAccountName(t2008Req.param.AcctName);
+                qdBiPlan.setPlanNo(t2008Req.param.PlanNO);
+                qdBiPlan.setPlanAmount(new BigDecimal(t2008Req.param.PlanAmt).divide(new BigDecimal(100)));
+                qdBiPlan.setPlanNum(Integer.parseInt(t2008Req.param.PlanNum));
                 if (!org.apache.commons.lang.StringUtils.isEmpty(t2008Req.param.SubmitDate)
                         && t2008Req.param.SubmitDate.length() >= 8) {
-                    biPlan.setSubmitDate(StringUtil.transDate8ToDate10(t2008Req.param.SubmitDate));
+                    qdBiPlan.setSubmitDate(StringUtil.transDate8ToDate10(t2008Req.param.SubmitDate));
                 } else {
-                    biPlan.setSubmitDate(t2008Req.param.SubmitDate);
+                    qdBiPlan.setSubmitDate(t2008Req.param.SubmitDate);
                 }
                 int planDetailCnt = t2008Req.param.recordList.size();
 
@@ -346,12 +346,12 @@ public class ServerMessageService implements IMessageService {
                     break;
                 }
                 String wrngRecordNo = null;
-                List<BiPlanDetail> biPlanDetailList = null;
+                List<QdBiPlanDetail> qdBiPlanDetailList = null;
                 try {
                     if (planDetailCnt >= 1) {
-                        biPlanDetailList = new ArrayList<BiPlanDetail>();
+                        qdBiPlanDetailList = new ArrayList<QdBiPlanDetail>();
                         for (T2008Req.Param.Record record : t2008Req.param.recordList) {
-                            BiPlanDetail planDetail = new BiPlanDetail();
+                            QdBiPlanDetail planDetail = new QdBiPlanDetail();
                             wrngRecordNo = record.PlanDetailNO;
                             planDetail.setPlanId(t2008Req.param.PlanNO);
                             planDetail.setPlanCtrlNo(record.PlanDetailNO);
@@ -368,9 +368,9 @@ public class ServerMessageService implements IMessageService {
                             planDetail.setPlanDate(record.PlanDate);
                             planDetail.setPlanDesc(record.Purpose);
                             planDetail.setRemark(record.Remark);
-                            biPlanDetailList.add(planDetail);
+                            qdBiPlanDetailList.add(planDetail);
                         }
-                        if (biDbService.storeFdcAllPlanInfos(biPlan, biPlanDetailList) == -1) {
+                        if (biDbService.storeFdcAllPlanInfos(qdBiPlan, qdBiPlanDetailList) == -1) {
                             throw new RuntimeException("接收保存数据操作失败！");
                         }
                     } else throw new RuntimeException("计划明细为空！");

@@ -5,8 +5,8 @@ import com.itextpdf.text.pdf.*;
 import rfm.qd.common.constant.RefundStatus;
 import rfm.qd.common.constant.WorkResult;
 import rfm.qd.gateway.utils.StringUtil;
-import rfm.qd.repository.model.RsPayout;
-import rfm.qd.repository.model.RsPlanCtrl;
+import rfm.qd.repository.model.QdRsPayout;
+import rfm.qd.repository.model.QdRsPlanCtrl;
 import rfm.qd.service.CbusPayoutService;
 import rfm.qd.service.ClientBiService;
 import rfm.qd.service.PayoutService;
@@ -46,7 +46,7 @@ import java.util.List;
 public class CbusPayoutExecAction {
     private Logger logger = LoggerFactory.getLogger(CbusPayoutExecAction.class);
 
-    private RsPayout rsPayout;
+    private QdRsPayout qdRsPayout;
     @ManagedProperty(value = "#{cbusPayoutService}")
     private CbusPayoutService cbusPayoutService;
     @ManagedProperty(value = "#{clientBiService}")
@@ -56,17 +56,17 @@ public class CbusPayoutExecAction {
     @ManagedProperty(value = "#{expensesPlanService}")
     private ExpensesPlanService expensesPlanService;
 
-    private List<RsPayout> passPayoutList;
-    private List<RsPayout> payOverList;
-    private List<RsPayout> payFailList;
-    private List<RsPayout> sendOverList;
-    private List<RsPayout> printVchList;
-    private RsPayout selectedRecord;
-    private RsPayout[] selectedRecords;
-    private RsPayout[] toSendRecords;
+    private List<QdRsPayout> passPayoutList;
+    private List<QdRsPayout> payOverList;
+    private List<QdRsPayout> payFailList;
+    private List<QdRsPayout> sendOverList;
+    private List<QdRsPayout> printVchList;
+    private QdRsPayout selectedRecord;
+    private QdRsPayout[] selectedRecords;
+    private QdRsPayout[] toSendRecords;
     private WorkResult workResult = WorkResult.CREATE;
     private RefundStatus statusFlag = RefundStatus.ACCOUNT_SUCCESS;
-    private RsPlanCtrl planCtrl;
+    private QdRsPlanCtrl planCtrl;
     private boolean isRunning;
     private String jscript;
 
@@ -85,14 +85,14 @@ public class CbusPayoutExecAction {
         String action = (String) context.getExternalContext().getRequestParameterMap().get("action");
 
         if (!StringUtils.isEmpty(pkid) && "act".equalsIgnoreCase(action)) {
-            rsPayout = payoutService.selectPayoutByPkid(pkid);
-            planCtrl = expensesPlanService.selectPlanCtrlByPlanNo(rsPayout.getBusinessNo());
+            qdRsPayout = payoutService.selectPayoutByPkid(pkid);
+            planCtrl = expensesPlanService.selectPlanCtrlByPlanNo(qdRsPayout.getBusinessNo());
             UIViewRoot viewRoot = FacesContext.getCurrentInstance().getViewRoot();
             CommandButton saveBtn = (CommandButton) viewRoot.findComponent("form:directPrint");
             saveBtn.setDisabled(true);
         } else if (!StringUtils.isEmpty(pkid) && "print".equalsIgnoreCase(action)) {
-            rsPayout = payoutService.selectPayoutByPkid(pkid);
-            planCtrl = expensesPlanService.selectPlanCtrlByPlanNo(rsPayout.getBusinessNo());
+            qdRsPayout = payoutService.selectPayoutByPkid(pkid);
+            planCtrl = expensesPlanService.selectPlanCtrlByPlanNo(qdRsPayout.getBusinessNo());
             UIViewRoot viewRoot = FacesContext.getCurrentInstance().getViewRoot();
             CommandButton saveBtn = (CommandButton) viewRoot.findComponent("form:directPrint");
             saveBtn.setDisabled(false);
@@ -113,8 +113,8 @@ public class CbusPayoutExecAction {
                     return null;
                 }
                 isRunning = true;
-                for (RsPayout record : selectedRecords) {
-                    RsPayout originPayout = payoutService.selectPayoutByPkid(record.getPkId());
+                for (QdRsPayout record : selectedRecords) {
+                    QdRsPayout originPayout = payoutService.selectPayoutByPkid(record.getPkId());
                     if (!WorkResult.PASS.getCode().equals(originPayout.getWorkResult())) {
                         MessageUtil.addWarn("并发入账冲突，请勿重复操作入账!");
                         return null;
@@ -156,14 +156,14 @@ public class CbusPayoutExecAction {
                 MessageUtil.addWarn("系统已进行入账，请稍候，勿重复操作入账!");
                 return null;
             }
-            RsPayout originPayout = payoutService.selectPayoutByPkid(rsPayout.getPkId());
+            QdRsPayout originPayout = payoutService.selectPayoutByPkid(qdRsPayout.getPkId());
             if (!WorkResult.PASS.getCode().equals(originPayout.getWorkResult())) {
                 MessageUtil.addWarn("并发入账冲突，请勿重复操作入账!");
                 return null;
             }
             isRunning = true;
             // TODO
-            int cnt = cbusPayoutService.updateRsPayoutToExec(rsPayout);
+            int cnt = cbusPayoutService.updateRsPayoutToExec(qdRsPayout);
 //            int cnt = 1;
             UIViewRoot viewRoot = FacesContext.getCurrentInstance().getViewRoot();
             CommandButton execBtn = (CommandButton) viewRoot.findComponent("form:saveBtn");
@@ -173,7 +173,7 @@ public class CbusPayoutExecAction {
                 MessageUtil.addInfo("入账完成!");
                 int sentResult = 1;
                 // TODO
-                sentResult = clientBiService.sendRsPayoutMsg(rsPayout);
+                sentResult = clientBiService.sendRsPayoutMsg(qdRsPayout);
                 if (sentResult != 1) {
                     throw new RuntimeException("发送失败");
                 }
@@ -239,7 +239,7 @@ public class CbusPayoutExecAction {
         Font headFont1 = new Font(bfChinese, 14, Font.BOLD);// 设置字体大小
         Font headFont2 = new Font(bfChinese, 10, Font.NORMAL);// 设置字体大小
         // 电汇凭证
-        if ("20".equals(rsPayout.getTransType())) {
+        if ("20".equals(qdRsPayout.getTransType())) {
             PdfPCell cell = new PdfPCell(new Paragraph("汇划业务凭证", headFont1));
             cell.setBorder(0);
             cell.setFixedHeight(40);//单元格高度
@@ -248,12 +248,12 @@ public class CbusPayoutExecAction {
             table.addCell(cell);
 
             String bankSerial = "";
-            if (StringUtils.isEmpty(rsPayout.getBankSerial())) {
+            if (StringUtils.isEmpty(qdRsPayout.getBankSerial())) {
                 bankSerial = " ";
-            } else if (rsPayout.getBankSerial().length() >= 12) {
-                bankSerial = rsPayout.getBankSerial().substring(12);
+            } else if (qdRsPayout.getBankSerial().length() >= 12) {
+                bankSerial = qdRsPayout.getBankSerial().substring(12);
             } else {
-                bankSerial = rsPayout.getBankSerial();
+                bankSerial = qdRsPayout.getBankSerial();
             }
 
             int[] rowWidths = new int[]{25, 34, 25};
@@ -261,18 +261,18 @@ public class CbusPayoutExecAction {
                     new String[]{"机构代号：" + om.getOperator().getDeptid(),
                             "记账时间：" + new SimpleDateFormat("yyyy/MM/dd hh:MM:ss").format(new Date()),
                             "流水号：" + bankSerial},
-                    new String[]{"录入员代号：" + (StringUtils.isEmpty(rsPayout.getApplyUserId()) ? " " : rsPayout.getApplyUserId().substring(9)),
-                            "复核员代码：" + (StringUtils.isEmpty(rsPayout.getAuditUserId()) ? " " : rsPayout.getAuditUserId().substring(9)),
-                            "主管代号：" + (StringUtils.isEmpty(rsPayout.getApplyUserId()) ? " " : rsPayout.getApplyUserId().substring(9))},
+                    new String[]{"录入员代号：" + (StringUtils.isEmpty(qdRsPayout.getApplyUserId()) ? " " : qdRsPayout.getApplyUserId().substring(9)),
+                            "复核员代码：" + (StringUtils.isEmpty(qdRsPayout.getAuditUserId()) ? " " : qdRsPayout.getAuditUserId().substring(9)),
+                            "主管代号：" + (StringUtils.isEmpty(qdRsPayout.getApplyUserId()) ? " " : qdRsPayout.getApplyUserId().substring(9))},
                     new String[]{" ", " ", " "},
                     new String[]{"币别代码：人民币",
-                            "凭证号：" + rsPayout.getDocNo(),
-                            "汇划日期：" + rsPayout.getTradeDate()},
+                            "凭证号：" + qdRsPayout.getDocNo(),
+                            "汇划日期：" + qdRsPayout.getTradeDate()},
                     new String[]{"支付渠道：大额支付",
-                            "支付交易序号：" + rsPayout.getWfInstanceId(),
+                            "支付交易序号：" + qdRsPayout.getWfInstanceId(),
                             "业务种类：普通汇兑"},
-                    new String[]{"接收行行号：" + rsPayout.getRecBankCode(),
-                            "接收行名称：" + rsPayout.getRecBankName(),
+                    new String[]{"接收行行号：" + qdRsPayout.getRecBankCode(),
+                            "接收行名称：" + qdRsPayout.getRecBankName(),
                             " "},
             };
             //内容
@@ -283,19 +283,19 @@ public class CbusPayoutExecAction {
                 table.addCell(cell);
             }
 
-            cell = new PdfPCell(new Paragraph(StringUtil.rightPad4ChineseToByteLength("付款人账号：" + rsPayout.getPayAccount()
+            cell = new PdfPCell(new Paragraph(StringUtil.rightPad4ChineseToByteLength("付款人账号：" + qdRsPayout.getPayAccount()
                     , 40, " ") + "付款人名称："
-                    + rsPayout.getPayCompanyName(), headFont2));
+                    + qdRsPayout.getPayCompanyName(), headFont2));
             cell.setBorder(0);
             cell.setHorizontalAlignment(Element.ALIGN_LEFT);
             table.addCell(cell);
-            cell = new PdfPCell(new Paragraph(StringUtil.rightPad4ChineseToByteLength("收款人账号：" + rsPayout.getRecAccount()
+            cell = new PdfPCell(new Paragraph(StringUtil.rightPad4ChineseToByteLength("收款人账号：" + qdRsPayout.getRecAccount()
                     , 40, " ") + "收款人名称："
-                    + rsPayout.getRecCompanyName(), headFont2));
+                    + qdRsPayout.getRecCompanyName(), headFont2));
             cell.setBorder(0);
             cell.setHorizontalAlignment(Element.ALIGN_LEFT);
             table.addCell(cell);
-            cell = new PdfPCell(new Paragraph("汇出金额：" + String.format("%.2f", rsPayout.getApAmount()), headFont2));
+            cell = new PdfPCell(new Paragraph("汇出金额：" + String.format("%.2f", qdRsPayout.getApAmount()), headFont2));
             cell.setBorder(0);
             cell.setHorizontalAlignment(Element.ALIGN_LEFT);
             table.addCell(cell);
@@ -308,19 +308,19 @@ public class CbusPayoutExecAction {
             table.addCell(cell);
             int[] rowWidths = new int[]{25, 34, 25};
             String bankSerial = "";
-            if (StringUtils.isEmpty(rsPayout.getBankSerial())) {
+            if (StringUtils.isEmpty(qdRsPayout.getBankSerial())) {
                 bankSerial = " ";
-            } else if (rsPayout.getBankSerial().length() >= 12) {
-                bankSerial = rsPayout.getBankSerial().substring(12);
+            } else if (qdRsPayout.getBankSerial().length() >= 12) {
+                bankSerial = qdRsPayout.getBankSerial().substring(12);
             } else {
-                bankSerial = rsPayout.getBankSerial();
+                bankSerial = qdRsPayout.getBankSerial();
             }
             String[][] rows = new String[][]{
                     new String[]{"机构代号：" + om.getOperator().getDeptid(),
                             "记账时间：" + new SimpleDateFormat("yyyy/MM/dd hh:MM:ss").format(new Date()),
                             "交易流水号：" + bankSerial},
-                    new String[]{"柜员代号：" + rsPayout.getApplyUserId().substring(9),
-                            "主管代号：" + rsPayout.getAuditUserId().substring(9),
+                    new String[]{"柜员代号：" + qdRsPayout.getApplyUserId().substring(9),
+                            "主管代号：" + qdRsPayout.getAuditUserId().substring(9),
                             "币别：人民币"},
             };
             //内容
@@ -331,9 +331,9 @@ public class CbusPayoutExecAction {
                 table.addCell(cell);
             }
 
-            String[] singleRows = new String[]{"付款人账号：" + rsPayout.getPayAccount(), "付款人户名：" + rsPayout.getPayCompanyName(),
-                    "收款人账号：" + rsPayout.getRecAccount(), "收款人户名：" + rsPayout.getRecCompanyName(),
-                    "交易金额：" + StringUtils.rightPad(String.format("%.2f", rsPayout.getApAmount()), 40, " ") + "交易类别：转账",
+            String[] singleRows = new String[]{"付款人账号：" + qdRsPayout.getPayAccount(), "付款人户名：" + qdRsPayout.getPayCompanyName(),
+                    "收款人账号：" + qdRsPayout.getRecAccount(), "收款人户名：" + qdRsPayout.getRecCompanyName(),
+                    "交易金额：" + StringUtils.rightPad(String.format("%.2f", qdRsPayout.getApAmount()), 40, " ") + "交易类别：转账",
                     "存款种类：" + StringUtil.rightPad4ChineseToByteLength(" ", 40, " ") + "存单存折印刷号：",
                     "凭证号码："
             };
@@ -369,7 +369,7 @@ public class CbusPayoutExecAction {
         } else {
             int sentResult = 1;
             try {
-                for (RsPayout record : payOverList) {
+                for (QdRsPayout record : payOverList) {
                     sentResult = clientBiService.sendRsPayoutMsg(record);
                     if (sentResult != 1) {
                         throw new RuntimeException("发送失败");
@@ -392,7 +392,7 @@ public class CbusPayoutExecAction {
         } else {
             int sentResult = 1;
             try {
-                for (RsPayout record : toSendRecords) {
+                for (QdRsPayout record : toSendRecords) {
                     sentResult = clientBiService.sendRsPayoutMsg(record);
                     if (sentResult != 1) {
                         throw new RuntimeException("发送失败");
@@ -414,7 +414,7 @@ public class CbusPayoutExecAction {
             MessageUtil.addWarn("请至少选择一笔记录！");
         } else {
             try {
-                for (RsPayout record : selectedRecords) {
+                for (QdRsPayout record : selectedRecords) {
                     record.setWorkResult(WorkResult.RE_CHECK.getCode());
                     payoutService.updateRsPayout(record);
                 }
@@ -434,7 +434,7 @@ public class CbusPayoutExecAction {
             MessageUtil.addWarn("请至少选择一笔记录！");
         } else {
             try {
-                for (RsPayout record : selectedRecords) {
+                for (QdRsPayout record : selectedRecords) {
                     payoutService.updateRsPayoutToExec(record);
                     clientBiService.sendRsPayoutMsg(record);
                 }
@@ -452,11 +452,11 @@ public class CbusPayoutExecAction {
 
     //=========================================
 
-    public List<RsPayout> getPrintVchList() {
+    public List<QdRsPayout> getPrintVchList() {
         return printVchList;
     }
 
-    public void setPrintVchList(List<RsPayout> printVchList) {
+    public void setPrintVchList(List<QdRsPayout> printVchList) {
         this.printVchList = printVchList;
     }
 
@@ -468,11 +468,11 @@ public class CbusPayoutExecAction {
         isRunning = running;
     }
 
-    public List<RsPayout> getPayFailList() {
+    public List<QdRsPayout> getPayFailList() {
         return payFailList;
     }
 
-    public void setPayFailList(List<RsPayout> payFailList) {
+    public void setPayFailList(List<QdRsPayout> payFailList) {
         this.payFailList = payFailList;
     }
 
@@ -492,20 +492,20 @@ public class CbusPayoutExecAction {
         this.payoutService = payoutService;
     }
 
-    public RsPlanCtrl getPlanCtrl() {
+    public QdRsPlanCtrl getPlanCtrl() {
         return planCtrl;
     }
 
-    public void setPlanCtrl(RsPlanCtrl planCtrl) {
+    public void setPlanCtrl(QdRsPlanCtrl planCtrl) {
         this.planCtrl = planCtrl;
     }
 
-    public RsPayout getRsPayout() {
-        return rsPayout;
+    public QdRsPayout getQdRsPayout() {
+        return qdRsPayout;
     }
 
-    public void setRsPayout(RsPayout rsPayout) {
-        this.rsPayout = rsPayout;
+    public void setQdRsPayout(QdRsPayout qdRsPayout) {
+        this.qdRsPayout = qdRsPayout;
     }
 
     public CbusPayoutService getCbusPayoutService() {
@@ -516,11 +516,11 @@ public class CbusPayoutExecAction {
         this.cbusPayoutService = cbusPayoutService;
     }
 
-    public RsPayout getSelectedRecord() {
+    public QdRsPayout getSelectedRecord() {
         return selectedRecord;
     }
 
-    public void setSelectedRecord(RsPayout selectedRecord) {
+    public void setSelectedRecord(QdRsPayout selectedRecord) {
         this.selectedRecord = selectedRecord;
     }
 
@@ -532,35 +532,35 @@ public class CbusPayoutExecAction {
         this.workResult = workResult;
     }
 
-    public RsPayout[] getSelectedRecords() {
+    public QdRsPayout[] getSelectedRecords() {
         return selectedRecords;
     }
 
-    public void setSelectedRecords(RsPayout[] selectedRecords) {
+    public void setSelectedRecords(QdRsPayout[] selectedRecords) {
         this.selectedRecords = selectedRecords;
     }
 
-    public List<RsPayout> getPassPayoutList() {
+    public List<QdRsPayout> getPassPayoutList() {
         return passPayoutList;
     }
 
-    public void setPassPayoutList(List<RsPayout> passPayoutList) {
+    public void setPassPayoutList(List<QdRsPayout> passPayoutList) {
         this.passPayoutList = passPayoutList;
     }
 
-    public List<RsPayout> getPayOverList() {
+    public List<QdRsPayout> getPayOverList() {
         return payOverList;
     }
 
-    public void setPayOverList(List<RsPayout> payOverList) {
+    public void setPayOverList(List<QdRsPayout> payOverList) {
         this.payOverList = payOverList;
     }
 
-    public RsPayout[] getToSendRecords() {
+    public QdRsPayout[] getToSendRecords() {
         return toSendRecords;
     }
 
-    public void setToSendRecords(RsPayout[] toSendRecords) {
+    public void setToSendRecords(QdRsPayout[] toSendRecords) {
         this.toSendRecords = toSendRecords;
     }
 
@@ -572,11 +572,11 @@ public class CbusPayoutExecAction {
         this.clientBiService = clientBiService;
     }
 
-    public List<RsPayout> getSendOverList() {
+    public List<QdRsPayout> getSendOverList() {
         return sendOverList;
     }
 
-    public void setSendOverList(List<RsPayout> sendOverList) {
+    public void setSendOverList(List<QdRsPayout> sendOverList) {
         this.sendOverList = sendOverList;
     }
 

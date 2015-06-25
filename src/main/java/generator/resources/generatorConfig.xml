@@ -32,157 +32,120 @@
         </javaClientGenerator>
 
         <!--房地产资金监管银行接口类 -->
+
+        <table tableName="QD_CBS_ACC_TXN">
+            <property name="ignoreQualifiersAtRuntime" value="true" />
+            <generatedKey column="pkid" sqlStatement="select sys_guid() from dual" identity="false"/>
+        </table>
+        <table tableName="QD_CBS_BANK_INFO">
+            <property name="ignoreQualifiersAtRuntime" value="true" />
+        </table>
+
         <!--RS -->
-
-        <table tableName="qd_rs_sys_ctl">
+        <table tableName="QD_RS_SYS_CTL">
             <property name="ignoreQualifiersAtRuntime" value="true" />
         </table>
-        <table schema="qd"  tableName="qd_rs_account">
-            <property name="ignoreQualifiersAtRuntime" value="true" />
-            <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
-        </table>
-        <!--
-        <table schema="qd"  tableName="rs_acc_detail">
+        <table tableName="QD_RS_ACCOUNT">
             <property name="ignoreQualifiersAtRuntime" value="true" />
             <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
         </table>
-        <table schema="qd"   tableName="rs_fdccompany">
+        <table tableName="QD_RS_ACC_DETAIL">
             <property name="ignoreQualifiersAtRuntime" value="true" />
             <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
         </table>
-        <table schema="qd"   tableName="rs_check">
+        <table tableName="QD_RS_FDCCOMPANY">
             <property name="ignoreQualifiersAtRuntime" value="true" />
             <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
         </table>
-        <table schema="qd"   tableName="rs_payout">
+        <table tableName="QD_RS_CHECK">
             <property name="ignoreQualifiersAtRuntime" value="true" />
             <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
         </table>
-        <table schema="qd"   tableName="rs_payup">
+        <table tableName="QD_RS_PAYOUT">
             <property name="ignoreQualifiersAtRuntime" value="true" />
             <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
         </table>
-        <table schema="qd"   tableName="rs_receive">
+        <table tableName="QD_RS_PAYUP">
             <property name="ignoreQualifiersAtRuntime" value="true" />
             <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
         </table>
-        <table schema="qd"   tableName="rs_refund">
+        <table tableName="QD_RS_RECEIVE">
             <property name="ignoreQualifiersAtRuntime" value="true" />
             <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
         </table>
-        <table schema="qd" tableName="RS_ACC_DETAIL">
+        <table tableName="QD_RS_REFUND">
+            <property name="ignoreQualifiersAtRuntime" value="true" />
+            <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
+        </table>
+        <table tableName="QD_RS_SEND_LOG">
             <property name="ignoreQualifiersAtRuntime" value="true"/>
             <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
-        </table>-->
-
-
-        <!--BI-->
-
-        <!--<table schema="qd"  tableName="bi_plan">
-            <property name="ignoreQualifiersAtRuntime" value="true" />
-            <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
         </table>
-        <table schema="qd"  tableName="bi_plan_detail">
-            <property name="ignoreQualifiersAtRuntime" value="true" />
-            <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
-        </table>
-        <table schema="qd"  tableName="bi_account_balance">
-            <property name="ignoreQualifiersAtRuntime" value="true" />
-            <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
-        </table>
-        <table schema="qd"  tableName="bi_account_balance_day">
-            <property name="ignoreQualifiersAtRuntime" value="true" />
-            <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
-        </table>
-        <table schema="qd"  tableName="bi_account_check">
-            <property name="ignoreQualifiersAtRuntime" value="true" />
-            <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
-        </table>
-        <table schema="qd"  tableName="bi_account_detail">
-            <property name="ignoreQualifiersAtRuntime" value="true" />
-            <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
-        </table>
-        <table schema="qd"  tableName="bi_acc_change">
-            <property name="ignoreQualifiersAtRuntime" value="true" />
-            <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
-        </table>
-        <table schema="qd"  tableName="bi_contract">
-            <property name="ignoreQualifiersAtRuntime" value="true" />
-            <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
-        </table>
-        <table schema="qd"  tableName="bi_contract_close">
-            <property name="ignoreQualifiersAtRuntime" value="true" />
-            <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
-        </table>
-        <table schema="qd"  tableName="bi_notify_conf">
-            <property name="ignoreQualifiersAtRuntime" value="true" />
-            <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
-        </table>
-        <table schema="qd"  tableName="bi_notify_message">
-            <property name="ignoreQualifiersAtRuntime" value="true" />
-            <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
-        </table>
-        <table schema="qd"  tableName="bi_trade">
-            <property name="ignoreQualifiersAtRuntime" value="true" />
-            <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
-        </table>
-        <table schema="qd"  tableName="bi_trade_log">
-            <property name="ignoreQualifiersAtRuntime" value="true" />
-            <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
-        </table>
-       <table schema="qd"  tableName="bi_account_balance">
-            <property name="ignoreQualifiersAtRuntime" value="true" />
-            <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
-        </table>
-        <table schema="qd"  tableName="bi_account_balance_day">
-            <property name="ignoreQualifiersAtRuntime" value="true" />
-            <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
-        </table>
-        <table schema="qd"  tableName="bi_account_check">
-            <property name="ignoreQualifiersAtRuntime" value="true" />
-            <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
-        </table>
-        <table schema="qd"  tableName="bi_account_detail">
-            <property name="ignoreQualifiersAtRuntime" value="true" />
-            <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
-        </table>
-        <table schema="qd"  tableName="bi_acc_change">
-            <property name="ignoreQualifiersAtRuntime" value="true" />
-            <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
-        </table>
-        <table schema="qd"  tableName="bi_contract">
-            <property name="ignoreQualifiersAtRuntime" value="true" />
-            <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
-        </table>
-        <table schema="qd"  tableName="bi_contract_close">
-            <property name="ignoreQualifiersAtRuntime" value="true" />
-            <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
-        </table>
-        <table schema="qd"  tableName="bi_notify_conf">
-            <property name="ignoreQualifiersAtRuntime" value="true" />
-            <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
-        </table>
-        <table schema="qd"  tableName="bi_notify_message">
-            <property name="ignoreQualifiersAtRuntime" value="true" />
-            <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
-        </table>
-        <table schema="qd"  tableName="bi_trade">
-            <property name="ignoreQualifiersAtRuntime" value="true" />
-            <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
-        </table>
-        <table schema="qd"  tableName="bi_trade_log">
-            <property name="ignoreQualifiersAtRuntime" value="true" />
-            <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
-        </table>-->
-        <!-- <table schema="qd" tableName="RS_SEND_LOG">
+        <table tableName="QD_RS_CONTRACT">
             <property name="ignoreQualifiersAtRuntime" value="true"/>
             <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
-        </table>-->
-        <!--<table schema="qd" tableName="rs_payout">
+        </table>
+        <table tableName="QD_RS_LOCKEDACC_DETAIL">
             <property name="ignoreQualifiersAtRuntime" value="true"/>
             <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
-        </table>-->
+        </table>
+        <table tableName="QD_RS_PLAN_CTRL">
+            <property name="ignoreQualifiersAtRuntime" value="true"/>
+            <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
+        </table>
 
+        <table tableName="QD_BI_PLAN">
+            <property name="ignoreQualifiersAtRuntime" value="true" />
+            <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
+        </table>
+        <table tableName="QD_BI_PLAN_DETAIL">
+            <property name="ignoreQualifiersAtRuntime" value="true" />
+            <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
+        </table>
+        <table tableName="QD_BI_ACCOUNT_BALANCE">
+            <property name="ignoreQualifiersAtRuntime" value="true" />
+            <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
+        </table>
+        <table tableName="QD_BI_ACCOUNT_BALANCE_DAY">
+            <property name="ignoreQualifiersAtRuntime" value="true" />
+            <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
+        </table>
+        <table tableName="QD_BI_ACCOUNT_CHECK">
+            <property name="ignoreQualifiersAtRuntime" value="true" />
+            <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
+        </table>
+        <table tableName="QD_BI_ACCOUNT_DETAIL">
+            <property name="ignoreQualifiersAtRuntime" value="true" />
+            <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
+        </table>
+        <table tableName="QD_BI_ACC_CHANGE">
+            <property name="ignoreQualifiersAtRuntime" value="true" />
+            <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
+        </table>
+        <table tableName="QD_BI_CONTRACT">
+            <property name="ignoreQualifiersAtRuntime" value="true" />
+            <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
+        </table>
+        <table tableName="QD_BI_CONTRACT_CLOSE">
+            <property name="ignoreQualifiersAtRuntime" value="true" />
+            <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
+        </table>
+        <table tableName="QD_BI_NOTIFY_CONF">
+            <property name="ignoreQualifiersAtRuntime" value="true" />
+            <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
+        </table>
+        <table tableName="QD_BI_NOTIFY_MESSAGE">
+            <property name="ignoreQualifiersAtRuntime" value="true" />
+            <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
+        </table>
+        <table tableName="QD_BI_TRADE">
+            <property name="ignoreQualifiersAtRuntime" value="true" />
+            <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
+        </table>
+        <table tableName="QD_BI_TRADE_LOG">
+            <property name="ignoreQualifiersAtRuntime" value="true" />
+            <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
+        </table>
     </context>
 
 </generatorConfiguration>

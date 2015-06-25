@@ -55,7 +55,7 @@
                                     <h:panelGrid columns="4" cellpadding="2" columnClasses="col-95,col-5,col-95,col-5"
                                                  style="width: 100%">
                                         <h:outputLabel value="计划编号:" for="planNo" style="margin-left: 28px;"/>
-                                        <p:inputText id="planNo" value="#{payoutAction.rsPayout.businessNo}"
+                                        <p:inputText id="planNo" value="#{payoutAction.qdRsPayout.businessNo}"
                                                      readonly="true" style="width:160px;"/>
                                         <h:outputLabel value="计划金额:" for="planAmt" style="margin-left: 30px;"/>
                                         <p:inputText id="planAmt" value="#{payoutAction.planCtrl.plAmount}"
@@ -77,17 +77,17 @@
                                     <h:panelGrid columns="4" cellpadding="2" columnClasses="col-95,col-5,col-95,col-5"
                                                  style="width: 100%">
                                         <h:outputLabel value="收款方账号:" for="toAccountCode" style="margin-left: 16px;"/>
-                                        <p:inputText id="toAccountCode" value="#{payoutAction.rsPayout.recAccount}"
+                                        <p:inputText id="toAccountCode" value="#{payoutAction.qdRsPayout.recAccount}"
                                                      readonly="true" style="width:160px;"/>
                                         <h:outputLabel value="收款方户名:" for="toAccountName" style="margin-left: 17px;"/>
-                                        <p:inputText id="toAccountName" value="#{payoutAction.rsPayout.recCompanyName}"
+                                        <p:inputText id="toAccountName" value="#{payoutAction.qdRsPayout.recCompanyName}"
                                                      readonly="true" style="width:260px;"/>
 
                                         <h:outputLabel value="收款行:" for="toBankCode" style="margin-left: 16px;"/>
-                                        <p:inputText id="toBankCode" value="#{payoutAction.rsPayout.recBankCode}"
+                                        <p:inputText id="toBankCode" value="#{payoutAction.qdRsPayout.recBankCode}"
                                                      readonly="true" style="width:160px;"/>
                                         <h:outputLabel value="收款行全称:" for="toBankName" style="margin-left: 17px;"/>
-                                        <p:inputText id="toBankName" value="#{payoutAction.rsPayout.recBankName}"
+                                        <p:inputText id="toBankName" value="#{payoutAction.qdRsPayout.recBankName}"
                                                      readonly="true" style="width:260px;"/>
                                     </h:panelGrid>
 
@@ -101,43 +101,43 @@
                                         <h:outputLabel value="付款房产商:" for="companyName" style="margin-left:20px;"/>
                                         <h:inputText autocomplete="off" id="companyName" style="width:160px;"
                                                      readonly="true"
-                                                     value="#{payoutAction.rsPayout.payCompanyName}">
+                                                     value="#{payoutAction.qdRsPayout.payCompanyName}">
                                         </h:inputText>
 
                                         <h:outputLabel value="付款监管账号:" for="accountCode"/>
                                         <p:inputText autocomplete="off" id="accountCode" style="width:160px;"
                                                      readonly="true"
-                                                     value="#{payoutAction.rsPayout.payAccount}">
+                                                     value="#{payoutAction.qdRsPayout.payAccount}">
                                         </p:inputText>
 
                                         <h:outputLabel value="凭证号:" for="docNo"/>
-                                        <p:inputText id="docNo" value="#{payoutAction.rsPayout.docNo}" readonly="true"
+                                        <p:inputText id="docNo" value="#{payoutAction.qdRsPayout.docNo}" readonly="true"
                                                      style="width:160px;"/>
 
                                         <h:outputLabel value="申请金额:" for="applyAmt" style="margin-left:20px"/>
                                         <p:inputText autocomplete="off" id="applyAmt" style="width:160px;"
-                                                     readonly="true" value="#{payoutAction.rsPayout.plAmount}">
+                                                     readonly="true" value="#{payoutAction.qdRsPayout.plAmount}">
                                             <f:convertNumber pattern="#,###,###,###,##0.00"/>
                                         </p:inputText>
 
                                         <h:outputLabel value="申请人:" for="applyPerson"/>
                                         <p:inputText autocomplete="off" id="applyPerson" style="width:160px;"
-                                                     readonly="true" value="#{payoutAction.rsPayout.applyUserName}">
+                                                     readonly="true" value="#{payoutAction.qdRsPayout.applyUserName}">
                                         </p:inputText>
 
                                         <h:outputLabel value="申请时间:" for="applyDate"/>
                                         <p:inputText autocomplete="off" id="applyDate" style="width:160px;"
-                                                     readonly="true" value="#{payoutAction.rsPayout.applyDate}">
+                                                     readonly="true" value="#{payoutAction.qdRsPayout.applyDate}">
                                         </p:inputText>
 
                                         <h:outputLabel value="审核人:" for="auditPerson"/>
                                         <p:inputText autocomplete="off" id="auditPerson" style="width:160px;"
-                                                     readonly="true" value="#{payoutAction.rsPayout.auditUserName}">
+                                                     readonly="true" value="#{payoutAction.qdRsPayout.auditUserName}">
                                         </p:inputText>
 
                                         <h:outputLabel value="审核时间:" for="auditDate"/>
                                         <p:inputText autocomplete="off" id="auditDate" style="width:160px;"
-                                                     readonly="true" value="#{payoutAction.rsPayout.auditDate}">
+                                                     readonly="true" value="#{payoutAction.qdRsPayout.auditDate}">
                                         </p:inputText>
 
                                     </h:panelGrid>
@@ -147,12 +147,12 @@
                                         <h:outputLabel value="申请事由:" for="applyReason"
                                                        style="text-align: right;margin-left: 33px;"/>
                                         <p:inputText autocomplete="off" id="applyReason" style="width:425px;"
-                                                     readonly="true" value="#{payoutAction.rsPayout.purpose}">
+                                                     readonly="true" value="#{payoutAction.qdRsPayout.purpose}">
                                         </p:inputText>
                                         <h:outputLabel value="备注:" for="remark"
                                                        style="text-align: right;margin-left: 33px;"/>
                                         <p:inputText autocomplete="off" id="remark" style="width:425px;"
-                                                     readonly="true" value="#{payoutAction.rsPayout.remark}">
+                                                     readonly="true" value="#{payoutAction.qdRsPayout.remark}">
                                         </p:inputText>
                                         <h:outputLabel/><p:separator/>
 
@@ -160,12 +160,12 @@
                                         <h:panelGroup>
                                             <h:outputLabel value="状态标志:" for="statusFlag"/>
                                             <h:outputText id="statusFlag"
-                                                          value="#{payoutAction.statusFlag.valueOfAlias(payoutAction.rsPayout.statusFlag).title}"
+                                                          value="#{payoutAction.statusFlag.valueOfAlias(payoutAction.qdRsPayout.statusFlag).title}"
                                                           readonly="true" style="width:160px;"/>
                                              <h:outputLabel/>
                                             <h:outputLabel value="处理结果:" for="workResult"/>
                                             <h:outputText id="workResult"
-                                                          value="#{payoutAction.workResult.valueOfAlias(payoutAction.rsPayout.workResult).title}"
+                                                          value="#{payoutAction.workResult.valueOfAlias(payoutAction.qdRsPayout.workResult).title}"
                                                           readonly="true" style="width:160px;"/>
                                         </h:panelGroup>
                                     </h:panelGrid>

@@ -1,10 +1,10 @@
 package rfm.qd.service;
 
 import rfm.qd.common.constant.*;
-import rfm.qd.repository.dao.RsAccDetailMapper;
+import rfm.qd.repository.dao.QdRsAccDetailMapper;
 import rfm.qd.repository.dao.common.CommonMapper;
-import rfm.qd.repository.model.RsAccDetail;
-import rfm.qd.repository.model.RsAccDetailExample;
+import rfm.qd.repository.model.QdRsAccDetail;
+import rfm.qd.repository.model.QdRsAccDetailExample;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import platform.service.SystemService;
@@ -28,13 +28,13 @@ import java.util.List;
 public class RsAccDetailService {
 
     @Autowired
-    private RsAccDetailMapper accDetailMapper;
+    private QdRsAccDetailMapper accDetailMapper;
     @Autowired
     private CommonMapper commonMapper;
     private SimpleDateFormat sdf10 = new SimpleDateFormat("yyyy-MM-dd");
 
-    public List<RsAccDetail> selectTodayAccDetails() {
-        RsAccDetailExample example = new RsAccDetailExample();
+    public List<QdRsAccDetail> selectTodayAccDetails() {
+        QdRsAccDetailExample example = new QdRsAccDetailExample();
         example.createCriteria().andDeletedFlagEqualTo("0")
                 .andStatusFlagEqualTo(TradeStatus.SUCCESS.getCode())
                 .andDcheckFlagEqualTo("0")
@@ -45,8 +45,8 @@ public class RsAccDetailService {
         return accDetailMapper.selectByExample(example);
     }
 
-    public List<RsAccDetail> selectTodayLoanAccDetails() {
-            RsAccDetailExample example = new RsAccDetailExample();
+    public List<QdRsAccDetail> selectTodayLoanAccDetails() {
+            QdRsAccDetailExample example = new QdRsAccDetailExample();
             example.createCriteria().andDeletedFlagEqualTo("0")
                     .andStatusFlagEqualTo(TradeStatus.SUCCESS.getCode())
                     .andTradeTypeEqualTo(TradeType.HOUSE_CREDIT.getCode())
@@ -58,7 +58,7 @@ public class RsAccDetailService {
         }
 
     public boolean isHasUnSendInterest() {
-        RsAccDetailExample example = new RsAccDetailExample();
+        QdRsAccDetailExample example = new QdRsAccDetailExample();
         example.createCriteria().andDeletedFlagEqualTo("0")
                 .andStatusFlagEqualTo(TradeStatus.SUCCESS.getCode())
                 .andTradeTypeEqualTo(TradeType.INTEREST.getCode())
@@ -71,7 +71,7 @@ public class RsAccDetailService {
 
 
     public boolean isHasUnSendCancelRecord() {
-        RsAccDetailExample example = new RsAccDetailExample();
+        QdRsAccDetailExample example = new QdRsAccDetailExample();
         example.createCriteria().andDeletedFlagEqualTo("0")
                 .andChangeFlagEqualTo(ChangeFlag.CANCEL.getCode())
                 .andStatusFlagEqualTo(TradeStatus.SUCCESS.getCode())
@@ -87,19 +87,19 @@ public class RsAccDetailService {
         return false;
     }
 
-    public RsAccDetail selectAccDetailByPkid(String pkid) {
+    public QdRsAccDetail selectAccDetailByPkid(String pkid) {
         return accDetailMapper.selectByPrimaryKey(pkid);
     }
 
-    public List<RsAccDetail> selectAccDetailsByStatus(TradeStatus tradeStatus) {
-        RsAccDetailExample example = new RsAccDetailExample();
+    public List<QdRsAccDetail> selectAccDetailsByStatus(TradeStatus tradeStatus) {
+        QdRsAccDetailExample example = new QdRsAccDetailExample();
         example.createCriteria().andDeletedFlagEqualTo("0").andStatusFlagEqualTo(tradeStatus.getCode());
         return accDetailMapper.selectByExample(example);
     }
 
     // 冲正交易
-    public List<RsAccDetail> selectCancelAccDetails() {
-        RsAccDetailExample example = new RsAccDetailExample();
+    public List<QdRsAccDetail> selectCancelAccDetails() {
+        QdRsAccDetailExample example = new QdRsAccDetailExample();
         example.createCriteria().andDeletedFlagEqualTo("0")
                 .andStatusFlagEqualTo(TradeStatus.SUCCESS.getCode())
                 .andChangeFlagEqualTo(ChangeFlag.NORMAL.getCode())
@@ -109,8 +109,8 @@ public class RsAccDetailService {
     }
 
     // 冲正申请交易
-    public List<RsAccDetail> selectAPCancelAccDetails() {
-        RsAccDetailExample example = new RsAccDetailExample();
+    public List<QdRsAccDetail> selectAPCancelAccDetails() {
+        QdRsAccDetailExample example = new QdRsAccDetailExample();
         example.createCriteria().andDeletedFlagEqualTo("0")
                 .andChangeFlagEqualTo(ChangeFlag.AP_CANCEL.getCode());
         example.setOrderByClause("Trade_Date desc");
@@ -118,8 +118,8 @@ public class RsAccDetailService {
     }
 
     // 退票交易
-    public List<RsAccDetail> selectBackAccDetails() {
-        RsAccDetailExample example = new RsAccDetailExample();
+    public List<QdRsAccDetail> selectBackAccDetails() {
+        QdRsAccDetailExample example = new QdRsAccDetailExample();
         try {
             example.createCriteria().andDeletedFlagEqualTo("0")
                     .andStatusFlagEqualTo(TradeStatus.SUCCESS.getCode())
@@ -135,8 +135,8 @@ public class RsAccDetailService {
     }
 
     // 退票申请交易
-    public List<RsAccDetail> selectAPBackAccDetails() {
-        RsAccDetailExample example = new RsAccDetailExample();
+    public List<QdRsAccDetail> selectAPBackAccDetails() {
+        QdRsAccDetailExample example = new QdRsAccDetailExample();
         example.createCriteria().andDeletedFlagEqualTo("0")
                 .andInoutFlagEqualTo(InOutFlag.OUT.getCode())
                 .andChangeFlagEqualTo(ChangeFlag.AP_BACK.getCode());
@@ -144,29 +144,29 @@ public class RsAccDetailService {
         return accDetailMapper.selectByExample(example);
     }
 
-    public int insertAccDetail(RsAccDetail rsAccDetail) {
+    public int insertAccDetail(QdRsAccDetail qdRsAccDetail) {
         OperatorManager om = SystemService.getOperatorManager();
         String operId = om.getOperatorId();
-        rsAccDetail.setCreatedBy(operId);
-        rsAccDetail.setCreatedDate(new Date());
-        rsAccDetail.setLastUpdBy(operId);
-        rsAccDetail.setLastUpdDate(new Date());
-        rsAccDetail.setLocalSerial(commonMapper.selectMaxAccDetailSerial());
-        rsAccDetail.setBankSerial(rsAccDetail.getLocalSerial());
-        return accDetailMapper.insertSelective(rsAccDetail);
+        qdRsAccDetail.setCreatedBy(operId);
+        qdRsAccDetail.setCreatedDate(new Date());
+        qdRsAccDetail.setLastUpdBy(operId);
+        qdRsAccDetail.setLastUpdDate(new Date());
+        qdRsAccDetail.setLocalSerial(commonMapper.selectMaxAccDetailSerial());
+        qdRsAccDetail.setBankSerial(qdRsAccDetail.getLocalSerial());
+        return accDetailMapper.insertSelective(qdRsAccDetail);
     }
 
-    public int updateAccDetail(RsAccDetail rsAccDetail) {
-        RsAccDetail originRecord = accDetailMapper.selectByPrimaryKey(rsAccDetail.getPkId());
-        if (!originRecord.getModificationNum().equals(rsAccDetail.getModificationNum())) {
+    public int updateAccDetail(QdRsAccDetail qdRsAccDetail) {
+        QdRsAccDetail originRecord = accDetailMapper.selectByPrimaryKey(qdRsAccDetail.getPkId());
+        if (!originRecord.getModificationNum().equals(qdRsAccDetail.getModificationNum())) {
             throw new RuntimeException("交易明细记录并发更新冲突，请重试！");
         } else {
             OperatorManager om = SystemService.getOperatorManager();
             String operId = om.getOperatorId();
-            rsAccDetail.setLastUpdBy(operId);
-            rsAccDetail.setLastUpdDate(new Date());
-            rsAccDetail.setModificationNum(rsAccDetail.getModificationNum() + 1);
-            return accDetailMapper.updateByPrimaryKeySelective(rsAccDetail);
+            qdRsAccDetail.setLastUpdBy(operId);
+            qdRsAccDetail.setLastUpdDate(new Date());
+            qdRsAccDetail.setModificationNum(qdRsAccDetail.getModificationNum() + 1);
+            return accDetailMapper.updateByPrimaryKeySelective(qdRsAccDetail);
         }
     }
 }

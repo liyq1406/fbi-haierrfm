@@ -3,9 +3,9 @@ package rfm.qd.view.payout;
 import rfm.qd.common.constant.LimitStatus;
 import rfm.qd.common.constant.RefundStatus;
 import rfm.qd.common.constant.WorkResult;
-import rfm.qd.repository.model.RsAccount;
-import rfm.qd.repository.model.RsPayout;
-import rfm.qd.repository.model.RsPlanCtrl;
+import rfm.qd.repository.model.QdRsAccount;
+import rfm.qd.repository.model.QdRsPayout;
+import rfm.qd.repository.model.QdRsPlanCtrl;
 import rfm.qd.service.PayoutService;
 import rfm.qd.service.account.AccountService;
 import rfm.qd.service.expensesplan.ExpensesPlanService;
@@ -38,7 +38,7 @@ import java.util.List;
 public class PayoutAction {
     private Logger logger = LoggerFactory.getLogger(PayoutAction.class);
 
-    private RsPayout rsPayout;
+    private QdRsPayout qdRsPayout;
     @ManagedProperty(value = "#{payoutService}")
     private PayoutService payoutService;
     @ManagedProperty(value = "#{expensesPlanService}")
@@ -47,25 +47,25 @@ public class PayoutAction {
     private AccountService accountService;
     @ManagedProperty(value = "#{toolsService}")
     private ToolsService toolsService;
-    private List<RsPayout> rsPayoutList;
-    private List<RsPayout> chkPayoutList;
-    private List<RsPayout> editPayoutList;
-    private List<RsPayout> passPayoutList;
-    private List<RsPayout> refusePayoutList;
-    private List<RsPlanCtrl> rsPlanCtrlList;
+    private List<QdRsPayout> qdRsPayoutList;
+    private List<QdRsPayout> chkPayoutList;
+    private List<QdRsPayout> editPayoutList;
+    private List<QdRsPayout> passPayoutList;
+    private List<QdRsPayout> refusePayoutList;
+    private List<QdRsPlanCtrl> qdRsPlanCtrlList;
     private List<SelectItem> bankCodeList;
 
-    private RsPayout selectedRecord;
-    private RsPayout[] selectedRecords;
+    private QdRsPayout selectedRecord;
+    private QdRsPayout[] selectedRecords;
     private WorkResult workResult = WorkResult.CREATE;
     private RefundStatus statusFlag = RefundStatus.ACCOUNT_SUCCESS;
-    private RsPlanCtrl planCtrl;
+    private QdRsPlanCtrl planCtrl;
 
     @PostConstruct
     public void init() {
-        rsPayout = new RsPayout();
-        planCtrl = new RsPlanCtrl();
-        rsPayoutList = new ArrayList<RsPayout>();
+        qdRsPayout = new QdRsPayout();
+        planCtrl = new QdRsPlanCtrl();
+        qdRsPayoutList = new ArrayList<QdRsPayout>();
         if (!initPayout()) {
             initTabList();
         }
@@ -78,23 +78,23 @@ public class PayoutAction {
 
         if (!StringUtils.isEmpty(pkid) && "insert".equalsIgnoreCase(action)) {
             planCtrl = expensesPlanService.selectPlanCtrlByPkid(pkid);
-            rsPayout.setBusinessNo(planCtrl.getPlanCtrlNo());
-            rsPayout.setRecAccount(planCtrl.getToAccountCode());
-            rsPayout.setRecCompanyName(planCtrl.getToAccountName());
-            rsPayout.setRecBankName(planCtrl.getToHsBankName());
-            rsPayout.setPayCompanyName(planCtrl.getCompanyName());
-            rsPayout.setPayAccount(planCtrl.getAccountCode());
-            rsPayout.setPurpose(planCtrl.getPlanDesc());
+            qdRsPayout.setBusinessNo(planCtrl.getPlanCtrlNo());
+            qdRsPayout.setRecAccount(planCtrl.getToAccountCode());
+            qdRsPayout.setRecCompanyName(planCtrl.getToAccountName());
+            qdRsPayout.setRecBankName(planCtrl.getToHsBankName());
+            qdRsPayout.setPayCompanyName(planCtrl.getCompanyName());
+            qdRsPayout.setPayAccount(planCtrl.getAccountCode());
+            qdRsPayout.setPurpose(planCtrl.getPlanDesc());
             bankCodeList = toolsService.getEnuSelectItemList("BANK_CODE", false, false);
             return true;
         } else if (!StringUtils.isEmpty(pkid) && "edit".equalsIgnoreCase(action)) {
-            rsPayout = payoutService.selectPayoutByPkid(pkid);
-            planCtrl = expensesPlanService.selectPlanCtrlByPlanNo(rsPayout.getBusinessNo());
+            qdRsPayout = payoutService.selectPayoutByPkid(pkid);
+            planCtrl = expensesPlanService.selectPlanCtrlByPlanNo(qdRsPayout.getBusinessNo());
             bankCodeList = toolsService.getEnuSelectItemList("BANK_CODE", false, false);
             return true;
         } else if (!StringUtils.isEmpty(pkid) && "query".equalsIgnoreCase(action)) {
-            rsPayout = payoutService.selectPayoutByPkid(pkid);
-            planCtrl = expensesPlanService.selectPlanCtrlByPlanNo(rsPayout.getBusinessNo());
+            qdRsPayout = payoutService.selectPayoutByPkid(pkid);
+            planCtrl = expensesPlanService.selectPlanCtrlByPlanNo(qdRsPayout.getBusinessNo());
         }
         return false;
     }
@@ -104,29 +104,29 @@ public class PayoutAction {
         editPayoutList = payoutService.selectEditRecords();
         passPayoutList = payoutService.selectRecordsByWorkResult(WorkResult.PASS.getCode());
         refusePayoutList = payoutService.selectRecordsByWorkResult(WorkResult.NOTPASS.getCode());
-        rsPlanCtrlList = expensesPlanService.selectPlanList();
+        qdRsPlanCtrlList = expensesPlanService.selectPlanList();
 
     }
 
     public String onSave() {
 
         try {
-            RsAccount account = accountService.selectCanPayAccountByNo(rsPayout.getPayAccount());
+            QdRsAccount account = accountService.selectCanPayAccountByNo(qdRsPayout.getPayAccount());
             if (account.getLimitFlag().equalsIgnoreCase(LimitStatus.LIMITED.getCode())) {
                 MessageUtil.addError("该账户已被限制付款！");
                 return null;
             }
 
-            if (rsPayout.getPlAmount().compareTo(planCtrl.getAvAmount()) > 0) {
+            if (qdRsPayout.getPlAmount().compareTo(planCtrl.getAvAmount()) > 0) {
                 MessageUtil.addError("申请金额不得大于可用金额！");
                 return null;
             }
-            if (rsPayout.getPlAmount().compareTo(planCtrl.getAvAmount()) > 0) {
+            if (qdRsPayout.getPlAmount().compareTo(planCtrl.getAvAmount()) > 0) {
                 MessageUtil.addError("申请金额不得大于可用金额！");
                 return null;
             }
-            rsPayout.setApAmount(rsPayout.getPlAmount());
-            if (payoutService.insertRsPayout(rsPayout) == 1) {
+            qdRsPayout.setApAmount(qdRsPayout.getPlAmount());
+            if (payoutService.insertRsPayout(qdRsPayout) == 1) {
                 MessageUtil.addInfo("受理用款成功！");
                 UIViewRoot viewRoot = FacesContext.getCurrentInstance().getViewRoot();
                 CommandButton saveBtn = (CommandButton) viewRoot.findComponent("form:saveBtn");
@@ -144,22 +144,22 @@ public class PayoutAction {
     public String onEdit() {
 
         try {
-            RsAccount account = accountService.selectCanPayAccountByNo(rsPayout.getPayAccount());
+            QdRsAccount account = accountService.selectCanPayAccountByNo(qdRsPayout.getPayAccount());
             if (account.getLimitFlag().equalsIgnoreCase(LimitStatus.LIMITED.getCode())) {
                 MessageUtil.addError("该账户已被限制付款！");
                 return null;
             }
-            if (rsPayout.getPlAmount().compareTo(planCtrl.getAvAmount()) > 0) {
+            if (qdRsPayout.getPlAmount().compareTo(planCtrl.getAvAmount()) > 0) {
                 MessageUtil.addError("申请金额不得大于可用金额！");
                 return null;
             }
-            if (rsPayout.getPlAmount().compareTo(planCtrl.getAvAmount()) > 0) {
+            if (qdRsPayout.getPlAmount().compareTo(planCtrl.getAvAmount()) > 0) {
                 MessageUtil.addError("申请金额不得大于可用金额！");
                 return null;
             }
-            rsPayout.setApAmount(rsPayout.getPlAmount());
-            rsPayout.setWorkResult(WorkResult.CREATE.getCode());
-            if (payoutService.updateRsPayout(rsPayout) == 1) {
+            qdRsPayout.setApAmount(qdRsPayout.getPlAmount());
+            qdRsPayout.setWorkResult(WorkResult.CREATE.getCode());
+            if (payoutService.updateRsPayout(qdRsPayout) == 1) {
                 MessageUtil.addInfo("受理用款修改成功！");
                 UIViewRoot viewRoot = FacesContext.getCurrentInstance().getViewRoot();
                 CommandButton saveBtn = (CommandButton) viewRoot.findComponent("form:saveBtn");
@@ -178,8 +178,8 @@ public class PayoutAction {
 
         try {
 
-            rsPayout.setDeletedFlag("1");
-            if (payoutService.updateRsPayout(rsPayout) == 1) {
+            qdRsPayout.setDeletedFlag("1");
+            if (payoutService.updateRsPayout(qdRsPayout) == 1) {
                 MessageUtil.addInfo("受理用款修删除成功！");
                 UIViewRoot viewRoot = FacesContext.getCurrentInstance().getViewRoot();
                 CommandButton saveBtn = (CommandButton) viewRoot.findComponent("form:saveBtn");
@@ -234,12 +234,12 @@ public class PayoutAction {
 
     //=========================================
 
-    public RsPayout getRsPayout() {
-        return rsPayout;
+    public QdRsPayout getQdRsPayout() {
+        return qdRsPayout;
     }
 
-    public void setRsPayout(RsPayout rsPayout) {
-        this.rsPayout = rsPayout;
+    public void setQdRsPayout(QdRsPayout qdRsPayout) {
+        this.qdRsPayout = qdRsPayout;
     }
 
     public PayoutService getPayoutService() {
@@ -254,11 +254,11 @@ public class PayoutAction {
         this.bankCodeList = bankCodeList;
     }
 
-    public List<RsPayout> getEditPayoutList() {
+    public List<QdRsPayout> getEditPayoutList() {
         return editPayoutList;
     }
 
-    public void setEditPayoutList(List<RsPayout> editPayoutList) {
+    public void setEditPayoutList(List<QdRsPayout> editPayoutList) {
         this.editPayoutList = editPayoutList;
     }
 
@@ -274,27 +274,27 @@ public class PayoutAction {
         this.payoutService = payoutService;
     }
 
-    public List<RsPayout> getRsPayoutList() {
-        return rsPayoutList;
+    public List<QdRsPayout> getQdRsPayoutList() {
+        return qdRsPayoutList;
     }
 
-    public void setRsPayoutList(List<RsPayout> rsPayoutList) {
-        this.rsPayoutList = rsPayoutList;
+    public void setQdRsPayoutList(List<QdRsPayout> qdRsPayoutList) {
+        this.qdRsPayoutList = qdRsPayoutList;
     }
 
-    public List<RsPayout> getChkPayoutList() {
+    public List<QdRsPayout> getChkPayoutList() {
         return chkPayoutList;
     }
 
-    public void setChkPayoutList(List<RsPayout> chkPayoutList) {
+    public void setChkPayoutList(List<QdRsPayout> chkPayoutList) {
         this.chkPayoutList = chkPayoutList;
     }
 
-    public RsPayout getSelectedRecord() {
+    public QdRsPayout getSelectedRecord() {
         return selectedRecord;
     }
 
-    public void setSelectedRecord(RsPayout selectedRecord) {
+    public void setSelectedRecord(QdRsPayout selectedRecord) {
         this.selectedRecord = selectedRecord;
     }
 
@@ -306,27 +306,27 @@ public class PayoutAction {
         this.workResult = workResult;
     }
 
-    public RsPayout[] getSelectedRecords() {
+    public QdRsPayout[] getSelectedRecords() {
         return selectedRecords;
     }
 
-    public void setSelectedRecords(RsPayout[] selectedRecords) {
+    public void setSelectedRecords(QdRsPayout[] selectedRecords) {
         this.selectedRecords = selectedRecords;
     }
 
-    public List<RsPayout> getPassPayoutList() {
+    public List<QdRsPayout> getPassPayoutList() {
         return passPayoutList;
     }
 
-    public void setPassPayoutList(List<RsPayout> passPayoutList) {
+    public void setPassPayoutList(List<QdRsPayout> passPayoutList) {
         this.passPayoutList = passPayoutList;
     }
 
-    public List<RsPayout> getRefusePayoutList() {
+    public List<QdRsPayout> getRefusePayoutList() {
         return refusePayoutList;
     }
 
-    public void setRefusePayoutList(List<RsPayout> refusePayoutList) {
+    public void setRefusePayoutList(List<QdRsPayout> refusePayoutList) {
         this.refusePayoutList = refusePayoutList;
     }
 
@@ -338,19 +338,19 @@ public class PayoutAction {
         this.expensesPlanService = expensesPlanService;
     }
 
-    public List<RsPlanCtrl> getRsPlanCtrlList() {
-        return rsPlanCtrlList;
+    public List<QdRsPlanCtrl> getQdRsPlanCtrlList() {
+        return qdRsPlanCtrlList;
     }
 
-    public void setRsPlanCtrlList(List<RsPlanCtrl> rsPlanCtrlList) {
-        this.rsPlanCtrlList = rsPlanCtrlList;
+    public void setQdRsPlanCtrlList(List<QdRsPlanCtrl> qdRsPlanCtrlList) {
+        this.qdRsPlanCtrlList = qdRsPlanCtrlList;
     }
 
-    public RsPlanCtrl getPlanCtrl() {
+    public QdRsPlanCtrl getPlanCtrl() {
         return planCtrl;
     }
 
-    public void setPlanCtrl(RsPlanCtrl planCtrl) {
+    public void setPlanCtrl(QdRsPlanCtrl planCtrl) {
         this.planCtrl = planCtrl;
     }
 

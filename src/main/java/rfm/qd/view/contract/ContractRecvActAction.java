@@ -4,7 +4,7 @@ import rfm.qd.common.constant.ContractRecvStatus;
 import rfm.qd.common.constant.ContractStatus;
 import rfm.qd.common.constant.InOutFlag;
 import rfm.qd.common.constant.WorkResult;
-import rfm.qd.repository.model.RsReceive;
+import rfm.qd.repository.model.QdRsReceive;
 import rfm.qd.service.ClientBiService;
 import rfm.qd.service.ContractRecvService;
 import rfm.qd.service.TradeService;
@@ -33,10 +33,10 @@ public class ContractRecvActAction {
     @ManagedProperty(value = "#{tradeService}")
     private TradeService tradeService;
 
-    private List<RsReceive> pendChkoverList;
-    private List<RsReceive> pendCommitActList;
-    private List<RsReceive> pendSentActList;
-    private RsReceive[] selectedRecords;
+    private List<QdRsReceive> pendChkoverList;
+    private List<QdRsReceive> pendCommitActList;
+    private List<QdRsReceive> pendSentActList;
+    private QdRsReceive[] selectedRecords;
     private ContractStatus contractStatus = ContractStatus.NORMAL;
     private ContractRecvStatus recvStatus = ContractRecvStatus.BACK;
     private WorkResult workResult = WorkResult.CREATE;
@@ -54,7 +54,7 @@ public class ContractRecvActAction {
             return null;
         }
         try {
-            for (RsReceive record : selectedRecords) {
+            for (QdRsReceive record : selectedRecords) {
                 if (tradeService.handleReceiveTrade(record) == 3) {
                     if (contractRecvService.updateRsReceiveToWorkResult(record, WorkResult.COMMIT) != 1) {
                         throw new RuntimeException("»Î’À ß∞‹£°’À∫≈:" + record.getAccountCode());
@@ -76,7 +76,7 @@ public class ContractRecvActAction {
             return null;
         }
         try {
-            for (RsReceive record : selectedRecords) {
+            for (QdRsReceive record : selectedRecords) {
                 if (clientBiService.sendRsReceiveMsg(record, InOutFlag.IN.getCode()) != 1) {
                     throw new RuntimeException("∑¢ÀÕ ß∞‹£°’À∫≈£∫" + record.getAccountCode());
                 }
@@ -108,19 +108,19 @@ public class ContractRecvActAction {
         this.workResult = workResult;
     }
 
-    public List<RsReceive> getPendChkoverList() {
+    public List<QdRsReceive> getPendChkoverList() {
         return pendChkoverList;
     }
 
-    public void setPendChkoverList(List<RsReceive> pendChkoverList) {
+    public void setPendChkoverList(List<QdRsReceive> pendChkoverList) {
         this.pendChkoverList = pendChkoverList;
     }
 
-    public RsReceive[] getSelectedRecords() {
+    public QdRsReceive[] getSelectedRecords() {
         return selectedRecords;
     }
 
-    public void setSelectedRecords(RsReceive[] selectedRecords) {
+    public void setSelectedRecords(QdRsReceive[] selectedRecords) {
         this.selectedRecords = selectedRecords;
     }
 
@@ -140,19 +140,19 @@ public class ContractRecvActAction {
         this.recvStatus = recvStatus;
     }
 
-    public List<RsReceive> getPendCommitActList() {
+    public List<QdRsReceive> getPendCommitActList() {
         return pendCommitActList;
     }
 
-    public void setPendCommitActList(List<RsReceive> pendCommitActList) {
+    public void setPendCommitActList(List<QdRsReceive> pendCommitActList) {
         this.pendCommitActList = pendCommitActList;
     }
 
-    public List<RsReceive> getPendSentActList() {
+    public List<QdRsReceive> getPendSentActList() {
         return pendSentActList;
     }
 
-    public void setPendSentActList(List<RsReceive> pendSentActList) {
+    public void setPendSentActList(List<QdRsReceive> pendSentActList) {
         this.pendSentActList = pendSentActList;
     }
 

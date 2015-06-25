@@ -2,8 +2,8 @@ package rfm.qd.view.account;
 
 import rfm.qd.common.constant.TradeStatus;
 import rfm.qd.common.constant.TradeType;
-import rfm.qd.repository.model.CbsAccTxn;
-import rfm.qd.repository.model.RsAccDetail;
+import rfm.qd.repository.model.QdCbsAccTxn;
+import rfm.qd.repository.model.QdRsAccDetail;
 import rfm.qd.service.CbusActTxnService;
 import rfm.qd.service.RsAccDetailService;
 import rfm.qd.service.account.AccountDetlService;
@@ -45,23 +45,23 @@ public class AccountTradeDetlAction {
     private Date endDate;
     private String acctname;
     private String acctno;
-    private List<RsAccDetail> rsAccDetails;
-    private RsAccDetail rsAccDetail;
-    private List<RsAccDetail> rsAccDetailsInit;
+    private List<QdRsAccDetail> qdRsAccDetails;
+    private QdRsAccDetail qdRsAccDetail;
+    private List<QdRsAccDetail> qdRsAccDetailsInit;
     private SimpleDateFormat sdf10 = new SimpleDateFormat("yyyy-MM-dd");
     private SimpleDateFormat sdf8 = new SimpleDateFormat("yyyyMMdd");
     private List<SelectItem> actDetlStatusOptions;
 
     @ManagedProperty(value = "#{cbusActTxnService}")
     private CbusActTxnService cbusActTxnService;
-    private List<CbsAccTxn> cbsAccTxnList;
+    private List<QdCbsAccTxn> qdCbsAccTxnList;
     private String strStartDate;
     private String strEndDate;
 
     @PostConstruct
     public void init() {
         actDetlStatusOptions = returnStatusOptions();
-        rsAccDetail = new RsAccDetail();
+        qdRsAccDetail = new QdRsAccDetail();
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.DAY_OF_MONTH, 1);
         beginDate = cal.getTime();
@@ -74,7 +74,7 @@ public class AccountTradeDetlAction {
         statusfalgs.add(0, TradeStatus.CANCEL.getCode());
         statusfalgs.add(1, TradeStatus.BACK.getCode());
         //成功录入(包括被退回的)
-        rsAccDetailsInit = accountDetlService.selectedRecordsForChk(TradeType.INTEREST.getCode(), statusfalgs);
+        qdRsAccDetailsInit = accountDetlService.selectedRecordsForChk(TradeType.INTEREST.getCode(), statusfalgs);
 
     }
 
@@ -93,7 +93,7 @@ public class AccountTradeDetlAction {
     public String onDelete() {
         FacesContext context = FacesContext.getCurrentInstance();
         String pkid = context.getExternalContext().getRequestParameterMap().get("pkid").toString();
-        RsAccDetail record = accDetailService.selectAccDetailByPkid(pkid);
+        QdRsAccDetail record = accDetailService.selectAccDetailByPkid(pkid);
         record.setDeletedFlag("1");
         if (accDetailService.updateAccDetail(record) == 1) {
             MessageUtil.addInfo("账户" + record.getAccountCode() + "利息已删除！");
@@ -106,9 +106,9 @@ public class AccountTradeDetlAction {
 
     public void onBtnQueryClick() {
         try {
-            rsAccDetails = accountDetlService.selectedRecordsByTradeDate(acctname, acctno,
+            qdRsAccDetails = accountDetlService.selectedRecordsByTradeDate(acctname, acctno,
                     sdf10.format(beginDate), sdf10.format(endDate));
-            if (rsAccDetails.isEmpty()) {
+            if (qdRsAccDetails.isEmpty()) {
                 MessageUtil.addWarn("没有查询到明细记录！");
             }
         } catch (Exception e) {
@@ -120,9 +120,9 @@ public class AccountTradeDetlAction {
 
     public void onQueryCbs() {
         try {
-            cbsAccTxnList = cbusActTxnService.qryCbsAccTxns(acctname, acctno,
+            qdCbsAccTxnList = cbusActTxnService.qryCbsAccTxns(acctname, acctno,
                     strStartDate, strEndDate);
-            if (cbsAccTxnList.isEmpty()) {
+            if (qdCbsAccTxnList.isEmpty()) {
                 MessageUtil.addWarn("没有查询到明细记录！");
             }
         } catch (Exception e) {
@@ -150,12 +150,12 @@ public class AccountTradeDetlAction {
         this.strStartDate = strStartDate;
     }
 
-    public List<CbsAccTxn> getCbsAccTxnList() {
-        return cbsAccTxnList;
+    public List<QdCbsAccTxn> getQdCbsAccTxnList() {
+        return qdCbsAccTxnList;
     }
 
-    public void setCbsAccTxnList(List<CbsAccTxn> cbsAccTxnList) {
-        this.cbsAccTxnList = cbsAccTxnList;
+    public void setQdCbsAccTxnList(List<QdCbsAccTxn> qdCbsAccTxnList) {
+        this.qdCbsAccTxnList = qdCbsAccTxnList;
     }
 
     public CbusActTxnService getCbusActTxnService() {
@@ -182,20 +182,20 @@ public class AccountTradeDetlAction {
         this.acctno = acctno;
     }
 
-    public List<RsAccDetail> getRsAccDetailsInit() {
-        return rsAccDetailsInit;
+    public List<QdRsAccDetail> getQdRsAccDetailsInit() {
+        return qdRsAccDetailsInit;
     }
 
-    public void setRsAccDetailsInit(List<RsAccDetail> rsAccDetailsInit) {
-        this.rsAccDetailsInit = rsAccDetailsInit;
+    public void setQdRsAccDetailsInit(List<QdRsAccDetail> qdRsAccDetailsInit) {
+        this.qdRsAccDetailsInit = qdRsAccDetailsInit;
     }
 
-    public RsAccDetail getRsAccDetail() {
-        return rsAccDetail;
+    public QdRsAccDetail getQdRsAccDetail() {
+        return qdRsAccDetail;
     }
 
-    public void setRsAccDetail(RsAccDetail rsAccDetail) {
-        this.rsAccDetail = rsAccDetail;
+    public void setQdRsAccDetail(QdRsAccDetail qdRsAccDetail) {
+        this.qdRsAccDetail = qdRsAccDetail;
     }
 
     public AccountDetlService getAccountDetlService() {
@@ -230,12 +230,12 @@ public class AccountTradeDetlAction {
         this.endDate = endDate;
     }
 
-    public List<RsAccDetail> getRsAccDetails() {
-        return rsAccDetails;
+    public List<QdRsAccDetail> getQdRsAccDetails() {
+        return qdRsAccDetails;
     }
 
-    public void setRsAccDetails(List<RsAccDetail> rsAccDetails) {
-        this.rsAccDetails = rsAccDetails;
+    public void setQdRsAccDetails(List<QdRsAccDetail> qdRsAccDetails) {
+        this.qdRsAccDetails = qdRsAccDetails;
     }
 
     public ToolsService getToolsService() {

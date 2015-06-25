@@ -1,8 +1,8 @@
 package rfm.qd.service.expensesplan;
 
-import rfm.qd.repository.dao.RsPlanCtrlMapper;
-import rfm.qd.repository.model.RsPlanCtrl;
-import rfm.qd.repository.model.RsPlanCtrlExample;
+import rfm.qd.repository.dao.QdRsPlanCtrlMapper;
+import rfm.qd.repository.model.QdRsPlanCtrl;
+import rfm.qd.repository.model.QdRsPlanCtrlExample;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +26,11 @@ public class ExpensesPlanService {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    private RsPlanCtrlMapper rsPlanCtrlMapper;
+    private QdRsPlanCtrlMapper qdRsPlanCtrlMapper;
 
     @Transactional
-    public int updatePlanCtrl(RsPlanCtrl planCtrl) {
-        RsPlanCtrl originRecord = selectPlanCtrlByPkid(planCtrl.getPkId());
+    public int updatePlanCtrl(QdRsPlanCtrl planCtrl) {
+        QdRsPlanCtrl originRecord = selectPlanCtrlByPkid(planCtrl.getPkId());
         if (!originRecord.getModificationNum().equals(planCtrl.getModificationNum())) {
             logger.info("【ExpensesPlanService.updatePlanCtrl】新记录版本号：" + planCtrl.getModificationNum() );
             logger.info("【ExpensesPlanService.updatePlanCtrl】原记录版本号：" + originRecord.getModificationNum() );
@@ -41,36 +41,36 @@ public class ExpensesPlanService {
             planCtrl.setLastUpdBy(operId);
             planCtrl.setLastUpdDate(new Date());
             planCtrl.setModificationNum(planCtrl.getModificationNum() + 1);
-            return rsPlanCtrlMapper.updateByPrimaryKey(planCtrl);
+            return qdRsPlanCtrlMapper.updateByPrimaryKey(planCtrl);
         }
     }
 
-    public RsPlanCtrl selectPlanCtrlByPlanNo(String planNo) {
+    public QdRsPlanCtrl selectPlanCtrlByPlanNo(String planNo) {
 
-        RsPlanCtrlExample example = new RsPlanCtrlExample();
+        QdRsPlanCtrlExample example = new QdRsPlanCtrlExample();
         example.createCriteria().andDeletedFlagEqualTo("0").andPlanCtrlNoEqualTo(planNo);
-        List<RsPlanCtrl> planCtrlList = rsPlanCtrlMapper.selectByExample(example);
+        List<QdRsPlanCtrl> planCtrlList = qdRsPlanCtrlMapper.selectByExample(example);
         if (planCtrlList.isEmpty()) {
             throw new RuntimeException("没有查询到计划明细！");
         }
         return planCtrlList.get(0);
     }
 
-    public RsPlanCtrl selectPlanCtrlByPkid(String pkid) {
-        return rsPlanCtrlMapper.selectByPrimaryKey(pkid);
+    public QdRsPlanCtrl selectPlanCtrlByPkid(String pkid) {
+        return qdRsPlanCtrlMapper.selectByPrimaryKey(pkid);
     }
 
-    public List<RsPlanCtrl> selectPlanList() {
-        RsPlanCtrlExample example = new RsPlanCtrlExample();
+    public List<QdRsPlanCtrl> selectPlanList() {
+        QdRsPlanCtrlExample example = new QdRsPlanCtrlExample();
         example.createCriteria().andDeletedFlagEqualTo("0");
-        return rsPlanCtrlMapper.selectByExample(example);
+        return qdRsPlanCtrlMapper.selectByExample(example);
     }
 
-    public List<RsPlanCtrl> selectPlanListByFields(String companyName, String accountCode, String payContractNo) {
-        RsPlanCtrlExample example = new RsPlanCtrlExample();
+    public List<QdRsPlanCtrl> selectPlanListByFields(String companyName, String accountCode, String payContractNo) {
+        QdRsPlanCtrlExample example = new QdRsPlanCtrlExample();
         example.createCriteria().andDeletedFlagEqualTo("0").andCompanyNameLike("%" + companyName + "%")
                 .andAccountCodeLike("%" + accountCode + "%").andPayContractNoLike("%" + payContractNo + "%");
-        return rsPlanCtrlMapper.selectByExample(example);
+        return qdRsPlanCtrlMapper.selectByExample(example);
     }
 
 }

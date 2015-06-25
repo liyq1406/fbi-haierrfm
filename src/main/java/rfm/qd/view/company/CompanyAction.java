@@ -1,6 +1,6 @@
 package rfm.qd.view.company;
 
-import rfm.qd.repository.model.RsFdccompany;
+import rfm.qd.repository.model.QdRsFdccompany;
 import rfm.qd.service.company.CompanyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,13 +26,13 @@ public class CompanyAction {
     private Logger logger = LoggerFactory.getLogger(CompanyAction.class);
     @ManagedProperty(value = "#{companyService}")
     private CompanyService companyService;
-    private RsFdccompany fdccompany;
+    private QdRsFdccompany fdccompany;
     private String companyName;
-    private List<RsFdccompany> fdccompanyList;
+    private List<QdRsFdccompany> fdccompanyList;
 
     @PostConstruct
     public void init() {
-        fdccompany = new RsFdccompany();
+        fdccompany = new QdRsFdccompany();
         qrySelectedRecords("");
     }
 
@@ -47,7 +47,7 @@ public class CompanyAction {
             return null;
         }
         MessageUtil.addInfo("新增数据完成。");
-        fdccompany = new RsFdccompany();
+        fdccompany = new QdRsFdccompany();
         return null;
     }
 
@@ -57,7 +57,7 @@ public class CompanyAction {
             FacesContext context = FacesContext.getCurrentInstance();
             String pkid = context.getExternalContext().getRequestParameterMap().get("pkid").toString();
             String modno = context.getExternalContext().getRequestParameterMap().get("modno").toString();
-            RsFdccompany up = new RsFdccompany();
+            QdRsFdccompany up = new QdRsFdccompany();
             up.setPkId(pkid);
             up.setModificationNum(Integer.parseInt(modno));
             up.setDeleteFlag("1");
@@ -87,11 +87,11 @@ public class CompanyAction {
         fdccompanyList = companyService.qryRsFdccompanyByName(comName);
     }
 
-    public RsFdccompany getFdccompany() {
+    public QdRsFdccompany getFdccompany() {
         return fdccompany;
     }
 
-    public void setFdccompany(RsFdccompany fdccompany) {
+    public void setFdccompany(QdRsFdccompany fdccompany) {
         this.fdccompany = fdccompany;
     }
 
@@ -103,11 +103,11 @@ public class CompanyAction {
         this.companyService = companyService;
     }
 
-    public List<RsFdccompany> getFdccompanyList() {
+    public List<QdRsFdccompany> getFdccompanyList() {
         return fdccompanyList;
     }
 
-    public void setFdccompanyList(List<RsFdccompany> fdccompanyList) {
+    public void setFdccompanyList(List<QdRsFdccompany> fdccompanyList) {
         this.fdccompanyList = fdccompanyList;
     }
 
