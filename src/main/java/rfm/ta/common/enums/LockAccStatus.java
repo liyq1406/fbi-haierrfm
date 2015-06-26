@@ -2,18 +2,17 @@ package rfm.ta.common.enums;
 
 import java.util.Hashtable;
 
-public enum ChangeFlag implements EnumApp {
-    NORMAL("N", "正常"),
-    CANCEL("R", "冲正"),
-    BACK("D", "退票"),
-    AP_CANCEL("A", "申请冲正"),
-    AP_BACK("B", "申请退票");
+public enum LockAccStatus implements EnumApp {
+    UN_LOCK("0", "解冻"),
+    PART_LOCK("1", "部分冻结"),
+    SINGLE_LOCK("3", "单向冻结"),
+    FULL_LOCK("2","全部冻结");
 
     private String code = null;
     private String title = null;
-    private static Hashtable<String, ChangeFlag> aliasEnums;
+    private static Hashtable<String, LockAccStatus> aliasEnums;
 
-    ChangeFlag(String code, String title) {
+    LockAccStatus(String code, String title) {
         this.init(code, title);
     }
 
@@ -30,7 +29,7 @@ public enum ChangeFlag implements EnumApp {
         aliasEnums.put(title, this);
     }
 
-    public static ChangeFlag valueOfAlias(String alias) {
+    public static LockAccStatus valueOfAlias(String alias) {
         return aliasEnums.get(alias);
     }
 

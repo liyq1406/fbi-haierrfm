@@ -1,0 +1,169 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                template="/templates/ui.xhtml">
+
+<ui:define name="head">
+    <style type="text/css">
+        .input-col-m {
+            width: 60px;
+        }
+
+        .input-col-l {
+            width: 80px;
+        }
+
+        .input-col-xxl {
+            width: 1%;
+            text-align: right;
+        }
+
+        .col-95 {
+            text-align: right;
+        }
+
+        .col-5 {
+            text-align: left;
+        }
+    </style>
+    <script type="text/javascript" language="javascript">
+        document.onkeydown = function TabReplace() {
+            if (event.keyCode == 13) {
+                if (event.srcElement.tagName != 'BUTTON')
+                    event.keyCode = 9;
+                else
+                    event.srcElement.click();
+            }
+        }
+    </script>
+
+</ui:define>
+
+<ui:define name="content">
+    <div style="margin:5px;">
+        <p:growl id="msgs" showDetail="false"/>
+        <h:form id="form">
+
+            <p:panel id="input" header="【实际用款】表单">
+                <h:panelGrid columns="1" cellspacing="2" style="width: 100%">
+                    <h:panelGrid columns="1" cellspacing="2" style="width: 100%">
+
+                        <p:fieldset legend="用款计划">
+                            <h:panelGrid columns="1">
+                                <h:panelGrid columns="4" cellpadding="2" columnClasses="col-95,col-5,col-95,col-5"
+                                             style="width: 100%">
+                                    <h:outputLabel value="计划编号:" for="planNo" style="margin-left: 28px;"/>
+                                    <p:inputText id="planNo" value="#{payoutAction.qdRsPayout.businessNo}"
+                                                 readonly="true" style="width:160px;" disabled="true"/>
+                                    <h:outputLabel value="计划金额:" for="planAmt" style="margin-left: 30px;"/>
+                                    <p:inputText id="planAmt" value="#{payoutAction.planCtrl.plAmount}"
+                                                 readonly="true" style="width:260px;" disabled="true">
+                                        <f:convertNumber pattern="#,###,###,###,##0.00"/>
+                                    </p:inputText>
+                                    <h:outputLabel value="可用金额:" for="avAmt" style="margin-left: 28px;"/>
+                                    <p:inputText id="avAmt" value="#{payoutAction.planCtrl.avAmount}"
+                                                 readonly="true" style="width:160px;" disabled="true">
+                                        <f:convertNumber pattern="#,###,###,###,##0.00"/>
+                                    </p:inputText>
+                                    <h:outputLabel/><h:outputLabel/>
+                                </h:panelGrid>
+                            </h:panelGrid>
+                        </p:fieldset>
+
+                        <p:fieldset legend="收款方信息">
+                            <h:panelGrid columns="1">
+                                <h:panelGrid columns="4" cellpadding="2" columnClasses="col-95,col-5,col-95,col-5"
+                                             style="width: 100%">
+                                    <h:outputLabel value="收款方账号:" for="toAccountCode" style="margin-left: 16px;"/>
+                                    <p:inputText id="toAccountCode" value="#{payoutAction.qdRsPayout.recAccount}"
+                                                 readonly="false" style="width:160px;" disabled="true"/>
+                                    <h:outputLabel value="收款方户名:" for="toAccountName" style="margin-left: 17px;"/>
+                                    <p:inputText id="toAccountName" value="#{payoutAction.qdRsPayout.recCompanyName}"
+                                                 readonly="false" disabled="true"
+                                                 style="width:260px;"/>
+
+                                    <h:outputLabel value="收款行:" for="toBankCode"
+                                                   style="margin-left: 16px;"/>
+                                    <h:selectOneMenu id="toBankCode" style="width:165px;" disabled="true"
+                                                     value="#{payoutAction.qdRsPayout.recBankCode}">
+                                        <f:selectItems value="#{payoutAction.bankCodeList}"/>
+                                    </h:selectOneMenu>
+
+                                    <h:outputLabel value="收款行全称:" for="toBankName" style="margin-left: 17px;"/>
+                                    <p:inputText id="toBankName" value="#{payoutAction.qdRsPayout.recBankName}"
+                                                 readonly="true" disabled="true"
+                                                 style="width:260px;"/>
+                                </h:panelGrid>
+
+                            </h:panelGrid>
+                        </p:fieldset>
+                        <p:fieldset legend="付款方信息">
+                            <h:panelGrid columns="1">
+                                <h:panelGrid columns="4" cellspacing="2" style="width: 100%"
+                                             columnClasses="col-95,col-5,col-95,col-5">
+
+                                    <h:outputLabel value="付款房产商:" for="companyName" style="margin-left:20px;"/>
+                                    <h:inputText autocomplete="off" id="companyName" style="width:160px;"
+                                                 readonly="false" disabled="true"
+                                                 value="#{payoutAction.qdRsPayout.payCompanyName}">
+                                    </h:inputText>
+
+                                    <h:outputLabel value="付款监管账号:" for="accountCode"/>
+                                    <p:inputText autocomplete="off" id="accountCode" style="width:250px;"
+                                                 readonly="true" disabled="true"
+                                                 value="#{payoutAction.qdRsPayout.payAccount}">
+                                    </p:inputText>
+
+                                    <h:outputLabel value="【凭证号】:" for="docNo"/>
+                                    <p:inputText id="docNo" value="#{payoutAction.qdRsPayout.docNo}"  style="width:160px;"
+                                                 onfocus="this.select()" disabled="true"/>
+
+                                    <h:outputLabel value="【申请金额】:" for="applyAmt" style="margin-left:20px"/>
+                                    <p:inputText autocomplete="off" id="applyAmt" style="width:250px;"
+                                                 disabled="true"
+                                                 value="#{payoutAction.qdRsPayout.plAmount}">
+                                    </p:inputText>
+                                </h:panelGrid>
+                                <h:panelGrid columns="2" cellspacing="2" style="width: 100%"
+                                             columnClasses="col-95,col-5,col-95,col-5">
+                                    <h:outputLabel value="申请事由:" for="applyReason"
+                                                   style="text-align: right;margin-left: 32px;"/>
+                                    <p:inputText autocomplete="off" id="applyReason" style="width:528px;"
+                                                 value="#{payoutAction.qdRsPayout.purpose}" disabled="true">
+                                    </p:inputText>
+                                    <h:outputLabel value="备注:" for="remark"
+                                                   style="text-align: right;margin-left: 32px;"/>
+                                    <p:inputText autocomplete="off" id="remark" style="width:528px;"
+                                                 value="#{payoutAction.qdRsPayout.remark}" disabled="true">
+                                    </p:inputText>
+                                </h:panelGrid>
+                            </h:panelGrid>
+                        </p:fieldset>
+                    </h:panelGrid>
+                    <h:panelGrid style="width: 20%" columns="2">
+                        <p:commandButton id="saveBtn" ajax="true" value="删除"
+                                         action="#{payoutAction.onDelete}"
+                                         style="margin-left:235px;width:90px"
+                                         update="input,pdt,msgs">
+                            <p:collector value="#{payoutAction.qdRsPayout}" addTo="#{payoutAction.qdRsPayoutList}"/>
+                        </p:commandButton>
+                        <p:commandButton ajax="true" id="clsBtn" value="关闭" onclick="window.close();"
+                                         style="width:90px;margin-left:15px" />
+                    </h:panelGrid>
+                </h:panelGrid>
+            </p:panel>
+            <p:ajaxStatus style="width:16px;height:16px;">
+                <f:facet name="start">
+                    <h:graphicImage value="/images/ajaxloading.gif"/>
+                </f:facet>
+                <f:facet name="complete">
+                    <h:outputText value=""/>
+                </f:facet>
+            </p:ajaxStatus>
+        </h:form>
+    </div>
+</ui:define>
+
+</ui:composition>

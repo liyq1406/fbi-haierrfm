@@ -2,18 +2,25 @@ package rfm.ta.common.enums;
 
 import java.util.Hashtable;
 
-public enum ChangeFlag implements EnumApp {
-    NORMAL("N", "正常"),
-    CANCEL("R", "冲正"),
-    BACK("D", "退票"),
-    AP_CANCEL("A", "申请冲正"),
-    AP_BACK("B", "申请退票");
+/**
+ * Created by IntelliJ IDEA.
+ * User: zhanrui
+ * Date: 11-7-23
+ * Time: 下午3:30
+ * To change this template use File | Settings | File Templates.
+ */
+public enum ContractStatus implements EnumApp {
+    NORMAL("1", "正常进行"),
+    TRANS("6", "撤销待退款"),
+    CANCELING("7", "撤销中"),
+    END("8", "交易完成"),
+    CANCEL("9", "撤销终止");
 
     private String code = null;
     private String title = null;
-    private static Hashtable<String, ChangeFlag> aliasEnums;
+    private static Hashtable<String, ContractStatus> aliasEnums;
 
-    ChangeFlag(String code, String title) {
+    ContractStatus(String code, String title) {
         this.init(code, title);
     }
 
@@ -30,7 +37,7 @@ public enum ChangeFlag implements EnumApp {
         aliasEnums.put(title, this);
     }
 
-    public static ChangeFlag valueOfAlias(String alias) {
+    public static ContractStatus valueOfAlias(String alias) {
         return aliasEnums.get(alias);
     }
 

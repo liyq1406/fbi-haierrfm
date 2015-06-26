@@ -2,18 +2,15 @@ package rfm.ta.common.enums;
 
 import java.util.Hashtable;
 
-public enum ChangeFlag implements EnumApp {
-    NORMAL("N", "正常"),
-    CANCEL("R", "冲正"),
-    BACK("D", "退票"),
-    AP_CANCEL("A", "申请冲正"),
-    AP_BACK("B", "申请退票");
+public enum InOutFlag implements EnumApp {
+    OUT("0", "支出"),
+    IN("1", "收入");
 
     private String code = null;
     private String title = null;
-    private static Hashtable<String, ChangeFlag> aliasEnums;
+    private static Hashtable<String, InOutFlag> aliasEnums;
 
-    ChangeFlag(String code, String title) {
+    InOutFlag(String code, String title) {
         this.init(code, title);
     }
 
@@ -30,7 +27,7 @@ public enum ChangeFlag implements EnumApp {
         aliasEnums.put(title, this);
     }
 
-    public static ChangeFlag valueOfAlias(String alias) {
+    public static InOutFlag valueOfAlias(String alias) {
         return aliasEnums.get(alias);
     }
 

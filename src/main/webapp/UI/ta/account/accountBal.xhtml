@@ -1,0 +1,81 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                template="/templates/ui.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+            .input-col-m {
+                width: 60px;
+            }
+
+            .input-col-l {
+                width: 80px;
+            }
+
+            .input-col-xxl {
+                width: 1%;
+                text-align: right;
+            }
+
+            .col-95 {
+                text-align: right;
+            }
+
+            .col-5 {
+                text-align: left;
+            }
+        </style>
+        <script type="text/javascript" src="#{request.contextPath}/UI/support/pub.js"/>
+        <script type="text/javascript" language="javascript">
+            document.onkeydown = function TabReplace() {
+                if (event.keyCode == 13) {
+                    if (event.srcElement.tagName != 'BUTTON')
+                        event.keyCode = 9;
+                }
+            }
+        </script>
+    </ui:define>
+    <ui:define name="content">
+        <div style="margin:5px;">
+            <p:growl id="msgs" showDetail="false"/>
+            <h:form id="form">
+                <p:panel id="input" header="【监管账户余额查询】">
+                    <h:panelGrid columns="2" cellspacing="3" style="width:100%">
+                        <h:panelGrid columns="6" cellspacing="3" style="width:90%"
+                                     columnClasses="col-95,col-5,col-95,col-5">
+
+                            <h:outputLabel value="*【监管账号】:" for="accountCode"/>
+                            <h:inputText autocomplete="off" id="accountCode" style="width:192px;" required="true"
+                                         requiredMessage="必须输入监管账号！" value="#{accountAction.account.accountCode}">
+                            </h:inputText>
+                            <h:outputLabel value="账户余额:"/>
+                            <h:inputText value="#{accountAction.account.balance}"/>
+                            <h:outputLabel value="可用余额:"/>
+                            <h:inputText value="#{accountAction.account.balanceUsable}"/>
+                        </h:panelGrid>
+                        <h:panelGrid style="width:20%">
+                            <p:commandButton id="saveBtn" ajax="true" value="查询"
+                                             action="#{accountAction.qrybal}"
+                                             style="margin-left:15px;width:90px"
+                                             update="input,msgs">
+                            </p:commandButton>
+                        </h:panelGrid>
+                    </h:panelGrid>
+                </p:panel>
+                <p:ajaxStatus style="width:16px;height:16px;">
+                    <f:facet name="start">
+                        <h:graphicImage value="/images/ajaxloading.gif"/>
+                    </f:facet>
+                    <f:facet name="complete">
+                        <h:outputText value=""/>
+                    </f:facet>
+                </p:ajaxStatus>
+
+            </h:form>
+        </div>
+    </ui:define>
+
+</ui:composition>

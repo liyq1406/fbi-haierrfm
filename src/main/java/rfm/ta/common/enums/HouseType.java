@@ -2,18 +2,23 @@ package rfm.ta.common.enums;
 
 import java.util.Hashtable;
 
-public enum ChangeFlag implements EnumApp {
-    NORMAL("N", "正常"),
-    CANCEL("R", "冲正"),
-    BACK("D", "退票"),
-    AP_CANCEL("A", "申请冲正"),
-    AP_BACK("B", "申请退票");
+/**
+ * Created by IntelliJ IDEA.
+ * User: zhanrui
+ * Date: 11-7-23
+ * Time: 下午3:30
+ * To change this template use File | Settings | File Templates.
+ */
+public enum HouseType implements EnumApp {
+    NORMAL("01", "普通商品房"),
+    JING_JI("02", "经济适用房"),
+    XIAN_JIA("03", "限价商品房");
 
     private String code = null;
     private String title = null;
-    private static Hashtable<String, ChangeFlag> aliasEnums;
+    private static Hashtable<String, HouseType> aliasEnums;
 
-    ChangeFlag(String code, String title) {
+    HouseType(String code, String title) {
         this.init(code, title);
     }
 
@@ -30,7 +35,7 @@ public enum ChangeFlag implements EnumApp {
         aliasEnums.put(title, this);
     }
 
-    public static ChangeFlag valueOfAlias(String alias) {
+    public static HouseType valueOfAlias(String alias) {
         return aliasEnums.get(alias);
     }
 

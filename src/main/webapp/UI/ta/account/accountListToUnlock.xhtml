@@ -1,0 +1,193 @@
+﻿<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                template="/templates/ui.xhtml">
+
+    <ui:define name="head">
+        <script type="text/javascript" src="#{request.contextPath}/UI/support/dialogwindow.js"/>
+        <script type="text/javascript" language="javascript">
+            document.onkeydown = function TabReplace() {
+                if (event.keyCode == 13) {
+                    if (event.srcElement.tagName != 'BUTTON')
+                        event.keyCode = 9;
+                }
+            }
+            function doPopupWindow(obj) {
+                var pkid = obj.parentNode.parentNode.childNodes[0].innerHTML;
+                popupwindow = window.open("accountUnlockDetl.xhtml?pkid=" + pkid, "popupwindow", "height=600,width=800,left=200,top=100,toolbar=no,menubar=no,scrollbars=yes,location=no");
+                popupwindow.focus;
+            }
+        </script>
+
+    </ui:define>
+
+    <ui:define name="content">
+        <div style="margin:5px;">
+            <p:tabView style="font-weight:normal;font-style:normal" dynamic="true" cache="false"
+                    tabChangeListener="#{accountUnlockAction.onTabChange}">
+                <p:tab title="当前冻结账户清单">
+                    <div>
+                        <h:form id="form1">
+                            <p:dataTable id="pdt1" style="width:100%;"
+                                         dynamic="true"
+                                         value="#{accountUnlockAction.accountLockList}" var="record"
+                                         paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         paginator="true" rows="20" paginatorPosition="bottom"
+                                         rowsPerPageTemplate="100,50,30,20,10,5"
+                                         emptyMessage="数据记录为空...">
+                                <f:facet name="header">
+                                    当前冻结账户记录
+                                </f:facet>
+
+                                <p:column style="display:none;" headerText="pkid">
+                                    <h:outputText value="#{record.pkId}"/>
+                                </p:column>
+
+                                <p:column headerText="监管账号" style="text-align:center" filterBy="#{record.accountCode}">
+                                    <h:outputText value="#{record.accountCode}"/>
+                                </p:column>
+
+                                <p:column headerText="账户名称" style="text-align:center" filterBy="#{record.accountName}">
+                                    <h:outputText value="#{record.accountName}" style="text-align: left"/>
+                                </p:column>
+
+                                <p:column headerText="项目名称" style="text-align:center">
+                                    <h:outputText value="#{record.proName}" style="text-align: left"/>
+                                </p:column>
+
+                                <p:column headerText="项目地址" style="text-align:center">
+                                    <h:outputText value="#{record.proAddr}" style="text-align: left"/>
+                                </p:column>
+
+                                <p:column headerText="账户余额" style="text-align:center">
+                                    <h:outputText value="#{record.balance}" style="float:right">
+                                        <f:convertNumber pattern="#,###,###,###,##0.00"/>
+                                    </h:outputText>
+                                </p:column>
+
+                                <p:column headerText="冻结金额" style="text-align:center">
+                                    <h:outputText value="#{record.balanceLock}" style="float:right">
+                                        <f:convertNumber pattern="#,###,###,###,##0.00"/>
+                                    </h:outputText>
+                                </p:column>
+
+                                <p:column headerText="操作" style="text-align:center">
+                                    <p:commandLink value="解冻" style="color:blue" update="popupwindow"
+                                                   onclick="doPopupWindow(this);"/>
+                                </p:column>
+                            </p:dataTable>
+                        </h:form>
+                    </div>
+                </p:tab>
+                <p:tab title="未发送解冻明细记录">
+                    <p:growl id="msgs" showDetail="false"/>
+                    <h:form id="form2">
+                        <p:menubar>
+                            <p:menuitem type="push" value="全部发送" icon="ui-icon ui-icon-document"
+                                        action="#{accountUnlockAction.onAllSend}" update="msgs, pdt1, pdt2, pdt3"
+                                        ajax="true"/>
+                            <p:menuitem type="push" value="多笔发送" icon="ui-icon ui-icon-document"
+                                        action="#{accountUnlockAction.onMultiSend}" update="msgs, pdt1, pdt2, pdt3"
+                                        ajax="true"/>
+                        </p:menubar>
+                        <p:ajaxStatus style="height:18px;text-align:center">
+                            <f:facet name="start">
+                                <h:graphicImage value="/images/ajaxloadingbar.gif"/>
+                            </f:facet>
+                            <f:facet name="complete">
+                                <h:outputText value=""/>
+                            </f:facet>
+                        </p:ajaxStatus>
+                        <p:dataTable id="pdt2" style="width:100%;"
+                                     dynamic="true" selection="#{accountUnlockAction.selectedRecords}"
+                                     value="#{accountUnlockAction.unSendLockDetailList}" var="record"
+                                     paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     paginator="true" rows="20" paginatorPosition="bottom"
+                                     rowsPerPageTemplate="100,50,30,20,10,5"
+                                     emptyMessage="数据记录为空...">
+
+                            <p:column selectionMode="multiple"/>
+                            <p:column style="display:none;" headerText="pkid">
+                                <h:outputText value="#{record.pkId}"/>
+                            </p:column>
+
+                            <p:column headerText="监管账号" style="text-align:center">
+                                <h:outputText value="#{record.accountCode}"/>
+                            </p:column>
+
+                            <p:column headerText="账户名称" style="text-align:center">
+                                <h:outputText value="#{record.accountName}" style="text-align: left"/>
+                            </p:column>
+
+                            <p:column headerText="账户余额" style="text-align:center">
+                                <h:outputText value="#{record.balance}" style="float:right">
+                                    <f:convertNumber pattern="#,###,###,###,##0.00"/>
+                                </h:outputText>
+                            </p:column>
+
+                            <p:column headerText="冻结金额" style="text-align:center">
+                                <h:outputText value="#{record.balanceLock}" style="float:right">
+                                    <f:convertNumber pattern="#,###,###,###,##0.00"/>
+                                </h:outputText>
+                            </p:column>
+
+                            <p:column headerText="冻结状态" style="text-align:center">
+                                <h:outputText
+                                        value="#{accountUnlockAction.lockStatus.valueOfAlias(record.statusFlag).title}">
+                                </h:outputText>
+                            </p:column>
+
+                        </p:dataTable>
+                    </h:form>
+                </p:tab>
+                <p:tab title="已发送解冻明细记录">
+                    <h:form id="form3">
+                        <p:dataTable id="pdt3" style="width:100%;"
+                                     dynamic="true"
+                                     value="#{accountUnlockAction.sentLockDetailList}" var="record"
+                                     paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     paginator="true" rows="20" paginatorPosition="bottom"
+                                     rowsPerPageTemplate="100,50,30,20,10,5"
+                                     emptyMessage="数据记录为空...">
+
+                            <p:column style="display:none;" headerText="pkid">
+                                <h:outputText value="#{record.pkId}"/>
+                            </p:column>
+
+                            <p:column headerText="监管账号" style="text-align:center">
+                                <h:outputText value="#{record.accountCode}"/>
+                            </p:column>
+
+                            <p:column headerText="账户名称" style="text-align:center">
+                                <h:outputText value="#{record.accountName}" style="text-align: left"/>
+                            </p:column>
+
+                            <p:column headerText="账户余额" style="text-align:center">
+                                <h:outputText value="#{record.balance}" style="float:right">
+                                    <f:convertNumber pattern="#,###,###,###,##0.00"/>
+                                </h:outputText>
+                            </p:column>
+
+                            <p:column headerText="冻结金额" style="text-align:center">
+                                <h:outputText value="#{record.balanceLock}" style="float:right">
+                                    <f:convertNumber pattern="#,###,###,###,##0.00"/>
+                                </h:outputText>
+                            </p:column>
+
+                            <p:column headerText="冻结状态" style="text-align:center">
+                                <h:outputText
+                                        value="#{accountUnlockAction.lockStatus.valueOfAlias(record.statusFlag).title}">
+                                </h:outputText>
+                            </p:column>
+
+                        </p:dataTable>
+                    </h:form>
+                </p:tab>
+
+            </p:tabView>
+        </div>
+    </ui:define>
+
+</ui:composition>

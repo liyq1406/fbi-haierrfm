@@ -1,7 +1,5 @@
 package rfm.ta.common.enums;
 
-import rfm.qd.common.constant.EnumApp;
-
 import java.util.Hashtable;
 
 public enum AccountStatus implements EnumApp {

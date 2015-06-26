@@ -9,7 +9,7 @@
         <script type="text/javascript">
             function doPopupWindow(obj) {
                 var pkid = obj.parentNode.parentNode.childNodes[0].innerHTML;
-                popupwindow = window.open("cbusPayoutDelDetl.xhtml?action=edit&amp;pkid=" + pkid, "popupwindow", "height=600,width=800,left=200,top=100,toolbar=no,menubar=no,scrollbars=yes,location=no");
+                popupwindow = window.open("cbusPayoutEditDetl.xhtml?action=edit&amp;pkid=" + pkid, "popupwindow", "height=600,width=800,left=200,top=100,toolbar=no,menubar=no,scrollbars=yes,location=no");
                 popupwindow.focus;
             }
 
@@ -94,7 +94,7 @@
 
                                 <p:column headerText="记账日期" style="text-align:center">
                                     <h:outputText value="#{record.createdDate}">
-                                        <f:convertDateTime pattern="yyyyMMdd HH:mm:ss" timeZone="GMT+08:00"/>
+                                    <f:convertDateTime pattern="yyyyMMdd HH:mm:ss"  timeZone="GMT+08:00"/>
                                     </h:outputText>
                                 </p:column>
 
@@ -104,7 +104,7 @@
                                 </p:column>
 
                                 <p:column headerText="操作" style="text-align:center">
-                                    <p:commandLink value="删除" style="color:blue" update="popupwindow"
+                                    <p:commandLink value="修改" style="color:blue" update="popupwindow"
                                                    onclick="doPopupWindow(this);"/>
                                 </p:column>
 

@@ -1,0 +1,151 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                template="/templates/ui.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+            .input-col-m {
+                width: 60px;
+            }
+
+            .input-col-l {
+                width: 80px;
+            }
+
+            .input-col-xxl {
+                width: 1%;
+                text-align: right;
+            }
+
+            .col-95 {
+                text-align: right;
+            }
+
+            .col-5 {
+                text-align: left;
+            }
+        </style>
+        <script type="text/javascript" language="javascript">
+            document.onkeydown = function TabReplace() {
+                if (event.keyCode == 13) {
+                    if (event.srcElement.tagName != 'BUTTON')
+                        event.keyCode = 9;
+                    else
+                        event.srcElement.click();
+                }
+            }
+        </script>
+
+    </ui:define>
+
+    <ui:define name="content">
+        <div style="margin:5px;">
+            <p:growl id="msgs" showDetail="false"/>
+            <h:form id="form">
+
+                <p:panel id="input" header="【监管账户信息】查询条件">
+                    <h:panelGrid columns="2" cellspacing="3" style="width:100%">
+                        <h:panelGrid columns="4" cellspacing="3" style="width:80%" columnClasses="col-95,col-5,col-95,col-5">
+
+                            <h:outputLabel value="预售许可证号:" for="presellNo"/>
+                            <h:inputText autocomplete="off" id="presellNo" style="width:162px;" value="#{accountAction.account.presellNo}"
+                                         onfocus="this.select()">
+                            </h:inputText>
+
+                            <h:outputLabel value="*【房产商】:" for="companyId"/>
+                            <p:inputText autocomplete="off" id="companyId" style="width:162px;" required="true"
+                                         requiredMessage="必须输入房产商！" value="#{accountAction.account.companyId}">
+                            </p:inputText>
+
+                            <h:outputLabel value="*【监管账号】:" for="accountCode"/>
+                            <h:inputText autocomplete="off" id="accountCode" style="width:162px;" required="true"
+                                         requiredMessage="必须输入监管账号！" value="#{accountAction.account.accountCode}">
+                            </h:inputText>
+
+                            <h:outputLabel value="账户名称:" for="accountName"/>
+                            <p:inputText id="accountName" value="#{accountAction.account.accountName}"
+                                         style="width:162px;"/>
+
+                            <h:outputLabel value="项目名称:" for="proName"/>
+                            <p:inputText id="proName" value="#{accountAction.account.proName}"
+                                         style="width:162px;"/>
+
+                            <h:outputLabel value="状态:" for="stautsFlag"/>
+                            <p:inputText id="stautsFlag" value="#{accountAction.account.statusFlag}"
+                                         style="width:162px;"/>
+
+                            <h:outputLabel value="限制付款:" for="limitFlag"/>
+                            <p:inputText id="limitFlag" value="#{accountAction.account.limitFlag}"
+                                         style="width:162px;"/>
+
+                        </h:panelGrid>
+                        <h:panelGrid style="width:20%">
+                            <p:commandButton id="saveBtn" ajax="true" value="查询"
+                                             action="#{accountAction.insertRecord}"
+                                             style="margin-left:15px;width:90px"
+                                             update="input,pdt,msgs">
+                            </p:commandButton>
+                            <p:commandButton ajax="true" id="resetBtn" value="重置" action="#{accountAction.reset}"
+                                             style="width:90px;margin-left:15px" update="input,msgs,pdt"/>
+                        </h:panelGrid>
+                    </h:panelGrid>
+                </p:panel>
+                <p:ajaxStatus style="width:16px;height:16px;">
+                    <f:facet name="start">
+                        <h:graphicImage value="/images/ajaxloading.gif"/>
+                    </f:facet>
+                    <f:facet name="complete">
+                        <h:outputText value=""/>
+                    </f:facet>
+                </p:ajaxStatus>
+
+                <p:dataTable id="pdt" style="width:100%;"
+                             dynamic="true" selectionMode="single"
+                             value="#{accountAction.accountList}" var="record"
+                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             paginator="true" rows="15" paginatorPosition="bottom"
+                             rowsPerPageTemplate="100,50,30,15,5"
+                             emptyMessage="数据记录为空...">
+
+                    <p:column headerText="预售许可证号" style="text-align:left">
+                        <h:outputText value="#{record.presellNo}"/>
+                    </p:column>
+
+                    <p:column headerText="房产商ID" style="text-align:center">
+                        <h:outputText value="#{record.companyId}"/>
+                    </p:column>
+
+                    <p:column headerText="监管账号" style="text-align:left">
+                        <h:outputText value="#{record.accountCode}"/>
+                    </p:column>
+
+                    <p:column headerText="账户名称" style="text-align:left">
+                        <h:outputText value="#{record.accountName}"/>
+                    </p:column>
+
+                    <p:column headerText="项目名称" style="text-align:left">
+                        <h:outputText value="#{record.proName}"/>
+                    </p:column>
+
+                    <p:column headerText="项目地址" style="text-align:left">
+                        <h:outputText value="#{record.proAddr}"/>
+                    </p:column>
+
+                     <p:column headerText="状态" style="text-align:center">
+                        <h:outputText value="#{accountAction.accountStatus.valueOfAlias(record.statusFlag).title}"/>
+                    </p:column>
+
+                     <p:column headerText="限制付款" style="text-align:center">
+                        <h:outputText value="#{record.limitFlag}"/>
+                    </p:column>
+
+
+                </p:dataTable>
+            </h:form>
+        </div>
+    </ui:define>
+
+</ui:composition>
