@@ -38,8 +38,6 @@ public class TASBSAccountAction implements Serializable{
             maa41.setTXNDAT("20150701");
             maa41.setREMARK("TAFC");
             maa41.setPASSNO("TAFC" + biadate);//Æ±¾Ý±àºÅ
-//            SOFForm form = dataExchangeService.callSbsTxn("aa41", maa41).get(0);
-//            String formcode = form.getFormHeader().getFormCode();
             List<SOFForm> formList = dataExchangeService.callSbsTxn("aa41", maa41);
             String formcode = formList.get(0).getFormHeader().getFormCode();
             if ("T531".equals(formcode)){
