@@ -9,7 +9,6 @@
 *.ear
 lib/
 doc/
-db/
 out/
 .idea/
 *.iml
