@@ -3,8 +3,8 @@ package rfm.ta.gateway.xsocket.client.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xsocket.connection.INonBlockingConnection;
-import rfm.ta.gateway.service.IMessageService;
-import rfm.ta.gateway.service.impl.TaClientMessageService;
+import rfm.ta.gateway.sbs.domain.service.IMessageService;
+import rfm.ta.gateway.sbs.domain.service.impl.TaClientMessageService;
 import rfm.ta.gateway.xsocket.client.IClientHandler;
 
 import java.io.IOException;

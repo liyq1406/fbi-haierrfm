@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.xsocket.connection.IDataHandler;
 import org.xsocket.connection.INonBlockingConnection;
-import rfm.ta.gateway.service.impl.TaServerMessageService;
+import rfm.ta.gateway.sbs.domain.service.impl.TaServerMessageService;
 import rfm.ta.gateway.xsocket.crypt.des.DesCrypter;
 import rfm.ta.gateway.xsocket.server.TaIServerHandler;
 

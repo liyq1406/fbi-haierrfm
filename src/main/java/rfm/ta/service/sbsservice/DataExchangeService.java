@@ -4,9 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rfm.ta.tagateway.tasbs.core.domain.SOFForm;
-import rfm.ta.tagateway.tasbs.service.SbsTxnService;
-import rfm.ta.tagateway.tasbs.txn.model.msg.MTia;
+import rfm.ta.gateway.sbs.domain.core.domain.SOFForm;
+import rfm.ta.gateway.sbs.domain.service.SbsTxnService;
+import rfm.ta.gateway.sbs.domain.txn.model.msg.MTia;
 
 import java.util.List;
 
