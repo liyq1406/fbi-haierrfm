@@ -10,7 +10,7 @@ import java.util.Hashtable;
  * Time: 下午3:30
  * To change this template use File | Settings | File Templates.
  */
-public enum RefundStatus implements EnumApp {
+public enum TaRefundStatus implements EnumApp {
     BACK("0", "退回"),
     INIT("1", "初始"),
     CHECKING("2", "审核中"),
@@ -26,9 +26,9 @@ public enum RefundStatus implements EnumApp {
 
     private String code = null;
     private String title = null;
-    private static Hashtable<String, RefundStatus> aliasEnums;
+    private static Hashtable<String, TaRefundStatus> aliasEnums;
 
-    RefundStatus(String code, String title) {
+    TaRefundStatus(String code, String title) {
         this.init(code, title);
     }
 
@@ -45,7 +45,7 @@ public enum RefundStatus implements EnumApp {
         aliasEnums.put(title, this);
     }
 
-    public static RefundStatus valueOfAlias(String alias) {
+    public static TaRefundStatus valueOfAlias(String alias) {
         return aliasEnums.get(alias);
     }
 

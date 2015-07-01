@@ -2,23 +2,21 @@ package rfm.ta.common.enums;
 
 import java.util.Hashtable;
 
-/**
- * Created by IntelliJ IDEA.
- * User: zhanrui
- * Date: 11-7-23
- * Time: 下午3:30
- * To change this template use File | Settings | File Templates.
+/*
+类型;01房款收入-定金、02计划付款、03退款、04利息、05 房款划转、09其他
+
  */
-public enum HouseType implements EnumApp {
-    NORMAL("01", "普通商品房"),
-    JING_JI("02", "经济适用房"),
-    XIAN_JIA("03", "限价商品房");
+public enum TaTradeType implements EnumApp {
+    TRADE_INCOME("01", "交存"),
+    TRADE_PAYMENT("02", "划拨"),
+    TRADE_BACK("03", "退款"),
+    TRADE_OTHERS("04", "其他");
 
     private String code = null;
     private String title = null;
-    private static Hashtable<String, HouseType> aliasEnums;
+    private static Hashtable<String, TaTradeType> aliasEnums;
 
-    HouseType(String code, String title) {
+    TaTradeType(String code, String title) {
         this.init(code, title);
     }
 
@@ -35,7 +33,7 @@ public enum HouseType implements EnumApp {
         aliasEnums.put(title, this);
     }
 
-    public static HouseType valueOfAlias(String alias) {
+    public static TaTradeType valueOfAlias(String alias) {
         return aliasEnums.get(alias);
     }
 

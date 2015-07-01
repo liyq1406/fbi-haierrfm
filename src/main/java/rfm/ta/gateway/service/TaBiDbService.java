@@ -3,11 +3,10 @@ package rfm.ta.gateway.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import rfm.ta.common.enums.ChangeFlag;
+import rfm.ta.common.enums.TaChangeFlag;
 import rfm.ta.repository.dao.*;
 import rfm.ta.repository.model.*;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -37,7 +36,7 @@ public class TaBiDbService {
     public List<TaRsAccDetail> selectAccDetailsByCodeNameDate(String accountCode, String accountName, String fromDate, String toDate) {
         TaRsAccDetailExample example = new TaRsAccDetailExample();
         example.createCriteria().andDeletedFlagEqualTo("0")
-                .andChangeFlagNotEqualTo(ChangeFlag.CANCEL.getCode())
+                .andChangeFlagNotEqualTo(TaChangeFlag.CANCEL.getCode())
                 .andAccountCodeEqualTo(accountCode)
                 .andAccountNameEqualTo(accountName).
                 andTradeDateBetween(fromDate, toDate);
@@ -52,7 +51,7 @@ public class TaBiDbService {
      */
     @Transactional
     public int updateAccount(TaRsAccount account) {
-        account.setModificationNum(account.getModificationNum() + 1);
+        account.setRecVersion(account.getRecVersion() + 1);
         return accountMapper.updateByPrimaryKey(account);
     }
 
@@ -64,8 +63,7 @@ public class TaBiDbService {
      * @return
      */
     public int updateAccountToLimitStatus(TaRsAccount account, String limitStatus) {
-        account.setLimitFlag(limitStatus);
-        account.setModificationNum(account.getModificationNum() + 1);
+        account.setRecVersion(account.getRecVersion() + 1);
         return accountMapper.updateByPrimaryKey(account);
     }
 
@@ -79,14 +77,14 @@ public class TaBiDbService {
     public List<TaRsAccount> selectAccountByCodeName(String accountCode, String accountName) {
         TaRsAccountExample example = new TaRsAccountExample();
         example.createCriteria().andDeletedFlagEqualTo("0")
-                .andAccountCodeEqualTo(accountCode).andAccountNameEqualTo(accountName);
+                .andAccIdEqualTo(accountCode).andAccNameEqualTo(accountName);
         return accountMapper.selectByExample(example);
     }
 
     public boolean isAccountExistByCodeName(String accountCode, String accountName) {
         TaRsAccountExample example = new TaRsAccountExample();
         example.createCriteria().andDeletedFlagEqualTo("0")
-                .andAccountCodeEqualTo(accountCode).andAccountNameEqualTo(accountName);
+                .andAccIdEqualTo(accountCode).andAccNameEqualTo(accountName);
         return accountMapper.countByExample(example) == 1;
     }
 

@@ -2,23 +2,14 @@ package rfm.ta.common.enums;
 
 import java.util.Hashtable;
 
-/**
- * Created by IntelliJ IDEA.
- * User: zhanrui
- * Date: 11-7-23
- * Time: 下午3:30
- * To change this template use File | Settings | File Templates.
- */
-public enum LoanType implements EnumApp {
-    SHANG_YE("01", "商业贷款"),
-    GONG_JI_JIN("02", "公积金贷款"),
-    ZU_HE("03", "组合贷款");
+public enum TaAccType implements EnumApp {
+    AccType0("0", "初始");
 
     private String code = null;
     private String title = null;
-    private static Hashtable<String, LoanType> aliasEnums;
+    private static Hashtable<String, TaAccType> aliasEnums;
 
-    LoanType(String code, String title) {
+    TaAccType(String code, String title) {
         this.init(code, title);
     }
 
@@ -35,7 +26,7 @@ public enum LoanType implements EnumApp {
         aliasEnums.put(title, this);
     }
 
-    public static LoanType valueOfAlias(String alias) {
+    public static TaAccType valueOfAlias(String alias) {
         return aliasEnums.get(alias);
     }
 

@@ -2,17 +2,17 @@ package rfm.ta.common.enums;
 
 import java.util.Hashtable;
 
-public enum SendLogResult implements EnumApp {
-    SEND_OVER("2", "发送数据成功"),
-    SEND_ERR("20", "发送数据失败"),
-    QRYED("1", "查询明细成功"),
-    QRYED_ERR("10", "查询明细失败");
+public enum TaLockAccStatus implements EnumApp {
+    UN_LOCK("0", "解冻"),
+    PART_LOCK("1", "部分冻结"),
+    SINGLE_LOCK("3", "单向冻结"),
+    FULL_LOCK("2","全部冻结");
 
     private String code = null;
     private String title = null;
-    private static Hashtable<String, SendLogResult> aliasEnums;
+    private static Hashtable<String, TaLockAccStatus> aliasEnums;
 
-    SendLogResult(String code, String title) {
+    TaLockAccStatus(String code, String title) {
         this.init(code, title);
     }
 
@@ -29,7 +29,7 @@ public enum SendLogResult implements EnumApp {
         aliasEnums.put(title, this);
     }
 
-    public static SendLogResult valueOfAlias(String alias) {
+    public static TaLockAccStatus valueOfAlias(String alias) {
         return aliasEnums.get(alias);
     }
 

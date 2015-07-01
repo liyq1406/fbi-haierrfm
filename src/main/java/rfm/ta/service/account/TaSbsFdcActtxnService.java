@@ -1,25 +1,16 @@
 package rfm.ta.service.account;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rfm.ta.common.enums.InOutFlag;
-import rfm.ta.common.enums.SendLogResult;
-import rfm.ta.common.enums.TradeType;
-import rfm.ta.gateway.sbs.domain.txn.QDJG01Res;
+import rfm.ta.common.enums.TaSendLogResult;
 import rfm.ta.gateway.sbs.domain.txn.QDJG02Res;
-import rfm.ta.gateway.fdc.CommonRes;
-import rfm.ta.gateway.fdc.T000.T0007Req;
 import rfm.ta.gateway.service.TaSbsTxnService;
-import rfm.ta.gateway.utils.StringUtil;
 import rfm.ta.repository.dao.TaRsSendLogMapper;
 import rfm.ta.repository.dao.com.TaCommonMapper;
 import rfm.ta.repository.model.*;
 import rfm.ta.service.TaClientBiService;
-import rfm.ta.service.account.TaAccountService;
 
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -62,7 +53,7 @@ public class TaSbsFdcActtxnService {
             }
         } catch (Exception e) {
             logger.error("自动获取当日贷款交易明细异常。", e);
-            insertNewSendLog("QDJG02", "CBUS查询交易明细", yesterday, SendLogResult.QRYED_ERR.getCode());
+            insertNewSendLog("QDJG02", "CBUS查询交易明细", yesterday, TaSendLogResult.QRYED_ERR.getCode());
             return -1;
         }
         try {
@@ -73,7 +64,7 @@ public class TaSbsFdcActtxnService {
             }
         } catch (Exception e) {
             logger.error("自动发送当日账户按揭贷款汇总异常。", e);
-            insertNewSendLog("0007", "发送按揭贷款交易金额汇总", yesterday, SendLogResult.SEND_ERR.getCode());
+            insertNewSendLog("0007", "发送按揭贷款交易金额汇总", yesterday, TaSendLogResult.SEND_ERR.getCode());
             return -1;
         }
         return 0;
@@ -100,7 +91,7 @@ public class TaSbsFdcActtxnService {
 
     public boolean isSentActtxns(String endDate) {
         TaRsSendLogExample example = new TaRsSendLogExample();
-        example.createCriteria().andTxnDateEqualTo(endDate).andTxnResultEqualTo(SendLogResult.SEND_OVER.getCode());
+        example.createCriteria().andTxnDateEqualTo(endDate).andTxnResultEqualTo(TaSendLogResult.SEND_OVER.getCode());
         return qdRsSendLogMapper.countByExample(example) > 0;
     }
 
@@ -108,7 +99,7 @@ public class TaSbsFdcActtxnService {
         String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
        /* List<TaRsAccount> accountList = accountService.qryAllMonitRecords();
         for (TaRsAccount account : accountList) {
-            QDJG01Res res01 = qdSbsTxnService.qdjg01QryActbal(account.getAccountCode());
+            QDJG01Res res01 = qdSbsTxnService.qdjg01QryActbal(account.getAccId());
             account.setBalance(new BigDecimal(res01.actbal));
             account.setBalanceUsable(new BigDecimal(res01.avabal));
             accountService.updateRecord(account);
@@ -123,12 +114,12 @@ public class TaSbsFdcActtxnService {
         int cnt = 0;
         try {
             for (TaRsAccount account : accountList) {
-                List<QDJG02Res> resList = qdSbsTxnService.qdjg02qryActtxnsByParams(account.getAccountCode(), startDate, endDate);
+                List<QDJG02Res> resList = qdSbsTxnService.qdjg02qryActtxnsByParams(account.getAccId(), startDate, endDate);
                 for (QDJG02Res res : resList) {
                     for (QDJG02Res.TxnRecord txnRecord : res.recordList) {
                         /*TaCbsAccTxn qdCbsAccTxn = new TaCbsAccTxn();
                         qdCbsAccTxn.setPkid(UUID.randomUUID().toString());
-                        qdCbsAccTxn.setAccountNo(account.getAccountCode());
+                        qdCbsAccTxn.setAccountNo(account.getAccId());
                         qdCbsAccTxn.setAccountName(account.getAccountName());
                         qdCbsAccTxn.setBankId(res.getHeader().getBankId());
                         qdCbsAccTxn.setOperId(res.getHeader().getOperId());
@@ -157,11 +148,11 @@ public class TaSbsFdcActtxnService {
                 }
             }
             if (accountList.size() > 0) {
-                insertNewSendLog("QDJG02", "CBUS查询交易明细", endDate, SendLogResult.QRYED.getCode());
+                insertNewSendLog("QDJG02", "CBUS查询交易明细", endDate, TaSendLogResult.QRYED.getCode());
             }
         } catch (Exception e) {
             logger.error("查询交易明细异常。", e);
-            insertNewSendLog("QDJG02", "CBUS查询交易明细", endDate, SendLogResult.QRYED_ERR.getCode());
+            insertNewSendLog("QDJG02", "CBUS查询交易明细", endDate, TaSendLogResult.QRYED_ERR.getCode());
             return -1;
         }
         return cnt;
