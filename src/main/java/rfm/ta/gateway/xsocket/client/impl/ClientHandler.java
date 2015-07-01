@@ -3,8 +3,6 @@ package rfm.ta.gateway.xsocket.client.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xsocket.connection.INonBlockingConnection;
-import rfm.ta.gateway.sbs.domain.service.IMessageService;
-import rfm.ta.gateway.sbs.domain.service.impl.TaClientMessageService;
 import rfm.ta.gateway.xsocket.client.IClientHandler;
 
 import java.io.IOException;
@@ -18,8 +16,13 @@ import java.nio.BufferUnderflowException;
 @Deprecated
 public class ClientHandler implements IClientHandler {
 
+
+    /**
+     * Lichao.W At 2015/6/29 16:53
+     * 暂时先不用
+     */
     private static final Logger logger = LoggerFactory.getLogger(ClientHandler.class);
-    private IMessageService messageService = new TaClientMessageService();
+//    private IMessageService messageService = new TaClientMessageService();
 
     /**
      * 连接的成功时的操作
@@ -39,7 +42,7 @@ public class ClientHandler implements IClientHandler {
         String dataContent = null;
         dataContent = nbc.readStringByDelimiter("\r\n");
         logger.info("【本地客户端】ClientHandler接收到报文:" + dataContent);
-        messageService.handleMessage(dataContent);
+//        messageService.handleMessage(dataContent);
         return true;
     }
 
