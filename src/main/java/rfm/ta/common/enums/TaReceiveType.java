@@ -2,15 +2,24 @@ package rfm.ta.common.enums;
 
 import java.util.Hashtable;
 
-public enum LimitStatus implements EnumApp {
-    NOT_LIMIT("0", "未限制"),
-    LIMITED("1", "限制");
+/**
+ * 交款类型。[1]-定金;[2]-首付;[3]-贷款;[9]-其他。
+ * User: zhanrui
+ * Date: 11-7-23
+ * Time: 下午3:30
+ * To change this template use File | Settings | File Templates.
+ */
+public enum TaReceiveType implements EnumApp {
+    DEPOSIT("1", "定金"),
+    DOWN_PAYMENT("2", "首付"),
+    LOAN("3", "贷款"),
+    OTHER("9", "其他");
 
     private String code = null;
     private String title = null;
-    private static Hashtable<String, LimitStatus> aliasEnums;
+    private static Hashtable<String, TaReceiveType> aliasEnums;
 
-    LimitStatus(String code, String title) {
+    TaReceiveType(String code, String title) {
         this.init(code, title);
     }
 
@@ -27,7 +36,7 @@ public enum LimitStatus implements EnumApp {
         aliasEnums.put(title, this);
     }
 
-    public static LimitStatus valueOfAlias(String alias) {
+    public static TaReceiveType valueOfAlias(String alias) {
         return aliasEnums.get(alias);
     }
 

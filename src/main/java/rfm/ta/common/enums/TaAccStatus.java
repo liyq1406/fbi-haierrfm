@@ -2,24 +2,16 @@ package rfm.ta.common.enums;
 
 import java.util.Hashtable;
 
-/**
- * 交款类型。[1]-定金;[2]-首付;[3]-贷款;[9]-其他。
- * User: zhanrui
- * Date: 11-7-23
- * Time: 下午3:30
- * To change this template use File | Settings | File Templates.
- */
-public enum ReceiveType implements EnumApp {
-    DEPOSIT("1", "定金"),
-    DOWN_PAYMENT("2", "首付"),
-    LOAN("3", "贷款"),
-    OTHER("9", "其他");
+public enum TaAccStatus implements EnumApp {
+    INIT("N", "初始"),
+    WATCH("0", "监管中"),
+    CLOSE("1", "撤销监管");
 
     private String code = null;
     private String title = null;
-    private static Hashtable<String, ReceiveType> aliasEnums;
+    private static Hashtable<String, TaAccStatus> aliasEnums;
 
-    ReceiveType(String code, String title) {
+    TaAccStatus(String code, String title) {
         this.init(code, title);
     }
 
@@ -36,7 +28,7 @@ public enum ReceiveType implements EnumApp {
         aliasEnums.put(title, this);
     }
 
-    public static ReceiveType valueOfAlias(String alias) {
+    public static TaAccStatus valueOfAlias(String alias) {
         return aliasEnums.get(alias);
     }
 

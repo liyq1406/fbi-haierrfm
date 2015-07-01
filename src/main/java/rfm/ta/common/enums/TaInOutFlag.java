@@ -2,22 +2,15 @@ package rfm.ta.common.enums;
 
 import java.util.Hashtable;
 
-/**
- * Created by IntelliJ IDEA.
- * User: zhanrui
- * Date: 11-7-23
- * Time: 下午3:30
- * To change this template use File | Settings | File Templates.
- */
-public enum PayupFlag implements EnumApp {
-    PEND_PAYUP("01", "未上缴"),
-    PAYUP_OVER("02", "已上缴");
+public enum TaInOutFlag implements EnumApp {
+    OUT("0", "支出"),
+    IN("1", "收入");
 
     private String code = null;
     private String title = null;
-    private static Hashtable<String, PayupFlag> aliasEnums;
+    private static Hashtable<String, TaInOutFlag> aliasEnums;
 
-    PayupFlag(String code, String title) {
+    TaInOutFlag(String code, String title) {
         this.init(code, title);
     }
 
@@ -34,7 +27,7 @@ public enum PayupFlag implements EnumApp {
         aliasEnums.put(title, this);
     }
 
-    public static PayupFlag valueOfAlias(String alias) {
+    public static TaInOutFlag valueOfAlias(String alias) {
         return aliasEnums.get(alias);
     }
 

@@ -55,43 +55,35 @@
                     <h:panelGrid columns="2" cellspacing="3" style="width:100%">
                         <h:panelGrid columns="4" cellspacing="3" style="width:90%"
                                      columnClasses="col-95,col-5,col-95,col-5">
+                            <h:outputLabel value="*【账户类别】:" for="accType"/>
+                            <h:selectOneMenu id="accType" value="#{taAccountAction.taRsAccount.accType}" style="width:192px;">
+                                <f:selectItems value="#{taAccountAction.accTypeList}"/>
+                            </h:selectOneMenu>
 
-                            <h:outputLabel value="*【账户名称】:" for="accountName"/>
-                            <h:inputText id="accountName" value="#{accountAction.account.accountName}"
-                                         required="true" requiredMessage="必须输入账户名称！" style="width:192px;"/>
+                            <h:outputLabel value="*【申请编号】:" for="originId"/>
+                            <h:inputText id="originId" value="#{taAccountAction.taRsAccount.originId}"/>
 
-                            <h:outputLabel value="*【房产商】:" for="companyId"/>
-                            <h:panelGroup>
-                                <h:selectOneMenu id="companyId" style="width:190px;"
-                                                 value="#{accountAction.account.companyId}">
-                                    <f:selectItems value="#{accountAction.companyList}"/>
-                                </h:selectOneMenu>
-                            </h:panelGroup>
-
-                            <h:outputLabel value="*【监管账号】:" for="accountCode"/>
-                            <h:inputText autocomplete="off" id="accountCode" style="width:192px;" required="true"
-                                         requiredMessage="必须输入监管账号！" value="#{accountAction.account.accountCode}">
+                            <h:outputLabel value="*【专户账号】:" for="accId"/>
+                            <h:inputText autocomplete="off" id="accId" style="width:192px;" required="true"
+                                         requiredMessage="必须输入监管账号！" value="#{taAccountAction.taRsAccount.accId}">
                             </h:inputText>
 
-                            <h:outputLabel value="*【确认监管账号】:" for="confirmAccountNo"/>
+                            <h:outputLabel value="*【确认专户账号】:" for="confirmAccountNo"/>
                             <h:inputText autocomplete="off" id="confirmAccountNo" style="width:192px;" required="true"
-                                         requiredMessage="必须输入确认监管账号！" value="#{accountAction.confirmAccountNo}">
+                                         requiredMessage="必须输入确认监管账号！" value="#{taAccountAction.confirmAccountNo}">
                             </h:inputText>
 
-                            <h:outputLabel value="项目名称:" for="proName"/>
-                            <h:inputText id="proName" value="#{accountAction.account.proName}" style="width:192px;"/>
-
-                            <h:outputLabel value="项目地址:" for="proAddr"/>
-                            <h:inputText id="proAddr" value="#{accountAction.account.proAddr}"
-                                         style="width:192px;"/>
+                            <h:outputLabel value="专户名称:" for="accName"/>
+                            <h:inputText id="accName" value="#{taAccountAction.taRsAccount.accName}"
+                                         required="true" requiredMessage="必须输入账户名称！" style="width:192px;"/>
                         </h:panelGrid>
                         <h:panelGrid style="width:20%">
                             <p:commandButton id="saveBtn" ajax="true" value="保存"
-                                             action="#{accountAction.insertRecord}"
+                                             action="#{taAccountAction.insertRecord}"
                                              style="margin-left:15px;width:90px"
                                              update="input,pdt,msgs">
                             </p:commandButton>
-                            <p:commandButton ajax="true" id="resetBtn" value="重置" action="#{accountAction.reset}"
+                            <p:commandButton ajax="true" id="resetBtn" value="重置" action="#{taAccountAction.reset}"
                                              style="width:90px;margin-left:15px" update="input,msgs,pdt"/>
                         </h:panelGrid>
                     </h:panelGrid>
@@ -107,53 +99,26 @@
 
                 <p:dataTable id="pdt" style="width:100%;"
                              dynamic="true" selectionMode="single"
-                             value="#{accountAction.accountList}" var="record"
+                             value="#{taAccountAction.taRsAccountList}" var="record"
                              paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                              paginator="true" rows="15" paginatorPosition="bottom"
-                             rowsPerPageTemplate="100,50,30,15,5" rowSelectListener="#{accountAction.test}"
+                             rowsPerPageTemplate="100,50,30,15,5"
                              emptyMessage="数据记录为空...">
 
                     <p:column headerText="监管账号" style="text-align:left">
-                        <h:outputText value="#{record.accountCode}"/>
+                        <h:outputText value="#{record.accId}"/>
                     </p:column>
 
                     <p:column headerText="账户名称" style="text-align:left">
-                        <h:outputText value="#{record.accountName}"/>
+                        <h:outputText value="#{record.accName}"/>
                     </p:column>
 
                     <p:column headerText="项目名称" style="text-align:left">
-                        <h:outputText value="#{record.proName}"/>
+                        <h:outputText value="#{record.preSaleProName}"/>
                     </p:column>
 
                     <p:column headerText="项目地址" style="text-align:left">
-                        <h:outputText value="#{record.proAddr}"/>
-                    </p:column>
-
-                    <p:column headerText="余额" style="text-align:center">
-                        <f:facet name="header">
-                            <h:outputText value="余额"/>
-                        </f:facet>
-                        <h:outputText value="#{record.balance}" style="float: right">
-                            <f:convertNumber pattern="###,###,###,##0.00"/>
-                        </h:outputText>
-                    </p:column>
-
-                    <p:column headerText="可用余额" style="text-align:center">
-                        <f:facet name="header">
-                            <h:outputText value="可用余额"/>
-                        </f:facet>
-                        <h:outputText value="#{record.balanceUsable}" style="float: right;">
-                            <f:convertNumber pattern="###,###,###,##0.00"/>
-                        </h:outputText>
-                    </p:column>
-
-                    <p:column headerText="冻结金额" style="text-align:center">
-                        <f:facet name="header">
-                            <h:outputText value="冻结金额"/>
-                        </f:facet>
-                        <h:outputText value="#{record.balanceLock}" style="float: right;">
-                            <f:convertNumber pattern="###,###,###,##0.00"/>
-                        </h:outputText>
+                        <h:outputText value="#{record.preSaleProAddr}"/>
                     </p:column>
 
                     <p:column headerText="监管状态" style="text-align:center">
@@ -161,13 +126,6 @@
                             <h:outputText value="监管状态"/>
                         </f:facet>
                         <h:outputText value="#{flagStatusForMap.accountStatus[record.statusFlag]}"/>
-                    </p:column>
-
-                    <p:column headerText="限制付款" style="text-align:center">
-                        <f:facet name="header">
-                            <h:outputText value="限制付款"/>
-                        </f:facet>
-                        <h:outputText value="#{flagStatusForMap.accountLimit[record.limitFlag]}"/>
                     </p:column>
                 </p:dataTable>
             </h:form>

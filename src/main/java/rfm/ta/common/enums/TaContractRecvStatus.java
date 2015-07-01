@@ -2,16 +2,26 @@ package rfm.ta.common.enums;
 
 import java.util.Hashtable;
 
-public enum TradeStatus implements EnumApp {
-    CANCEL("0", "初始"),
-    SUCCESS("1", "交易成功"),
-    CHECKED("2","审核通过"),
-    BACK("3","退回");
+/**
+ * 合同缴款状态标志，[0]-退回;[1]-初始;[2]-审核中;[3]-已审核;[7]-记账中;[9]-记账完成
+ * User: zhanrui
+ * Date: 11-7-23
+ * Time: 下午3:30
+ * To change this template use File | Settings | File Templates.
+ */
+public enum TaContractRecvStatus implements EnumApp {
+    BACK("0", "退回"),
+    INIT("1", "初始"),
+    CHECKING("2", "审核中"),
+    CHECKED("3", "已审核"),
+    ACCOUNT("7", "记账中"),
+    ACCOUNTOVER("9", "记账完成");
+
     private String code = null;
     private String title = null;
-    private static Hashtable<String, TradeStatus> aliasEnums;
+    private static Hashtable<String, TaContractRecvStatus> aliasEnums;
 
-    TradeStatus(String code, String title) {
+    TaContractRecvStatus(String code, String title) {
         this.init(code, title);
     }
 
@@ -28,7 +38,7 @@ public enum TradeStatus implements EnumApp {
         aliasEnums.put(title, this);
     }
 
-    public static TradeStatus valueOfAlias(String alias) {
+    public static TaContractRecvStatus valueOfAlias(String alias) {
         return aliasEnums.get(alias);
     }
 
