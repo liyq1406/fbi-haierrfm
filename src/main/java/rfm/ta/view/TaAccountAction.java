@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import platform.common.utils.MessageUtil;
 import rfm.ta.common.enums.TaAccStatus;
 import rfm.ta.common.enums.TaAccType;
-import rfm.ta.gateway.service.TaSbsTxnService;
+import rfm.ta.gateway.sbs.taservice.TaSbsService;
 import rfm.ta.repository.model.TaRsAccount;
 import rfm.ta.service.account.TaAccountService;
 
@@ -34,7 +34,7 @@ public class TaAccountAction {
     @ManagedProperty(value = "#{taAccountService}")
     private TaAccountService taAccountService;
     @ManagedProperty(value = "#{taSbsTxnService}")
-    private TaSbsTxnService taSbsTxnService;
+    private TaSbsService taSbsTxnService;
 
     private TaRsAccount taRsAccount;
     private List<TaRsAccount> taRsAccountList;
@@ -103,11 +103,11 @@ public class TaAccountAction {
         this.accTypeList = accTypeList;
     }
 
-    public TaSbsTxnService getTaSbsTxnService() {
+    public TaSbsService getTaSbsTxnService() {
         return taSbsTxnService;
     }
 
-    public void setTaSbsTxnService(TaSbsTxnService taSbsTxnService) {
+    public void setTaSbsTxnService(TaSbsService taSbsTxnService) {
         this.taSbsTxnService = taSbsTxnService;
     }
 
