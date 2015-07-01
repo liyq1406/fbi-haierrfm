@@ -1,4 +1,4 @@
-package rfm.ta.service.sbsservice;
+package rfm.ta.gateway.sbs.taservice;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,9 +15,9 @@ import java.util.List;
  * 对外交易发起
  */
 @Service
-public class DataExchangeService {
+public class TaSbsService {
 
-    private static Logger logger = LoggerFactory.getLogger(DataExchangeService.class);
+    private static Logger logger = LoggerFactory.getLogger(TaSbsService.class);
     @Autowired
     private SbsTxnService sbsTxnService;
 
