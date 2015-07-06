@@ -1,5 +1,6 @@
 package rfm.ta.service.account;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import platform.service.PtenudetailService;
@@ -110,20 +111,20 @@ public class TaAccountService {
     /**
      * ≤È—Ø
      */
-    public List<TaRsAccount> selectedRecordsByCondition(String presellNo, String companyId, String accountCode, String accountName) {
+    public List<TaRsAccount> selectedRecordsByCondition(String strAccTypePara, String strAccIdPara, String strAccNamePara) {
         TaRsAccountExample example = new TaRsAccountExample();
         example.clear();
         TaRsAccountExample.Criteria rsActCrit = example.createCriteria();
         rsActCrit.andDeletedFlagEqualTo("0");
-      /*  if (presellNo != null && !StringUtils.isEmpty(presellNo.trim())) {
-            rsActCrit.andPresellNoEqualTo(presellNo);
+        if (ToolUtil.getStrIgnoreNull(strAccTypePara).trim().length()!=0) {
+            rsActCrit.andAccTypeEqualTo(strAccTypePara);
         }
-        if (accountCode != null && !StringUtils.isEmpty(accountCode.trim())) {
-            rsActCrit.andAccIdEqualTo(accountCode);
+        if (ToolUtil.getStrIgnoreNull(strAccIdPara).trim().length()!=0) {
+            rsActCrit.andAccIdLike("%"+strAccIdPara+"%");
         }
-        if (accountName != null && !StringUtils.isEmpty(accountName.trim())) {
-            rsActCrit.andAccountNameLike(accountName + "%");
-        }*/
+        if (ToolUtil.getStrIgnoreNull(strAccNamePara).trim().length()!=0) {
+            rsActCrit.andAccNameLike("%" + strAccNamePara + "%");
+        }
         return accountMapper.selectByExample(example);
     }
 
