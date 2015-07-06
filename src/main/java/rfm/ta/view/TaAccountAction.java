@@ -1,5 +1,6 @@
 package rfm.ta.view;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import platform.common.utils.MessageUtil;
@@ -28,13 +29,19 @@ public class TaAccountAction {
     @ManagedProperty(value = "#{taSbsTxnService}")
     private TaSbsService taSbsTxnService;
 
-    private TaRsAccount taRsAccount;
     private List<TaRsAccount> taRsAccountList;
     private String confirmAccountNo;
 
+    private TaRsAccount taRsAccountQry;
+    private TaRsAccount taRsAccountAdd;
+    private TaRsAccount taRsAccountUpd;
+    private String rtnFlag;
+
     @PostConstruct
     public void init() {
-        this.taRsAccount = new TaRsAccount();
+        this.taRsAccountAdd = new TaRsAccount();
+        this.taRsAccountUpd = new TaRsAccount();
+        this.taRsAccountQry= new TaRsAccount();
         querySelectedRecords();
     }
 
@@ -43,24 +50,30 @@ public class TaAccountAction {
     }
 
     private void querySelectedRecords(TaRsAccount act) {
-        /*taRsAccountList = taAccountService.selectedRecordsByCondition(act.getPresellNo(), act.getCompanyId(), act.getAccountCode(),
-                act.getAccountName());*/
+        taRsAccountList = taAccountService.selectedRecordsByCondition(act.getAccType(), act.getAccId(), act.getAccName());
     }
 
-    public String onBtnQueryClick() {
-        querySelectedRecords(taRsAccount);
-        return null;
+    public void onBtnQueryClick() {
+        querySelectedRecords(taRsAccountQry);
     }
-
-    // 增
-    public String insertRecord() {
+    public String onBtnSaveClick() {
         try {
-            if (!confirmAccountNo.equalsIgnoreCase(taRsAccount.getAccId())) {
+            taAccountService.updateRecord(taRsAccountUpd);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            rtnFlag = "<script language='javascript'>rtnScript('false');</script>";
+            return null;
+        }
+        rtnFlag = "<script language='javascript'>rtnScript('true');</script>";
+        return null;
+    }    public String insertRecord() {
+        try {
+            if (!confirmAccountNo.equalsIgnoreCase(taRsAccountAdd.getAccId())) {
                 MessageUtil.addError("两次输入的监管账户号不一致！");
                 return null;
             }
             // 初始帐户余额均为可用
-            taAccountService.insertRecord(taRsAccount);
+            taAccountService.insertRecord(taRsAccountAdd);
         } catch (Exception e) {
             logger.error("新增数据失败，", e);
             MessageUtil.addError(e.getMessage());
@@ -68,13 +81,34 @@ public class TaAccountAction {
         }
         MessageUtil.addInfo("新增数据完成。");
         querySelectedRecords();
-        this.taRsAccount = new TaRsAccount();
+        this.taRsAccountAdd = new TaRsAccount();
         confirmAccountNo = "";
         return null;
     }
 
+    public void selectRecordAction(
+            String strSubmitTypePara,
+            TaRsAccount taRsAccountPara) {
+        try {
+            // 查询
+            if (strSubmitTypePara.equals("Sel")) {
+                taRsAccountQry = (TaRsAccount) BeanUtils.cloneBean(taRsAccountPara);
+            } else if (strSubmitTypePara.equals("Add")) {
+                taRsAccountAdd = new TaRsAccount();
+            } else if (strSubmitTypePara.equals("Upd")) {
+                taRsAccountUpd = (TaRsAccount) BeanUtils.cloneBean(taRsAccountPara);
+            } else if (strSubmitTypePara.equals("Del")) {
+                taRsAccountQry = (TaRsAccount) BeanUtils.cloneBean(taRsAccountPara);
+            } else {
+                taRsAccountQry = (TaRsAccount) BeanUtils.cloneBean(taRsAccountPara);
+            }
+        } catch (Exception e) {
+            MessageUtil.addError(e.getMessage());
+        }
+    }
+
     public String reset() {
-        this.taRsAccount = new TaRsAccount();
+        this.taRsAccountAdd = new TaRsAccount();
         if (!taRsAccountList.isEmpty()) {
             taRsAccountList.clear();
         }
@@ -105,12 +139,20 @@ public class TaAccountAction {
         this.confirmAccountNo = confirmAccountNo;
     }
 
-    public TaRsAccount getTaRsAccount() {
-        return taRsAccount;
+    public TaRsAccount getTaRsAccountQry() {
+        return taRsAccountQry;
     }
 
-    public void setTaRsAccount(TaRsAccount taRsAccount) {
-        this.taRsAccount = taRsAccount;
+    public void setTaRsAccountQry(TaRsAccount taRsAccountQry) {
+        this.taRsAccountQry = taRsAccountQry;
+    }
+
+    public TaRsAccount getTaRsAccountAdd() {
+        return taRsAccountAdd;
+    }
+
+    public void setTaRsAccountAdd(TaRsAccount taRsAccountAdd) {
+        this.taRsAccountAdd = taRsAccountAdd;
     }
 
     public List<TaRsAccount> getTaRsAccountList() {
@@ -121,5 +163,19 @@ public class TaAccountAction {
         this.taRsAccountList = taRsAccountList;
     }
 
+    public TaRsAccount getTaRsAccountUpd() {
+        return taRsAccountUpd;
+    }
 
+    public void setTaRsAccountUpd(TaRsAccount taRsAccountUpd) {
+        this.taRsAccountUpd = taRsAccountUpd;
+    }
+
+    public String getRtnFlag() {
+        return rtnFlag;
+    }
+
+    public void setRtnFlag(String rtnFlag) {
+        this.rtnFlag = rtnFlag;
+    }
 }

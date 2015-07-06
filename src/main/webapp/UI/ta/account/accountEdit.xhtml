@@ -2,7 +2,7 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
-                xmlns:p="http://primefaces.prime.com.tr/ui"
+                xmlns:p="http://primefaces.org/ui"
                 xmlns:fbi="http://www.fbifaces.org"
                 template="/templates/ui.xhtml">
 
@@ -29,7 +29,6 @@
                 text-align: left;
             }
         </style>
-        <script type="text/javascript" src="#{request.contextPath}/UI/support/dialogwindow.js"/>
         <script type="text/javascript" language="javascript">
             document.onkeydown = function TabReplace() {
                 if (event.keyCode == 13) {
@@ -37,53 +36,37 @@
                         event.keyCode = 9;
                 }
             }
-            function recordEdit(obj) {
-                var pkid = obj.parentNode.parentNode.children[0].innerHTML;
-                var statusflag = obj.parentNode.parentNode.children[1].innerHTML;
-                if (statusflag != "N") {
-                    alert("账户已开启或结束监管，不能修改!");
-                    return false;
-                }
-                var sfeature = "dialogwidth:800px; dialogheight:520px;center:yes;help:yes;resizable:yes;scroll:yes;status:yes";
-                var arg = new Object();
-                arg.doType = "edit";
-                var rtn = dialog("accountEditDetail.xhtml?actPKID=" + pkid + "&amp;doType=eidt", arg, sfeature);
-                if (rtn == "1") {
-                    document.getElementById("actqueryForm:btnQuery").click();
-                }
-            }
         </script>
-
     </ui:define>
 
     <ui:define name="content">
         <div style="margin:5px;" id="top">
-            <p:growl id="msgs" showDetail="false"/>
+            <p:growl id="msgs" showDetail="true"/>
             <h:form id="actqueryForm">
                 <p:panel id="query" header="【监管账户信息】查询">
                     <h:panelGrid columns="2" cellspacing="3" style="width:100%">
-                        <h:panelGrid columns="4" cellspacing="3" style="width:80%" columnClasses="col-95,col-5">
-
-                            <h:outputLabel value="监管账号:" for="accountCode"/>
-                            <h:inputText autocomplete="off" id="accountCode" style="width:192px;"
-                                         value="#{accountAction.account.accountCode}">
+                        <h:panelGrid columns="6" cellspacing="3" style="width:90%"
+                                     columnClasses="col-95,col-5,col-95,col-5">
+                            <h:outputLabel value="*【账户类别】:" for="accTypeUpd"/>
+                            <h:selectOneMenu id="accType" value="#{taAccountAction.taRsAccountQry.accType}">
+                                <f:selectItems value="#{ptenudetailAction.taAccTypeList}"/>
+                            </h:selectOneMenu>
+                            <h:outputLabel value="*【专户账号】:" for="accId"/>
+                            <h:inputText autocomplete="off" id="accId"
+                                         value="#{taAccountAction.taRsAccountQry.accId}">
                             </h:inputText>
-
-                            <h:outputLabel value="账户名称:" for="accountName"/>
-                            <p:inputText id="accountName" value="#{accountAction.account.accountName}"
-                                         style="width:192px;"/>
+                            <h:outputLabel value="*【专户名称】:" for="accName"/>
+                            <h:inputText id="accName" value="#{taAccountAction.taRsAccountQry.accName}"/>
                         </h:panelGrid>
-                        <h:panelGrid style="width:20%" columns="1" cellspacing="3">
-                            <p:commandButton style="margin-left:15px;width:90px" ajax="false" update="msgs"
-                                             action="#{accountAction.onBtnQueryClick}" id="btnQuery" value="查询">
-                            </p:commandButton>
+                        <h:commandButton update="msgs,pdt" style="width:40"
+                                         action="#{taAccountAction.onBtnQueryClick}" id="btnQuery" value="查询">
+                        </h:commandButton>
                             <!--<p:commandButton ajax="false" id="resetBtn" value="Excel导出"
                                              style="width:90px;margin-left:15px">
                                 <fbi:DataExporter target="pdt" type="xls" titleName="账户信息" fileName="company_account"
                                                   excludeColumns="0,1,11"
                                                   excludeColumnsWidth="15,15,15,15,15,14,14,12,12"/>
                             </p:commandButton>-->
-                        </h:panelGrid>
                     </h:panelGrid>
                 </p:panel>
                 <p:ajaxStatus style="width:16px;height:16px;">
@@ -97,7 +80,9 @@
 
                 <p:dataTable id="pdt" style="width:100%;"
                              dynamic="true" selectionMode="single"
-                             value="#{taAccountAction.taRsAccountList}" var="record"
+                             value="#{taAccountAction.taRsAccountList}"
+                             var="record"
+                             rowKey="#{record.pkId}"
                              paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                              paginator="true" rows="15" paginatorPosition="bottom"
                              rowsPerPageTemplate="100,50,30,15,5"
@@ -153,10 +138,66 @@
                     </p:column>
 
                     <p:column headerText="操作" style="text-align:center">
-                        <h:commandLink onclick="recordEdit(this)" value="修改" style="color: blue"/>
+                        <p:commandButton  value="修改" style="color: blue"
+                                          onclick="wVDlgViewForUpd.show()"
+                                          update="pdt,:form:pgViewForUpd,:form:msgs"
+                                          actionListener="#{taAccountAction.selectRecordAction('Upd',record)}">
+                        </p:commandButton>
                     </p:column>
 
                 </p:dataTable>
+                <p:dialog id="dlgViewForUpd" header="【监管账户】修改" widgetVar="wVDlgViewForUpd"
+                          resizable="false" modal="true"
+                          showEffect="clip" hideEffect="fold">
+                    <h:outputText id="rntFlag" escape="false" value="#{taAccountAction.rtnFlag}"/>
+                    <h:panelGrid id="pgViewForUpd">
+                        <h:panelGrid columns="4" cellspacing="3">
+                            <p:outputLabel value="*【账户类别】:" for="accTypeUpd"/>
+                            <p:selectOneMenu id="accTypeUpd" value="#{taAccountAction.taRsAccountUpd.accType}">
+                                <f:selectItems value="#{ptenudetailAction.taAccTypeList}"/>
+                            </p:selectOneMenu>
+
+                            <h:outputLabel value="*【专户账号】:" for="accIdUpd"/>
+                            <h:inputText autocomplete="off" id="accIdUpd"
+                                         value="#{taAccountAction.taRsAccountUpd.accId}">
+                            </h:inputText>
+
+                            <h:outputLabel value="*【申请编号】:" for="originIdUpd"/>
+                            <h:inputText id="originIdUpd" value="#{taAccountAction.taRsAccountUpd.originId}"/>
+
+                            <h:outputLabel value="*【专户名称】:" for="accNameUpd"/>
+                            <h:inputText id="accNameUpd" value="#{taAccountAction.taRsAccountUpd.accName}"/>
+                        </h:panelGrid>
+                        <h:panelGrid columns="4">
+                            <h:outputLabel for="createdTimeForUpd" value="创建时间：" />
+                            <h:inputText id="createdTimeForUpd"
+                                         value="#{taAccountAction.taRsAccountUpd.createdTime}"
+                                         style="background-color:gainsboro" readonly="true"/>
+                            <h:outputLabel for="lastUpdTimeForUpd" value="修改时间：" />
+                            <h:inputText id="lastUpdTimeForUpd"
+                                         value="#{taAccountAction.taRsAccountUpd.lastUpdTime}"
+                                         style="background-color:gainsboro" readonly="true"/>
+                            <h:outputLabel for="recVersionForUpd" value="修改次数：" />
+                            <h:inputText id="recVersionForUpd"
+                                         value="#{taAccountAction.taRsAccountUpd.recVersion}"
+                                         style="background-color:gainsboro;text-align:right;" readonly="true">
+                                <f:convertNumber type="number" pattern="#,###,###,###,##0"/>
+                            </h:inputText>
+                        </h:panelGrid>
+                        <h:panelGrid id="pgOperBtnForUpd" columns="3">
+                            <h:commandButton id="btnSave" rendered="true"
+                                             action="#{taAccountAction.onBtnSaveClick}"
+                                             update="pdt,msgs,pgViewForUpd"
+                                             value="保存"/>
+                            <h:commandButton id="resetBtnForUpd"
+                                             type="reset"
+                                             update="pgViewForUpd"
+                                             value="重置">
+                            </h:commandButton>
+                            <h:commandButton value="取消" oncomplete="wVDlgViewForUpd.hide()"/>
+                        </h:panelGrid>
+                    </h:panelGrid>
+                </p:dialog>
             </h:form>
         </div>
     </ui:define>
