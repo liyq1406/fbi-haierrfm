@@ -3,117 +3,162 @@
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.prime.com.tr/ui"
+                xmlns:fbi="http://www.fbifaces.org"
                 template="/templates/ui.xhtml">
 
     <ui:define name="head">
         <style type="text/css">
-            .col-label {
-                width: 100px;
+            .input-col-m {
+                width: 60px;
+            }
+
+            .input-col-l {
+                width: 80px;
+            }
+
+            .input-col-xxl {
+                width: 1%;
                 text-align: right;
             }
 
-            .col-label2 {
-                width: 200px;
+            .col-95 {
                 text-align: right;
             }
 
-            .col-input {
-                width: 30px;
-            }
-
-            .col_remark {
-                width: 100px;
-                text-align: right;
-            }
-
-            .buttontab {
-                margin-top: 15px;
-                text-align: center;
+            .col-5 {
+                text-align: left;
             }
         </style>
-        <script type="text/javascript" src="#{request.contextPath}/js/jquery-1.6.js"/>
-        <script type="text/javascript">
-            var Flag = "none";
-            function changeRtnFlag(param) {
-                Flag = param;
-            }
-            function rtnScript(rtnflag) {
-                if (rtnflag == "true") {
-                    alert("操作成功！");
-                    window.returnValue = "1";
-                    window.close();
-                } else {
-                    alert("操作失败！");
-                    window.returnValue = "0";
-                    window.close();
-                }
-            }
+        <script type="text/javascript" src="#{request.contextPath}/UI/support/dialogwindow.js"/>
+        <script type="text/javascript" language="javascript">
             document.onkeydown = function TabReplace() {
                 if (event.keyCode == 13) {
-                    if (event.srcElement.getAttribute("id") != 'editForm:btnSave')
+                    if (event.srcElement.tagName != 'BUTTON')
                         event.keyCode = 9;
                 }
             }
-            function form_Init() {
-                var arg = window.dialogArguments;
-                if (arg) {
-                    var operation = arg.doType;
-                    if (operation != "add") {
-                        if (operation == "select") {
-                            $("input").disabled = "true";
-                        }
-                    }
+            function recordEdit(obj) {
+                var pkid = obj.parentNode.parentNode.children[0].innerHTML;
+                var statusflag = obj.parentNode.parentNode.children[1].innerHTML;
+                if (statusflag != "N") {
+                    alert("账户已开启或结束监管，不能修改!");
+                    return false;
+                }
+                var sfeature = "dialogwidth:800px; dialogheight:520px;center:yes;help:yes;resizable:yes;scroll:yes;status:yes";
+                var arg = new Object();
+                arg.doType = "edit";
+                var rtn = dialog("accountEditDetail.xhtml?actPKID=" + pkid + "&amp;doType=eidt", arg, sfeature);
+                if (rtn == "1") {
+                    document.getElementById("actqueryForm:btnQuery").click();
                 }
             }
         </script>
-        <base target="_self"/>
+
     </ui:define>
+
     <ui:define name="content">
-        <div style="margin:5px;">
-            <h:messages id="msgs" showDetail="true"/>
-            <h:form id="editForm">
-                <h:outputText id="rntFlag" escape="false" value="#{accountEditAction.rtnFlag}"/>
-                <p:fieldset legend="【监管账户】修改">
-                    <h:panelGrid id="detailPanel1" columns="1" cellpadding="3" border="0" style="margin-top: 15px;">
-                        <h:panelGrid columns="4" cellpadding="2"
-                                     columnClasses="col-label,col-input,col-label2,col-input">
+        <div style="margin:5px;" id="top">
+            <p:growl id="msgs" showDetail="false"/>
+            <h:form id="actqueryForm">
+                <p:panel id="query" header="【监管账户信息】查询">
+                    <h:panelGrid columns="2" cellspacing="3" style="width:100%">
+                        <h:panelGrid columns="4" cellspacing="3" style="width:80%" columnClasses="col-95,col-5">
 
-                            <h:outputLabel value="*【房产商】:" for="companyId"/>
-                            <h:selectOneMenu id="companyId" value="#{accountEditAction.account.companyId}" style="width:192px;">
-                                <f:selectItems value="#{accountEditAction.companyList}"></f:selectItems>
-                            </h:selectOneMenu>
-
-                            <h:outputLabel value="*【监管账号】:" for="accountCode"/>
-                            <h:inputText autocomplete="off" id="accountCode" style="width:192px;" required="true"
-                                         requiredMessage="必须输入监管账号！" value="#{accountEditAction.account.accountCode}">
+                            <h:outputLabel value="监管账号:" for="accountCode"/>
+                            <h:inputText autocomplete="off" id="accountCode" style="width:192px;"
+                                         value="#{accountAction.account.accountCode}">
                             </h:inputText>
 
-                            <h:outputLabel value="*【账户名称】:" for="accountName"/>
-                            <p:inputText id="accountName" value="#{accountEditAction.account.accountName}"
-                                         style="width:192px;" required="true" requiredMessage="必须输入账户名称！"/>
-
-                            <h:outputLabel value="项目名称:" for="proName"/>
-                            <p:inputText id="proName" value="#{accountEditAction.account.proName}"
-                                         style="width:192px;"/>
-
-                            <h:outputLabel value="项目地址:" for="proAddr"/>
-                            <p:inputText id="proAddr" value="#{accountEditAction.account.proAddr}"
+                            <h:outputLabel value="账户名称:" for="accountName"/>
+                            <p:inputText id="accountName" value="#{accountAction.account.accountName}"
                                          style="width:192px;"/>
                         </h:panelGrid>
+                        <h:panelGrid style="width:20%" columns="1" cellspacing="3">
+                            <p:commandButton style="margin-left:15px;width:90px" ajax="false" update="msgs"
+                                             action="#{accountAction.onBtnQueryClick}" id="btnQuery" value="查询">
+                            </p:commandButton>
+                            <!--<p:commandButton ajax="false" id="resetBtn" value="Excel导出"
+                                             style="width:90px;margin-left:15px">
+                                <fbi:DataExporter target="pdt" type="xls" titleName="账户信息" fileName="company_account"
+                                                  excludeColumns="0,1,11"
+                                                  excludeColumnsWidth="15,15,15,15,15,14,14,12,12"/>
+                            </p:commandButton>-->
+                        </h:panelGrid>
                     </h:panelGrid>
-                </p:fieldset>
-                <p:fieldset legend="操作">
-                    <h:panelGrid styleClass="buttontab" columns="1" border="0" width="100%">
-                        <h:panelGroup>
-                            <h:commandButton id="btnSave" rendered="true"
-                                             action="#{accountEditAction.onBtnSaveClick}" value="保存"/>
-                            <h:commandButton immediate="true" rendered="true" value="取消"
-                                             onclick="window.close();return false;"/>
-                        </h:panelGroup>
+                </p:panel>
+                <p:ajaxStatus style="width:16px;height:16px;">
+                    <f:facet name="start">
+                        <h:graphicImage value="/images/ajaxloading.gif"/>
+                    </f:facet>
+                    <f:facet name="complete">
+                        <h:outputText value=""/>
+                    </f:facet>
+                </p:ajaxStatus>
 
-                    </h:panelGrid>
-                </p:fieldset>
+                <p:dataTable id="pdt" style="width:100%;"
+                             dynamic="true" selectionMode="single"
+                             value="#{taAccountAction.taRsAccountList}" var="record"
+                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             paginator="true" rows="15" paginatorPosition="bottom"
+                             rowsPerPageTemplate="100,50,30,15,5"
+                             emptyMessage="数据记录为空...">
+                    <p:column headerText="pkid" style="display:none;">
+                        <h:outputText value="#{record.pkId}"/>
+                    </p:column>
+                    <p:column headerText="statusflag" style="display:none;">
+                        <h:outputText value="#{record.statusFlag}"/>
+                    </p:column>
+
+                    <p:column headerText="监管账号" style="text-align:center">
+                        <f:facet name="header">
+                            <h:outputText value="监管账号"/>
+                        </f:facet>
+                        <h:outputText value="#{record.accId}" style="text-align: center;"/>
+                    </p:column>
+
+                    <p:column headerText="账户名称" style="text-align:center">
+                        <f:facet name="header">
+                            <h:outputText value="账户名称"/>
+                        </f:facet>
+                        <h:outputText value="#{record.accName}" style="text-align: right"/>
+                    </p:column>
+
+                    <p:column headerText="预售人名称" style="text-align:center">
+                        <f:facet name="header">
+                            <h:outputText value="预售人名称"/>
+                        </f:facet>
+                        <h:outputText value="#{record.preSalePerName}" style="text-align: right"/>
+                    </p:column>
+
+                    <p:column headerText="预售项目名称" style="text-align:center">
+                        <f:facet name="header">
+                            <h:outputText value="预售项目名称"/>
+                        </f:facet>
+                        <h:outputText value="#{record.preSaleProName}" style="text-align: right"/>
+                    </p:column>
+
+                    <p:column headerText="预售项目地址" style="text-align:center">
+                        <f:facet name="header">
+                            <h:outputText value="预售项目地址"/>
+                        </f:facet>
+                        <h:outputText value="#{record.preSaleProAddr}" style="text-align: right"/>
+                    </p:column>
+
+                    <p:column headerText="监管状态" style="text-align:center">
+                        <f:facet name="header">
+                            <h:outputText value="监管状态"/>
+                        </f:facet>
+                        <h:outputText value="#{ptenudetailAction.taAccTypeMap.get(record.accType)}"/>
+                        <h:outputText value="#{flagStatusForMap.accountStatus[record.statusFlag]}"/>
+                    </p:column>
+
+                    <p:column headerText="操作" style="text-align:center">
+                        <h:commandLink onclick="recordEdit(this)" value="修改" style="color: blue"/>
+                    </p:column>
+
+                </p:dataTable>
             </h:form>
         </div>
     </ui:define>
+
 </ui:composition>

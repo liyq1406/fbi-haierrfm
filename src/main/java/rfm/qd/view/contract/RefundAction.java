@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import platform.common.utils.MessageUtil;
 import platform.service.SystemService;
-import platform.service.ToolsService;
+import platform.service.PtenudetailService;
 import pub.platform.security.OperatorManager;
 
 import javax.annotation.PostConstruct;
@@ -46,8 +46,8 @@ public class RefundAction implements Serializable {
     @ManagedProperty(value = "#{clientBiService}")
     private ClientBiService clientBiService;
 
-    @ManagedProperty(value = "#{toolsService}")
-    private ToolsService toolsService;
+    @ManagedProperty(value = "#{ptenudetailService}")
+    private PtenudetailService toolsService;
 
     private List<QdRsContract> detlList;
     private QdRsContract[] selectedRecords;
@@ -251,11 +251,11 @@ public class RefundAction implements Serializable {
         this.selectedRecord = selectedRecord;
     }
 
-    public ToolsService getToolsService() {
+    public PtenudetailService getToolsService() {
         return toolsService;
     }
 
-    public void setToolsService(ToolsService toolsService) {
+    public void setToolsService(PtenudetailService toolsService) {
         this.toolsService = toolsService;
     }
 

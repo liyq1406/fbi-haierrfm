@@ -5,7 +5,7 @@ import rfm.qd.service.account.AccountService;
 import rfm.qd.service.company.CompanyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import platform.service.ToolsService;
+import platform.service.PtenudetailService;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -31,8 +31,8 @@ public class AccountEditAction {
     private AccountService accountService;
     @ManagedProperty(value = "#{companyService}")
     private CompanyService companyService;
-    @ManagedProperty(value = "#{toolsService}")
-    private ToolsService toolsService;
+    @ManagedProperty(value = "#{ptenudetailService}")
+    private PtenudetailService toolsService;
     private QdRsAccount account;
     private String rtnFlag;
     private List<SelectItem> companyList;
@@ -93,11 +93,11 @@ public class AccountEditAction {
         this.account = account;
     }
 
-    public ToolsService getToolsService() {
+    public PtenudetailService getToolsService() {
         return toolsService;
     }
 
-    public void setToolsService(ToolsService toolsService) {
+    public void setToolsService(PtenudetailService toolsService) {
         this.toolsService = toolsService;
     }
 

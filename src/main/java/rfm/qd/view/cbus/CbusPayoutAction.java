@@ -15,7 +15,7 @@ import org.primefaces.component.commandbutton.CommandButton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import platform.common.utils.MessageUtil;
-import platform.service.ToolsService;
+import platform.service.PtenudetailService;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -46,8 +46,8 @@ public class CbusPayoutAction {
     private ExpensesPlanService expensesPlanService;
     @ManagedProperty(value = "#{accountService}")
     private AccountService accountService;
-    @ManagedProperty(value = "#{toolsService}")
-    private ToolsService toolsService;
+    @ManagedProperty(value = "#{ptenudetailService}")
+    private PtenudetailService toolsService;
     @ManagedProperty(value = "#{bankInfoService}")
     private BankInfoService bankInfoService;
 
@@ -300,11 +300,11 @@ public class CbusPayoutAction {
         this.editPayoutList = editPayoutList;
     }
 
-    public ToolsService getToolsService() {
+    public PtenudetailService getToolsService() {
         return toolsService;
     }
 
-    public void setToolsService(ToolsService toolsService) {
+    public void setToolsService(PtenudetailService toolsService) {
         this.toolsService = toolsService;
     }
 

@@ -10,8 +10,9 @@ import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import platform.auth.MD5Helper;
 import pub.platform.advance.utils.PropertyManager;
-import rfm.ta.common.utils.MD5Helper;
+
 import rfm.ta.gateway.hfnb.model.base.TaHfnbToaXmlErr;
 import rfm.ta.gateway.hfnb.enums.TxnRtnCode;
 import rfm.ta.view.deposit.AbstractTxnProcessor;

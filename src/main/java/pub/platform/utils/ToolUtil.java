@@ -1,5 +1,11 @@
 package pub.platform.utils;
 
+import pub.platform.form.config.SystemAttributeNames;
+import pub.platform.security.OperatorManager;
+
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpSession;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -204,6 +210,20 @@ public class ToolUtil {
             e.printStackTrace();
         }
         return "";
+    }
+
+    /**
+     * 获取当前登录用户信息
+     * @return
+     */
+    public static OperatorManager getOperatorManager(){
+        ExternalContext extContext = FacesContext.getCurrentInstance().getExternalContext();
+        HttpSession session = (HttpSession) extContext.getSession(true);
+        OperatorManager om = (OperatorManager) session.getAttribute(SystemAttributeNames.USER_INFO_NAME);
+        if (om == null) {
+            throw new RuntimeException("用户未登录！");
+        }
+        return om;
     }
 
     public static String getDateSx(){

@@ -1,23 +1,15 @@
 package rfm.ta.view;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import platform.common.utils.MessageUtil;
-import rfm.ta.common.enums.TaAccStatus;
-import rfm.ta.common.enums.TaAccType;
 import rfm.ta.gateway.sbs.taservice.TaSbsService;
 import rfm.ta.repository.model.TaRsAccount;
 import rfm.ta.service.account.TaAccountService;
-
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.RequestScoped;
 import javax.faces.bean.ViewScoped;
-import javax.faces.model.SelectItem;
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,16 +31,10 @@ public class TaAccountAction {
     private TaRsAccount taRsAccount;
     private List<TaRsAccount> taRsAccountList;
     private String confirmAccountNo;
-    private TaAccStatus taAccStatus = TaAccStatus.INIT;
-
-    private List<SelectItem> accTypeList;
 
     @PostConstruct
     public void init() {
         this.taRsAccount = new TaRsAccount();
-        accTypeList=new ArrayList<>();
-        SelectItem selectItem=new SelectItem(TaAccType.AccType0.getCode(),TaAccType.AccType0.getTitle());
-        accTypeList.add(selectItem);
         querySelectedRecords();
     }
 
@@ -95,14 +81,6 @@ public class TaAccountAction {
         return null;
     }
 
-    public List<SelectItem> getAccTypeList() {
-        return accTypeList;
-    }
-
-    public void setAccTypeList(List<SelectItem> accTypeList) {
-        this.accTypeList = accTypeList;
-    }
-
     public TaSbsService getTaSbsTxnService() {
         return taSbsTxnService;
     }
@@ -127,14 +105,6 @@ public class TaAccountAction {
         this.confirmAccountNo = confirmAccountNo;
     }
 
-    public TaAccStatus getTaAccStatus() {
-        return taAccStatus;
-    }
-
-    public void setTaAccStatus(TaAccStatus taAccStatus) {
-        this.taAccStatus = taAccStatus;
-    }
-
     public TaRsAccount getTaRsAccount() {
         return taRsAccount;
     }
@@ -150,4 +120,6 @@ public class TaAccountAction {
     public void setTaRsAccountList(List<TaRsAccount> taRsAccountList) {
         this.taRsAccountList = taRsAccountList;
     }
+
+
 }

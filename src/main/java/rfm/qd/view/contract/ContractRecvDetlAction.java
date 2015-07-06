@@ -11,7 +11,7 @@ import org.primefaces.component.commandbutton.CommandButton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import platform.common.utils.MessageUtil;
-import platform.service.ToolsService;
+import platform.service.PtenudetailService;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -40,8 +40,8 @@ public class ContractRecvDetlAction implements Serializable {
     private ContractService contractService;
     @ManagedProperty(value = "#{contractRecvService}")
     private ContractRecvService contractRecvService;
-    @ManagedProperty(value = "#{toolsService}")
-    private ToolsService toolsService;
+    @ManagedProperty(value = "#{ptenudetailService}")
+    private PtenudetailService toolsService;
 
     private QdRsReceive selectedRecord;
     private QdRsContract contract;
@@ -203,11 +203,11 @@ public class ContractRecvDetlAction implements Serializable {
         this.recvTypeOptions = recvTypeOptions;
     }
 
-    public ToolsService getToolsService() {
+    public PtenudetailService getToolsService() {
         return toolsService;
     }
 
-    public void setToolsService(ToolsService toolsService) {
+    public void setToolsService(PtenudetailService toolsService) {
         this.toolsService = toolsService;
     }
 

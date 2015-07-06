@@ -1,5 +1,6 @@
 package rfm.qd.gateway.service;
 
+import pub.platform.utils.ToolUtil;
 import rfm.qd.gateway.cbus.CbusSocketClient;
 import rfm.qd.gateway.cbus.domain.base.MsgHeader;
 import rfm.qd.gateway.cbus.domain.txn.*;
@@ -8,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import platform.service.PlatformService;
 import pub.platform.advance.utils.PropertyManager;
 import pub.platform.security.OperatorManager;
 
@@ -125,7 +125,7 @@ public class QdSbsTxnService {
         QDJG03Req qdjg03Req = new QDJG03Req();
         MsgHeader header = qdjg03Req.getHeader();
         try {
-            OperatorManager om = PlatformService.getOperatorManager();
+            OperatorManager om = ToolUtil.getOperatorManager();
             header.setOperId(om.getOperatorId());
         } catch (Exception e) {
             header.setOperId(PropertyManager.getProperty("brzfdc.wrd.default.operid"));
@@ -172,7 +172,7 @@ public class QdSbsTxnService {
     public QDJG04Res qdjg04payAmtBtwnBankByReq(QDJG04Req qdjg04Req) throws Exception {
         MsgHeader header = qdjg04Req.getHeader();
         try {
-            OperatorManager om = PlatformService.getOperatorManager();
+            OperatorManager om = ToolUtil.getOperatorManager();
             header.setOperId(om.getOperatorId());
         } catch (Exception e) {
             header.setOperId(PropertyManager.getProperty("brzfdc.wrd.default.operid"));

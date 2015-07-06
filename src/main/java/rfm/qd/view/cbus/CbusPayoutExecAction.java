@@ -2,6 +2,7 @@ package rfm.qd.view.cbus;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
+import pub.platform.utils.ToolUtil;
 import rfm.qd.common.constant.RefundStatus;
 import rfm.qd.common.constant.WorkResult;
 import rfm.qd.gateway.utils.StringUtil;
@@ -16,9 +17,7 @@ import org.primefaces.component.commandbutton.CommandButton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import platform.common.utils.MessageUtil;
-import platform.service.PlatformService;
 import pub.platform.security.OperatorManager;
-
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -228,7 +227,7 @@ public class CbusPayoutExecAction {
     //
     private PdfPTable transToPdfTable() throws IOException, DocumentException {
         PdfPTable table = new PdfPTable(new float[]{900f});// 建立一个pdf表格
-        OperatorManager om = PlatformService.getOperatorManager();
+        OperatorManager om = ToolUtil.getOperatorManager();
 
         table.setSpacingBefore(130f);// 设置表格上面空白宽度
         table.setTotalWidth(835);// 设置表格的宽度

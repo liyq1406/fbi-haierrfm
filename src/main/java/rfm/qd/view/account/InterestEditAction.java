@@ -7,7 +7,7 @@ import rfm.qd.service.account.AccountDetlService;
 import rfm.qd.service.account.AccountService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import platform.service.ToolsService;
+import platform.service.PtenudetailService;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -32,8 +32,8 @@ public class InterestEditAction {
     private static final Logger logger = LoggerFactory.getLogger(InterestEditAction.class);
     @ManagedProperty(value = "#{accountDetlService}")
     private AccountDetlService accountDetlService;
-    @ManagedProperty(value = "#{toolsService}")
-    private ToolsService toolsService;
+    @ManagedProperty(value = "#{ptenudetailService}")
+    private PtenudetailService toolsService;
     @ManagedProperty(value = "#{accountService}")
     private AccountService accountService;
 
@@ -112,11 +112,11 @@ public class InterestEditAction {
         this.accountDetlService = accountDetlService;
     }
 
-    public ToolsService getToolsService() {
+    public PtenudetailService getToolsService() {
         return toolsService;
     }
 
-    public void setToolsService(ToolsService toolsService) {
+    public void setToolsService(PtenudetailService toolsService) {
         this.toolsService = toolsService;
     }
 

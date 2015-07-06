@@ -1,17 +1,15 @@
 package rfm.ta.service.account;
 
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import platform.service.PtenudetailService;
 import platform.service.SystemService;
 import pub.platform.security.OperatorManager;
 import pub.platform.utils.ToolUtil;
-import rfm.ta.common.enums.TaAccStatus;
 import rfm.ta.repository.dao.TaRsAccountMapper;
 import rfm.ta.repository.model.TaRsAccount;
 import rfm.ta.repository.model.TaRsAccountExample;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -25,6 +23,8 @@ import java.util.List;
 public class TaAccountService {
     @Autowired
     private TaRsAccountMapper accountMapper;
+    @Autowired
+    private PtenudetailService ptenudetailService;
 
     public TaRsAccount selectedRecordByPkid(String pkId) {
         return accountMapper.selectByPrimaryKey(pkId);
@@ -32,8 +32,10 @@ public class TaAccountService {
 
     public TaRsAccount selectCanRecvAccountByNo(String accountNo) {
         TaRsAccountExample accountExample = new TaRsAccountExample();
-        accountExample.createCriteria().andDeletedFlagEqualTo("0").andStatusFlagEqualTo(TaAccStatus.WATCH.getCode())
-                .andAccIdEqualTo(accountNo);
+        accountExample.createCriteria().
+                andDeletedFlagEqualTo("0").
+                andStatusFlagEqualTo(ptenudetailService.getEnuSelectItem("TA_ACC_STATUS", 1).getValue().toString())
+        .andAccIdEqualTo(accountNo);
         List<TaRsAccount> accountList = accountMapper.selectByExample(accountExample);
         if (accountList.isEmpty()) {
             throw new RuntimeException("没有查询到已监管账户！！");
@@ -43,7 +45,10 @@ public class TaAccountService {
 
     public TaRsAccount selectCanPayAccountByNo(String accountNo) {
         TaRsAccountExample accountExample = new TaRsAccountExample();
-        accountExample.createCriteria().andDeletedFlagEqualTo("0").andStatusFlagEqualTo(TaAccStatus.WATCH.getCode()).andAccIdEqualTo(accountNo);
+        accountExample.createCriteria().
+                andDeletedFlagEqualTo("0").
+                andStatusFlagEqualTo(ptenudetailService.getEnuSelectItem("TA_ACC_STATUS", 1).getValue().toString()).
+                andAccIdEqualTo(accountNo);
         List<TaRsAccount> accountList = accountMapper.selectByExample(accountExample);
         if (accountList.isEmpty()) {
             throw new RuntimeException("没有查询到未限制的已监管账户！请确认该账户已开启监管并未限制付款！");
@@ -96,7 +101,9 @@ public class TaAccountService {
 
     public List<TaRsAccount> qryAllMonitRecords() {
         TaRsAccountExample example = new TaRsAccountExample();
-        example.createCriteria().andDeletedFlagEqualTo("0").andStatusFlagEqualTo(TaAccStatus.WATCH.getCode());
+        example.createCriteria().
+                andDeletedFlagEqualTo("0").
+                andStatusFlagEqualTo(ptenudetailService.getEnuSelectItem("TA_ACC_STATUS", 1).getValue().toString());
         return accountMapper.selectByExample(example);
     }
 

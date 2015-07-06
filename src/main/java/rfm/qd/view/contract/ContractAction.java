@@ -1,5 +1,6 @@
 package rfm.qd.view.contract;
 
+import platform.service.PtenudetailService;
 import rfm.qd.common.constant.ContractStatus;
 import rfm.qd.common.constant.HouseType;
 import rfm.qd.common.constant.LoanType;
@@ -8,8 +9,6 @@ import rfm.qd.repository.model.QdRsContract;
 import rfm.qd.service.contract.ContractService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import platform.service.ToolsService;
-
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -36,8 +35,8 @@ public class ContractAction implements Serializable{
     @ManagedProperty(value = "#{contractService}")
     private ContractService contractService;
 
-    @ManagedProperty(value = "#{toolsService}")
-    private ToolsService toolsService;
+    @ManagedProperty(value = "#{ptenudetailService}")
+    private PtenudetailService ptenudetailService;
 
     private List<QdRsContract> detlList;
     private QdRsContract[] selectedRecords;
@@ -55,10 +54,10 @@ public class ContractAction implements Serializable{
 
     @PostConstruct
     public void init() {
-        this.contractStatusOptions = toolsService.getEnuSelectItemList("CONTRACT_STATUS", false, false);
-        this.houseTypeOptions = toolsService.getEnuSelectItemList("HOUSE_TYPE", false, false);
-        this.loanTypeOptions = toolsService.getEnuSelectItemList("LOAN_TYPE", false, false);
-        this.payupTypeOptions = toolsService.getEnuSelectItemList("PAYUP_TYPE", false, false);
+        this.contractStatusOptions = ptenudetailService.getEnuSelectItemList("CONTRACT_STATUS", false, false);
+        this.houseTypeOptions = ptenudetailService.getEnuSelectItemList("HOUSE_TYPE", false, false);
+        this.loanTypeOptions = ptenudetailService.getEnuSelectItemList("LOAN_TYPE", false, false);
+        this.payupTypeOptions = ptenudetailService.getEnuSelectItemList("PAYUP_TYPE", false, false);
         initList();
     }
 
@@ -118,12 +117,12 @@ public class ContractAction implements Serializable{
         this.selectedRecord = selectedRecord;
     }
 
-    public ToolsService getToolsService() {
-        return toolsService;
+    public PtenudetailService getPtenudetailService() {
+        return ptenudetailService;
     }
 
-    public void setToolsService(ToolsService toolsService) {
-        this.toolsService = toolsService;
+    public void setPtenudetailService(PtenudetailService ptenudetailService) {
+        this.ptenudetailService = ptenudetailService;
     }
 
     public List<SelectItem> getContractStatusOptions() {
