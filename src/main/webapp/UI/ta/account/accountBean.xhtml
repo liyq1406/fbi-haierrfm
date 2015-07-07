@@ -1,0 +1,100 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/ui.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+            .input-col-m {
+                width: 60px;
+            }
+
+            .input-col-l {
+                width: 80px;
+            }
+
+            .input-col-xxl {
+                width: 1%;
+                text-align: right;
+            }
+
+            .col-95 {
+                text-align: right;
+            }
+
+            .col-5 {
+                text-align: left;
+            }
+        </style>
+        <script type="text/javascript" language="javascript">
+            document.onkeydown = function TabReplace() {
+                if (event.keyCode == 13) {
+                    if (event.srcElement.tagName != 'BUTTON')
+                        event.keyCode = 9;
+                }
+            }
+        </script>
+    </ui:define>
+
+    <ui:define name="content">
+        <div style="margin:5px;" id="top">
+            <p:growl id="msgs" showDetail="true"/>
+            <h:form id="actqueryForm">
+                <p:panel id="query" header="【监管账户信息】查询">
+                    <h:panelGrid columns="2" cellspacing="3" style="width:100%">
+                        <h:panelGrid columns="4" cellspacing="3" style="width:90%"
+                                     columnClasses="col-95,col-5,col-95,col-5">
+                            <h:outputLabel value="*【账户类别】:" for="accType"/>
+                            <h:selectOneMenu id="accType" value="#{taAccountAction.taRsAccountQry.accType}" style="width:132px;">
+                                <f:selectItems value="#{ptenudetailAction.taAccTypeList}"/>
+                            </h:selectOneMenu>
+
+                            <h:outputLabel value="*【专户账号】:" for="accId"/>
+                            <h:inputText autocomplete="off" id="accId" style="width:192px;"
+                                         value="#{taAccountAction.taRsAccountQry.accId}">
+                            </h:inputText>
+
+                            <h:outputLabel value="*【申请编号】:" for="originId"/>
+                            <h:inputText id="originId" value="#{taAccountAction.taRsAccountQry.originId}"/>
+
+                            <h:outputLabel value="*【专户名称】:" for="accName"/>
+                            <h:inputText id="accName" value="#{taAccountAction.taRsAccountQry.accName}" style="width:192px;"/>
+
+                            <h:outputLabel value="*【statusFlag】:" for="statusFlag"/>
+                            <h:inputText id="statusFlag" value="#{taAccountAction.taRsAccountQry.statusFlag}"/>
+
+                            <h:outputLabel value="*【originFlag】:" for="originFlag"/>
+                            <h:inputText id="originFlag" value="#{taAccountAction.taRsAccountQry.originFlag}" style="width:192px;"/>
+                        </h:panelGrid>
+                        <h:panelGrid id="btns" columns="1" style="text-align:center;">
+                            <p:commandButton style="width:80px;" value="确认修改"
+                                             action="#{taAccountAction.onUpdate}" ajax="true" update="msgs,btns"
+                                             rendered="#{taAccountAction.updateable}">
+                            </p:commandButton>
+                            <p:commandButton style="width:80px;" value="确认删除"
+                                             action="#{taAccountAction.onDel}" ajax="true"
+                                             rendered="#{taAccountAction.deleteable}" update="msgs,btns">
+                            </p:commandButton>
+                            <p:commandButton id="back" ajax="false" value="返回" immediate="true"
+                                             action="#{taAccountAction.onBack}"
+                                             style="width:80px;"/>
+                        </h:panelGrid>
+                    </h:panelGrid>
+                </p:panel>
+
+                <p:ajaxStatus style="width:16px;height:16px;">
+                    <f:facet name="start">
+                        <h:graphicImage value="/images/ajaxloading.gif"/>
+                    </f:facet>
+                    <f:facet name="complete">
+                        <h:outputText value=""/>
+                    </f:facet>
+                </p:ajaxStatus>
+
+            </h:form>
+        </div>
+    </ui:define>
+
+</ui:composition>

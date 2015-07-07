@@ -94,6 +94,11 @@ public class TaAccountService {
         return accountMapper.selectByExample(example);
     }
 
+    public TaRsAccount qryRecord(String pkid){
+        TaRsAccountExample example = new TaRsAccountExample();
+        example.createCriteria().andDeletedFlagEqualTo("0");
+        return accountMapper.selectByPrimaryKey(pkid);
+    }
     public List<TaRsAccount> qryAllLockRecords() {
         TaRsAccountExample example = new TaRsAccountExample();
         example.createCriteria().andDeletedFlagEqualTo("0");
