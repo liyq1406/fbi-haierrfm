@@ -4,14 +4,18 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import platform.common.utils.MessageUtil;
+import rfm.ta.gateway.sbs.helper.BeanHelper;
 import rfm.ta.gateway.sbs.taservice.TaSbsService;
 import rfm.ta.repository.model.TaRsAccount;
 import rfm.ta.service.account.TaAccountService;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -35,14 +39,28 @@ public class TaAccountAction {
     private TaRsAccount taRsAccountQry;
     private TaRsAccount taRsAccountAdd;
     private TaRsAccount taRsAccountUpd;
+    private TaRsAccount taRsAccount;
     private String rtnFlag;
+    private String action;
+    private String pkid;
+    private boolean updateable = false;
+    private boolean deleteable = false;
 
     @PostConstruct
     public void init() {
-        this.taRsAccountAdd = new TaRsAccount();
-        this.taRsAccountUpd = new TaRsAccount();
-        this.taRsAccountQry= new TaRsAccount();
+        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+        action = params.get("action");
+        pkid = params.get("pkid");
         querySelectedRecords();
+        if (action != null) {
+            taRsAccountQry = taAccountService.qryRecord(pkid);
+            if ("update".equals(action)) {
+                updateable = true;
+            }
+            if ("del".equals(action)) {
+                deleteable = true;
+            }
+        }
     }
 
     private void querySelectedRecords() {
@@ -56,17 +74,8 @@ public class TaAccountAction {
     public void onBtnQueryClick() {
         querySelectedRecords(taRsAccountQry);
     }
-    public String onBtnSaveClick() {
-        try {
-            taAccountService.updateRecord(taRsAccountUpd);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            rtnFlag = "<script language='javascript'>rtnScript('false');</script>";
-            return null;
-        }
-        rtnFlag = "<script language='javascript'>rtnScript('true');</script>";
-        return null;
-    }    public String insertRecord() {
+
+    public String insertRecord() {
         try {
             if (!confirmAccountNo.equalsIgnoreCase(taRsAccountAdd.getAccId())) {
                 MessageUtil.addError("两次输入的监管账户号不一致！");
@@ -86,27 +95,6 @@ public class TaAccountAction {
         return null;
     }
 
-    public void selectRecordAction(
-            String strSubmitTypePara,
-            TaRsAccount taRsAccountPara) {
-        try {
-            // 查询
-            if (strSubmitTypePara.equals("Sel")) {
-                taRsAccountQry = (TaRsAccount) BeanUtils.cloneBean(taRsAccountPara);
-            } else if (strSubmitTypePara.equals("Add")) {
-                taRsAccountAdd = new TaRsAccount();
-            } else if (strSubmitTypePara.equals("Upd")) {
-                taRsAccountUpd = (TaRsAccount) BeanUtils.cloneBean(taRsAccountPara);
-            } else if (strSubmitTypePara.equals("Del")) {
-                taRsAccountQry = (TaRsAccount) BeanUtils.cloneBean(taRsAccountPara);
-            } else {
-                taRsAccountQry = (TaRsAccount) BeanUtils.cloneBean(taRsAccountPara);
-            }
-        } catch (Exception e) {
-            MessageUtil.addError(e.getMessage());
-        }
-    }
-
     public String reset() {
         this.taRsAccountAdd = new TaRsAccount();
         if (!taRsAccountList.isEmpty()) {
@@ -114,6 +102,22 @@ public class TaAccountAction {
         }
         return null;
     }
+
+    public String onUpdate(){
+        return null;
+    }
+    public String onDel(){
+        return null;
+    }
+    public String onClick() {
+        return "accountBean";
+    }
+
+    public String onBack() {
+        return "accountEdit?faces-redirect=true";
+    }
+
+    //= = = = = = = = = = = = = = =  get set = = = = = = = = = = = = = = = =
 
     public TaSbsService getTaSbsTxnService() {
         return taSbsTxnService;
@@ -178,4 +182,45 @@ public class TaAccountAction {
     public void setRtnFlag(String rtnFlag) {
         this.rtnFlag = rtnFlag;
     }
+
+    public String getPkid() {
+        return pkid;
+    }
+
+    public void setPkid(String pkid) {
+        this.pkid = pkid;
+    }
+
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
+    }
+
+    public TaRsAccount getTaRsAccount() {
+        return taRsAccount;
+    }
+
+    public void setTaRsAccount(TaRsAccount taRsAccount) {
+        this.taRsAccount = taRsAccount;
+    }
+
+    public boolean isUpdateable() {
+        return updateable;
+    }
+
+    public void setUpdateable(boolean updateable) {
+        this.updateable = updateable;
+    }
+
+    public boolean isDeleteable() {
+        return deleteable;
+    }
+
+    public void setDeleteable(boolean deleteable) {
+        this.deleteable = deleteable;
+    }
+
 }
