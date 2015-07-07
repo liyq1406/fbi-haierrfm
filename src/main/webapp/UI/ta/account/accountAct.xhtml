@@ -47,15 +47,15 @@
                         <h:panelGrid columns="6" cellspacing="3" style="width:90%"
                                      columnClasses="col-95,col-5,col-95,col-5">
                             <h:outputLabel value="*【账户类别】:" for="accType"/>
-                            <h:selectOneMenu id="accType" value="#{taAccountAction.taRsAccount.accType}">
+                            <h:selectOneMenu id="accType" value="#{taAccountAction.taRsAccountQry.accType}">
                                 <f:selectItems value="#{ptenudetailAction.taAccTypeList}"/>
                             </h:selectOneMenu>
                             <h:outputLabel value="*【专户账号】:" for="accId"/>
                             <h:inputText autocomplete="off" id="accId"
-                                         value="#{taAccountAction.taRsAccount.accId}">
+                                         value="#{taAccountAction.taRsAccountQry.accId}">
                             </h:inputText>
                             <h:outputLabel value="*【专户名称】:" for="accName"/>
-                            <h:inputText id="accName" value="#{taAccountAction.taRsAccount.accName}"/>
+                            <h:inputText id="accName" value="#{taAccountAction.taRsAccountQry.accName}"/>
                         </h:panelGrid>
                         <p:commandButton update="msgs,pdt" style="width: 80px"
                                          action="#{taAccountAction.onBtnQueryClick}" id="btnQuery" value="查询">
@@ -74,7 +74,6 @@
                 <p:dataTable id="pdt" style="width:100%;"
                              dynamic="true" selectionMode="single"
                              value="#{taAccountAction.taRsAccountList}"
-                             selection="#{taAccountAction.taRsAccountSeled}"
                              var="record"
                              rowKey="#{record.pkId}"
                              paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -132,16 +131,8 @@
                     </p:column>
 
                     <p:column headerText="操作" style="text-align:center">
-                        <p:commandLink  value="修改" immediate="true" ajax="false" action="#{taAccountAction.onClick()}"
+                        <p:commandLink  value="启用" immediate="true" ajax="false" action="#{taAccountAction.onEnable()}"
                                         style="color: blue">
-                            <f:param value="#{record.pkId}" name="pkid"/>
-                            <f:param value="update" name="actionType"/>
-                        </p:commandLink>
-                        <p:spacer width="15px;"/>
-                        <p:commandLink  value="删除" immediate="true" ajax="false" action="#{taAccountAction.onClick()}"
-                                        style="color: blue">
-                            <f:param value="#{record.pkId}" name="pkid"/>
-                            <f:param value="del" name="action"/>
                         </p:commandLink>
                     </p:column>
 

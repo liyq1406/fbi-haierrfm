@@ -56,17 +56,17 @@
                         <h:panelGrid columns="4" cellspacing="3" style="width:90%"
                                      columnClasses="col-95,col-5,col-95,col-5">
                             <h:outputLabel value="*【账户类别】:" for="accType"/>
-                            <h:selectOneMenu id="accType" value="#{taAccountAction.taRsAccountAdd.accType}" style="width:192px;">
+                            <h:selectOneMenu id="accType" value="#{taAccountAction.taRsAccount.accType}" style="width:192px;">
                                 <f:selectItems value="#{ptenudetailAction.taAccTypeList}"/>
                             </h:selectOneMenu>
 
                             <h:outputLabel value="*【专户账号】:" for="accId"/>
                             <h:inputText autocomplete="off" id="accId" style="width:192px;" required="true"
-                                         requiredMessage="必须输入监管账号！" value="#{taAccountAction.taRsAccountAdd.accId}">
+                                         requiredMessage="必须输入监管账号！" value="#{taAccountAction.taRsAccount.accId}">
                             </h:inputText>
 
                             <h:outputLabel value="*【申请编号】:" for="originId"/>
-                            <h:inputText id="originId" value="#{taAccountAction.taRsAccountAdd.originId}"/>
+                            <h:inputText id="originId" value="#{taAccountAction.taRsAccount.originId}"/>
 
                             <h:outputLabel value="*【确认专户账号】:" for="confirmAccountNo"/>
                             <h:inputText autocomplete="off" id="confirmAccountNo" style="width:192px;" required="true"
@@ -74,12 +74,12 @@
                             </h:inputText>
 
                             <h:outputLabel value="*【专户名称】:" for="accName"/>
-                            <h:inputText id="accName" value="#{taAccountAction.taRsAccountAdd.accName}"
+                            <h:inputText id="accName" value="#{taAccountAction.taRsAccount.accName}"
                                          required="true" requiredMessage="必须输入账户名称！" style="width:192px;"/>
                         </h:panelGrid>
                         <h:panelGrid style="width:20%">
                             <p:commandButton id="saveBtn" ajax="true" value="保存"
-                                             action="#{taAccountAction.insertRecord}"
+                                             action="#{taAccountAction.onAdd()}"
                                              style="margin-left:15px;width:90px"
                                              update="input,pdt,msgs">
                             </p:commandButton>

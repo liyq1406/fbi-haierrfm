@@ -2,15 +2,13 @@ package rfm.ta.gateway.sbs.helper;
 
 import org.apache.commons.lang.StringUtils;
 import rfm.ta.gateway.hfnb.model.txn.TaHfnbTiaXml2002;
-import rfm.ta.test.Bean20002Test;
-
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 
 /**
  * wanglichao@163.com
  * Created by Lichao.W At 2015/7/6 11:10
- * 对象操作辅助类
+ * ???????
  */
 public class XmlToBean {
 
@@ -54,29 +52,7 @@ public class XmlToBean {
                 }
             }
         } catch (Exception e) {
-            throw new RuntimeException("AbstractTxnProcessor copyXmlToBean 解析异常");
+            throw new RuntimeException("AbstractTxnProcessor copyXmlToBean ????");
         }
-    }
-
-    public static void main(String[] args) {
-        String msgData = "<?xml version=\"1.0\" encoding=\"GBK\"?>" +
-                "<root>" +
-                "<info>" +
-                "<txncode>9009001</txncode>" +
-                "<userid>9009001</userid>" +
-                "<reqsn>9009001</reqsn>" +
-                "<version>9009001</version>" +
-                "<txndate>9009001</txndate>" +
-                "<txntime>QDJS000092321</txntime>" +
-                "</info>" +
-                "<body>" +
-                "<originid>123456789</originid>" +
-                "<originid2>435234</originid2>" +
-                "</body>" +
-                "</root>";
-        TaHfnbTiaXml2002 tia = (TaHfnbTiaXml2002) (new TaHfnbTiaXml2002().getTia(msgData));
-        Bean20002Test bean = new Bean20002Test();
-        CopyXmlToBean(tia, bean);
-        System.out.println(bean.getOriginid() + "\n" + bean.getOriginid2());
     }
 }

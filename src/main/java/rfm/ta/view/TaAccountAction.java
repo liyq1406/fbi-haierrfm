@@ -36,10 +36,8 @@ public class TaAccountAction {
     private List<TaRsAccount> taRsAccountList;
     private String confirmAccountNo;
 
-    private TaRsAccount taRsAccountQry;
-    private TaRsAccount taRsAccountAdd;
-    private TaRsAccount taRsAccountUpd;
     private TaRsAccount taRsAccount;
+    private TaRsAccount taRsAccountSeled;
     private String rtnFlag;
     private String action;
     private String pkid;
@@ -49,11 +47,11 @@ public class TaAccountAction {
     @PostConstruct
     public void init() {
         Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-        action = params.get("action");
+        action = params.get("actionType");
         pkid = params.get("pkid");
         querySelectedRecords();
         if (action != null) {
-            taRsAccountQry = taAccountService.qryRecord(pkid);
+            taRsAccount = taAccountService.qryRecord(pkid);
             if ("update".equals(action)) {
                 updateable = true;
             }
@@ -72,17 +70,25 @@ public class TaAccountAction {
     }
 
     public void onBtnQueryClick() {
-        querySelectedRecords(taRsAccountQry);
+        querySelectedRecords(taRsAccount);
     }
 
-    public String insertRecord() {
+    public String reset() {
+        this.taRsAccount = new TaRsAccount();
+        if (!taRsAccountList.isEmpty()) {
+            taRsAccountList.clear();
+        }
+        return null;
+    }
+
+    public String onAdd() {
         try {
-            if (!confirmAccountNo.equalsIgnoreCase(taRsAccountAdd.getAccId())) {
+            if (!confirmAccountNo.equalsIgnoreCase(taRsAccount.getAccId())) {
                 MessageUtil.addError("两次输入的监管账户号不一致！");
                 return null;
             }
             // 初始帐户余额均为可用
-            taAccountService.insertRecord(taRsAccountAdd);
+            taAccountService.insertRecord(taRsAccount);
         } catch (Exception e) {
             logger.error("新增数据失败，", e);
             MessageUtil.addError(e.getMessage());
@@ -90,31 +96,44 @@ public class TaAccountAction {
         }
         MessageUtil.addInfo("新增数据完成。");
         querySelectedRecords();
-        this.taRsAccountAdd = new TaRsAccount();
+        this.taRsAccount = new TaRsAccount();
         confirmAccountNo = "";
         return null;
     }
 
-    public String reset() {
-        this.taRsAccountAdd = new TaRsAccount();
-        if (!taRsAccountList.isEmpty()) {
-            taRsAccountList.clear();
+    public String onUpd(){
+        try {
+            if (!confirmAccountNo.equalsIgnoreCase(taRsAccount.getAccId())) {
+                MessageUtil.addError("两次输入的监管账户号不一致！");
+                return null;
+            }
+            // 初始帐户余额均为可用
+            taAccountService.insertRecord(taRsAccount);
+        } catch (Exception e) {
+            logger.error("修改数据失败，", e);
+            MessageUtil.addError(e.getMessage());
+            return null;
         }
-        return null;
-    }
-
-    public String onUpdate(){
+        MessageUtil.addInfo("修改数据完成。");
+        querySelectedRecords();
+        this.taRsAccount = new TaRsAccount();
+        confirmAccountNo = "";
         return null;
     }
     public String onDel(){
         return null;
     }
     public String onClick() {
-        return "accountBean";
+        return "accountEditDetail";
     }
 
     public String onBack() {
-        return "accountEdit?faces-redirect=true";
+        return "accountEdit";
+    }
+
+    public String onEnable(){
+
+        return null;
     }
 
     //= = = = = = = = = = = = = = =  get set = = = = = = = = = = = = = = = =
@@ -143,36 +162,12 @@ public class TaAccountAction {
         this.confirmAccountNo = confirmAccountNo;
     }
 
-    public TaRsAccount getTaRsAccountQry() {
-        return taRsAccountQry;
-    }
-
-    public void setTaRsAccountQry(TaRsAccount taRsAccountQry) {
-        this.taRsAccountQry = taRsAccountQry;
-    }
-
-    public TaRsAccount getTaRsAccountAdd() {
-        return taRsAccountAdd;
-    }
-
-    public void setTaRsAccountAdd(TaRsAccount taRsAccountAdd) {
-        this.taRsAccountAdd = taRsAccountAdd;
-    }
-
     public List<TaRsAccount> getTaRsAccountList() {
         return taRsAccountList;
     }
 
     public void setTaRsAccountList(List<TaRsAccount> taRsAccountList) {
         this.taRsAccountList = taRsAccountList;
-    }
-
-    public TaRsAccount getTaRsAccountUpd() {
-        return taRsAccountUpd;
-    }
-
-    public void setTaRsAccountUpd(TaRsAccount taRsAccountUpd) {
-        this.taRsAccountUpd = taRsAccountUpd;
     }
 
     public String getRtnFlag() {
@@ -223,4 +218,11 @@ public class TaAccountAction {
         this.deleteable = deleteable;
     }
 
+    public TaRsAccount getTaRsAccountSeled() {
+        return taRsAccountSeled;
+    }
+
+    public void setTaRsAccountSeled(TaRsAccount taRsAccountSeled) {
+        this.taRsAccountSeled = taRsAccountSeled;
+    }
 }
