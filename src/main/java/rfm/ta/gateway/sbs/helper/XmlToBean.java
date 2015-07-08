@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 /**
  * wanglichao@163.com
  * Created by Lichao.W At 2015/7/6 11:10
- * ???????
+ * 对象操作辅助类
  */
 public class XmlToBean {
 
@@ -52,7 +52,7 @@ public class XmlToBean {
                 }
             }
         } catch (Exception e) {
-            throw new RuntimeException("AbstractTxnProcessor copyXmlToBean ????");
+            throw new RuntimeException("AbstractTxnProcessor copyXmlToBean 解析异常");
         }
     }
 }

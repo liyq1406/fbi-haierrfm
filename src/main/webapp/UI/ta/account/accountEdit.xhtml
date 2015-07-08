@@ -72,8 +72,9 @@
                 </p:ajaxStatus>
 
                 <p:dataTable id="pdt" style="width:100%;"
-                             dynamic="true" selectionMode="single"
+                             dynamic="true"
                              value="#{taAccountAction.taRsAccountList}"
+                             selectionMode="single"
                              selection="#{taAccountAction.taRsAccountSeled}"
                              var="record"
                              rowKey="#{record.pkId}"
@@ -132,7 +133,7 @@
                     </p:column>
 
                     <p:column headerText="操作" style="text-align:center">
-                        <p:commandLink  value="修改" immediate="true" ajax="false" action="#{taAccountAction.onClick()}"
+                        <p:commandLink  value="修改" ajax="false" action="#{taAccountAction.onClick_ListToDetail()}"
                                         style="color: blue">
                             <f:param value="#{record.pkId}" name="pkid"/>
                             <f:param value="update" name="actionType"/>

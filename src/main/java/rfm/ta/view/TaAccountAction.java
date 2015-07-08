@@ -58,6 +58,8 @@ public class TaAccountAction {
             if ("del".equals(action)) {
                 deleteable = true;
             }
+        }else{
+            taRsAccount=new TaRsAccount();
         }
     }
 
@@ -123,12 +125,12 @@ public class TaAccountAction {
     public String onDel(){
         return null;
     }
-    public String onClick() {
-        return "accountEditDetail";
-    }
 
-    public String onBack() {
-        return "accountEdit";
+    public String onClick_ListToDetail() {
+        return "accountEditDetail.xhtml?faces-redirect=true";
+    }
+    public String onClick_DetailToList() {
+        return "accountEdit.xhtml?faces-redirect=true";
     }
 
     public String onEnable(){
