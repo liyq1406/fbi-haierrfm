@@ -2,7 +2,7 @@ package rfm.ta.common.enums;
 
 import java.util.Hashtable;
 
-public enum TaInOutFlag implements EnumApp {
+public enum TaInOutFlag {
     OUT("0", "支出"),
     IN("1", "收入");
 

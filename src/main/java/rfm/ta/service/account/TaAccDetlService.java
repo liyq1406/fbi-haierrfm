@@ -22,7 +22,7 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 @Service
-public class TaAccountDetlService {
+public class TaAccDetlService {
     @Autowired
     private TaRsAccDetailMapper taRsAccDetailMapper;
     @Autowired
@@ -30,21 +30,24 @@ public class TaAccountDetlService {
 
     /**
      * ÕË»§Ã÷Ï¸²éÑ¯*/
-    public List<TaRsAccDetail> selectedRecordsByTradeDate(String acctname,String acctno,String beginDate, String endDate) {
+    public List<TaRsAccDetail> selectedRecords(TaRsAccDetail taRsAccDetailPara) {
         TaRsAccDetailExample example = new TaRsAccDetailExample();
         example.clear();
         TaRsAccDetailExample.Criteria criteria = example.createCriteria();
-        if (acctname !=null && !StringUtils.isEmpty(acctname.trim())) {
-            criteria.andAccNameLike("%" + acctname + "%");
+        if (taRsAccDetailPara.getBusiApplyId() !=null && !StringUtils.isEmpty(taRsAccDetailPara.getBusiApplyId().trim())) {
+            criteria.andBusiApplyIdEqualTo(taRsAccDetailPara.getBusiApplyId());
         }
-        if (acctno != null && !StringUtils.isEmpty(acctno.trim())) {
-            criteria.andAccIdEqualTo(acctno);
+        if (taRsAccDetailPara.getTradeId() !=null && !StringUtils.isEmpty(taRsAccDetailPara.getTradeId().trim())) {
+            criteria.andTradeIdEqualTo(taRsAccDetailPara.getTradeId());
         }
-        if (beginDate != null && endDate != null) {
-            criteria.andTradeDateBetween(beginDate, endDate);
+        if (taRsAccDetailPara.getAccName() !=null && !StringUtils.isEmpty(taRsAccDetailPara.getAccName().trim())) {
+            criteria.andAccNameLike("%" + taRsAccDetailPara.getAccName() + "%");
+        }
+        if (taRsAccDetailPara.getAccId() != null && !StringUtils.isEmpty(taRsAccDetailPara.getAccId().trim())) {
+            criteria.andAccIdEqualTo(taRsAccDetailPara.getAccId());
         }
         criteria.andDeletedFlagEqualTo("0");
-        example.setOrderByClause("Trade_Date desc,account_code,local_serial");
+        example.setOrderByClause("Trade_Date desc,acc_id");
         return taRsAccDetailMapper.selectByExample(example);
     }
 
@@ -67,6 +70,7 @@ public class TaAccountDetlService {
         TaRsAccDetailExample example = new TaRsAccDetailExample();
         example.clear();
         TaRsAccDetailExample.Criteria criteria = example.createCriteria();
+
         if (statusflags != null && statusflags.size()>0) {
             criteria.andStatusFlagIn(statusflags);
         }
@@ -79,6 +83,7 @@ public class TaAccountDetlService {
         TaRsAccDetailExample example = new TaRsAccDetailExample();
         example.clear();
         TaRsAccDetailExample.Criteria criteria = example.createCriteria();
+
         if (statusflag != null && !StringUtils.isEmpty(tradeType.trim())) {
             criteria.andStatusFlagEqualTo(statusflag);
         }

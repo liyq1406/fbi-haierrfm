@@ -2,7 +2,7 @@ package rfm.ta.common.enums;
 
 import java.util.Hashtable;
 
-public enum TaSendFlag implements EnumApp {
+public enum TaSendFlag {
     UN_SEND("0", "Î´·¢ËÍ"),
     SENT("1", "ÒÑ·¢ËÍ");
 

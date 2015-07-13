@@ -23,6 +23,15 @@ public class PtenudetailService {
     @Autowired
     private PtenudetailMapper enudetailMapper;
 
+    private Map<String,String> taAccTypeMap;
+    private List<SelectItem> taAccTypeList;
+
+    private Map<String,String> taAccStatusMap;
+    private List<SelectItem> taAccStatusList;
+
+    private Map<String,String> taTradeIdMap;
+    private List<SelectItem> taTradeIdList;
+
     /**
      * 根据枚举表的内容组下拉菜单
      *
@@ -93,5 +102,35 @@ public class PtenudetailService {
             enuMap.put(record.getEnuitemvalue(), record.getEnuitemlabel());
         }
         return enuMap;
+    }
+
+    public Map<String, String> getTaAccTypeMap() {
+        this.taAccTypeMap = selectEnuItemValueToExpandValueMap("TA_ACC_TYPE");
+        return taAccTypeMap;
+    }
+
+    public List<SelectItem> getTaAccTypeList() {
+        this.taAccTypeList=getEnuSelectItemList("TA_ACC_TYPE",false,false);
+        return taAccTypeList;
+    }
+
+    public Map<String, String> getTaAccStatusMap() {
+        this.taAccStatusMap=selectEnuItemValueToExpandValueMap("TA_ACC_STATUS");
+        return taAccStatusMap;
+    }
+
+    public List<SelectItem> getTaAccStatusList() {
+        this.taAccStatusList=getEnuSelectItemList("TA_ACC_STATUS",false,false);
+        return taAccStatusList;
+    }
+
+    public Map<String, String> getTradeIdMap() {
+        this.taTradeIdMap=selectEnuItemValueToExpandValueMap("TA_TRADE_ID");
+        return taTradeIdMap;
+    }
+
+    public List<SelectItem> getTradeIdList() {
+        this.taTradeIdList=getEnuSelectItemList("TA_TRADE_ID",false,false);
+        return taTradeIdList;
     }
 }

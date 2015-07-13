@@ -56,35 +56,35 @@
                         <h:panelGrid columns="4" cellspacing="3" style="width:90%"
                                      columnClasses="col-95,col-5,col-95,col-5">
                             <h:outputLabel value="*【账户类别】:" for="accType"/>
-                            <h:selectOneMenu id="accType" value="#{taAccountAction.taRsAccount.accType}" style="width:192px;">
+                            <h:selectOneMenu id="accType" value="#{taAccAction.taRsAccount.accType}" style="width:192px;">
                                 <f:selectItems value="#{ptenudetailAction.taAccTypeList}"/>
                             </h:selectOneMenu>
 
                             <h:outputLabel value="*【专户账号】:" for="accId"/>
                             <h:inputText autocomplete="off" id="accId" style="width:192px;" required="true"
-                                         requiredMessage="必须输入监管账号！" value="#{taAccountAction.taRsAccount.accId}">
+                                         requiredMessage="必须输入监管账号！" value="#{taAccAction.taRsAccount.accId}">
                             </h:inputText>
 
                             <h:outputLabel value="*【申请编号】:" for="originId"/>
-                            <h:inputText id="originId" value="#{taAccountAction.taRsAccount.originId}"/>
+                            <h:inputText id="originId" value="#{taAccAction.taRsAccount.busiApplyId}"/>
 
                             <h:outputLabel value="*【确认专户账号】:" for="confirmAccountNo"/>
                             <h:inputText autocomplete="off" id="confirmAccountNo" style="width:192px;" required="true"
-                                         requiredMessage="必须输入确认监管账号！" value="#{taAccountAction.confirmAccountNo}">
+                                         requiredMessage="必须输入确认监管账号！" value="#{taAccAction.confirmAccountNo}">
                             </h:inputText>
 
                             <h:outputLabel value="*【专户名称】:" for="accName"/>
-                            <h:inputText id="accName" value="#{taAccountAction.taRsAccount.accName}"
+                            <h:inputText id="accName" value="#{taAccAction.taRsAccount.accName}"
                                          required="true" requiredMessage="必须输入账户名称！" style="width:192px;"/>
                         </h:panelGrid>
                         <h:panelGrid style="width:20%">
                             <p:commandButton id="saveBtn" ajax="true" value="保存"
-                                             action="#{taAccountAction.onAdd()}"
+                                             action="#{taAccAction.onAdd()}"
                                              style="margin-left:15px;width:90px"
                                              update="input,pdt,msgs">
                             </p:commandButton>
-                            <p:commandButton ajax="true" id="resetBtn" value="重置" action="#{taAccountAction.reset}"
-                                             style="width:90px;margin-left:15px" update="input,msgs,pdt"/>
+                            <p:commandButton type="reset" id="resetBtn" value="重置"
+                                             style="width:90px;margin-left:15px" update="input"/>
                         </h:panelGrid>
                     </h:panelGrid>
                 </p:panel>
@@ -99,7 +99,7 @@
 
                 <p:dataTable id="pdt" style="width:100%;"
                              dynamic="true" selectionMode="single"
-                             value="#{taAccountAction.taRsAccountList}" var="record"
+                             value="#{taAccAction.taRsAccountList}" var="record"
                              rowKey="#{record.pkId}"
                              paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                              paginator="true" rows="15" paginatorPosition="bottom"
@@ -111,7 +111,7 @@
                     </p:column>
 
                     <p:column headerText="申请编号" style="text-align:left">
-                        <h:outputText value="#{record.originId}"/>
+                        <h:outputText value="#{record.busiApplyId}"/>
                     </p:column>
 
                     <p:column headerText="专户账号" style="text-align:left">

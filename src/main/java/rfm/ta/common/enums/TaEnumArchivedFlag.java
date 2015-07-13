@@ -3,25 +3,21 @@ package rfm.ta.common.enums;
 import java.util.Hashtable;
 
 /**
- * 合同缴款状态标志，[0]-退回;[1]-初始;[2]-审核中;[3]-已审核;[7]-记账中;[9]-记账完成
- * User: zhanrui
- * Date: 11-7-23
- * Time: 下午3:30
+ * 会计系统 公用枚举.
+ * User: hanjianlong
+ * Date: 2013-05-20
+ * Time: 9:58:32
  * To change this template use File | Settings | File Templates.
  */
-public enum TaContractRecvStatus implements EnumApp {
-    BACK("0", "退回"),
-    INIT("1", "初始"),
-    CHECKING("2", "审核中"),
-    CHECKED("3", "已审核"),
-    ACCOUNT("7", "记账中"),
-    ACCOUNTOVER("9", "记账完成");
+public enum TaEnumArchivedFlag {
+    ARCHIVED_FLAG0("0","未删除"),
+    ARCHIVED_FLAG1("1","逻辑删除");
 
     private String code = null;
     private String title = null;
-    private static Hashtable<String, TaContractRecvStatus> aliasEnums;
+    private static Hashtable<String, TaEnumArchivedFlag> aliasEnums;
 
-    TaContractRecvStatus(String code, String title) {
+    TaEnumArchivedFlag(String code, String title){
         this.init(code, title);
     }
 
@@ -38,7 +34,7 @@ public enum TaContractRecvStatus implements EnumApp {
         aliasEnums.put(title, this);
     }
 
-    public static TaContractRecvStatus valueOfAlias(String alias) {
+    public static TaEnumArchivedFlag getValueByKey(String alias) {
         return aliasEnums.get(alias);
     }
 

@@ -1,0 +1,132 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/ui.xhtml">
+
+    <ui:define name="head">
+        <script type="text/javascript" language="javascript">
+            document.onkeydown = function TabReplace() {
+                if (event.keyCode == 13) {
+                    if (event.srcElement.tagName != 'BUTTON')
+                        event.keyCode = 9;
+                }
+            }
+        </script>
+    </ui:define>
+
+    <ui:define name="content">
+        <div style="margin:5px;" id="top">
+            <p:growl id="msgs" showDetail="false"/>
+            <h:form id="actqueryForm">
+                <p:panel id="query" header="【返还信息】查询">
+                    <h:panelGrid columns="2" cellspacing="3" style="width:100%">
+                        <h:panelGrid columns="2" cellspacing="3" style="width:40%">
+                            <h:outputLabel value="*【返还申请编号】:" for="busiApplyId"/>
+                            <h:inputText autocomplete="off" id="busiApplyId"
+                                         required="true" requiredMessage="必须输入返还申请编号！"
+                                         value="#{taRefundAction.taRsAccDetail.busiApplyId}">
+                            </h:inputText>
+                        </h:panelGrid>
+                        <p:commandButton update="msgs,pdt" style="width: 80px"
+                                         action="#{taRefundAction.onBtnActClick()}"
+                                         id="btnQuery" value="记账">
+                        </p:commandButton>
+                    </h:panelGrid>
+                </p:panel>
+                <p:ajaxStatus style="width:16px;height:16px;">
+                    <f:facet name="start">
+                        <h:graphicImage value="/images/ajaxloading.gif"/>
+                    </f:facet>
+                    <f:facet name="complete">
+                        <h:outputText value=""/>
+                    </f:facet>
+                </p:ajaxStatus>
+
+                <p:dataTable id="pdt" style="width:100%;"
+                             dynamic="true"
+                             value="#{taRefundAction.taRsAccDetailList}"
+                             selectionMode="single"
+                             var="record"
+                             rowKey="#{record.pkId}"
+                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             paginator="true" rows="15" paginatorPosition="bottom"
+                             scrollable="true"
+                             rowsPerPageTemplate="100,50,30,15,5"
+                             emptyMessage="数据记录为空...">
+
+                    <p:column headerText="交易代码" style="width: 80px;text-align:center">
+                        <h:outputText value="#{record.tradeId}" style="text-align: center;"/>
+                    </p:column>
+
+                    <p:column headerText="监管银行代码" style="width: 80px;text-align:center">
+                        <h:outputText value="#{record.bankId}" style="text-align: right"/>
+                    </p:column>
+
+                    <p:column headerText="城市代码" style="width: 80px;text-align:center">
+                        <h:outputText value="#{record.cityId}" style="text-align: right"/>
+                    </p:column>
+
+                    <p:column headerText="划拨申请编号" style="width: 80px;text-align:center">
+                        <h:outputText value="#{record.busiApplyId}" style="text-align: right"/>
+                    </p:column>
+
+                    <p:column headerText="划拨密码" style="width: 80px;text-align:center">
+                        <h:outputText value="#{record.tradePwd}" style="text-align: right"/>
+                    </p:column>
+
+                    <p:column headerText="验证流水" style="width: 80px;text-align:center">
+                        <h:outputText value="#{record.bankSerial}"/>
+                    </p:column>
+                    <p:column headerText="验证日期" style="width: 80px;text-align:center">
+                        <h:outputText value="#{record.tradeDate}" style="text-align: right"/>
+                    </p:column>
+                    <p:column headerText="验证网点" style="width: 80px;text-align:center">
+                        <h:outputText value="#{record.bankBranchId}" style="text-align: right"/>
+                    </p:column>
+                    <p:column headerText="验证人员" style="width: 80px;text-align:center">
+                        <h:outputText value="#{record.bankOperId}" style="text-align: right"/>
+                    </p:column>
+                    <p:column headerText="发起方" style="width: 80px;text-align:center">
+                        <h:outputText value="#{record.initiator}" style="text-align: right"/>
+                    </p:column>
+                    <p:column headerText="结果" style="width: 80px;text-align:center">
+                        <h:outputText value="#{record.returnId}" style="text-align: right"/>
+                    </p:column>
+                    <p:column headerText="监管账号" style="width: 80px;text-align:center">
+                        <h:outputText value="#{record.accId}" style="text-align: right"/>
+                    </p:column>
+                    <p:column headerText="监管账户名" style="width: 80px;text-align:center">
+                        <h:outputText value="#{record.accName}" style="text-align: right"/>
+                    </p:column>
+                    <p:column headerText="划拨金额" style="width: 80px;text-align:center">
+                        <h:outputText value="#{record.tradeAmt}" style="text-align: right"/>
+                    </p:column>
+                    <p:column headerText="收款银行" style="width: 80px;text-align:center">
+                        <h:outputText value="#{record.toHsBankName}" style="text-align: right"/>
+                    </p:column>
+                    <p:column headerText="收款单位账号" style="width: 80px;text-align:center">
+                        <h:outputText value="#{record.toAccId}" style="text-align: right"/>
+                    </p:column>
+                    <p:column headerText="收款单位户名" style="width: 80px;text-align:center">
+                        <h:outputText value="#{record.toAccName}" style="text-align: right"/>
+                    </p:column>
+                    <p:column headerText="项目名称" style="width: 80px;text-align:center">
+                        <h:outputText value="#{record.progName}" style="text-align: right"/>
+                    </p:column>
+                    <p:column headerText="开发企业名称" style="width: 80px;text-align:center">
+                        <h:outputText value="#{record.devlopCompName}" style="text-align: right"/>
+                    </p:column>
+                    <p:column headerText="预售资金监管平台流水" style="width: 160px;text-align:center">
+                        <h:outputText value="#{record.fdcSerial}" style="text-align: right"/>
+                    </p:column>
+                    <p:column headerText="描述" style="width: 80px;text-align:center">
+                        <h:outputText value="#{record.remark}" style="text-align: right"/>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+        </div>
+    </ui:define>
+
+</ui:composition>

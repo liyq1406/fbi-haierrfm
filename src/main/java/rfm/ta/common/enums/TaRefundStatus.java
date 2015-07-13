@@ -10,7 +10,7 @@ import java.util.Hashtable;
  * Time: 下午3:30
  * To change this template use File | Settings | File Templates.
  */
-public enum TaRefundStatus implements EnumApp {
+public enum TaRefundStatus {
     BACK("0", "退回"),
     INIT("1", "初始"),
     CHECKING("2", "审核中"),

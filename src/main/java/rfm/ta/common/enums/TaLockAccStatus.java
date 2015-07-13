@@ -2,7 +2,7 @@ package rfm.ta.common.enums;
 
 import java.util.Hashtable;
 
-public enum TaLockAccStatus implements EnumApp {
+public enum TaLockAccStatus {
     UN_LOCK("0", "解冻"),
     PART_LOCK("1", "部分冻结"),
     SINGLE_LOCK("3", "单向冻结"),

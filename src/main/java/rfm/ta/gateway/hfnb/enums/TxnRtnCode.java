@@ -1,13 +1,13 @@
 package rfm.ta.gateway.hfnb.enums;
 
-import rfm.ta.common.enums.EnumApp;
+
 import java.util.Hashtable;
 
 /**
  * Created by XIANGYANG on 2015-7-1.
  */
 
-public enum TxnRtnCode implements EnumApp {
+public enum TxnRtnCode {
     TXN_PROCESSED("0000", "服务器接收解析成功"),
 
     MSG_ANALYSIS_ILLEGAL("1000", "报文解析错误"),

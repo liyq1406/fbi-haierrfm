@@ -43,8 +43,10 @@ public class PtenudetailAction implements Serializable {
     @PostConstruct
     public void init() {
         try {
-            this.taAccTypeMap = ptenudetailService.selectEnuItemValueToExpandValueMap("TA_ACC_TYPE");
-            this.taAccTypeList=ptenudetailService.getEnuSelectItemList("TA_ACC_TYPE",false,false);
+            this.taAccTypeMap = ptenudetailService.getTaAccTypeMap();
+            this.taAccTypeList=ptenudetailService.getTaAccTypeList();
+            this.taAccStatusMap=ptenudetailService.getTaAccStatusMap();
+            this.taAccStatusList=ptenudetailService.getTaAccStatusList();
 
         }catch (Exception e){
             logger.error("初始化失败", e);
@@ -73,6 +75,22 @@ public class PtenudetailAction implements Serializable {
 
     public void setTaAccTypeList(List<SelectItem> taAccTypeList) {
         this.taAccTypeList = taAccTypeList;
+    }
+
+    public Map<String, String> getTaAccStatusMap() {
+        return taAccStatusMap;
+    }
+
+    public void setTaAccStatusMap(Map<String, String> taAccStatusMap) {
+        this.taAccStatusMap = taAccStatusMap;
+    }
+
+    public List<SelectItem> getTaAccStatusList() {
+        return taAccStatusList;
+    }
+
+    public void setTaAccStatusList(List<SelectItem> taAccStatusList) {
+        this.taAccStatusList = taAccStatusList;
     }
     //职能字段 End
 }

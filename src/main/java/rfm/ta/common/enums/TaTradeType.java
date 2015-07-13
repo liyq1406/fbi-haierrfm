@@ -6,7 +6,7 @@ import java.util.Hashtable;
 类型;01房款收入-定金、02计划付款、03退款、04利息、05 房款划转、09其他
 
  */
-public enum TaTradeType implements EnumApp {
+public enum TaTradeType {
     TRADE_INCOME("01", "交存"),
     TRADE_PAYMENT("02", "划拨"),
     TRADE_BACK("03", "退款"),

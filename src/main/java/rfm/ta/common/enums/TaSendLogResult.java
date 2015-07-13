@@ -2,7 +2,7 @@ package rfm.ta.common.enums;
 
 import java.util.Hashtable;
 
-public enum TaSendLogResult implements EnumApp {
+public enum TaSendLogResult {
     SEND_OVER("2", "发送数据成功"),
     SEND_ERR("20", "发送数据失败"),
     QRYED("1", "查询明细成功"),

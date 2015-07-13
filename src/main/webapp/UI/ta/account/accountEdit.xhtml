@@ -40,25 +40,25 @@
 
     <ui:define name="content">
         <div style="margin:5px;" id="top">
-            <p:messages id="msgs" showDetail="true"/>
+            <p:growl id="msgs" showDetail="true"/>
             <h:form id="actqueryForm">
                 <p:panel id="query" header="【监管账户信息】查询">
                     <h:panelGrid columns="2" cellspacing="3" style="width:100%">
                         <h:panelGrid columns="6" cellspacing="3" style="width:90%"
                                      columnClasses="col-95,col-5,col-95,col-5">
                             <h:outputLabel value="*【账户类别】:" for="accType"/>
-                            <h:selectOneMenu id="accType" value="#{taAccountAction.taRsAccount.accType}">
+                            <h:selectOneMenu id="accType" value="#{taAccAction.taRsAccount.accType}">
                                 <f:selectItems value="#{ptenudetailAction.taAccTypeList}"/>
                             </h:selectOneMenu>
-                            <h:outputLabel value="*【专户账号】:" for="accId"/>
+                            <h:outputLabel value="*【账号】:" for="accId"/>
                             <h:inputText autocomplete="off" id="accId"
-                                         value="#{taAccountAction.taRsAccount.accId}">
+                                         value="#{taAccAction.taRsAccount.accId}">
                             </h:inputText>
-                            <h:outputLabel value="*【专户名称】:" for="accName"/>
-                            <h:inputText id="accName" value="#{taAccountAction.taRsAccount.accName}"/>
+                            <h:outputLabel value="*【名称】:" for="accName"/>
+                            <h:inputText id="accName" value="#{taAccAction.taRsAccount.accName}"/>
                         </h:panelGrid>
                         <p:commandButton update="msgs,pdt" style="width: 80px"
-                                         action="#{taAccountAction.onBtnQueryClick}" id="btnQuery" value="查询">
+                                         action="#{taAccAction.onBtnQueryClick}" id="btnQuery" value="查询">
                         </p:commandButton>
                     </h:panelGrid>
                 </p:panel>
@@ -73,76 +73,53 @@
 
                 <p:dataTable id="pdt" style="width:100%;"
                              dynamic="true"
-                             value="#{taAccountAction.taRsAccountList}"
+                             value="#{taAccAction.taRsAccountList}"
                              selectionMode="single"
-                             selection="#{taAccountAction.taRsAccountSeled}"
                              var="record"
                              rowKey="#{record.pkId}"
                              paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                              paginator="true" rows="15" paginatorPosition="bottom"
                              rowsPerPageTemplate="100,50,30,15,5"
                              emptyMessage="数据记录为空...">
-                    <p:column headerText="pkid" style="display:none;">
-                        <h:outputText value="#{record.pkId}"/>
-                    </p:column>
-                    <p:column headerText="statusflag" style="display:none;">
-                        <h:outputText value="#{record.statusFlag}"/>
+                    <p:column headerText="账户类别" style="text-align:left">
+                        <h:outputText value="#{ptenudetailAction.taAccTypeMap.get(record.accType)}"/>
                     </p:column>
 
-                    <p:column headerText="监管账号" style="text-align:center">
-                        <f:facet name="header">
-                            <h:outputText value="监管账号"/>
-                        </f:facet>
+                    <p:column headerText="账号" style="text-align:center">
                         <h:outputText value="#{record.accId}" style="text-align: center;"/>
                     </p:column>
 
-                    <p:column headerText="账户名称" style="text-align:center">
-                        <f:facet name="header">
-                            <h:outputText value="账户名称"/>
-                        </f:facet>
+                    <p:column headerText="名称" style="text-align:center">
                         <h:outputText value="#{record.accName}" style="text-align: right"/>
                     </p:column>
 
                     <p:column headerText="预售人名称" style="text-align:center">
-                        <f:facet name="header">
-                            <h:outputText value="预售人名称"/>
-                        </f:facet>
                         <h:outputText value="#{record.preSalePerName}" style="text-align: right"/>
                     </p:column>
 
                     <p:column headerText="预售项目名称" style="text-align:center">
-                        <f:facet name="header">
-                            <h:outputText value="预售项目名称"/>
-                        </f:facet>
                         <h:outputText value="#{record.preSaleProName}" style="text-align: right"/>
                     </p:column>
 
                     <p:column headerText="预售项目地址" style="text-align:center">
-                        <f:facet name="header">
-                            <h:outputText value="预售项目地址"/>
-                        </f:facet>
                         <h:outputText value="#{record.preSaleProAddr}" style="text-align: right"/>
                     </p:column>
 
                     <p:column headerText="监管状态" style="text-align:center">
-                        <f:facet name="header">
-                            <h:outputText value="监管状态"/>
-                        </f:facet>
-                        <h:outputText value="#{ptenudetailAction.taAccTypeMap.get(record.accType)}"/>
-                        <h:outputText value="#{flagStatusForMap.accountStatus[record.statusFlag]}"/>
+                        <h:outputText value="#{ptenudetailAction.taAccStatusMap.get(record.statusFlag)}"/>
                     </p:column>
 
                     <p:column headerText="操作" style="text-align:center">
-                        <p:commandLink  value="修改" ajax="false" action="#{taAccountAction.onClick_ListToDetail()}"
+                        <p:commandLink  value="修改" immediate="true" ajax="false"
+                                        action="#{taAccAction.onClick_ListToDetail('Upd',record.pkId)}"
+                                        rendered="#{record.statusFlag eq '1'?'false':'true'}"
                                         style="color: blue">
-                            <f:param value="#{record.pkId}" name="pkid"/>
-                            <f:param value="update" name="actionType"/>
                         </p:commandLink>
-                        <p:spacer width="15px;"/>
-                        <p:commandLink  value="删除" immediate="true" ajax="false" action="#{taAccountAction.onClick_ListToDetail()}"
+
+                        <p:commandLink  value="删除" immediate="true" ajax="false"
+                                        action="#{taAccAction.onClick_ListToDetail('Del',record.pkId)}"
+                                        rendered="#{record.statusFlag eq '1'?'false':'true'}"
                                         style="color: blue">
-                            <f:param value="#{record.pkId}" name="pkid"/>
-                            <f:param value="del" name="action"/>
                         </p:commandLink>
                     </p:column>
 

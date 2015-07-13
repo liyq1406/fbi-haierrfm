@@ -17,7 +17,6 @@ import rfm.ta.gateway.sbs.taservice.TaSbsService;
 import rfm.ta.repository.model.TaRsAccDetail;
 import rfm.ta.repository.model.TaTxnSbs;
 import rfm.ta.service.account.TaAccDetailService;
-
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -57,12 +56,12 @@ public class TaAccDetailAction implements Serializable {
     @PostConstruct
     public void init(){
         taRsAccDetailList = taAccDetailService.detailAllList();
-        System.out.println("======>" + taRsAccDetailList.get(0).getAccountCode());
+        System.out.println("======>" + taRsAccDetailList.get(0).getAccId());
     }
 
     public void onQryLocaldatatest() {
         taRsAccDetailList2 = taAccDetailService.detailAllList();
-        System.out.println("======>" + taRsAccDetailList.get(0).getAccountCode());
+        System.out.println("======>" + taRsAccDetailList.get(0).getAccId());
     }
 
     public void onQrySBSdata() {
@@ -184,10 +183,10 @@ public class TaAccDetailAction implements Serializable {
             }
             for (TaRsAccDetail taRsAccDetail:taRsAccDetailList){
                 body.append(newLineCh).append(getLeftSpaceStr(taRsAccDetail.getTradeId(),4)).append("|")
-                .append(getLeftSpaceStr(taRsAccDetail.getOriginId(), 14)).append("|")
+                .append(getLeftSpaceStr(taRsAccDetail.getBusiApplyId(), 14)).append("|")
                 .append(getLeftSpaceStr(taRsAccDetail.getInoutFlag(), 1)).append("|")
                 .append(getLeftSpaceStr(new DecimalFormat("#####0.00").format(taRsAccDetail.getTradeAmt()), 20)).append("|")
-                .append(getLeftSpaceStr(taRsAccDetail.getAccountCode(), 30)).append("|")
+                .append(getLeftSpaceStr(taRsAccDetail.getAccId(), 30)).append("|")
                 .append(getLeftSpaceStr(taRsAccDetail.getFdcSerial(), 16)).append("|")
                 .append(getLeftSpaceStr(taRsAccDetail.getBankSerial(), 30)).append("|")
                 .append(getLeftSpaceStr(taRsAccDetail.getBankBranchId(), 30)).append("|")
