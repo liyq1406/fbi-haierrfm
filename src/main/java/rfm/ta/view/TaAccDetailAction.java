@@ -156,7 +156,7 @@ public class TaAccDetailAction implements Serializable {
 
     public void onCreatFile() {
         File file;
-        String filePath = "d:";
+        String filePath = "D:/brzfdc";
         String fileName = "PF12370900"+erydat+".dat";//PF为固定字符，BB指监管银行代码（2位），CCCCCC 指城市代码（6位）YYYYMMDD为对账日期。
         String newLineCh = "\r\n";       // 换行 适用于windows系统
         StringBuffer line = new StringBuffer("");
