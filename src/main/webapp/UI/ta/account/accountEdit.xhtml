@@ -139,7 +139,7 @@
                             <f:param value="update" name="actionType"/>
                         </p:commandLink>
                         <p:spacer width="15px;"/>
-                        <p:commandLink  value="删除" immediate="true" ajax="false" action="#{taAccountAction.onClick()}"
+                        <p:commandLink  value="删除" immediate="true" ajax="false" action="#{taAccountAction.onClick_ListToDetail()}"
                                         style="color: blue">
                             <f:param value="#{record.pkId}" name="pkid"/>
                             <f:param value="del" name="action"/>

@@ -1,5 +1,6 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
                 template="/templates/ui.xhtml">
@@ -77,7 +78,7 @@
                                              rendered="#{taAccountAction.deleteable}" update="msgs,btns">
                             </p:commandButton>
                             <p:commandButton id="back" ajax="false" value="返回" immediate="true"
-                                             action="#{taAccountAction.onBack_DetailToList}"
+                                             action="#{taAccountAction.onClick_DetailToList}"
                                              style="width:80px;"/>
                         </h:panelGrid>
                     </h:panelGrid>
