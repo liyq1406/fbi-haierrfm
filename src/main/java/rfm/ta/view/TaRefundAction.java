@@ -3,7 +3,7 @@ package rfm.ta.view;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import platform.service.PtenudetailService;
-import rfm.ta.repository.model.TaRsAccDetail;
+import rfm.ta.repository.model.TaRsAccDtl;
 import rfm.ta.service.account.TaAccDetlService;
 
 import javax.annotation.PostConstruct;
@@ -29,13 +29,13 @@ public class TaRefundAction {
     @ManagedProperty(value = "#{ptenudetailService}")
     private PtenudetailService ptenudetailService;
 
-    private List<TaRsAccDetail> taRsAccDetailList;
-    private TaRsAccDetail taRsAccDetail;
+    private List<TaRsAccDtl> taRsAccDetailList;
+    private TaRsAccDtl taRsAccDetail;
     private List<SelectItem> taTradeIdList;
 
     @PostConstruct
     public void init() {
-        taRsAccDetail=new TaRsAccDetail();
+        taRsAccDetail=new TaRsAccDtl();
         taTradeIdList=ptenudetailService.getTradeIdList();
     }
 
@@ -78,7 +78,7 @@ public class TaRefundAction {
     }
 
     public String reset() {
-        this.taRsAccDetail = new TaRsAccDetail();
+        this.taRsAccDetail = new TaRsAccDtl();
         if (!taRsAccDetailList.isEmpty()) {
             taRsAccDetailList.clear();
         }
@@ -95,19 +95,19 @@ public class TaRefundAction {
         this.taAccDetlService = taAccDetlService;
     }
 
-    public List<TaRsAccDetail> getTaRsAccDetailList() {
+    public List<TaRsAccDtl> getTaRsAccDtlList() {
         return taRsAccDetailList;
     }
 
-    public void setTaRsAccDetailList(List<TaRsAccDetail> taRsAccDetailList) {
+    public void setTaRsAccDtlList(List<TaRsAccDtl> taRsAccDetailList) {
         this.taRsAccDetailList = taRsAccDetailList;
     }
 
-    public TaRsAccDetail getTaRsAccDetail() {
+    public TaRsAccDtl getTaRsAccDtl() {
         return taRsAccDetail;
     }
 
-    public void setTaRsAccDetail(TaRsAccDetail taRsAccDetail) {
+    public void setTaRsAccDtl(TaRsAccDtl taRsAccDetail) {
         this.taRsAccDetail = taRsAccDetail;
     }
 

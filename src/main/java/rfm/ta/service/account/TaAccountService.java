@@ -7,9 +7,9 @@ import platform.service.PtenudetailService;
 import platform.service.SystemService;
 import pub.platform.security.OperatorManager;
 import pub.platform.utils.ToolUtil;
-import rfm.ta.repository.dao.TaRsAccountMapper;
-import rfm.ta.repository.model.TaRsAccount;
-import rfm.ta.repository.model.TaRsAccountExample;
+import rfm.ta.repository.dao.TaRsAccMapper;
+import rfm.ta.repository.model.TaRsAcc;
+import rfm.ta.repository.model.TaRsAccExample;
 
 import java.util.List;
 
@@ -23,34 +23,34 @@ import java.util.List;
 @Service
 public class TaAccountService {
     @Autowired
-    private TaRsAccountMapper accountMapper;
+    private TaRsAccMapper accountMapper;
     @Autowired
     private PtenudetailService ptenudetailService;
 
-    public TaRsAccount selectedRecordByPkid(String pkId) {
+    public TaRsAcc selectedRecordByPkid(String pkId) {
         return accountMapper.selectByPrimaryKey(pkId);
     }
 
-    public TaRsAccount selectCanRecvAccountByNo(String accountNo) {
-        TaRsAccountExample accountExample = new TaRsAccountExample();
+    public TaRsAcc selectCanRecvAccountByNo(String accountNo) {
+        TaRsAccExample accountExample = new TaRsAccExample();
         accountExample.createCriteria().
                 andDeletedFlagEqualTo("0").
                 andStatusFlagEqualTo(ptenudetailService.getEnuSelectItem("TA_ACC_STATUS", 1).getValue().toString())
         .andAccIdEqualTo(accountNo);
-        List<TaRsAccount> accountList = accountMapper.selectByExample(accountExample);
+        List<TaRsAcc> accountList = accountMapper.selectByExample(accountExample);
         if (accountList.isEmpty()) {
             throw new RuntimeException("没有查询到已监管账户！！");
         }
         return accountList.get(0);
     }
 
-    public TaRsAccount selectCanPayAccountByNo(String accountNo) {
-        TaRsAccountExample accountExample = new TaRsAccountExample();
+    public TaRsAcc selectCanPayAccountByNo(String accountNo) {
+        TaRsAccExample accountExample = new TaRsAccExample();
         accountExample.createCriteria().
                 andDeletedFlagEqualTo("0").
                 andStatusFlagEqualTo(ptenudetailService.getEnuSelectItem("TA_ACC_STATUS", 1).getValue().toString()).
                 andAccIdEqualTo(accountNo);
-        List<TaRsAccount> accountList = accountMapper.selectByExample(accountExample);
+        List<TaRsAcc> accountList = accountMapper.selectByExample(accountExample);
         if (accountList.isEmpty()) {
             throw new RuntimeException("没有查询到未限制的已监管账户！请确认该账户已开启监管并未限制付款！");
         }
@@ -63,8 +63,8 @@ public class TaAccountService {
      * @param account
      * @return
      */
-    public boolean isExistInDb(TaRsAccount account) {
-        TaRsAccountExample example = new TaRsAccountExample();
+    public boolean isExistInDb(TaRsAcc account) {
+        TaRsAccExample example = new TaRsAccExample();
         example.createCriteria().andAccIdEqualTo(account.getAccId());
         return accountMapper.countByExample(example) >= 1;
     }
@@ -75,8 +75,8 @@ public class TaAccountService {
      * @param
      * @return
      */
-    public boolean isModifiable(TaRsAccount act) {
-        TaRsAccount actt = accountMapper.selectByPrimaryKey(act.getPkId());
+    public boolean isModifiable(TaRsAcc act) {
+        TaRsAcc actt = accountMapper.selectByPrimaryKey(act.getPkId());
         if (!act.getRecVersion().equals(actt.getRecVersion())) {
             return false;
         }
@@ -88,25 +88,25 @@ public class TaAccountService {
      *
      * @return
      */
-    public List<TaRsAccount> qryAllRecords() {
-        TaRsAccountExample example = new TaRsAccountExample();
+    public List<TaRsAcc> qryAllRecords() {
+        TaRsAccExample example = new TaRsAccExample();
         example.createCriteria().andDeletedFlagEqualTo("0");
         return accountMapper.selectByExample(example);
     }
 
-    public TaRsAccount qryRecord(String pkid){
-        TaRsAccountExample example = new TaRsAccountExample();
+    public TaRsAcc qryRecord(String pkid){
+        TaRsAccExample example = new TaRsAccExample();
         example.createCriteria().andDeletedFlagEqualTo("0");
         return accountMapper.selectByPrimaryKey(pkid);
     }
-    public List<TaRsAccount> qryAllLockRecords() {
-        TaRsAccountExample example = new TaRsAccountExample();
+    public List<TaRsAcc> qryAllLockRecords() {
+        TaRsAccExample example = new TaRsAccExample();
         example.createCriteria().andDeletedFlagEqualTo("0");
         return accountMapper.selectByExample(example);
     }
 
-    public List<TaRsAccount> qryAllMonitRecords() {
-        TaRsAccountExample example = new TaRsAccountExample();
+    public List<TaRsAcc> qryAllMonitRecords() {
+        TaRsAccExample example = new TaRsAccExample();
         example.createCriteria().
                 andDeletedFlagEqualTo("0").
                 andStatusFlagEqualTo(ptenudetailService.getEnuSelectItem("TA_ACC_STATUS", 1).getValue().toString());
@@ -116,10 +116,10 @@ public class TaAccountService {
     /**
      * 查询
      */
-    public List<TaRsAccount> selectedRecordsByCondition(String strAccTypePara, String strAccIdPara, String strAccNamePara) {
-        TaRsAccountExample example = new TaRsAccountExample();
+    public List<TaRsAcc> selectedRecordsByCondition(String strAccTypePara, String strAccIdPara, String strAccNamePara) {
+        TaRsAccExample example = new TaRsAccExample();
         example.clear();
-        TaRsAccountExample.Criteria rsActCrit = example.createCriteria();
+        TaRsAccExample.Criteria rsActCrit = example.createCriteria();
         rsActCrit.andDeletedFlagEqualTo("0");
         if (ToolUtil.getStrIgnoreNull(strAccTypePara).trim().length()!=0) {
             rsActCrit.andAccTypeEqualTo(strAccTypePara);
@@ -138,7 +138,7 @@ public class TaAccountService {
      *
      * @param account
      */
-    public void insertRecord(TaRsAccount account) {
+    public void insertRecord(TaRsAcc account) {
         if (isExistInDb(account)) {
             throw new RuntimeException("该账号已存在，请重新录入！");
         } else {
@@ -155,7 +155,7 @@ public class TaAccountService {
     /**
      * 通过主键更新
      */
-    public int updateRecord(TaRsAccount account) {
+    public int updateRecord(TaRsAcc account) {
         if (isModifiable(account)) {
             try {
                 OperatorManager om = SystemService.getOperatorManager();
@@ -177,11 +177,11 @@ public class TaAccountService {
      * 利息入账更新余额
      */
 
-    public int updateRecordBalance(TaRsAccount qdRsAccount) {
-        TaRsAccountExample example = new TaRsAccountExample();
+    public int updateRecordBalance(TaRsAcc qdRsAccount) {
+        TaRsAccExample example = new TaRsAccExample();
         example.clear();
         example.createCriteria().andAccIdEqualTo(qdRsAccount.getAccId());
-        TaRsAccount tmpRact = accountMapper.selectByExample(example).get(0);
+        TaRsAcc tmpRact = accountMapper.selectByExample(example).get(0);
         qdRsAccount.setPkId(tmpRact.getPkId());
         qdRsAccount.setRecVersion(tmpRact.getRecVersion());
         return updateRecord(qdRsAccount);

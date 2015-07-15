@@ -43,15 +43,14 @@
             <h:form id="form">
                 <p:messages id="msgs" showDetail="true"/>
                 <p:tabView>
-                    <p:tab title=": : 日终对账明细 : :">
+                    <p:tab title="【日终对账明细】">
                         <p:menubar>
                             <p:menuitem type="push" value="获取sbs数据" icon="ui-icon ui-icon-plus"
-                                        action="#{taAccDetailAction.onQryLocaldatatest}" update="sbspdt,:form:msgs"
+                                        action="#{taAccDetailAction.onQryLocaldatatest}" update="pdt,:form:msgs"
                                         ajax="true"/>
-                            <p:menuitem type="push" value="日终对账" icon="ui-icon ui-icon-copy"
-                                        action="#{taAccDetailAction.onReconciliation}" update="pdt,sbspdt,:form:msgs"
+                            <p:menuitem type="push" value="余额对账" icon="ui-icon ui-icon-copy"
+                                        action="#{taAccDetailAction.onReconciliation}" update="pdt,:form:msgs"
                                         ajax="true"/>
-
                         </p:menubar>
                         <p:ajaxStatus style="width:16px;height:16px;">
                             <f:facet name="start">
@@ -63,50 +62,24 @@
                         </p:ajaxStatus>
                         <p:panelGrid id="pdts" columns="2">
                             <p:dataTable id="pdt"  var="record"
-                                         value="#{taAccDetailAction.taRsAccDetailList}"
+                                         value="#{taAccDetailAction.taRsAccDtlList}"
                                          paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                          paginator="true" rows="15" paginatorPosition="bottom"
                                          rowsPerPageTemplate="100,50,30,15,5"
                                          emptyMessage="数据记录为空...">
 
                                 <p:column headerText="监管账号" style="text-align:center">
-                                    <h:outputText value="#{record.accountCode}"/>
+                                    <h:outputText value="#{record.rtnAccId}"/>
                                 </p:column>
-                                <p:column headerText="对方账号" style="text-align:center">
-                                    <h:outputText value="#{record.toAccountCode}"/>
-                                </p:column>
-                                <p:column headerText="对方账户名称" style="text-align:center">
-                                    <h:outputText value="#{record.toAccountName}"/>
-                                </p:column>
-                                <p:column headerText="交易金额">
-                                    <h:outputText value="#{record.tradeAmt}" style="float: right">
+                                <p:column headerText="账户余额">
+                                    <h:outputText value="#{record.rtnTradeAmt}" style="float: right">
                                         <f:convertNumber type="number" pattern="#,###,###,###,##0.00"/>
                                     </h:outputText>
                                 </p:column>
-                            </p:dataTable>
-                            <p:dataTable id="sbspdt"  var="record"
-                                         value="#{taAccDetailAction.taRsAccDetailList2}"
-                                         paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                                         paginator="true" rows="15" paginatorPosition="bottom"
-                                         rowsPerPageTemplate="100,50,30,15,5"
-                                         emptyMessage="数据记录为空...">
-
-                                <p:column headerText="监管账号" style="text-align:center">
-                                    <h:outputText value="#{record.accountCode}"/>
-                                </p:column>
-                                <p:column headerText="对方账号" style="text-align:center">
-                                    <h:outputText value="#{record.toAccountCode}"/>
-                                </p:column>
-                                <p:column headerText="对方账户名称" style="text-align:center">
-                                    <h:outputText value="#{record.toAccountName}"/>
-                                </p:column>
-                                <p:column headerText="交易金额">
-                                    <h:outputText value="#{record.tradeAmt}" style="float: right">
-                                        <f:convertNumber type="number" pattern="#,###,###,###,##0.00"/>
-                                    </h:outputText>
+                                <p:column headerText="日期" style="text-align:center">
+                                    <h:outputText value="#{record.tradeDate}"/>
                                 </p:column>
                             </p:dataTable>
-
                         </p:panelGrid>
                     </p:tab>
                 </p:tabView>

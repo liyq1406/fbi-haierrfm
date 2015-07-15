@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import platform.common.utils.MessageUtil;
 import rfm.ta.gateway.sbs.helper.BeanHelper;
 import rfm.ta.gateway.sbs.taservice.TaSbsService;
-import rfm.ta.repository.model.TaRsAccount;
+import rfm.ta.repository.model.TaRsAcc;
 import rfm.ta.service.account.TaAccountService;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -33,11 +33,11 @@ public class TaAccountAction {
     @ManagedProperty(value = "#{taSbsTxnService}")
     private TaSbsService taSbsTxnService;
 
-    private List<TaRsAccount> taRsAccountList;
+    private List<TaRsAcc> taRsAccountList;
     private String confirmAccountNo;
 
-    private TaRsAccount taRsAccount;
-    private TaRsAccount taRsAccountSeled;
+    private TaRsAcc taRsAccount;
+    private TaRsAcc taRsAccountSeled;
     private String rtnFlag;
     private String action;
     private String pkid;
@@ -59,7 +59,7 @@ public class TaAccountAction {
                 deleteable = true;
             }
         }else{
-            taRsAccount=new TaRsAccount();
+            taRsAccount=new TaRsAcc();
         }
     }
 
@@ -67,7 +67,7 @@ public class TaAccountAction {
         taRsAccountList = taAccountService.qryAllRecords();
     }
 
-    private void querySelectedRecords(TaRsAccount act) {
+    private void querySelectedRecords(TaRsAcc act) {
         taRsAccountList = taAccountService.selectedRecordsByCondition(act.getAccType(), act.getAccId(), act.getAccName());
     }
 
@@ -76,7 +76,7 @@ public class TaAccountAction {
     }
 
     public String reset() {
-        this.taRsAccount = new TaRsAccount();
+        this.taRsAccount = new TaRsAcc();
         if (!taRsAccountList.isEmpty()) {
             taRsAccountList.clear();
         }
@@ -98,7 +98,7 @@ public class TaAccountAction {
         }
         MessageUtil.addInfo("新增数据完成。");
         querySelectedRecords();
-        this.taRsAccount = new TaRsAccount();
+        this.taRsAccount = new TaRsAcc();
         confirmAccountNo = "";
         return null;
     }
@@ -118,7 +118,7 @@ public class TaAccountAction {
         }
         MessageUtil.addInfo("修改数据完成。");
         querySelectedRecords();
-        this.taRsAccount = new TaRsAccount();
+        this.taRsAccount = new TaRsAcc();
         confirmAccountNo = "";
         return null;
     }
@@ -164,11 +164,11 @@ public class TaAccountAction {
         this.confirmAccountNo = confirmAccountNo;
     }
 
-    public List<TaRsAccount> getTaRsAccountList() {
+    public List<TaRsAcc> getTaRsAccList() {
         return taRsAccountList;
     }
 
-    public void setTaRsAccountList(List<TaRsAccount> taRsAccountList) {
+    public void setTaRsAccList(List<TaRsAcc> taRsAccountList) {
         this.taRsAccountList = taRsAccountList;
     }
 
@@ -196,11 +196,11 @@ public class TaAccountAction {
         this.action = action;
     }
 
-    public TaRsAccount getTaRsAccount() {
+    public TaRsAcc getTaRsAcc() {
         return taRsAccount;
     }
 
-    public void setTaRsAccount(TaRsAccount taRsAccount) {
+    public void setTaRsAcc(TaRsAcc taRsAccount) {
         this.taRsAccount = taRsAccount;
     }
 
@@ -220,11 +220,11 @@ public class TaAccountAction {
         this.deleteable = deleteable;
     }
 
-    public TaRsAccount getTaRsAccountSeled() {
+    public TaRsAcc getTaRsAccSeled() {
         return taRsAccountSeled;
     }
 
-    public void setTaRsAccountSeled(TaRsAccount taRsAccountSeled) {
+    public void setTaRsAccSeled(TaRsAcc taRsAccountSeled) {
         this.taRsAccountSeled = taRsAccountSeled;
     }
 }

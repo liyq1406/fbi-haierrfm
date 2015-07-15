@@ -5,11 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import platform.service.SystemService;
 import pub.platform.security.OperatorManager;
-import rfm.ta.repository.dao.TaRsAccDetailMapper;
+import pub.platform.utils.ToolUtil;
+import rfm.ta.repository.dao.TaRsAccDtlMapper;
 import rfm.ta.repository.dao.com.TaCommonMapper;
-import rfm.ta.repository.model.TaRsAccDetail;
-import rfm.ta.repository.model.TaRsAccDetailExample;
-import rfm.ta.repository.model.TaRsAccount;
+import rfm.ta.repository.model.TaRsAccDtl;
+import rfm.ta.repository.model.TaRsAccDtlExample;
+import rfm.ta.repository.model.TaRsAcc;
 
 import java.util.Date;
 import java.util.List;
@@ -24,21 +25,21 @@ import java.util.List;
 @Service
 public class TaAccountDetlService {
     @Autowired
-    private TaRsAccDetailMapper taRsAccDetailMapper;
+    private TaRsAccDtlMapper taRsAccDetailMapper;
     @Autowired
     private TaCommonMapper commonMapper;
 
     /**
      * 账户明细查询*/
-    public List<TaRsAccDetail> selectedRecordsByTradeDate(String acctname,String acctno,String beginDate, String endDate) {
-        TaRsAccDetailExample example = new TaRsAccDetailExample();
+    public List<TaRsAccDtl> selectedRecordsByTradeDate(String acctname,String acctno,String beginDate, String endDate) {
+        TaRsAccDtlExample example = new TaRsAccDtlExample();
         example.clear();
-        TaRsAccDetailExample.Criteria criteria = example.createCriteria();
+        TaRsAccDtlExample.Criteria criteria = example.createCriteria();
         if (acctname !=null && !StringUtils.isEmpty(acctname.trim())) {
-            criteria.andAccNameLike("%" + acctname + "%");
+            criteria.andRtnAccNameLike("%" + acctname + "%");
         }
         if (acctno != null && !StringUtils.isEmpty(acctno.trim())) {
-            criteria.andAccIdEqualTo(acctno);
+            criteria.andRtnAccIdEqualTo(acctno);
         }
         if (beginDate != null && endDate != null) {
             criteria.andTradeDateBetween(beginDate, endDate);
@@ -50,76 +51,61 @@ public class TaAccountDetlService {
 
     /**
      * 插入*/
-    public void insertSelectedRecord(TaRsAccDetail taRsAccDetail) {
+    public void insertSelectedRecord(TaRsAccDtl taRsAccDetail) {
         OperatorManager om = SystemService.getOperatorManager();
         taRsAccDetail.setCreatedBy(om.getOperatorId());
-        taRsAccDetail.setCreatedDate(new Date());
+        taRsAccDetail.setCreatedTime(ToolUtil.getStrLastUpdTime());
         taRsAccDetail.setLastUpdBy(om.getOperatorId());
-        taRsAccDetail.setLastUpdDate(new Date());
-        taRsAccDetail.setFdcSerial(commonMapper.selectMaxAccDetailSerial());
-        taRsAccDetail.setBankSerial(taRsAccDetail.getFdcSerial());
+        taRsAccDetail.setLastUpdTime(ToolUtil.getStrLastUpdTime());
+        /*taRsAccDetail.setFdcSerial(commonMapper.selectMaxAccDetailSerial());
+        taRsAccDetail.setBankSerial(taRsAccDetail.getFdcSerial());*/
         taRsAccDetailMapper.insertSelective(taRsAccDetail);
     }
 
     /**
      * 未发送前数据(包括退回)*/
-    public List<TaRsAccDetail> selectedRecordsForChk(String tradeType, List<String> statusflags) {
-        TaRsAccDetailExample example = new TaRsAccDetailExample();
+    public List<TaRsAccDtl> selectedRecordsForChk(String tradeType, List<String> statusflags) {
+        TaRsAccDtlExample example = new TaRsAccDtlExample();
         example.clear();
-        TaRsAccDetailExample.Criteria criteria = example.createCriteria();
-        if (statusflags != null && statusflags.size()>0) {
-            criteria.andStatusFlagIn(statusflags);
-        }
+        TaRsAccDtlExample.Criteria criteria = example.createCriteria();
         criteria.andDeletedFlagEqualTo("0");
         example.setOrderByClause("account_code,local_serial");
         return taRsAccDetailMapper.selectByExample(example);
     }
 
-    public List<TaRsAccDetail> selectedRecordsForSend(String tradeType,String statusflag,String sendflag) {
-        TaRsAccDetailExample example = new TaRsAccDetailExample();
+    public List<TaRsAccDtl> selectedRecordsForSend(String tradeType,String statusflag,String sendflag) {
+        TaRsAccDtlExample example = new TaRsAccDtlExample();
         example.clear();
-        TaRsAccDetailExample.Criteria criteria = example.createCriteria();
-        if (statusflag != null && !StringUtils.isEmpty(tradeType.trim())) {
-            criteria.andStatusFlagEqualTo(statusflag);
-        }
+        TaRsAccDtlExample.Criteria criteria = example.createCriteria();
         example.setOrderByClause("account_code,local_serial");
         return taRsAccDetailMapper.selectByExample(example);
     }
 
-    public TaRsAccDetail selectedByPK(String pkid) {
+    public TaRsAccDtl selectedByPK(String pkid) {
         return taRsAccDetailMapper.selectByPrimaryKey(pkid);
     }
 
-    public boolean isChecked(TaRsAccDetail taRsAccDetail) {
-        String orgn_statusflag = taRsAccDetailMapper.selectByPrimaryKey(taRsAccDetail.getPkId()).getStatusFlag();
-        if (orgn_statusflag.equalsIgnoreCase(taRsAccDetail.getStatusFlag())) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public int updateSelectedRecord(TaRsAccDetail taRsAccDetail) {
+    public int updateSelectedRecord(TaRsAccDtl taRsAccDetail) {
         OperatorManager om = SystemService.getOperatorManager();
         taRsAccDetail.setLastUpdBy(om.getOperatorId());
-        taRsAccDetail.setLastUpdDate(new Date());
+        taRsAccDetail.setLastUpdTime(ToolUtil.getStrLastUpdTime());
         return taRsAccDetailMapper.updateByPrimaryKeySelective(taRsAccDetail);
     }
 
     /**
      * 入账更新*/
-    public int updateSelectedRecordBook(TaRsAccDetail taRsAccDetail,TaRsAccount taRsAccount) {
+    public int updateSelectedRecordBook(TaRsAccDtl taRsAccDetail,TaRsAcc taRsAccount) {
         OperatorManager om = SystemService.getOperatorManager();
         taRsAccDetail.setLastUpdBy(om.getOperatorId());
-        taRsAccDetail.setLastUpdDate(new Date());
+        taRsAccDetail.setLastUpdTime(ToolUtil.getStrLastUpdTime());
         return taRsAccDetailMapper.updateByPrimaryKeySelective(taRsAccDetail);
     }
 
-    public TaRsAccDetailMapper getTaRsAccDetailMapper() {
+    public TaRsAccDtlMapper getTaRsAccDtlMapper() {
         return taRsAccDetailMapper;
     }
 
-    public void setTaRsAccDetailMapper(TaRsAccDetailMapper taRsAccDetailMapper) {
+    public void setTaRsAccDtlMapper(TaRsAccDtlMapper taRsAccDetailMapper) {
         this.taRsAccDetailMapper = taRsAccDetailMapper;
     }
 }

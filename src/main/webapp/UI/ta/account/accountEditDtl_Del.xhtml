@@ -50,40 +50,40 @@
                             <h:inputText id="accType"
                                          readonly="true"
                                          style="background-color:gainsboro;"
-                                         value="#{ptenudetailAction.taAccTypeMap.get(taAccAction.taRsAccount.accType)}">
+                                         value="#{ptenudetailAction.taAccTypeMap.get(taAccAction.taRsAcc.accType)}">
                             </h:inputText>
 
                             <h:outputLabel value="*【账号】:" for="accId"/>
                             <h:inputText autocomplete="off" id="accId"
                                          readonly="true"
                                          style="background-color:gainsboro;"
-                                         value="#{taAccAction.taRsAccount.accId}">
+                                         value="#{taAccAction.taRsAcc.accId}">
                             </h:inputText>
 
                             <h:outputLabel value="*【申请编号】:" for="originId"/>
                             <h:inputText id="originId"
                                          readonly="true"
                                          style="background-color:gainsboro;"
-                                         value="#{taAccAction.taRsAccount.busiApplyId}"/>
+                                         value="#{taAccAction.taRsAcc.busiApplyId}"/>
 
                             <h:outputLabel value="*【名称】:" for="accName"/>
                             <h:inputText id="accName"
                                          readonly="true"
                                          style="background-color:gainsboro;"
-                                         value="#{taAccAction.taRsAccount.accName}"/>
+                                         value="#{taAccAction.taRsAcc.accName}"/>
 
                             <h:outputLabel value="*【监管状态】:" for="statusFlag"/>
                             <h:inputText id="statusFlag"
                                          readonly="true"
                                          style="background-color:gainsboro;"
-                                         value="#{ptenudetailAction.taAccStatusMap.get(taAccAction.taRsAccount.statusFlag)}"/>
+                                         value="#{ptenudetailAction.taAccStatusMap.get(taAccAction.taRsAcc.statusFlag)}"/>
                         </h:panelGrid>
                         <h:panelGrid id="btns" columns="1" style="text-align:center;">
                             <p:commandButton style="width:80px;" value="确认删除"
                                              action="#{taAccAction.onDel}" ajax="true" update="msgs">
                             </p:commandButton>
                             <p:commandButton id="back" ajax="false" value="返回" immediate="true"
-                                             action="#{taAccAction.onClick_DetailToList(taAccAction.taRsAccount.pkId)}"
+                                             action="#{taAccAction.onClick_DetailToList(taAccAction.taRsAcc.pkId)}"
                                              style="width:80px;"/>
                         </h:panelGrid>
                     </h:panelGrid>

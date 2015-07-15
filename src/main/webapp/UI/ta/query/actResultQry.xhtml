@@ -26,7 +26,7 @@
                             <h:outputLabel value="*【业务编号】:" for="busiApplyId"/>
                             <h:inputText autocomplete="off" id="busiApplyId"
                                          required="true" requiredMessage="必须输入业务编号！"
-                                         value="#{taActRsltQryAction.taRsAccDetail.busiApplyId}">
+                                         value="#{taActRsltQryAction.taActRsltQryModelShow.busiApplyId}">
                             </h:inputText>
                         </h:panelGrid>
                         <p:commandButton update="msgs,pdt" style="width: 80px"
@@ -46,7 +46,7 @@
 
                 <p:dataTable id="pdt" style="width:100%;"
                              dynamic="true"
-                             value="#{taActRsltQryAction.taRsAccDetailList}"
+                             value="#{taActRsltQryAction.taActRsltQryModelShowList}"
                              selectionMode="single"
                              var="record"
                              rowKey="#{record.pkId}"
@@ -68,57 +68,33 @@
                         <h:outputText value="#{record.cityId}" style="text-align: right"/>
                     </p:column>
 
-                    <p:column headerText="划拨申请编号" style="width: 80px;text-align:center">
+                    <p:column headerText="业务编号" style="width: 80px;text-align:center">
                         <h:outputText value="#{record.busiApplyId}" style="text-align: right"/>
                     </p:column>
 
-                    <p:column headerText="划拨密码" style="width: 80px;text-align:center">
-                        <h:outputText value="#{record.tradePwd}" style="text-align: right"/>
-                    </p:column>
-
-                    <p:column headerText="验证流水" style="width: 80px;text-align:center">
-                        <h:outputText value="#{record.bankSerial}"/>
-                    </p:column>
-                    <p:column headerText="验证日期" style="width: 80px;text-align:center">
-                        <h:outputText value="#{record.tradeDate}" style="text-align: right"/>
-                    </p:column>
-                    <p:column headerText="验证网点" style="width: 80px;text-align:center">
+                    <p:column headerText="查询网点" style="width: 80px;text-align:center">
                         <h:outputText value="#{record.bankBranchId}" style="text-align: right"/>
                     </p:column>
-                    <p:column headerText="验证人员" style="width: 80px;text-align:center">
-                        <h:outputText value="#{record.bankOperId}" style="text-align: right"/>
+
+                    <p:column headerText="查询人员" style="width: 80px;text-align:center">
+                        <h:outputText value="#{record.bankOperId}"/>
                     </p:column>
                     <p:column headerText="发起方" style="width: 80px;text-align:center">
                         <h:outputText value="#{record.initiator}" style="text-align: right"/>
                     </p:column>
-                    <p:column headerText="结果" style="width: 80px;text-align:center">
+                    <p:column headerText="返回结果代码" style="width: 80px;text-align:center">
                         <h:outputText value="#{record.returnId}" style="text-align: right"/>
                     </p:column>
-                    <p:column headerText="监管账号" style="width: 80px;text-align:center">
-                        <h:outputText value="#{record.accId}" style="text-align: right"/>
+                    <p:column headerText="记账结果" style="width: 80px;text-align:center">
+                        <h:outputText value="#{record.actRslt}" style="text-align: right"/>
                     </p:column>
-                    <p:column headerText="监管账户名" style="width: 80px;text-align:center">
-                        <h:outputText value="#{record.accName}" style="text-align: right"/>
+                    <p:column headerText="预售资金监管平台记账流水" style="width: 80px;text-align:center">
+                        <h:outputText value="#{record.fdcActSerial}" style="text-align: right"/>
                     </p:column>
-                    <p:column headerText="划拨金额" style="width: 80px;text-align:center">
-                        <h:outputText value="#{record.tradeAmt}" style="text-align: right"/>
+                    <p:column headerText="监管银行记账流水" style="width: 80px;text-align:center">
+                        <h:outputText value="#{record.bankSerial}" style="text-align: right"/>
                     </p:column>
-                    <p:column headerText="收款银行" style="width: 80px;text-align:center">
-                        <h:outputText value="#{record.toHsBankName}" style="text-align: right"/>
-                    </p:column>
-                    <p:column headerText="收款单位账号" style="width: 80px;text-align:center">
-                        <h:outputText value="#{record.toAccId}" style="text-align: right"/>
-                    </p:column>
-                    <p:column headerText="收款单位户名" style="width: 80px;text-align:center">
-                        <h:outputText value="#{record.toAccName}" style="text-align: right"/>
-                    </p:column>
-                    <p:column headerText="项目名称" style="width: 80px;text-align:center">
-                        <h:outputText value="#{record.progName}" style="text-align: right"/>
-                    </p:column>
-                    <p:column headerText="开发企业名称" style="width: 80px;text-align:center">
-                        <h:outputText value="#{record.devlopCompName}" style="text-align: right"/>
-                    </p:column>
-                    <p:column headerText="预售资金监管平台流水" style="width: 160px;text-align:center">
+                    <p:column headerText="预售资金监管平台流水" style="width: 80px;text-align:center">
                         <h:outputText value="#{record.fdcSerial}" style="text-align: right"/>
                     </p:column>
                     <p:column headerText="描述" style="width: 80px;text-align:center">

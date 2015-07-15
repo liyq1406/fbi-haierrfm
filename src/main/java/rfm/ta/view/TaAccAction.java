@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import platform.common.utils.MessageUtil;
 import platform.service.PtenudetailService;
 import rfm.ta.gateway.sbs.taservice.TaSbsService;
-import rfm.ta.repository.model.TaRsAccount;
+import rfm.ta.repository.model.TaRsAcc;
 import rfm.ta.service.account.TaAccService;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -34,10 +34,10 @@ public class TaAccAction {
     @ManagedProperty(value = "#{ptenudetailService}")
     private PtenudetailService ptenudetailService;
 
-    private List<TaRsAccount> taRsAccountList;
+    private List<TaRsAcc> taRsAccList;
     private String confirmAccountNo;
 
-    private TaRsAccount taRsAccount;
+    private TaRsAcc taRsAcc;
 
     @PostConstruct
     public void init() {
@@ -46,27 +46,27 @@ public class TaAccAction {
         String strPkidTemp = params.get("pkid");
         // 一下这样写对于初始化后是否即可查询没有用，因为菜单调用传不过参数来，如果平台换了，是可以起作用的。
         if (strActionTypeTemp != null) {
-            taRsAccount = taAccService.qryRecord(strPkidTemp);
+            taRsAcc = taAccService.qryRecord(strPkidTemp);
             if("Qry".equals(strActionTypeTemp)) {
 
             }else{
-                taRsAccountList = taAccService.qryAllRecords();
+                taRsAccList = taAccService.qryAllRecords();
             }
         }else{
-            taRsAccount=new TaRsAccount();
-            taRsAccountList = taAccService.qryAllRecords();
+            taRsAcc=new TaRsAcc();
+            taRsAccList = taAccService.qryAllRecords();
         }
     }
 
     /*画面查询用*/
     public void onBtnQueryClick() {
-        taRsAccountList = taAccService.selectedRecordsByCondition(taRsAccount.getAccType(), taRsAccount.getAccId(), taRsAccount.getAccName());
+        taRsAccList = taAccService.selectedRecordsByCondition(taRsAcc.getAccType(), taRsAcc.getAccId(), taRsAcc.getAccName());
     }
 
     public String reset() {
-        this.taRsAccount = new TaRsAccount();
-        if (!taRsAccountList.isEmpty()) {
-            taRsAccountList.clear();
+        this.taRsAcc = new TaRsAcc();
+        if (!taRsAccList.isEmpty()) {
+            taRsAccList.clear();
         }
         return null;
     }
@@ -74,20 +74,20 @@ public class TaAccAction {
     /*登记画面用*/
     public String onAdd() {
         try {
-            if (!confirmAccountNo.equalsIgnoreCase(taRsAccount.getAccId())) {
+            if (!confirmAccountNo.equalsIgnoreCase(taRsAcc.getAccId())) {
                 MessageUtil.addError("两次输入的监管账户号不一致！");
                 return null;
             }
             // 初始帐户余额均为可用
-            taAccService.insertRecord(taRsAccount);
+            taAccService.insertRecord(taRsAcc);
         } catch (Exception e) {
             logger.error("新增数据失败，", e);
             MessageUtil.addError(e.getMessage());
             return null;
         }
         MessageUtil.addInfo("新增数据完成。");
-        taRsAccountList = taAccService.qryAllRecords();
-        this.taRsAccount = new TaRsAccount();
+        taRsAccList = taAccService.qryAllRecords();
+        this.taRsAcc = new TaRsAcc();
         confirmAccountNo = "";
         return null;
     }
@@ -95,7 +95,7 @@ public class TaAccAction {
     /*管理明细画面用*/
     public String onUpd(){
         try {
-            taAccService.updateRecord(taRsAccount);
+            taAccService.updateRecord(taRsAcc);
         } catch (Exception e) {
             logger.error("修改数据失败，", e);
             MessageUtil.addError(e.getMessage());
@@ -107,7 +107,7 @@ public class TaAccAction {
     }
     public String onDel(){
         try {
-            taAccService.deleteRecord(taRsAccount);
+            taAccService.deleteRecord(taRsAcc);
         } catch (Exception e) {
             logger.error("删除数据失败，", e);
             MessageUtil.addError(e.getMessage());
@@ -131,12 +131,12 @@ public class TaAccAction {
     }
 
     /*启用*/
-    public String onClick_Enable(TaRsAccount taRsAccountPara){
+    public String onClick_Enable(TaRsAcc taRsAccPara){
         try {
             List<SelectItem> taAccStatusListTemp=ptenudetailService.getTaAccStatusList();
             // 枚举变量在数据库中，启用标志
-            taRsAccountPara.setStatusFlag(taAccStatusListTemp.get(1).getValue().toString());
-            taAccService.updateRecord(taRsAccountPara);
+            taRsAccPara.setStatusFlag(taAccStatusListTemp.get(1).getValue().toString());
+            taAccService.updateRecord(taRsAccPara);
         } catch (Exception e) {
             logger.error("启用数据失败，", e);
             MessageUtil.addError(e.getMessage());
@@ -147,12 +147,12 @@ public class TaAccAction {
         return null;
     }
     /*撤销*/
-    public String onClick_Unable(TaRsAccount taRsAccountPara){
+    public String onClick_Unable(TaRsAcc taRsAccPara){
         try {
             List<SelectItem> taAccStatusListTemp=ptenudetailService.getTaAccStatusList();
             // 枚举变量在数据库中，撤销标志
-            taRsAccountPara.setStatusFlag(taAccStatusListTemp.get(2).getValue().toString());
-            taAccService.updateRecord(taRsAccountPara);
+            taRsAccPara.setStatusFlag(taAccStatusListTemp.get(2).getValue().toString());
+            taAccService.updateRecord(taRsAccPara);
         } catch (Exception e) {
             logger.error("启用数据失败，", e);
             MessageUtil.addError(e.getMessage());
@@ -188,20 +188,20 @@ public class TaAccAction {
         this.confirmAccountNo = confirmAccountNo;
     }
 
-    public List<TaRsAccount> getTaRsAccountList() {
-        return taRsAccountList;
+    public List<TaRsAcc> getTaRsAccList() {
+        return taRsAccList;
     }
 
-    public void setTaRsAccountList(List<TaRsAccount> taRsAccountList) {
-        this.taRsAccountList = taRsAccountList;
+    public void setTaRsAccList(List<TaRsAcc> taRsAccList) {
+        this.taRsAccList = taRsAccList;
     }
 
-    public TaRsAccount getTaRsAccount() {
-        return taRsAccount;
+    public TaRsAcc getTaRsAcc() {
+        return taRsAcc;
     }
 
-    public void setTaRsAccount(TaRsAccount taRsAccount) {
-        this.taRsAccount = taRsAccount;
+    public void setTaRsAcc(TaRsAcc taRsAcc) {
+        this.taRsAcc = taRsAcc;
     }
 
     public PtenudetailService getPtenudetailService() {

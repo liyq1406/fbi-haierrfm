@@ -47,7 +47,7 @@
                         <h:panelGrid columns="4" cellspacing="3" style="width:90%"
                                      columnClasses="col-95,col-5,col-95,col-5">
                             <h:outputLabel value="*【账户类别】:" for="accType"/>
-                            <h:selectOneMenu id="accType" value="#{taAccAction.taRsAccount.accType}">
+                            <h:selectOneMenu id="accType" value="#{taAccAction.taRsAcc.accType}">
                                 <f:selectItems value="#{ptenudetailAction.taAccTypeList}"/>
                             </h:selectOneMenu>
 
@@ -55,26 +55,26 @@
                             <h:inputText autocomplete="off" id="accId"
                                          readonly="true"
                                          style="background-color:gainsboro;"
-                                         value="#{taAccAction.taRsAccount.accId}">
+                                         value="#{taAccAction.taRsAcc.accId}">
                             </h:inputText>
 
                             <h:outputLabel value="*【申请编号】:" for="originId"/>
-                            <h:inputText id="originId" value="#{taAccAction.taRsAccount.busiApplyId}"/>
+                            <h:inputText id="originId" value="#{taAccAction.taRsAcc.busiApplyId}"/>
 
                             <h:outputLabel value="*【名称】:" for="accName"/>
-                            <h:inputText id="accName" value="#{taAccAction.taRsAccount.accName}"/>
+                            <h:inputText id="accName" value="#{taAccAction.taRsAcc.accName}"/>
 
                             <h:outputLabel value="*【监管状态】:" for="statusFlag"/>
                             <h:inputText id="statusFlag"
                                          readonly="true"
-                                         value="#{ptenudetailAction.taAccStatusMap.get(taAccAction.taRsAccount.statusFlag)}"/>
+                                         value="#{ptenudetailAction.taAccStatusMap.get(taAccAction.taRsAcc.statusFlag)}"/>
                         </h:panelGrid>
                         <h:panelGrid id="btns" columns="1" style="text-align:center;">
                             <p:commandButton style="width:80px;" value="确认修改"
                                              action="#{taAccAction.onUpd}" ajax="true" update="msgs">
                             </p:commandButton>
                             <p:commandButton id="back" ajax="false" value="返回" immediate="true"
-                                             action="#{taAccAction.onClick_DetailToList(taAccAction.taRsAccount.pkId)}"
+                                             action="#{taAccAction.onClick_DetailToList(taAccAction.taRsAcc.pkId)}"
                                              style="width:80px;"/>
                         </h:panelGrid>
                     </h:panelGrid>

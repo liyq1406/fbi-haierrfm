@@ -14,7 +14,7 @@ import rfm.ta.gateway.sbs.domain.txn.model.msg.M8872;
 import rfm.ta.gateway.sbs.domain.txn.model.msg.M8873;
 import rfm.ta.gateway.sbs.helper.BeanHelper;
 import rfm.ta.gateway.sbs.taservice.TaSbsService;
-import rfm.ta.repository.model.TaRsAccDetail;
+import rfm.ta.repository.model.TaRsAccDtl;
 import rfm.ta.repository.model.TaTxnSbs;
 import rfm.ta.service.account.TaAccDetailService;
 import javax.annotation.PostConstruct;
@@ -49,19 +49,24 @@ public class TaAccDetailAction implements Serializable {
     T924 t924 = new T924();
     T846 t846 = new T846();
     private List<T924.Bean> dataList = new ArrayList<>();
-    private List<TaRsAccDetail> taRsAccDetailList;
-    private List<TaRsAccDetail> taRsAccDetailList2;
+    // 账务交易明细
+    private List<TaRsAccDtl> taRsAccDetailList;
+    private List<TaRsAccDtl> taRsAccDetailList2;
     private String erydat = new SimpleDateFormat("yyyyMMdd").format(new Date());
 
     @PostConstruct
     public void init(){
         taRsAccDetailList = taAccDetailService.detailAllList();
-        System.out.println("======>" + taRsAccDetailList.get(0).getAccId());
+        if(taRsAccDetailList.size()>0) {
+            System.out.println("======>" + taRsAccDetailList.get(0).getRtnAccId());
+        }
     }
 
     public void onQryLocaldatatest() {
         taRsAccDetailList2 = taAccDetailService.detailAllList();
-        System.out.println("======>" + taRsAccDetailList.get(0).getAccId());
+        if(taRsAccDetailList2.size()>0) {
+            System.out.println("======>" + taRsAccDetailList.get(0).getRtnAccId());
+        }
     }
 
     public void onQrySBSdata() {
@@ -122,9 +127,9 @@ public class TaAccDetailAction implements Serializable {
     public String onReconciliation() {
         if (taRsAccDetailList != null) {
             try {
-                for (TaRsAccDetail taRsAccDetail : taRsAccDetailList) {
+                for (TaRsAccDtl taRsAccDetail : taRsAccDetailList) {
                     for (int i = 0; i < dataList.size(); i++) {
-                        if (dataList.get(i).getMPCSEQ().equals(taRsAccDetail.getFdcSerial())) {
+                        if (dataList.get(i).getMPCSEQ().equals(taRsAccDetail.getSerial())) {
                             taRsAccDetailList.remove(taRsAccDetail);
                             dataList.remove(i);
                         }
@@ -181,16 +186,16 @@ public class TaAccDetailAction implements Serializable {
                 logger.error(formcode);
                 MessageUtil.addErrorWithClientID("msgs", formcode);
             }
-            for (TaRsAccDetail taRsAccDetail:taRsAccDetailList){
+            for (TaRsAccDtl taRsAccDetail:taRsAccDetailList){
                 body.append(newLineCh).append(getLeftSpaceStr(taRsAccDetail.getTradeId(),4)).append("|")
                 .append(getLeftSpaceStr(taRsAccDetail.getBusiApplyId(), 14)).append("|")
                 .append(getLeftSpaceStr(taRsAccDetail.getInoutFlag(), 1)).append("|")
-                .append(getLeftSpaceStr(new DecimalFormat("#####0.00").format(taRsAccDetail.getTradeAmt()), 20)).append("|")
-                .append(getLeftSpaceStr(taRsAccDetail.getAccId(), 30)).append("|")
-                .append(getLeftSpaceStr(taRsAccDetail.getFdcSerial(), 16)).append("|")
-                .append(getLeftSpaceStr(taRsAccDetail.getBankSerial(), 30)).append("|")
-                .append(getLeftSpaceStr(taRsAccDetail.getBankBranchId(), 30)).append("|")
-                .append(getLeftSpaceStr(taRsAccDetail.getBankOperId(), 30)).append("|")
+                .append(getLeftSpaceStr(new DecimalFormat("#####0.00").format(taRsAccDetail.getRtnTradeAmt()), 20)).append("|")
+                .append(getLeftSpaceStr(taRsAccDetail.getRtnAccId(), 30)).append("|")
+                .append(getLeftSpaceStr(taRsAccDetail.getRtnFdcSerial(), 16)).append("|")
+                .append(getLeftSpaceStr(taRsAccDetail.getSerial(), 30)).append("|")
+                .append(getLeftSpaceStr(taRsAccDetail.getBranchId(), 30)).append("|")
+                .append(getLeftSpaceStr(taRsAccDetail.getOperId(), 30)).append("|")
                 .append(getLeftSpaceStr(taRsAccDetail.getTradeDate(), 10)).append("|");
             }
             if (file!=null){
@@ -298,11 +303,11 @@ public class TaAccDetailAction implements Serializable {
         this.taTxnSbs = taTxnSbs;
     }
 
-    public List<TaRsAccDetail> getTaRsAccDetailList2() {
+    public List<TaRsAccDtl> getTaRsAccDtlList2() {
         return taRsAccDetailList2;
     }
 
-    public void setTaRsAccDetailList2(List<TaRsAccDetail> taRsAccDetailList2) {
+    public void setTaRsAccDtlList2(List<TaRsAccDtl> taRsAccDetailList2) {
         this.taRsAccDetailList2 = taRsAccDetailList2;
     }
 
@@ -322,11 +327,11 @@ public class TaAccDetailAction implements Serializable {
         this.t924 = t924;
     }
 
-    public List<TaRsAccDetail> getTaRsAccDetailList() {
+    public List<TaRsAccDtl> getTaRsAccDtlList() {
         return taRsAccDetailList;
     }
 
-    public void setTaRsAccDetailList(List<TaRsAccDetail> taRsAccDetailList) {
+    public void setTaRsAccDtlList(List<TaRsAccDtl> taRsAccDetailList) {
         this.taRsAccDetailList = taRsAccDetailList;
     }
 

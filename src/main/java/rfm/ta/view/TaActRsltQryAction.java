@@ -3,7 +3,8 @@ package rfm.ta.view;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import platform.service.PtenudetailService;
-import rfm.ta.repository.model.TaRsAccDetail;
+import rfm.ta.repository.model.TaRsAccDtl;
+import rfm.ta.repository.model.modelshow.TaActRsltQryModelShow;
 import rfm.ta.service.account.TaAccDetlService;
 
 import javax.annotation.PostConstruct;
@@ -29,60 +30,24 @@ public class TaActRsltQryAction {
     @ManagedProperty(value = "#{ptenudetailService}")
     private PtenudetailService ptenudetailService;
 
-    private List<TaRsAccDetail> taRsAccDetailList;
-    private TaRsAccDetail taRsAccDetail;
+    private List<TaActRsltQryModelShow> taActRsltQryModelShowList;
+    private TaActRsltQryModelShow taActRsltQryModelShow;
     private List<SelectItem> taTradeIdList;
 
     @PostConstruct
     public void init() {
-        taRsAccDetail=new TaRsAccDetail();
+        taActRsltQryModelShow=new TaActRsltQryModelShow();
         taTradeIdList=ptenudetailService.getTradeIdList();
     }
 
     /*划拨验证用*/
     public void onBtnValiClick() {
         /*验证后查询*/
-        onBtnValiQryClick();
+        onBtnQryClick();
     }
     /*划拨验证查询用*/
-    public void onBtnValiQryClick() {
-        taRsAccDetail.setTradeId(taTradeIdList.get(5).getValue().toString());
-        taRsAccDetailList = taAccDetlService.selectedRecords(taRsAccDetail);
-    }
-
-    /*划拨记账用*/
-    public void onBtnActClick() {
-        /*记账后查询*/
-        onBtnActQryClick();
-    }
-    /*划拨记账查询用*/
-    public void onBtnActQryClick() {
-        taRsAccDetail.setTradeId(taTradeIdList.get(6).getValue().toString());
-        taRsAccDetailList = taAccDetlService.selectedRecords(taRsAccDetail);
-    }
-
-    /*划拨冲正用*/
-    public void onBtnCanclClick() {
-        /*冲正后查询*/
-        onBtnCanclQryClick();
-    }
-    /*划拨冲正查询用*/
-    public void onBtnCanclQryClick() {
-        taRsAccDetail.setTradeId(taTradeIdList.get(7).getValue().toString());
-        taRsAccDetailList = taAccDetlService.selectedRecords(taRsAccDetail);
-    }
-
-    /*划拨查询用*/
     public void onBtnQryClick() {
-        taRsAccDetailList = taAccDetlService.selectedRecords(taRsAccDetail);
-    }
-
-    public String reset() {
-        this.taRsAccDetail = new TaRsAccDetail();
-        if (!taRsAccDetailList.isEmpty()) {
-            taRsAccDetailList.clear();
-        }
-        return null;
+        taActRsltQryModelShow.setTradeId(taTradeIdList.get(5).getValue().toString());
     }
 
     //= = = = = = = = = = = = = = =  get set = = = = = = = = = = = = = = = =
@@ -95,20 +60,28 @@ public class TaActRsltQryAction {
         this.taAccDetlService = taAccDetlService;
     }
 
-    public List<TaRsAccDetail> getTaRsAccDetailList() {
-        return taRsAccDetailList;
+    public List<TaActRsltQryModelShow> getTaActRsltQryModelShowList() {
+        return taActRsltQryModelShowList;
     }
 
-    public void setTaRsAccDetailList(List<TaRsAccDetail> taRsAccDetailList) {
-        this.taRsAccDetailList = taRsAccDetailList;
+    public void setTaActRsltQryModelShowList(List<TaActRsltQryModelShow> taActRsltQryModelShowList) {
+        this.taActRsltQryModelShowList = taActRsltQryModelShowList;
     }
 
-    public TaRsAccDetail getTaRsAccDetail() {
-        return taRsAccDetail;
+    public TaActRsltQryModelShow getTaActRsltQryModelShow() {
+        return taActRsltQryModelShow;
     }
 
-    public void setTaRsAccDetail(TaRsAccDetail taRsAccDetail) {
-        this.taRsAccDetail = taRsAccDetail;
+    public void setTaActRsltQryModelShow(TaActRsltQryModelShow taActRsltQryModelShow) {
+        this.taActRsltQryModelShow = taActRsltQryModelShow;
+    }
+
+    public List<SelectItem> getTaTradeIdList() {
+        return taTradeIdList;
+    }
+
+    public void setTaTradeIdList(List<SelectItem> taTradeIdList) {
+        this.taTradeIdList = taTradeIdList;
     }
 
     public PtenudetailService getPtenudetailService() {

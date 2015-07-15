@@ -2,10 +2,10 @@ package rfm.ta.service.account;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rfm.ta.repository.dao.TaRsAccDetailMapper;
+import rfm.ta.repository.dao.TaRsAccDtlMapper;
 import rfm.ta.repository.dao.TaTxnSbsMapper;
-import rfm.ta.repository.model.TaRsAccDetail;
-import rfm.ta.repository.model.TaRsAccDetailExample;
+import rfm.ta.repository.model.TaRsAccDtl;
+import rfm.ta.repository.model.TaRsAccDtlExample;
 import rfm.ta.repository.model.TaTxnSbs;
 
 import java.util.List;
@@ -17,26 +17,26 @@ import java.util.List;
 @Service
 public class TaAccDetailService {
     @Autowired
-    private TaRsAccDetailMapper taRsAccDetailMapper;
+    private TaRsAccDtlMapper taRsAccDtlMapper;
 
     @Autowired
     private TaTxnSbsMapper taTxnSbsMapper;
 
-    public List<TaRsAccDetail> detailAllList (){
-        TaRsAccDetailExample example = new TaRsAccDetailExample();
-        return taRsAccDetailMapper.selectByExample(example);
+    public List<TaRsAccDtl> detailAllList (){
+        TaRsAccDtlExample example = new TaRsAccDtlExample();
+        return taRsAccDtlMapper.selectByExample(example);
     }
 
     public int sbsdatcopy(TaTxnSbs taTxnSbs){
         return taTxnSbsMapper.insert(taTxnSbs);
     }
 
-    public TaRsAccDetailMapper getTaRsAccDetailMapper() {
-        return taRsAccDetailMapper;
+    public TaRsAccDtlMapper getTaRsAccDtlMapper() {
+        return taRsAccDtlMapper;
     }
 
-    public void setTaRsAccDetailMapper(TaRsAccDetailMapper taRsAccDetailMapper) {
-        this.taRsAccDetailMapper = taRsAccDetailMapper;
+    public void setTaRsAccDtlMapper(TaRsAccDtlMapper taRsAccDtlMapper) {
+        this.taRsAccDtlMapper = taRsAccDtlMapper;
     }
 
     public TaTxnSbsMapper getTaTxnSbsMapper() {

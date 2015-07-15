@@ -47,15 +47,15 @@
                         <h:panelGrid columns="6" cellspacing="3" style="width:90%"
                                      columnClasses="col-95,col-5,col-95,col-5">
                             <h:outputLabel value="*【账户类别】:" for="accType"/>
-                            <h:selectOneMenu id="accType" value="#{taAccAction.taRsAccount.accType}">
+                            <h:selectOneMenu id="accType" value="#{taAccAction.taRsAcc.accType}">
                                 <f:selectItems value="#{ptenudetailAction.taAccTypeList}"/>
                             </h:selectOneMenu>
                             <h:outputLabel value="*【账号】:" for="accId"/>
                             <h:inputText autocomplete="off" id="accId"
-                                         value="#{taAccAction.taRsAccount.accId}">
+                                         value="#{taAccAction.taRsAcc.accId}">
                             </h:inputText>
                             <h:outputLabel value="*【名称】:" for="accName"/>
-                            <h:inputText id="accName" value="#{taAccAction.taRsAccount.accName}"/>
+                            <h:inputText id="accName" value="#{taAccAction.taRsAcc.accName}"/>
                         </h:panelGrid>
                         <p:commandButton update="msgs,pdt" style="width: 80px"
                                          action="#{taAccAction.onBtnQueryClick}" id="btnQuery" value="查询">
@@ -73,7 +73,7 @@
 
                 <p:dataTable id="pdt" style="width:100%;"
                              dynamic="true"
-                             value="#{taAccAction.taRsAccountList}"
+                             value="#{taAccAction.taRsAccList}"
                              selectionMode="single"
                              var="record"
                              rowKey="#{record.pkId}"
@@ -94,15 +94,15 @@
                     </p:column>
 
                     <p:column headerText="预售人名称" style="text-align:center">
-                        <h:outputText value="#{record.preSalePerName}" style="text-align: right"/>
+                        <h:outputText value="#{record.rtnPreSalePerName}" style="text-align: right"/>
                     </p:column>
 
                     <p:column headerText="预售项目名称" style="text-align:center">
-                        <h:outputText value="#{record.preSaleProName}" style="text-align: right"/>
+                        <h:outputText value="#{record.rtnPreSaleProName}" style="text-align: right"/>
                     </p:column>
 
                     <p:column headerText="预售项目地址" style="text-align:center">
-                        <h:outputText value="#{record.preSaleProAddr}" style="text-align: right"/>
+                        <h:outputText value="#{record.rtnPreSaleProAddr}" style="text-align: right"/>
                     </p:column>
 
                     <p:column headerText="监管状态" style="text-align:center">
@@ -115,7 +115,6 @@
                                         rendered="#{record.statusFlag eq '1'?'false':'true'}"
                                         style="color: blue">
                         </p:commandLink>
-
                         <p:commandLink  value="删除" immediate="true" ajax="false"
                                         action="#{taAccAction.onClick_ListToDetail('Del',record.pkId)}"
                                         rendered="#{record.statusFlag eq '1'?'false':'true'}"
