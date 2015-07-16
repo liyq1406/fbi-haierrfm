@@ -20,8 +20,8 @@ public final class JmsManager {
     private static final String BROKER_URL = PropertyManager.getProperty("jms.brokerURL");
     private static final String USER_NAME = PropertyManager.getProperty("jms.username");
     private static final String PASSWORD = PropertyManager.getProperty("jms.password");
-    private static final String requestQueueName = PropertyManager.getProperty("queue.fip.to.dep.object");
-    private static final String responseQueueName = PropertyManager.getProperty("queue.fip.from.dep.object");
+    private static final String requestQueueName = PropertyManager.getProperty("queue.rfm.to.dep.object");
+    private static final String responseQueueName = PropertyManager.getProperty("queue.rfm.from.dep.object");
     private static final long MQ_TIME_OUT = PropertyManager.getLongProperty("jms.realtime_receive_timeout");
 
     private static Connection connection = null;
