@@ -133,6 +133,9 @@ public class TaAccAction {
     /*启用*/
     public String onClick_Enable(TaRsAcc taRsAccPara){
         try {
+
+
+
             List<SelectItem> taAccStatusListTemp=ptenudetailService.getTaAccStatusList();
             // 枚举变量在数据库中，启用标志
             taRsAccPara.setStatusFlag(taAccStatusListTemp.get(1).getValue().toString());

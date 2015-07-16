@@ -16,7 +16,8 @@ import rfm.ta.gateway.sbs.helper.BeanHelper;
 import rfm.ta.gateway.sbs.taservice.TaSbsService;
 import rfm.ta.repository.model.TaRsAccDtl;
 import rfm.ta.repository.model.TaTxnSbs;
-import rfm.ta.service.account.TaAccDetailService;
+import rfm.ta.service.account.TaAccDetlService;
+
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -34,11 +35,11 @@ import java.util.List;
  */
 @ManagedBean
 @ViewScoped
-public class TaAccDetailAction implements Serializable {
-    private static Logger logger = LoggerFactory.getLogger(TaAccDetailAction.class);
+public class TaAccDtlAction implements Serializable {
+    private static Logger logger = LoggerFactory.getLogger(TaAccDtlAction.class);
 
-    @ManagedProperty("#{taAccDetailService}")
-    private TaAccDetailService taAccDetailService;
+    @ManagedProperty("#{taAccDetlService}")
+    private TaAccDetlService taAccDetlService;
 
     @ManagedProperty("#{taSbsService}")
     private TaSbsService taSbsService;
@@ -50,22 +51,22 @@ public class TaAccDetailAction implements Serializable {
     T846 t846 = new T846();
     private List<T924.Bean> dataList = new ArrayList<>();
     // 账务交易明细
-    private List<TaRsAccDtl> taRsAccDetailList;
-    private List<TaRsAccDtl> taRsAccDetailList2;
+    private List<TaRsAccDtl> taRsAccDtlList;
+    private List<TaRsAccDtl> taRsAccDtlList2;
     private String erydat = new SimpleDateFormat("yyyyMMdd").format(new Date());
 
     @PostConstruct
     public void init(){
-        taRsAccDetailList = taAccDetailService.detailAllList();
-        if(taRsAccDetailList.size()>0) {
-            System.out.println("======>" + taRsAccDetailList.get(0).getRtnAccId());
+        taRsAccDtlList = taAccDetlService.selectedRecords(new TaRsAccDtl());
+        if(taRsAccDtlList.size()>0) {
+            System.out.println("======>" + taRsAccDtlList.get(0).getRtnAccId());
         }
     }
 
     public void onQryLocaldatatest() {
-        taRsAccDetailList2 = taAccDetailService.detailAllList();
-        if(taRsAccDetailList2.size()>0) {
-            System.out.println("======>" + taRsAccDetailList.get(0).getRtnAccId());
+        taRsAccDtlList2 = taAccDetlService.selectedRecords(new TaRsAccDtl());
+        if(taRsAccDtlList2.size()>0) {
+            System.out.println("======>" + taRsAccDtlList.get(0).getRtnAccId());
         }
     }
 
@@ -106,7 +107,7 @@ public class TaAccDetailAction implements Serializable {
                 for (T924.Bean bean : dataList) {
                     try {
                         BeanHelper.copyFields(bean, taTxnSbs);
-                        taAccDetailService.sbsdatcopy(taTxnSbs);
+                        //taAccDetlService.sbsdatcopy(taTxnSbs);
                     } catch (Exception e) {
                         logger.error("Bean 转换异常！", e);
                         MessageUtil.addError("Bean 转换异常！." + (e.getMessage() == null ? "" : e.getMessage()));
@@ -125,17 +126,17 @@ public class TaAccDetailAction implements Serializable {
     }
 
     public String onReconciliation() {
-        if (taRsAccDetailList != null) {
+        if (taRsAccDtlList != null) {
             try {
-                for (TaRsAccDtl taRsAccDetail : taRsAccDetailList) {
+                for (TaRsAccDtl taRsAccDtl : taRsAccDtlList) {
                     for (int i = 0; i < dataList.size(); i++) {
-                        if (dataList.get(i).getMPCSEQ().equals(taRsAccDetail.getSerial())) {
-                            taRsAccDetailList.remove(taRsAccDetail);
+                        if (dataList.get(i).getMPCSEQ().equals(taRsAccDtl.getSerial())) {
+                            taRsAccDtlList.remove(taRsAccDtl);
                             dataList.remove(i);
                         }
                     }
                 }
-                if (taRsAccDetailList == null) {
+                if (taRsAccDtlList == null) {
                     MessageUtil.addInfo("对账成功！");
                 }
             } catch (Exception e) {
@@ -186,17 +187,17 @@ public class TaAccDetailAction implements Serializable {
                 logger.error(formcode);
                 MessageUtil.addErrorWithClientID("msgs", formcode);
             }
-            for (TaRsAccDtl taRsAccDetail:taRsAccDetailList){
-                body.append(newLineCh).append(getLeftSpaceStr(taRsAccDetail.getTradeId(),4)).append("|")
-                .append(getLeftSpaceStr(taRsAccDetail.getBusiApplyId(), 14)).append("|")
-                .append(getLeftSpaceStr(taRsAccDetail.getInoutFlag(), 1)).append("|")
-                .append(getLeftSpaceStr(new DecimalFormat("#####0.00").format(taRsAccDetail.getRtnTradeAmt()), 20)).append("|")
-                .append(getLeftSpaceStr(taRsAccDetail.getRtnAccId(), 30)).append("|")
-                .append(getLeftSpaceStr(taRsAccDetail.getRtnFdcSerial(), 16)).append("|")
-                .append(getLeftSpaceStr(taRsAccDetail.getSerial(), 30)).append("|")
-                .append(getLeftSpaceStr(taRsAccDetail.getBranchId(), 30)).append("|")
-                .append(getLeftSpaceStr(taRsAccDetail.getOperId(), 30)).append("|")
-                .append(getLeftSpaceStr(taRsAccDetail.getTradeDate(), 10)).append("|");
+            for (TaRsAccDtl taRsAccDtl:taRsAccDtlList){
+                body.append(newLineCh).append(getLeftSpaceStr(taRsAccDtl.getTradeId(),4)).append("|")
+                .append(getLeftSpaceStr(taRsAccDtl.getBusiApplyId(), 14)).append("|")
+                .append(getLeftSpaceStr(taRsAccDtl.getInoutFlag(), 1)).append("|")
+                .append(getLeftSpaceStr(new DecimalFormat("#####0.00").format(taRsAccDtl.getRtnTradeAmt()), 20)).append("|")
+                .append(getLeftSpaceStr(taRsAccDtl.getRtnAccId(), 30)).append("|")
+                .append(getLeftSpaceStr(taRsAccDtl.getRtnFdcSerial(), 16)).append("|")
+                .append(getLeftSpaceStr(taRsAccDtl.getSerial(), 30)).append("|")
+                .append(getLeftSpaceStr(taRsAccDtl.getBranchId(), 30)).append("|")
+                .append(getLeftSpaceStr(taRsAccDtl.getOperId(), 30)).append("|")
+                .append(getLeftSpaceStr(taRsAccDtl.getTradeDate(), 10)).append("|");
             }
             if (file!=null){
                 try {
@@ -304,11 +305,11 @@ public class TaAccDetailAction implements Serializable {
     }
 
     public List<TaRsAccDtl> getTaRsAccDtlList2() {
-        return taRsAccDetailList2;
+        return taRsAccDtlList2;
     }
 
-    public void setTaRsAccDtlList2(List<TaRsAccDtl> taRsAccDetailList2) {
-        this.taRsAccDetailList2 = taRsAccDetailList2;
+    public void setTaRsAccDtlList2(List<TaRsAccDtl> taRsAccDtlList2) {
+        this.taRsAccDtlList2 = taRsAccDtlList2;
     }
 
     public M8873 getM8873() {
@@ -328,19 +329,35 @@ public class TaAccDetailAction implements Serializable {
     }
 
     public List<TaRsAccDtl> getTaRsAccDtlList() {
-        return taRsAccDetailList;
+        return taRsAccDtlList;
     }
 
-    public void setTaRsAccDtlList(List<TaRsAccDtl> taRsAccDetailList) {
-        this.taRsAccDetailList = taRsAccDetailList;
+    public void setTaRsAccDtlList(List<TaRsAccDtl> taRsAccDtlList) {
+        this.taRsAccDtlList = taRsAccDtlList;
     }
 
-    public TaAccDetailService getTaAccDetailService() {
-        return taAccDetailService;
+    public TaAccDetlService getTaAccDetlService() {
+        return taAccDetlService;
     }
 
-    public void setTaAccDetailService(TaAccDetailService taAccDetailService) {
-        this.taAccDetailService = taAccDetailService;
+    public void setTaAccDetlService(TaAccDetlService taAccDetlService) {
+        this.taAccDetlService = taAccDetlService;
+    }
+
+    public List<TaRsAccDtl> getTaRsAccDetailList() {
+        return taRsAccDtlList;
+    }
+
+    public void setTaRsAccDetailList(List<TaRsAccDtl> taRsAccDtlList) {
+        this.taRsAccDtlList = taRsAccDtlList;
+    }
+
+    public List<TaRsAccDtl> getTaRsAccDetailList2() {
+        return taRsAccDtlList2;
+    }
+
+    public void setTaRsAccDetailList2(List<TaRsAccDtl> taRsAccDtlList2) {
+        this.taRsAccDtlList2 = taRsAccDtlList2;
     }
 
     public TaSbsService getTaSbsService() {
