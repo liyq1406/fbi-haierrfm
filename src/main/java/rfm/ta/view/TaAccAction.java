@@ -7,6 +7,8 @@ import platform.service.PtenudetailService;
 import rfm.ta.gateway.sbs.taservice.TaSbsService;
 import rfm.ta.repository.model.TaRsAcc;
 import rfm.ta.service.account.TaAccService;
+import rfm.ta.service.dep.DepService;
+
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -133,13 +135,7 @@ public class TaAccAction {
     /*启用*/
     public String onClick_Enable(TaRsAcc taRsAccPara){
         try {
-
-
-
-            List<SelectItem> taAccStatusListTemp=ptenudetailService.getTaAccStatusList();
-            // 枚举变量在数据库中，启用标志
-            taRsAccPara.setStatusFlag(taAccStatusListTemp.get(1).getValue().toString());
-            taAccService.updateRecord(taRsAccPara);
+            taAccService.sendAndRecvRealTimeTxnMessage(taRsAccPara);
         } catch (Exception e) {
             logger.error("启用数据失败，", e);
             MessageUtil.addError(e.getMessage());
