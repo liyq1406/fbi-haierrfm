@@ -2,22 +2,21 @@ package rfm.ta.common.enums;
 
 import java.util.Hashtable;
 
-/**
- * 会计系统 公用枚举.
- * User: hanjianlong
- * Date: 2013-05-20
- * Time: 9:58:32
- * To change this template use File | Settings | File Templates.
+/*
+类型;01房款收入-定金、02计划付款、03退款、04利息、05 房款划转、09其他
+
  */
-public enum TaEnumArchivedFlag {
-    ARCHIVED_FLAG0("0","未删除"),
-    ARCHIVED_FLAG1("1","逻辑删除");
+public enum EnuTaTradeType {
+    TRADE_INCOME("01", "交存"),
+    TRADE_PAYMENT("02", "划拨"),
+    TRADE_BACK("03", "返还"),
+    TRADE_OTHERS("04", "其他");
 
     private String code = null;
     private String title = null;
-    private static Hashtable<String, TaEnumArchivedFlag> aliasEnums;
+    private static Hashtable<String, EnuTaTradeType> aliasEnums;
 
-    TaEnumArchivedFlag(String code, String title){
+    EnuTaTradeType(String code, String title) {
         this.init(code, title);
     }
 
@@ -34,7 +33,7 @@ public enum TaEnumArchivedFlag {
         aliasEnums.put(title, this);
     }
 
-    public static TaEnumArchivedFlag getValueByKey(String alias) {
+    public static EnuTaTradeType valueOfAlias(String alias) {
         return aliasEnums.get(alias);
     }
 

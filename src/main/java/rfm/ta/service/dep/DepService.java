@@ -44,7 +44,7 @@ public class DepService {
             public Object doInJms(Session session, MessageProducer producer) throws JMSException {
                 TextMessage msg = session.createTextMessage(msgtxt);
                 msg.setStringProperty("JMSX_CHANNELID", channelId);
-                msg.setStringProperty("JMSX_APPID", "HAIERFIP");
+                msg.setStringProperty("JMSX_APPID", "HAIERRFM");
                 msg.setStringProperty("JMSX_BIZID", DEP_BIZID.toUpperCase());
                 msg.setStringProperty("JMSX_USERID", DEP_USERNAME);
                 msg.setStringProperty("JMSX_PASSWORD", DEP_PWD);

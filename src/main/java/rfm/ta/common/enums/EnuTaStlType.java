@@ -2,17 +2,16 @@ package rfm.ta.common.enums;
 
 import java.util.Hashtable;
 
-public enum TaSendLogResult {
-    SEND_OVER("2", "发送数据成功"),
-    SEND_ERR("20", "发送数据失败"),
-    QRYED("1", "查询明细成功"),
-    QRYED_ERR("10", "查询明细失败");
+public enum EnuTaStlType {
+    STL_TYPE01("01", "现金"),
+    STL_TYPE02("02", "转账"),
+    STL_TYPE03("03", "支票");
 
     private String code = null;
     private String title = null;
-    private static Hashtable<String, TaSendLogResult> aliasEnums;
+    private static Hashtable<String, EnuTaStlType> aliasEnums;
 
-    TaSendLogResult(String code, String title) {
+    EnuTaStlType(String code, String title) {
         this.init(code, title);
     }
 
@@ -29,7 +28,7 @@ public enum TaSendLogResult {
         aliasEnums.put(title, this);
     }
 
-    public static TaSendLogResult valueOfAlias(String alias) {
+    public static EnuTaStlType valueOfAlias(String alias) {
         return aliasEnums.get(alias);
     }
 

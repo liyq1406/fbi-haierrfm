@@ -2,17 +2,14 @@ package rfm.ta.common.enums;
 
 import java.util.Hashtable;
 
-public enum TaLockAccStatus {
-    UN_LOCK("0", "解冻"),
-    PART_LOCK("1", "部分冻结"),
-    SINGLE_LOCK("3", "单向冻结"),
-    FULL_LOCK("2","全部冻结");
+public enum EnuTaInitiatorId {
+    INITIATOR("1", "监管银行");
 
     private String code = null;
     private String title = null;
-    private static Hashtable<String, TaLockAccStatus> aliasEnums;
+    private static Hashtable<String, EnuTaInitiatorId> aliasEnums;
 
-    TaLockAccStatus(String code, String title) {
+    EnuTaInitiatorId(String code, String title) {
         this.init(code, title);
     }
 
@@ -29,7 +26,7 @@ public enum TaLockAccStatus {
         aliasEnums.put(title, this);
     }
 
-    public static TaLockAccStatus valueOfAlias(String alias) {
+    public static EnuTaInitiatorId valueOfAlias(String alias) {
         return aliasEnums.get(alias);
     }
 

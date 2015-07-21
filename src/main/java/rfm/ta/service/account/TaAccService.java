@@ -10,16 +10,13 @@ import platform.service.PtenudetailService;
 import platform.service.SystemService;
 import pub.platform.security.OperatorManager;
 import pub.platform.utils.ToolUtil;
-import rfm.ta.common.enums.TaEnumArchivedFlag;
-import rfm.ta.gateway.dep.model.txn.TOA2001001;
+import rfm.ta.common.enums.*;
 import rfm.ta.repository.dao.TaRsAccMapper;
 import rfm.ta.repository.model.TaRsAcc;
 import rfm.ta.repository.model.TaRsAccExample;
 import rfm.ta.service.dep.DepService;
 
 import javax.faces.model.SelectItem;
-import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -32,7 +29,7 @@ import java.util.List;
 @Service
 public class TaAccService {
     private static final Logger logger = LoggerFactory.getLogger(TaAccService.class);
-    private static String DEP_CHANNEL_ID_UNIPAY = "100";
+    private static String DEP_CHANNEL_ID_RFM = "930";
 
     @Autowired
     private TaRsAccMapper accountMapper;
@@ -202,7 +199,7 @@ public class TaAccService {
             String strLastUpdTimeTemp=ToolUtil.getStrLastUpdTime();
             account.setLastUpdTime(strLastUpdTimeTemp);
             account.setRecVersion(account.getRecVersion() + 1);
-            account.setDeletedFlag(TaEnumArchivedFlag.ARCHIVED_FLAG1.getCode());
+            account.setDeletedFlag(EnuTaArchivedFlag.ARCHIVED_FLAG1.getCode());
             return accountMapper.updateByPrimaryKeySelective(account);
         } else {
             throw new RuntimeException("账户并发更新冲突！ActPkid=" + account.getPkId());
@@ -217,27 +214,33 @@ public class TaAccService {
     @Transactional
     public void sendAndRecvRealTimeTxnMessage(TaRsAcc taRsAccPara) {
         try {
-            String msgtxt = StringUtils.rightPad(taRsAccPara.getTradeId(), 4, ' ')       // 01   交易代码       4   2001
-                          + StringUtils.rightPad(taRsAccPara.getBankId(), 2, ' ')        // 02   监管银行代码   2
-                          + StringUtils.rightPad(taRsAccPara.getCityId(), 6, ' ')        // 03   城市代码       6
-                          + StringUtils.rightPad(taRsAccPara.getBusiApplyId(), 14, ' ')  // 04   监管申请编号   14
-                          + StringUtils.rightPad(taRsAccPara.getAccType(), 1, ' ')       // 05   帐户类别       1   0：预售监管户
-                          + StringUtils.rightPad(taRsAccPara.getAccId(), 30, ' ')        // 06   监管专户账号   30
-                          + StringUtils.rightPad(taRsAccPara.getAccName(), 150, ' ')     // 07   监管专户户名   150
-                          + StringUtils.rightPad(taRsAccPara.getSerial(), 30, ' ')       // 08   流水号         30
-                          + StringUtils.rightPad(taRsAccPara.getTradeDate(), 10, ' ')    // 09   日期           10  送系统日期即可
-                          + StringUtils.rightPad(taRsAccPara.getBranchId(), 30, ' ')     // 10   网点号         30
-                          + StringUtils.rightPad(taRsAccPara.getOperId(), 30, ' ')       // 11   柜员号         30
-                          + StringUtils.rightPad(taRsAccPara.getInitiator(), 1, ' ');    // 12   发起方         1   1_监管银行
+            String msgtxt = EnuTaTradeId.TRADE_1001.getCode()                                            // 01   交易代码       4   2001
+                          + EnuTaBankId.BANK_HAIER.getCode()                                             // 02   监管银行代码   2
+                          + EnuTaCityId.CITY_TAIAN.getCode()                                             // 03   城市代码       6
+                          + StringUtils.rightPad(taRsAccPara.getBusiApplyId(), 14, ' ')                   // 04   监管申请编号   14
+                          + StringUtils.rightPad(taRsAccPara.getAccType(), 1, ' ')                        // 05   帐户类别       1   0：预售监管户
+                          + StringUtils.rightPad(taRsAccPara.getAccId(), 30, ' ')                         // 06   监管专户账号   30
+                          + StringUtils.rightPad(taRsAccPara.getAccName(), 150, ' ')                      // 07   监管专户户名   150
+                          + StringUtils.rightPad(taRsAccPara.getSerial(), 30, ' ')                        // 08   流水号         30
+                          + ToolUtil.getStrLastUpdDate()                                                  // 09   日期            10  送系统日期即可
+                          + StringUtils.rightPad(taRsAccPara.getBranchId(), 30, ' ')                      // 10   网点号         30
+                          + StringUtils.rightPad(ToolUtil.getOperatorManager().getOperatorId(), 30, ' ')  // 11   柜员号         30
+                          + EnuTaInitiatorId.INITIATOR.getCode();                                        // 12   发起方         1   1_监管银行
+
+            //通过MQ发送信息到DEP
+            String msgid="";// = depService.sendDepMessage(DEP_CHANNEL_ID_RFM, msgtxt);
+            handle1001Message(depService.recvDepMessage(msgid));
+            String strRtn="0000";
+            if(msgid!=""){
+
+            }
+
+
 
             List<SelectItem> taAccStatusListTemp=ptenudetailService.getTaAccStatusList();
             // 枚举变量在数据库中，启用标志
             taRsAccPara.setStatusFlag(taAccStatusListTemp.get(1).getValue().toString());
             updateRecord(taRsAccPara);
-
-            //通过MQ发送信息到DEP
-            String msgid = depService.sendDepMessage(DEP_CHANNEL_ID_UNIPAY, msgtxt);
-            handle1001Message(depService.recvDepMessage(msgid));
         } catch (Exception e) {
             logger.error("MQ消息发送失败", e);
             throw new RuntimeException("MQ消息发送失败", e);

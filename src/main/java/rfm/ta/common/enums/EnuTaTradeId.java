@@ -2,15 +2,25 @@ package rfm.ta.common.enums;
 
 import java.util.Hashtable;
 
-public enum TaSendFlag {
-    UN_SEND("0", "未发送"),
-    SENT("1", "已发送");
+public enum EnuTaTradeId {
+    TRADE_1001("1001", "建立监管"),
+    TRADE_1002("1002", "解除监管"),
+    TRADE_2001("2001", "交存验证"),
+    TRADE_2002("2002", "交存记账"),
+    TRADE_2011("2011", "交存冲正"),
+    TRADE_2101("2101", "划拨验证"),
+    TRADE_2102("2102", "划拨记账"),
+    TRADE_2111("2111", "划拨冲正"),
+    TRADE_2201("2201", "交存验证"),
+    TRADE_2202("2202", "交存记账"),
+    TRADE_2211("2211", "交存冲正"),
+    TRADE_OTHERS("04", "其他");
 
     private String code = null;
     private String title = null;
-    private static Hashtable<String, TaSendFlag> aliasEnums;
+    private static Hashtable<String, EnuTaTradeId> aliasEnums;
 
-    TaSendFlag(String code, String title) {
+    EnuTaTradeId(String code, String title) {
         this.init(code, title);
     }
 
@@ -27,7 +37,7 @@ public enum TaSendFlag {
         aliasEnums.put(title, this);
     }
 
-    public static TaSendFlag valueOfAlias(String alias) {
+    public static EnuTaTradeId valueOfAlias(String alias) {
         return aliasEnums.get(alias);
     }
 

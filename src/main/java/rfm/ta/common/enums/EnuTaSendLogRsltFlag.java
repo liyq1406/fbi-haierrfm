@@ -2,21 +2,17 @@ package rfm.ta.common.enums;
 
 import java.util.Hashtable;
 
-/*
-类型;01房款收入-定金、02计划付款、03退款、04利息、05 房款划转、09其他
-
- */
-public enum TaTradeType {
-    TRADE_INCOME("01", "交存"),
-    TRADE_PAYMENT("02", "划拨"),
-    TRADE_BACK("03", "退款"),
-    TRADE_OTHERS("04", "其他");
+public enum EnuTaSendLogRsltFlag {
+    SEND_OVER("2", "发送数据成功"),
+    SEND_ERR("20", "发送数据失败"),
+    QRYED("1", "查询明细成功"),
+    QRYED_ERR("10", "查询明细失败");
 
     private String code = null;
     private String title = null;
-    private static Hashtable<String, TaTradeType> aliasEnums;
+    private static Hashtable<String, EnuTaSendLogRsltFlag> aliasEnums;
 
-    TaTradeType(String code, String title) {
+    EnuTaSendLogRsltFlag(String code, String title) {
         this.init(code, title);
     }
 
@@ -33,7 +29,7 @@ public enum TaTradeType {
         aliasEnums.put(title, this);
     }
 
-    public static TaTradeType valueOfAlias(String alias) {
+    public static EnuTaSendLogRsltFlag valueOfAlias(String alias) {
         return aliasEnums.get(alias);
     }
 
