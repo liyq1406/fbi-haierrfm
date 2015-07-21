@@ -1,6 +1,7 @@
 package rfm.ta.gateway.sbs.helper;
 
 import org.apache.commons.lang.StringUtils;
+import rfm.ta.gateway.hfnb.model.txn.TaHfnbTiaXml2002;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 
