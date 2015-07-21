@@ -1,11 +1,11 @@
 package rfm.ta.view.deposit;
 
-import org.fbi.dep.model.base.TiaXml;
-import org.fbi.dep.model.base.ToaXml;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import rfm.ta.common.enums.EnuTaTxnRtnCode;
+import rfm.ta.gateway.dep.model.base.TiaXml;
+import rfm.ta.gateway.dep.model.base.ToaXml;
 import rfm.ta.gateway.dep.model.txn.TiaXml910012011;
 import rfm.ta.gateway.dep.model.txn.ToaXml910012011;
 

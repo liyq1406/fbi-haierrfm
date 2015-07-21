@@ -3,7 +3,8 @@ package rfm.ta.gateway.dep.model.txn;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.io.xml.DomDriver;
-import org.fbi.dep.model.base.TiaXml;
+import rfm.ta.gateway.dep.model.base.TiaXml;
+import rfm.ta.gateway.dep.model.base.TiaXmlHttpInfo;
 
 import java.io.Serializable;
 
