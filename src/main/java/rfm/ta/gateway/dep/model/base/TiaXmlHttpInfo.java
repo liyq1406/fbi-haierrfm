@@ -1,22 +1,18 @@
-package rfm.ta.gateway.hfnb.model.base;
+package rfm.ta.gateway.dep.model.base;
 
 import java.io.Serializable;
 
 /**
- * Created by XIANGYANG on 2015-7-1.
+ * Created by XIANGYANG on 2015-6-2.
  */
 
-public class TaHfnbToaXmlInfo implements Serializable {
+public class TiaXmlHttpInfo implements Serializable {
     public String txncode;            //交易代码
     public String userid;             //用户ID
     public String reqsn;              //交易流水号
     public String version;            //版本号
     public String txndate;            //交易日期
     public String txntime;            //交易时间
-    public String bankbranchid;       //网点编号
-    public String bankoperid;         //人员编号
-    public String rtncode;            //系统层面-返回代码
-    public String rtnmsg;             //系统层面-返回信息
 
     public String getTxncode() {
         return txncode;
@@ -65,36 +61,6 @@ public class TaHfnbToaXmlInfo implements Serializable {
     public void setTxntime(String txntime) {
         this.txntime = txntime;
     }
-
-    public String getBankbranchid() {
-        return bankbranchid;
-    }
-
-    public void setBankbranchid(String bankbranchid) {
-        this.bankbranchid = bankbranchid;
-    }
-
-    public String getBankoperid() {
-        return bankoperid;
-    }
-
-    public void setBankoperid(String bankoperid) {
-        this.bankoperid = bankoperid;
-    }
-
-    public String getRtncode() {
-        return rtncode;
-    }
-
-    public void setRtncode(String rtncode) {
-        this.rtncode = rtncode;
-    }
-
-    public String getRtnmsg() {
-        return rtnmsg;
-    }
-
-    public void setRtnmsg(String rtnmsg) {
-        this.rtnmsg = rtnmsg;
-    }
 }
+
+

@@ -108,12 +108,6 @@
         <servlet-class>pub.platform.security.AdminServlet</servlet-class>
     </servlet>
 
-    <servlet>
-        <servlet-name>BootStrapServlet</servlet-name>
-        <servlet-class>rfm.ta.gateway.hfnb.server.BootStrapServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-
     <!--JSF2 mapping-->
     <servlet-mapping>
         <servlet-name>Faces Servlet</servlet-name>

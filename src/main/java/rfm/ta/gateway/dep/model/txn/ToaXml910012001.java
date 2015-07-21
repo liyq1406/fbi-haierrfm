@@ -1,4 +1,4 @@
-package rfm.ta.gateway.hfnb.model.txn;
+package rfm.ta.gateway.dep.model.txn;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
@@ -6,8 +6,8 @@ import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 import com.thoughtworks.xstream.io.xml.XmlFriendlyReplacer;
 import com.thoughtworks.xstream.io.xml.XppDriver;
-import rfm.ta.gateway.hfnb.model.base.TaHfnbToaXml;
-import rfm.ta.gateway.hfnb.model.base.TaHfnbToaXmlInfo;
+import rfm.ta.gateway.dep.model.base.ToaXml;
+import rfm.ta.gateway.dep.model.base.ToaXmlHttpInfo;
 
 import java.io.Serializable;
 
@@ -16,24 +16,45 @@ import java.io.Serializable;
  */
 
 @XStreamAlias("root")
-public class TaHfnbToaXml2001 extends TaHfnbToaXml {
-    public TaHfnbToaXmlInfo info = new TaHfnbToaXmlInfo();
+public class ToaXml910012001 extends ToaXml {
+    public Info info = new Info();
     public Body Body = new Body();
 
-    public TaHfnbToaXml2001.Body getBody() {
-        return Body;
-    }
-
-    public void setBody(TaHfnbToaXml2001.Body body) {
-        Body = body;
-    }
-
-    public TaHfnbToaXmlInfo getInfo() {
+    public Info getInfo() {
         return info;
     }
 
-    public void setInfo(TaHfnbToaXmlInfo info) {
+    public void setInfo(Info info) {
         this.info = info;
+    }
+
+    public ToaXml910012001.Body getBody() {
+        return Body;
+    }
+
+    public void setBody(ToaXml910012001.Body body) {
+        Body = body;
+    }
+
+    public static class Info extends ToaXmlHttpInfo {
+        public String bankbranchid;       //Õ¯µ„±‡∫≈
+        public String bankoperid;         //»À‘±±‡∫≈
+
+        public String getBankbranchid() {
+            return bankbranchid;
+        }
+
+        public void setBankbranchid(String bankbranchid) {
+            this.bankbranchid = bankbranchid;
+        }
+
+        public String getBankoperid() {
+            return bankoperid;
+        }
+
+        public void setBankoperid(String bankoperid) {
+            this.bankoperid = bankoperid;
+        }
     }
 
     public static class Body implements Serializable {
@@ -108,13 +129,13 @@ public class TaHfnbToaXml2001 extends TaHfnbToaXml {
         XmlFriendlyReplacer replacer = new XmlFriendlyReplacer("$", "_");
         HierarchicalStreamDriver hierarchicalStreamDriver = new XppDriver(replacer);
         XStream xs = new XStream(hierarchicalStreamDriver);
-        xs.processAnnotations(TaHfnbToaXml2001.class);
+        xs.processAnnotations(ToaXml910012001.class);
         return "<?xml version=\"1.0\" encoding=\"GBK\"?>" + "\n" + xs.toXML(this);
     }
 
-    public static TaHfnbToaXml2001 getToa(String xml) {
+    public static ToaXml910012001 getToa(String xml) {
         XStream xs = new XStream(new DomDriver());
-        xs.processAnnotations(TaHfnbToaXml2001.class);
-        return (TaHfnbToaXml2001) xs.fromXML(xml);
+        xs.processAnnotations(ToaXml910012001.class);
+        return (ToaXml910012001) xs.fromXML(xml);
     }
 }

@@ -1,9 +1,9 @@
 package rfm.ta.view.deposit;
 
-import rfm.ta.gateway.hfnb.model.base.TaHfnbTiaXml;
-import rfm.ta.gateway.hfnb.model.base.TaHfnbToaXml;
+import org.springframework.transaction.annotation.Transactional;
+import rfm.ta.gateway.dep.model.base.TiaXml;
+import rfm.ta.gateway.dep.model.base.ToaXml;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 
 /**
@@ -11,10 +11,17 @@ import java.lang.reflect.Field;
  * 交易处理
  */
 
-public abstract class AbstractTxnProcessor implements TxnProcessor {
-    public abstract String process(String userid, String msgData) throws ClassNotFoundException, InstantiationException, IllegalAccessException, IOException;
+public abstract class DepAbstractTxnProcessor {
 
-    public void copyTiaInfoToToa(TaHfnbTiaXml tia, TaHfnbToaXml toa) {
+    public abstract ToaXml process(TiaXml tia) throws Exception;
+
+    @Transactional
+    public ToaXml run(TiaXml tia) throws Exception {
+        return process(tia);
+    }
+
+    //TODO--该函数主要功能为将请求报文头中的info拷贝到响应报文头--ADD BY YXY 20150704
+    public void copyTiaInfoToToa(TiaXml tia, ToaXml toa) {
         try {
             Field[] fields = tia.getClass().getFields();
             Class toaCLass = toa.getClass();
@@ -44,7 +51,7 @@ public abstract class AbstractTxnProcessor implements TxnProcessor {
                 }
             }
         } catch (Exception e) {
-            throw new RuntimeException("AbstractTxnProcessor copyTiaInfoToToa 解析异常");
+            throw new RuntimeException("DepAbstractTxnProcessor copyTiaInfoToToa 解析异常");
         }
     }
 }

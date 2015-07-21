@@ -1,4 +1,4 @@
-package rfm.ta.gateway;
+package rfm.ta.gateway.jms;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 

@@ -134,4 +134,8 @@
             <value>${queue.rfm.from.dep}</value>
         </constructor-arg>
     </bean>
+	
+	<jms:listener-container connection-factory="jmsConnectionFactory" concurrency="5">
+        <jms:listener destination="${queue.dep.core.fip.rfm.in}" ref="depMessageListener"/>
+    </jms:listener-container>
 </beans>
