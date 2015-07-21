@@ -5,15 +5,11 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import org.quartz.CronTrigger;
 import org.quartz.JobDetail;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
-
-import com.ccb.dao.SYSSCHEDULER;
-
-
+import platform.repository.model.SysScheduler;
 import pub.platform.db.ConnectionManager;
 import pub.platform.db.DatabaseConnection;
 
@@ -38,7 +34,7 @@ public class JobInfo {
    * 初始化作业信息
    * @param scheduler
    */
-  public JobInfo(SYSSCHEDULER scheduler) {
+  public JobInfo(SysScheduler scheduler) {
     this.JOBID = scheduler.getJobid() + "";
     this.JOBNAME = scheduler.getJobname();
     this.CRONEXPRESSION = scheduler.getCronexpression();
