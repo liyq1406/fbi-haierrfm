@@ -11,6 +11,7 @@ import platform.service.SystemService;
 import pub.platform.security.OperatorManager;
 import pub.platform.utils.ToolUtil;
 import rfm.ta.common.enums.TaEnumArchivedFlag;
+import rfm.ta.gateway.dep.model.txn.TIA2001001;
 import rfm.ta.gateway.dep.model.txn.TOA2001001;
 import rfm.ta.repository.dao.TaRsAccMapper;
 import rfm.ta.repository.model.TaRsAcc;
@@ -32,7 +33,7 @@ import java.util.List;
 @Service
 public class TaAccService {
     private static final Logger logger = LoggerFactory.getLogger(TaAccService.class);
-    private static String DEP_CHANNEL_ID_UNIPAY = "100";
+    private static String DEP_CHANNEL_ID_TAFDC = "930";
 
     @Autowired
     private TaRsAccMapper accountMapper;
@@ -236,7 +237,8 @@ public class TaAccService {
             updateRecord(taRsAccPara);
 
             //通过MQ发送信息到DEP
-            String msgid = depService.sendDepMessage(DEP_CHANNEL_ID_UNIPAY, msgtxt);
+            String msgid = depService.sendDepMessage(DEP_CHANNEL_ID_TAFDC, msgtxt);
+            System.out.println(msgid);
             handle1001Message(depService.recvDepMessage(msgid));
         } catch (Exception e) {
             logger.error("MQ消息发送失败", e);

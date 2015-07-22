@@ -7,6 +7,8 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.ProducerCallback;
 import org.springframework.stereotype.Service;
 import pub.platform.advance.utils.PropertyManager;
+import rfm.ta.gateway.dep.model.base.TIA;
+
 import javax.annotation.Resource;
 import javax.jms.*;
 
@@ -43,8 +45,9 @@ public class DepService {
         TextMessage msg = (TextMessage) jmsSendTemplate.execute(new ProducerCallback<Object>() {
             public Object doInJms(Session session, MessageProducer producer) throws JMSException {
                 TextMessage msg = session.createTextMessage(msgtxt);
+//                ObjectMessage msg = session.createObjectMessage(msgtxt);
                 msg.setStringProperty("JMSX_CHANNELID", channelId);
-                msg.setStringProperty("JMSX_APPID", "HAIERFIP");
+                msg.setStringProperty("JMSX_APPID", "HAIERRFM");
                 msg.setStringProperty("JMSX_BIZID", DEP_BIZID.toUpperCase());
                 msg.setStringProperty("JMSX_USERID", DEP_USERNAME);
                 msg.setStringProperty("JMSX_PASSWORD", DEP_PWD);
