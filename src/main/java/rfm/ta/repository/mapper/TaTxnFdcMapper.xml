@@ -8,7 +8,7 @@
       This element was generated on Thu Jul 02 18:27:17 CST 2015.
     -->
     <result column="PK_ID" property="pkId" jdbcType="VARCHAR" />
-    <result column="TRADE_ID" property="tradeId" jdbcType="VARCHAR" />
+    <result column="TRADE_ID" property="txCode" jdbcType="VARCHAR" />
     <result column="ACC_TYPE" property="accType" jdbcType="VARCHAR" />
     <result column="ORIGIN_ID" property="originId" jdbcType="VARCHAR" />
     <result column="BANK_ID" property="bankId" jdbcType="VARCHAR" />
@@ -174,7 +174,7 @@
       RECEIVE_SERIAL, PROG_NAME, COMPANY_NAME, 
       OPER_NAME, CERTIFICATES_TYPE, CERTIFICATES_NAME
       )
-    values (#{pkId,jdbcType=VARCHAR}, #{tradeId,jdbcType=VARCHAR}, #{accType,jdbcType=VARCHAR}, 
+    values (#{pkId,jdbcType=VARCHAR}, #{txCode,jdbcType=VARCHAR}, #{accType,jdbcType=VARCHAR},
       #{originId,jdbcType=VARCHAR}, #{bankId,jdbcType=VARCHAR}, #{cityId,jdbcType=VARCHAR}, 
       #{accountId,jdbcType=VARCHAR}, #{accountName,jdbcType=VARCHAR}, #{toAccountId,jdbcType=VARCHAR}, 
       #{toAccountName,jdbcType=VARCHAR}, #{toBankName,jdbcType=VARCHAR}, #{tradeAmt,jdbcType=DECIMAL}, 
@@ -199,7 +199,7 @@
       <if test="pkId != null" >
         PK_ID,
       </if>
-      <if test="tradeId != null" >
+      <if test="txCode != null" >
         TRADE_ID,
       </if>
       <if test="accType != null" >
@@ -309,8 +309,8 @@
       <if test="pkId != null" >
         #{pkId,jdbcType=VARCHAR},
       </if>
-      <if test="tradeId != null" >
-        #{tradeId,jdbcType=VARCHAR},
+      <if test="txCode != null" >
+        #{txCode,jdbcType=VARCHAR},
       </if>
       <if test="accType != null" >
         #{accType,jdbcType=VARCHAR},
@@ -438,8 +438,8 @@
       <if test="record.pkId != null" >
         PK_ID = #{record.pkId,jdbcType=VARCHAR},
       </if>
-      <if test="record.tradeId != null" >
-        TRADE_ID = #{record.tradeId,jdbcType=VARCHAR},
+      <if test="record.txCode != null" >
+        TRADE_ID = #{record.txCode,jdbcType=VARCHAR},
       </if>
       <if test="record.accType != null" >
         ACC_TYPE = #{record.accType,jdbcType=VARCHAR},
@@ -556,7 +556,7 @@
     -->
     update TA_TXN_FDC
     set PK_ID = #{record.pkId,jdbcType=VARCHAR},
-      TRADE_ID = #{record.tradeId,jdbcType=VARCHAR},
+      TRADE_ID = #{record.txCode,jdbcType=VARCHAR},
       ACC_TYPE = #{record.accType,jdbcType=VARCHAR},
       ORIGIN_ID = #{record.originId,jdbcType=VARCHAR},
       BANK_ID = #{record.bankId,jdbcType=VARCHAR},

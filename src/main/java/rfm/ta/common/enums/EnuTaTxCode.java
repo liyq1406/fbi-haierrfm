@@ -2,7 +2,7 @@ package rfm.ta.common.enums;
 
 import java.util.Hashtable;
 
-public enum EnuTaTradeId {
+public enum EnuTaTxCode {
     TRADE_1001("1001", "建立监管"),
     TRADE_1002("1002", "解除监管"),
     TRADE_2001("2001", "交存验证"),
@@ -18,9 +18,9 @@ public enum EnuTaTradeId {
 
     private String code = null;
     private String title = null;
-    private static Hashtable<String, EnuTaTradeId> aliasEnums;
+    private static Hashtable<String, EnuTaTxCode> aliasEnums;
 
-    EnuTaTradeId(String code, String title) {
+    EnuTaTxCode(String code, String title) {
         this.init(code, title);
     }
 
@@ -37,7 +37,7 @@ public enum EnuTaTradeId {
         aliasEnums.put(title, this);
     }
 
-    public static EnuTaTradeId valueOfAlias(String alias) {
+    public static EnuTaTxCode valueOfAlias(String alias) {
         return aliasEnums.get(alias);
     }
 

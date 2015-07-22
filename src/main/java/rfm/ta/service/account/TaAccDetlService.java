@@ -37,11 +37,11 @@ public class TaAccDetlService {
         if (taRsAccDtlPara.getTxCode() !=null && !StringUtils.isEmpty(taRsAccDtlPara.getTxCode().trim())) {
             criteria.andTxCodeEqualTo(taRsAccDtlPara.getTxCode());
         }
-        if (taRsAccDtlPara.getRtnAccName() !=null && !StringUtils.isEmpty(taRsAccDtlPara.getRtnAccName().trim())) {
-            criteria.andRtnAccNameLike("%" + taRsAccDtlPara.getRtnAccName() + "%");
+        if (taRsAccDtlPara.getAccName() !=null && !StringUtils.isEmpty(taRsAccDtlPara.getAccName().trim())) {
+            criteria.andAccNameLike("%" + taRsAccDtlPara.getAccName() + "%");
         }
-        if (taRsAccDtlPara.getRtnAccId() != null && !StringUtils.isEmpty(taRsAccDtlPara.getRtnAccId().trim())) {
-            criteria.andRtnAccIdEqualTo(taRsAccDtlPara.getRtnAccId());
+        if (taRsAccDtlPara.getAccId() != null && !StringUtils.isEmpty(taRsAccDtlPara.getAccId().trim())) {
+            criteria.andAccIdEqualTo(taRsAccDtlPara.getAccId());
         }
         criteria.andDeletedFlagEqualTo("0");
         example.setOrderByClause("Trade_Date desc,acc_id");

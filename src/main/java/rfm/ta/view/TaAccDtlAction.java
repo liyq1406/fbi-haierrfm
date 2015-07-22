@@ -44,14 +44,14 @@ public class TaAccDtlAction implements Serializable {
     public void init(){
         taRsAccDtlList = taAccDetlService.selectedRecords(new TaRsAccDtl());
         if(taRsAccDtlList.size()>0) {
-            System.out.println("======>" + taRsAccDtlList.get(0).getRtnAccId());
+            System.out.println("======>" + taRsAccDtlList.get(0).getAccId());
         }
     }
 
     public void onQryLocaldatatest() {
         taRsAccDtlList2 = taAccDetlService.selectedRecords(new TaRsAccDtl());
         if(taRsAccDtlList2.size()>0) {
-            System.out.println("======>" + taRsAccDtlList.get(0).getRtnAccId());
+            System.out.println("======>" + taRsAccDtlList.get(0).getAccId());
         }
     }
 

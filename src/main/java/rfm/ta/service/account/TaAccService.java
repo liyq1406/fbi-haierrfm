@@ -29,7 +29,7 @@ import java.util.List;
 @Service
 public class TaAccService {
     private static final Logger logger = LoggerFactory.getLogger(TaAccService.class);
-    private static String DEP_CHANNEL_ID_RFM = "930";
+    private static String DEP_CHANNEL_ID_RFM = "200";
 
     @Autowired
     private TaRsAccMapper accountMapper;
@@ -214,10 +214,10 @@ public class TaAccService {
     @Transactional
     public void sendAndRecvRealTimeTxnMessage(TaRsAcc taRsAccPara) {
         try {
-            String msgtxt = EnuTaTradeId.TRADE_1001.getCode()                                            // 01   交易代码       4   2001
+            String msgtxt = EnuTaTxCode.TRADE_1001.getCode()                                             // 01   交易代码       4   2001
                           + EnuTaBankId.BANK_HAIER.getCode()                                             // 02   监管银行代码   2
                           + EnuTaCityId.CITY_TAIAN.getCode()                                             // 03   城市代码       6
-                          + StringUtils.rightPad(taRsAccPara.getBizId(), 14, ' ')                   // 04   监管申请编号   14
+                          + StringUtils.rightPad(taRsAccPara.getBizId(), 14, ' ')                         // 04   监管申请编号   14
                           + StringUtils.rightPad(taRsAccPara.getAccType(), 1, ' ')                        // 05   帐户类别       1   0：预售监管户
                           + StringUtils.rightPad(taRsAccPara.getAccId(), 30, ' ')                         // 06   监管专户账号   30
                           + StringUtils.rightPad(taRsAccPara.getAccName(), 150, ' ')                      // 07   监管专户户名   150
@@ -226,7 +226,6 @@ public class TaAccService {
                           + StringUtils.rightPad(taRsAccPara.getBranchId(), 30, ' ')                      // 10   网点号         30
                           + StringUtils.rightPad(ToolUtil.getOperatorManager().getOperatorId(), 30, ' ')  // 11   柜员号         30
                           + EnuTaInitiatorId.INITIATOR.getCode();                                        // 12   发起方         1   1_监管银行
-
             //通过MQ发送信息到DEP
             String msgid="";// = depService.sendDepMessage(DEP_CHANNEL_ID_RFM, msgtxt);
             handle1001Message(depService.recvDepMessage(msgid));

@@ -23,10 +23,10 @@
                 <p:panel id="query" header="【记账结果】查询">
                     <h:panelGrid columns="2" cellspacing="3" style="width:100%">
                         <h:panelGrid columns="2" cellspacing="3" style="width:40%">
-                            <h:outputLabel value="*【业务编号】:" for="busiApplyId"/>
-                            <h:inputText autocomplete="off" id="busiApplyId"
+                            <h:outputLabel value="*【业务编号】:" for="bizId"/>
+                            <h:inputText autocomplete="off" id="bizId"
                                          required="true" requiredMessage="必须输入业务编号！"
-                                         value="#{taActRsltQryAction.taActRsltQryModelShow.busiApplyId}">
+                                         value="#{taActRsltQryAction.taActRsltQryModelShow.bizId}">
                             </h:inputText>
                         </h:panelGrid>
                         <p:commandButton update="msgs,pdt" style="width: 80px"
@@ -57,7 +57,7 @@
                              emptyMessage="数据记录为空...">
 
                     <p:column headerText="交易代码" style="width: 80px;text-align:center">
-                        <h:outputText value="#{record.tradeId}" style="text-align: center;"/>
+                        <h:outputText value="#{record.txCode}" style="text-align: center;"/>
                     </p:column>
 
                     <p:column headerText="监管银行代码" style="width: 80px;text-align:center">
@@ -69,7 +69,7 @@
                     </p:column>
 
                     <p:column headerText="业务编号" style="width: 80px;text-align:center">
-                        <h:outputText value="#{record.busiApplyId}" style="text-align: right"/>
+                        <h:outputText value="#{record.bizId}" style="text-align: right"/>
                     </p:column>
 
                     <p:column headerText="查询网点" style="width: 80px;text-align:center">

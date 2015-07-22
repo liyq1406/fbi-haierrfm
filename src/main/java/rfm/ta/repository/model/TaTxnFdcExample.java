@@ -266,73 +266,73 @@ public class TaTxnFdcExample {
             return (Criteria) this;
         }
 
-        public Criteria andTradeIdIsNull() {
+        public Criteria andtxCodeIsNull() {
             addCriterion("TRADE_ID is null");
             return (Criteria) this;
         }
 
-        public Criteria andTradeIdIsNotNull() {
+        public Criteria andtxCodeIsNotNull() {
             addCriterion("TRADE_ID is not null");
             return (Criteria) this;
         }
 
-        public Criteria andTradeIdEqualTo(String value) {
-            addCriterion("TRADE_ID =", value, "tradeId");
+        public Criteria andtxCodeEqualTo(String value) {
+            addCriterion("TRADE_ID =", value, "txCode");
             return (Criteria) this;
         }
 
-        public Criteria andTradeIdNotEqualTo(String value) {
-            addCriterion("TRADE_ID <>", value, "tradeId");
+        public Criteria andtxCodeNotEqualTo(String value) {
+            addCriterion("TRADE_ID <>", value, "txCode");
             return (Criteria) this;
         }
 
-        public Criteria andTradeIdGreaterThan(String value) {
-            addCriterion("TRADE_ID >", value, "tradeId");
+        public Criteria andtxCodeGreaterThan(String value) {
+            addCriterion("TRADE_ID >", value, "txCode");
             return (Criteria) this;
         }
 
-        public Criteria andTradeIdGreaterThanOrEqualTo(String value) {
-            addCriterion("TRADE_ID >=", value, "tradeId");
+        public Criteria andtxCodeGreaterThanOrEqualTo(String value) {
+            addCriterion("TRADE_ID >=", value, "txCode");
             return (Criteria) this;
         }
 
-        public Criteria andTradeIdLessThan(String value) {
-            addCriterion("TRADE_ID <", value, "tradeId");
+        public Criteria andtxCodeLessThan(String value) {
+            addCriterion("TRADE_ID <", value, "txCode");
             return (Criteria) this;
         }
 
-        public Criteria andTradeIdLessThanOrEqualTo(String value) {
-            addCriterion("TRADE_ID <=", value, "tradeId");
+        public Criteria andtxCodeLessThanOrEqualTo(String value) {
+            addCriterion("TRADE_ID <=", value, "txCode");
             return (Criteria) this;
         }
 
-        public Criteria andTradeIdLike(String value) {
-            addCriterion("TRADE_ID like", value, "tradeId");
+        public Criteria andtxCodeLike(String value) {
+            addCriterion("TRADE_ID like", value, "txCode");
             return (Criteria) this;
         }
 
-        public Criteria andTradeIdNotLike(String value) {
-            addCriterion("TRADE_ID not like", value, "tradeId");
+        public Criteria andtxCodeNotLike(String value) {
+            addCriterion("TRADE_ID not like", value, "txCode");
             return (Criteria) this;
         }
 
-        public Criteria andTradeIdIn(List<String> values) {
-            addCriterion("TRADE_ID in", values, "tradeId");
+        public Criteria andtxCodeIn(List<String> values) {
+            addCriterion("TRADE_ID in", values, "txCode");
             return (Criteria) this;
         }
 
-        public Criteria andTradeIdNotIn(List<String> values) {
-            addCriterion("TRADE_ID not in", values, "tradeId");
+        public Criteria andtxCodeNotIn(List<String> values) {
+            addCriterion("TRADE_ID not in", values, "txCode");
             return (Criteria) this;
         }
 
-        public Criteria andTradeIdBetween(String value1, String value2) {
-            addCriterion("TRADE_ID between", value1, value2, "tradeId");
+        public Criteria andtxCodeBetween(String value1, String value2) {
+            addCriterion("TRADE_ID between", value1, value2, "txCode");
             return (Criteria) this;
         }
 
-        public Criteria andTradeIdNotBetween(String value1, String value2) {
-            addCriterion("TRADE_ID not between", value1, value2, "tradeId");
+        public Criteria andtxCodeNotBetween(String value1, String value2) {
+            addCriterion("TRADE_ID not between", value1, value2, "txCode");
             return (Criteria) this;
         }
 

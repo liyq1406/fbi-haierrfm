@@ -72,16 +72,16 @@
                                 </f:facet>
 
                                 <p:column headerText="监管账号" style="text-align:center">
-                                    <h:outputText value="#{record.rtnAccId}"/>
+                                    <h:outputText value="#{record.accId}"/>
                                 </p:column>
                                 <p:column headerText="对方账号" style="text-align:center">
-                                    <h:outputText value="#{record.rtnRecvAccId}"/>
+                                    <h:outputText value="#{record.recvAccId}"/>
                                 </p:column>
                                 <p:column headerText="对方账户名称" style="text-align:center">
-                                    <h:outputText value="#{record.rtnRecvAccName}"/>
+                                    <h:outputText value="#{record.recvAccName}"/>
                                 </p:column>
                                 <p:column headerText="交易金额">
-                                    <h:outputText value="#{record.rtnTradeAmt}" style="float: right">
+                                    <h:outputText value="#{record.txAmt}" style="float: right">
                                         <f:convertNumber type="number" pattern="#,###,###,###,##0.00"/>
                                     </h:outputText>
                                 </p:column>
@@ -96,16 +96,16 @@
                                     本日SBS记账
                                 </f:facet>
                                 <p:column headerText="监管账号" style="text-align:center">
-                                    <h:outputText value="#{record.rtnAccId}"/>
+                                    <h:outputText value="#{record.accId}"/>
                                 </p:column>
                                 <p:column headerText="对方账号" style="text-align:center">
-                                    <h:outputText value="#{record.rtnRecvAccId}"/>
+                                    <h:outputText value="#{record.recvAccId}"/>
                                 </p:column>
                                 <p:column headerText="对方账户名称" style="text-align:center">
-                                    <h:outputText value="#{record.rtnRecvAccName}"/>
+                                    <h:outputText value="#{record.recvAccName}"/>
                                 </p:column>
                                 <p:column headerText="交易金额">
-                                    <h:outputText value="#{record.rtnTradeAmt}" style="float: right">
+                                    <h:outputText value="#{record.txAmt}" style="float: right">
                                         <f:convertNumber type="number" pattern="#,###,###,###,##0.00"/>
                                     </h:outputText>
                                 </p:column>
