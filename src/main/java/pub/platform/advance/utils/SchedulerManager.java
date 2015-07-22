@@ -8,8 +8,7 @@ import java.io.*;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerFactory;
 import org.quartz.impl.StdSchedulerFactory;
-
-import com.ccb.dao.SYSSCHEDULER;
+import platform.repository.model.SysScheduler;
 
 public class SchedulerManager extends HttpServlet {
 
@@ -88,16 +87,14 @@ public class SchedulerManager extends HttpServlet {
 		SchedulerManager.shutdownScheduler();
 
 		SchedulerFactory schedulerFactory = new StdSchedulerFactory();
-               // System.out.println("ddd");
+        // System.out.println("ddd");
 		SchedulerManager.scheduler = schedulerFactory.getScheduler();
 
-		List list = SYSSCHEDULER.find("", true);
-
-
+		/*List list = SysScheduler.find("", true);
 		for(int i=0; i<list.size(); i++){
-			SYSSCHEDULER scheuler = (SYSSCHEDULER)list.get(i);
+            SysScheduler scheuler = (SysScheduler)list.get(i);
 			JobInfo job = new JobInfo(scheuler);
-		}
+		}*/
 
 		SchedulerManager.scheduler.start();
 	}
