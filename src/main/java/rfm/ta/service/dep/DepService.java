@@ -2,12 +2,11 @@ package rfm.ta.service.dep;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.ProducerCallback;
 import org.springframework.stereotype.Service;
 import pub.platform.advance.utils.PropertyManager;
-import rfm.ta.gateway.dep.model.base.TIA;
+import rfm.ta.common.gateway.dep.model.base.TIA;
 
 import javax.annotation.Resource;
 import javax.jms.*;

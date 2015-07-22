@@ -1,6 +1,5 @@
 package rfm.ta.service.account;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,12 +10,12 @@ import platform.service.SystemService;
 import pub.platform.security.OperatorManager;
 import common.utils.ToolUtil;
 import rfm.ta.common.enums.*;
+import rfm.ta.common.gateway.dep.model.txn.TIA2001001;
 import rfm.ta.repository.dao.TaRsAccMapper;
 import rfm.ta.repository.model.TaRsAcc;
 import rfm.ta.repository.model.TaRsAccExample;
 import rfm.ta.service.dep.DepService;
 
-import javax.faces.model.SelectItem;
 import java.util.List;
 
 /**
@@ -214,20 +213,21 @@ public class TaAccService {
     @Transactional
     public void sendAndRecvRealTimeTxnMessage(TaRsAcc taRsAccPara) {
         try {
-            String msgtxt = EnuTaTxCode.TRADE_1001.getCode()                                             // 01   交易代码       4   2001
-                          + EnuTaBankId.BANK_HAIER.getCode()                                             // 02   监管银行代码   2
-                          + EnuTaCityId.CITY_TAIAN.getCode()                                             // 03   城市代码       6
-                          + StringUtils.rightPad(taRsAccPara.getBizId(), 14, ' ')                         // 04   监管申请编号   14
-                          + StringUtils.rightPad(taRsAccPara.getAccType(), 1, ' ')                        // 05   帐户类别       1   0：预售监管户
-                          + StringUtils.rightPad(taRsAccPara.getAccId(), 30, ' ')                         // 06   监管专户账号   30
-                          + StringUtils.rightPad(taRsAccPara.getAccName(), 150, ' ')                      // 07   监管专户户名   150
-                          + StringUtils.rightPad(taRsAccPara.getReqSn(), 30, ' ')                         // 08   流水号         30
-                          + ToolUtil.getStrLastUpdDate()                                                  // 09   日期            10  送系统日期即可
-                          + StringUtils.rightPad(taRsAccPara.getBranchId(), 30, ' ')                      // 10   网点号         30
-                          + StringUtils.rightPad(ToolUtil.getOperatorManager().getOperatorId(), 30, ' ')  // 11   柜员号         30
-                          + EnuTaInitiatorId.INITIATOR.getCode();                                        // 12   发起方         1   1_监管银行
+            TIA2001001 tia2001001Temp=new TIA2001001() ;
+            tia2001001Temp.header.TX_CODE=EnuTaTxCode.TRADE_1001.getCode();      // 01   交易代码       4   2001
+            tia2001001Temp.body.BANK_ID= EnuTaBankId.BANK_HAIER.getCode();       // 02   监管银行代码   2
+            tia2001001Temp.body.CITY_ID= EnuTaCityId.CITY_TAIAN.getCode();       // 03   城市代码       6
+            tia2001001Temp.header.BIZ_ID=taRsAccPara.getBizId();                  // 04   监管申请编号   14
+            tia2001001Temp.body.ACC_TYPE=taRsAccPara.getAccType();                // 05   帐户类别       1   0：预售监管户
+            tia2001001Temp.body.ACC_ID=taRsAccPara.getAccId();                    // 06   监管专户账号    30
+            tia2001001Temp.body.ACC_NAME=taRsAccPara.getAccName();                // 07   监管专户户名   150
+            tia2001001Temp.header.REQ_SN=taRsAccPara.getReqSn();                  // 08   流水号         30
+            tia2001001Temp.body.TX_DATE=ToolUtil.getStrLastUpdDate() ;            // 09   日期           10  送系统日期即可
+            tia2001001Temp.body.BRANCH_ID=ToolUtil.getStrLastUpdDate() ;          // 10   网点号         30
+            tia2001001Temp.header.USER_ID=ToolUtil.getStrLastUpdDate() ;          // 11   柜员号         30
+            tia2001001Temp.body.INITIATOR=EnuTaInitiatorId.INITIATOR.getCode() ;// 12   发起方         1   1_监管银行
             //通过MQ发送信息到DEP
-            String msgid="";// = depService.sendDepMessage(DEP_CHANNEL_ID_RFM, msgtxt);
+            String msgid=depService.sendDepMessage(DEP_CHANNEL_ID_RFM, tia2001001Temp);
             handle1001Message(depService.recvDepMessage(msgid));
             String strRtn="0000";
             if(msgid!=""){
