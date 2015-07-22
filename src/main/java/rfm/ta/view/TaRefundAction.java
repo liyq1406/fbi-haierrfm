@@ -3,6 +3,7 @@ package rfm.ta.view;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import platform.service.PtenudetailService;
+import rfm.ta.common.enums.EnuTaTxCode;
 import rfm.ta.repository.model.TaRsAccDtl;
 import rfm.ta.service.account.TaAccDetlService;
 
@@ -39,40 +40,40 @@ public class TaRefundAction {
         tatxCodeList=ptenudetailService.getTxCodeList();
     }
 
-    /*划拨验证用*/
+    /*返还验证用*/
     public void onBtnValiClick() {
         /*验证后查询*/
         onBtnValiQryClick();
     }
-    /*划拨验证查询用*/
+    /*返还验证查询用*/
     public void onBtnValiQryClick() {
-        taRsAccDetail.setTxCode(tatxCodeList.get(5).getValue().toString());
+        taRsAccDetail.setTxCode(EnuTaTxCode.TRADE_2201.getCode());
         taRsAccDetailList = taAccDetlService.selectedRecords(taRsAccDetail);
     }
 
-    /*划拨记账用*/
+    /*返还记账用*/
     public void onBtnActClick() {
         /*记账后查询*/
         onBtnActQryClick();
     }
-    /*划拨记账查询用*/
+    /*返还记账查询用*/
     public void onBtnActQryClick() {
-        taRsAccDetail.setTxCode(tatxCodeList.get(6).getValue().toString());
+        taRsAccDetail.setTxCode(EnuTaTxCode.TRADE_2202.getCode());
         taRsAccDetailList = taAccDetlService.selectedRecords(taRsAccDetail);
     }
 
-    /*划拨冲正用*/
+    /*返还冲正用*/
     public void onBtnCanclClick() {
         /*冲正后查询*/
         onBtnCanclQryClick();
     }
-    /*划拨冲正查询用*/
+    /*返还冲正查询用*/
     public void onBtnCanclQryClick() {
-        taRsAccDetail.setTxCode(tatxCodeList.get(7).getValue().toString());
+        taRsAccDetail.setTxCode(EnuTaTxCode.TRADE_2211.getCode());
         taRsAccDetailList = taAccDetlService.selectedRecords(taRsAccDetail);
     }
 
-    /*划拨查询用*/
+    /*返还查询用*/
     public void onBtnQryClick() {
         taRsAccDetailList = taAccDetlService.selectedRecords(taRsAccDetail);
     }

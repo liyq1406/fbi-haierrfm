@@ -11,10 +11,10 @@ public enum EnuTaTxCode {
     TRADE_2101("2101", "划拨验证"),
     TRADE_2102("2102", "划拨记账"),
     TRADE_2111("2111", "划拨冲正"),
-    TRADE_2201("2201", "交存验证"),
-    TRADE_2202("2202", "交存记账"),
-    TRADE_2211("2211", "交存冲正"),
-    TRADE_OTHERS("04", "其他");
+    TRADE_2201("2201", "返还验证"),
+    TRADE_2202("2202", "返还记账"),
+    TRADE_2211("2211", "返还冲正"),
+    TRADE_2501("2501", "记账结果查询");
 
     private String code = null;
     private String title = null;

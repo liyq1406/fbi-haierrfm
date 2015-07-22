@@ -3,6 +3,7 @@ package rfm.ta.view;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import platform.service.PtenudetailService;
+import rfm.ta.common.enums.EnuTaTxCode;
 import rfm.ta.repository.model.TaRsAccDtl;
 import rfm.ta.service.account.TaAccDetlService;
 import rfm.ta.service.account.TaAccService;
@@ -47,7 +48,7 @@ public class TaPayoutAction {
     }
     /*划拨验证查询用*/
     public void onBtnValiQryClick() {
-        taRsAccDetail.setTxCode(taTxCodeList.get(5).getValue().toString());
+        taRsAccDetail.setTxCode(EnuTaTxCode.TRADE_2101.getCode());
         taRsAccDetailList = taAccDetlService.selectedRecords(taRsAccDetail);
     }
 
@@ -58,7 +59,7 @@ public class TaPayoutAction {
     }
     /*划拨记账查询用*/
     public void onBtnActQryClick() {
-        taRsAccDetail.setTxCode(taTxCodeList.get(6).getValue().toString());
+        taRsAccDetail.setTxCode(EnuTaTxCode.TRADE_2102.getCode());
         taRsAccDetailList = taAccDetlService.selectedRecords(taRsAccDetail);
     }
 
@@ -69,7 +70,7 @@ public class TaPayoutAction {
     }
     /*划拨冲正查询用*/
     public void onBtnCanclQryClick() {
-        taRsAccDetail.setTxCode(taTxCodeList.get(7).getValue().toString());
+        taRsAccDetail.setTxCode(EnuTaTxCode.TRADE_2111.getCode());
         taRsAccDetailList = taAccDetlService.selectedRecords(taRsAccDetail);
     }
 

@@ -234,11 +234,7 @@ public class TaAccService {
 
             }
 
-
-
-            List<SelectItem> taAccStatusListTemp=ptenudetailService.getTaAccStatusList();
-            // 枚举变量在数据库中，启用标志
-            taRsAccPara.setStatusFlag(taAccStatusListTemp.get(1).getValue().toString());
+            taRsAccPara.setStatusFlag(EnuTaTxCode.TRADE_1001.getCode());
             updateRecord(taRsAccPara);
         } catch (Exception e) {
             logger.error("MQ消息发送失败", e);

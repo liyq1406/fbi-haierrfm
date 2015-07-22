@@ -26,7 +26,7 @@
                             <h:outputLabel value="*【业务编号】:" for="bizId"/>
                             <h:inputText autocomplete="off" id="bizId"
                                          required="true" requiredMessage="必须输入业务编号！"
-                                         value="#{taActRsltQryAction.taActRsltQryModelShow.bizId}">
+                                         value="#{taActRsltQryAction.taRsAccDtlQry.bizId}">
                             </h:inputText>
                         </h:panelGrid>
                         <p:commandButton update="msgs,pdt" style="width: 80px"
@@ -46,7 +46,7 @@
 
                 <p:dataTable id="pdt" style="width:100%;"
                              dynamic="true"
-                             value="#{taActRsltQryAction.taActRsltQryModelShowList}"
+                             value="#{taActRsltQryAction.taRsAccDtlList}"
                              selectionMode="single"
                              var="record"
                              rowKey="#{record.pkId}"
@@ -73,32 +73,32 @@
                     </p:column>
 
                     <p:column headerText="查询网点" style="width: 80px;text-align:center">
-                        <h:outputText value="#{record.bankBranchId}" style="text-align: right"/>
+                        <h:outputText value="#{record.branchId}" style="text-align: right"/>
                     </p:column>
 
                     <p:column headerText="查询人员" style="width: 80px;text-align:center">
-                        <h:outputText value="#{record.bankOperId}"/>
+                        <h:outputText value="#{record.userId}"/>
                     </p:column>
                     <p:column headerText="发起方" style="width: 80px;text-align:center">
                         <h:outputText value="#{record.initiator}" style="text-align: right"/>
                     </p:column>
                     <p:column headerText="返回结果代码" style="width: 80px;text-align:center">
-                        <h:outputText value="#{record.returnId}" style="text-align: right"/>
+                        <h:outputText value="#{record.returnCode}" style="text-align: right"/>
                     </p:column>
                     <p:column headerText="记账结果" style="width: 80px;text-align:center">
-                        <h:outputText value="#{record.actRslt}" style="text-align: right"/>
+                        <h:outputText value="#{record.actRstl}" style="text-align: right"/>
                     </p:column>
                     <p:column headerText="预售资金监管平台记账流水" style="width: 80px;text-align:center">
-                        <h:outputText value="#{record.fdcActSerial}" style="text-align: right"/>
+                        <h:outputText value="#{record.fdcActSn}" style="text-align: right"/>
                     </p:column>
                     <p:column headerText="监管银行记账流水" style="width: 80px;text-align:center">
-                        <h:outputText value="#{record.bankSerial}" style="text-align: right"/>
+                        <h:outputText value="#{record.fdcBankActSn}" style="text-align: right"/>
                     </p:column>
                     <p:column headerText="预售资金监管平台流水" style="width: 80px;text-align:center">
-                        <h:outputText value="#{record.fdcSerial}" style="text-align: right"/>
+                        <h:outputText value="#{record.fdcSn}" style="text-align: right"/>
                     </p:column>
                     <p:column headerText="描述" style="width: 80px;text-align:center">
-                        <h:outputText value="#{record.remark}" style="text-align: right"/>
+                        <h:outputText value="#{record.returnMsg}" style="text-align: right"/>
                     </p:column>
                 </p:dataTable>
             </h:form>
