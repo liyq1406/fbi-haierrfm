@@ -3,7 +3,6 @@ package rfm.ta.view;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import platform.service.PtenudetailService;
-import rfm.ta.gateway.sbs.taservice.TaSbsService;
 import rfm.ta.repository.model.TaRsAccDtl;
 import rfm.ta.service.account.TaAccDetlService;
 import rfm.ta.service.account.TaAccService;
