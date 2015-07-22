@@ -38,8 +38,6 @@ public class TIA2002501 extends TIA implements Serializable {
           05	查询网点	    30
           06	查询人员	    30
           07	发起方	        1 1_监管银行*/
-        public String REQ_CONTEXT;             // 报文主题内容
 
-        public String REMARK;                   // 备注
     }
 }

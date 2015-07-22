@@ -48,8 +48,12 @@ public class TIA2002102 extends TIA implements Serializable {
           13	记账网点	    30
           14	记账人员	    30
           15	发起方	        1	1_监管银行*/
-        public String REQ_CONTEXT;             // 报文主题内容
 
-        public String REMARK;                   // 备注
+        public String ACC_ID;             // 06	监管账号	    30	划拨验证的输出项
+        public String RECV_ACC_ID;       // 07	收款单位账号	30	划拨验证的输出项
+        public String TX_AMT;             // 08	划拨资金	    20	划拨验证的输出项
+        public String STL_TYPE;           // 09   结算方式	    2	01_ 现金 02_ 转账 03_ 支票
+        public String CHECK_ID;           // 10   支票号码	    30
+        public String TX_DATE;            // 日期           10  送系统日期即可
     }
 }

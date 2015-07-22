@@ -37,7 +37,7 @@ public class TaActRsltQryAction {
     @PostConstruct
     public void init() {
         taActRsltQryModelShow=new TaActRsltQryModelShow();
-        taTradeIdList=ptenudetailService.getTradeIdList();
+        taTradeIdList=ptenudetailService.getTxCodeList();
     }
 
     /*划拨验证用*/

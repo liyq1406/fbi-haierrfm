@@ -37,8 +37,8 @@ public class TOA2001001 extends TOA implements Serializable {
           04	预售项目地址            128
           05    预售项目名称            128
         */
-        public String RES_CONTEXT;             // 报文主题内容
-
-        public String REMARK;                   // 备注
+        public String PRE_SALE_PER_NAME;             // 预售人名称	            255
+        public String PRE_SALE_PRO_ADDR;             // 预售项目地址            128
+        public String PRE_SALE_PRO_NAME;             // 预售项目名称            128
     }
 }

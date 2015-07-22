@@ -36,7 +36,7 @@ public class TaRefundAction {
     @PostConstruct
     public void init() {
         taRsAccDetail=new TaRsAccDtl();
-        taTradeIdList=ptenudetailService.getTradeIdList();
+        taTradeIdList=ptenudetailService.getTxCodeList();
     }
 
     /*划拨验证用*/
@@ -46,7 +46,7 @@ public class TaRefundAction {
     }
     /*划拨验证查询用*/
     public void onBtnValiQryClick() {
-        taRsAccDetail.setTradeId(taTradeIdList.get(5).getValue().toString());
+        taRsAccDetail.setTxCode(taTradeIdList.get(5).getValue().toString());
         taRsAccDetailList = taAccDetlService.selectedRecords(taRsAccDetail);
     }
 
@@ -57,7 +57,7 @@ public class TaRefundAction {
     }
     /*划拨记账查询用*/
     public void onBtnActQryClick() {
-        taRsAccDetail.setTradeId(taTradeIdList.get(6).getValue().toString());
+        taRsAccDetail.setTxCode(taTradeIdList.get(6).getValue().toString());
         taRsAccDetailList = taAccDetlService.selectedRecords(taRsAccDetail);
     }
 
@@ -68,7 +68,7 @@ public class TaRefundAction {
     }
     /*划拨冲正查询用*/
     public void onBtnCanclQryClick() {
-        taRsAccDetail.setTradeId(taTradeIdList.get(7).getValue().toString());
+        taRsAccDetail.setTxCode(taTradeIdList.get(7).getValue().toString());
         taRsAccDetailList = taAccDetlService.selectedRecords(taRsAccDetail);
     }
 

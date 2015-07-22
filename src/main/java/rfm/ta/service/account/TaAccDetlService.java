@@ -5,14 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import platform.service.SystemService;
 import pub.platform.security.OperatorManager;
-import pub.platform.utils.ToolUtil;
-import rfm.ta.repository.dao.TaRsAccDtlMapper;
+import common.utils.ToolUtil;
 import rfm.ta.repository.dao.com.TaCommonMapper;
 import rfm.ta.repository.model.TaRsAccDtl;
 import rfm.ta.repository.model.TaRsAccDtlExample;
-import rfm.ta.repository.model.TaRsAcc;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -34,11 +31,11 @@ public class TaAccDetlService {
         TaRsAccDtlExample example = new TaRsAccDtlExample();
         example.clear();
         TaRsAccDtlExample.Criteria criteria = example.createCriteria();
-        if (taRsAccDtlPara.getBusiApplyId() !=null && !StringUtils.isEmpty(taRsAccDtlPara.getBusiApplyId().trim())) {
-            criteria.andBusiApplyIdEqualTo(taRsAccDtlPara.getBusiApplyId());
+        if (taRsAccDtlPara.getBizId() !=null && !StringUtils.isEmpty(taRsAccDtlPara.getBizId().trim())) {
+            criteria.andBizIdEqualTo(taRsAccDtlPara.getBizId());
         }
-        if (taRsAccDtlPara.getTradeId() !=null && !StringUtils.isEmpty(taRsAccDtlPara.getTradeId().trim())) {
-            criteria.andTradeIdEqualTo(taRsAccDtlPara.getTradeId());
+        if (taRsAccDtlPara.getTxCode() !=null && !StringUtils.isEmpty(taRsAccDtlPara.getTxCode().trim())) {
+            criteria.andTxCodeEqualTo(taRsAccDtlPara.getTxCode());
         }
         if (taRsAccDtlPara.getRtnAccName() !=null && !StringUtils.isEmpty(taRsAccDtlPara.getRtnAccName().trim())) {
             criteria.andRtnAccNameLike("%" + taRsAccDtlPara.getRtnAccName() + "%");
@@ -60,7 +57,7 @@ public class TaAccDetlService {
         taRsAccDtl.setCreatedTime(ToolUtil.getStrLastUpdTime());
         taRsAccDtl.setLastUpdBy(om.getOperatorId());
         taRsAccDtl.setLastUpdTime(ToolUtil.getStrLastUpdTime());
-        taRsAccDtl.setSerial(commonMapper.selectMaxAccDetailSerial());
+        taRsAccDtl.setReqSn(commonMapper.selectMaxAccDetailSerial());
         //taRsAccDtl.setToSerial(taRsAccDtl.gett());
         //taRsAccDtlMapper.insertSelective(taRsAccDtl);
     }

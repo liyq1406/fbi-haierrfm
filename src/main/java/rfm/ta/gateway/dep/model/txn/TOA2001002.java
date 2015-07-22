@@ -33,8 +33,5 @@ public class TOA2001002 extends TOA implements Serializable {
         /*01	结果	                4   0000表示成功
           02	预售资金监管平台流水	16
         */
-        public String RES_CONTEXT;             // 报文主题内容
-
-        public String REMARK;                   // 备注
     }
 }

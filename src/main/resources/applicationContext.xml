@@ -107,7 +107,6 @@
         </property>
         <property name="userName" value="${jms.username}"/>
         <property name="password" value="${jms.password}"/>
-
     </bean>
 
     <bean id="jmsSendTemplate" class="org.springframework.jms.core.JmsTemplate">
@@ -122,7 +121,7 @@
         <property name="receiveTimeout" value="${jms.realtime_receive_timeout}"/>
     </bean>
 
-    <!-- 实时发送  -->
+    <!-- 实时发送-->
     <bean id="send.unipay" class="org.apache.activemq.command.ActiveMQQueue">
         <constructor-arg index="0">
             <value>${queue.fip.to.dep}</value>
@@ -137,11 +136,11 @@
 
     <bean id="jmsFipOutTemplate" class="org.springframework.jms.core.JmsTemplate">
         <property name="connectionFactory" ref="jmsConnectionFactory"/>
-        <property name="defaultDestinationName" value="${queue.dep.core.fip.rfm.out}"/>
+        <property name="defaultDestinationName" value="${queue.dep.core.rfm.out}"/>
         <property name="timeToLive" value="${jms.timeToLive}"/>
     </bean>
 	
 	<jms:listener-container connection-factory="jmsConnectionFactory" concurrency="5">
-        <jms:listener destination="${queue.dep.core.fip.rfm.in}" ref="depMessageListener"/>
+        <jms:listener destination="${queue.dep.core.rfm.in}" ref="depMessageListener"/>
     </jms:listener-container>
 </beans>

@@ -40,8 +40,6 @@ public class TIA2002001 extends TIA implements Serializable {
           07	验证网点	    30
           08	验证人员	    30
           09	发起方	        1	1_监管银行*/
-        public String REQ_CONTEXT;             // 报文主题内容
-
-        public String REMARK;                   // 备注
+        public String TX_DATE;            // 日期           10  送系统日期即可
     }
 }

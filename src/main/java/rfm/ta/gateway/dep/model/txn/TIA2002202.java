@@ -43,8 +43,8 @@ public class TIA2002202 extends TIA implements Serializable {
           10	记账网点	    30
           11	记账人员	    30
           12	发起方	        1	1_监管银行*/
-        public String REQ_CONTEXT;             // 报文主题内容
-
-        public String REMARK;                   // 备注
+        public String ACC_ID;             // 06	监管账号	    30
+        public String TX_AMT;             // 07	返还资金	    20
+        public String TX_DATE;            // 日期           10  送系统日期即可
     }
 }

@@ -35,7 +35,7 @@ public class TIA2002002 extends TIA implements Serializable {
           02	监管银行代码	2
           03	城市代码	    6
           04	交存申请编号	14
-          05	交存金额	    32	MD5
+          05	交存金额	    20	2001交易交存验证返回的实缴金额；2003交易无返此项，由柜员录入。
           06	监管账号	    30	划拨验证的输出项
           07	结算方式	    2	01_ 现金 02_ 转账 03_ 支票
           08	支票号码	    30
@@ -44,8 +44,10 @@ public class TIA2002002 extends TIA implements Serializable {
           11	记账网点	    30
           12	记账人员	    30
           13	发起方	        1	1_监管银行*/
-        public String REQ_CONTEXT;             // 报文主题内容
-
-        public String REMARK;                   // 备注
+        public String TX_AMT;             // 05	交存金额	    20	2001交易交存验证返回的实缴金额；2003交易无返此项，由柜员录入。
+        public String ACC_ID;             // 06	监管账号	    30	划拨验证的输出项
+        public String STL_TYPE;           // 07   结算方式	    2	01_ 现金 02_ 转账 03_ 支票
+        public String CHECK_ID;           // 08   支票号码	    30
+        public String TX_DATE;            // 日期           10  送系统日期即可
     }
 }

@@ -29,8 +29,8 @@ public class PtenudetailService {
     private Map<String,String> taAccStatusMap;
     private List<SelectItem> taAccStatusList;
 
-    private Map<String,String> taTradeIdMap;
-    private List<SelectItem> taTradeIdList;
+    private Map<String,String> taTxCodeMap;
+    private List<SelectItem> taTxCodeList;
 
     /**
      * 根据枚举表的内容组下拉菜单
@@ -124,13 +124,13 @@ public class PtenudetailService {
         return taAccStatusList;
     }
 
-    public Map<String, String> getTradeIdMap() {
-        this.taTradeIdMap=selectEnuItemValueToExpandValueMap("TA_TRADE_ID");
-        return taTradeIdMap;
+    public Map<String, String> getTxCodeMap() {
+        this.taTxCodeMap=selectEnuItemValueToExpandValueMap("TA_TRADE_ID");
+        return taTxCodeMap;
     }
 
-    public List<SelectItem> getTradeIdList() {
-        this.taTradeIdList=getEnuSelectItemList("TA_TRADE_ID",false,false);
-        return taTradeIdList;
+    public List<SelectItem> getTxCodeList() {
+        this.taTxCodeList=getEnuSelectItemList("TA_TRADE_ID",false,false);
+        return taTxCodeList;
     }
 }

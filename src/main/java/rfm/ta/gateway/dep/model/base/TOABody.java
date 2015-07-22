@@ -3,10 +3,12 @@ package rfm.ta.gateway.dep.model.base;
 import java.io.Serializable;
 
 /**
+ * DEP往RFM发送的Java对象的报文体
  * Created by IntelliJ IDEA.
- * User: zhanrui
- * Date: 12-1-31
- * Time: 下午2:46
+ * User: hanjianlong
+ * Date: 2015/07/21
+ * Time: 15:02
  */
 public class TOABody implements Serializable {
+
 }

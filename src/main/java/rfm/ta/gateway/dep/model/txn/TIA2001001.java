@@ -11,7 +11,6 @@ import java.io.Serializable;
  * User: hanjianlong
  * Date: 2015-07-16
  */
-
 public class TIA2001001 extends TIA implements Serializable {
     public  Header header = new Header();
     public  Body body = new Body();
@@ -43,8 +42,9 @@ public class TIA2001001 extends TIA implements Serializable {
           10	网点号	        30
           11	柜员号	        30
           12	发起方	        1	1_监管银行*/
-        public String REQ_CONTEXT;             // 报文主题内容
-
-        public String REMARK;                   // 备注
+        public String ACC_TYPE;           // 帐户类别       1  0：预售监管户
+        public String ACC_ID;             // 监管专户账号   30
+        public String ACC_NAME;           // 监管专户户名   150
+        public String TX_DATE;            // 日期           10  送系统日期即可
     }
 }

@@ -33,12 +33,12 @@ public class TaPayoutAction {
 
     private List<TaRsAccDtl> taRsAccDetailList;
     private TaRsAccDtl taRsAccDetail;
-    private List<SelectItem> taTradeIdList;
+    private List<SelectItem> taTxCodeList;
 
     @PostConstruct
     public void init() {
         taRsAccDetail=new TaRsAccDtl();
-        taTradeIdList=ptenudetailService.getTradeIdList();
+        taTxCodeList=ptenudetailService.getTxCodeList();
     }
 
     /*划拨验证用*/
@@ -48,7 +48,7 @@ public class TaPayoutAction {
     }
     /*划拨验证查询用*/
     public void onBtnValiQryClick() {
-        taRsAccDetail.setTradeId(taTradeIdList.get(5).getValue().toString());
+        taRsAccDetail.setTxCode(taTxCodeList.get(5).getValue().toString());
         taRsAccDetailList = taAccDetlService.selectedRecords(taRsAccDetail);
     }
 
@@ -59,7 +59,7 @@ public class TaPayoutAction {
     }
     /*划拨记账查询用*/
     public void onBtnActQryClick() {
-        taRsAccDetail.setTradeId(taTradeIdList.get(6).getValue().toString());
+        taRsAccDetail.setTxCode(taTxCodeList.get(6).getValue().toString());
         taRsAccDetailList = taAccDetlService.selectedRecords(taRsAccDetail);
     }
 
@@ -70,7 +70,7 @@ public class TaPayoutAction {
     }
     /*划拨冲正查询用*/
     public void onBtnCanclQryClick() {
-        taRsAccDetail.setTradeId(taTradeIdList.get(7).getValue().toString());
+        taRsAccDetail.setTxCode(taTxCodeList.get(7).getValue().toString());
         taRsAccDetailList = taAccDetlService.selectedRecords(taRsAccDetail);
     }
 

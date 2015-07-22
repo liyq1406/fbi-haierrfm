@@ -42,8 +42,8 @@ public class TIA2001002 extends TIA implements Serializable {
           09	网点号	        30
           10	柜员号	        30
           11	发起方	        1	1_监管银行*/
-        public String REQ_CONTEXT;             // 报文主题内容
-
-        public String REMARK;                   // 备注
+        public String ACC_ID;             // 监管专户账号   30
+        public String ACC_NAME;           // 监管专户户名   150
+        public String TX_DATE;            // 日期           10  送系统日期即可
     }
 }

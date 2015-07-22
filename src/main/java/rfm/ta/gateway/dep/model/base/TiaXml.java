@@ -3,11 +3,11 @@ package rfm.ta.gateway.dep.model.base;
 import java.io.Serializable;
 
 /**
- * Created with IntelliJ IDEA.
- * User: zhangxiaobo
- * Date: 13-4-3
- * Time: 上午12:13
- * To change this template use File | Settings | File Templates.
+ * RFM往DEP发送的Java对象（抽象类）解析
+ * Created by IntelliJ IDEA.
+ * User: hanjianlong
+ * Date: 2015/07/21
+ * Time: 15:02
  */
 public abstract class TiaXml implements Serializable{
      public TiaXml transform(String xml) {

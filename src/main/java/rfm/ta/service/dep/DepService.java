@@ -41,11 +41,10 @@ public class DepService {
      * @return
      * @throws javax.jms.JMSException
      */
-    public String sendDepMessage(final String channelId, final String msgtxt) throws JMSException {
+    public String sendDepMessage(final String channelId, final TIA msgtxt) throws JMSException {
         TextMessage msg = (TextMessage) jmsSendTemplate.execute(new ProducerCallback<Object>() {
             public Object doInJms(Session session, MessageProducer producer) throws JMSException {
-                TextMessage msg = session.createTextMessage(msgtxt);
-//                ObjectMessage msg = session.createObjectMessage(msgtxt);
+                ObjectMessage msg = session.createObjectMessage(msgtxt);
                 msg.setStringProperty("JMSX_CHANNELID", channelId);
                 msg.setStringProperty("JMSX_APPID", "HAIERRFM");
                 msg.setStringProperty("JMSX_BIZID", DEP_BIZID.toUpperCase());

@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import platform.common.utils.MessageUtil;
 import platform.service.PtenudetailService;
-import rfm.ta.gateway.sbs.taservice.TaSbsService;
 import rfm.ta.repository.model.TaRsAcc;
 import rfm.ta.service.account.TaAccService;
 import rfm.ta.service.dep.DepService;
@@ -31,8 +30,6 @@ public class TaAccAction {
     private static final Logger logger = LoggerFactory.getLogger(TaAccAction.class);
     @ManagedProperty(value = "#{taAccService}")
     private TaAccService taAccService;
-    @ManagedProperty(value = "#{taSbsTxnService}")
-    private TaSbsService taSbsTxnService;
     @ManagedProperty(value = "#{ptenudetailService}")
     private PtenudetailService ptenudetailService;
 
@@ -163,14 +160,6 @@ public class TaAccAction {
     }
 
     //= = = = = = = = = = = = = = =  get set = = = = = = = = = = = = = = = =
-    public TaSbsService getTaSbsTxnService() {
-        return taSbsTxnService;
-    }
-
-    public void setTaSbsTxnService(TaSbsService taSbsTxnService) {
-        this.taSbsTxnService = taSbsTxnService;
-    }
-
     public TaAccService getTaAccService() {
         return taAccService;
     }

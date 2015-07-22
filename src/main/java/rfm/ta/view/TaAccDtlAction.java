@@ -7,13 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import platform.common.utils.MessageUtil;
 import pub.platform.advance.utils.PropertyManager;
-import rfm.ta.gateway.sbs.domain.core.domain.SOFForm;
-import rfm.ta.gateway.sbs.domain.txn.model.form.ac.T846;
-import rfm.ta.gateway.sbs.domain.txn.model.form.re.T924;
-import rfm.ta.gateway.sbs.domain.txn.model.msg.M8872;
-import rfm.ta.gateway.sbs.domain.txn.model.msg.M8873;
-import rfm.ta.gateway.sbs.helper.BeanHelper;
-import rfm.ta.gateway.sbs.taservice.TaSbsService;
 import rfm.ta.repository.model.TaRsAccDtl;
 import rfm.ta.repository.model.TaTxnSbs;
 import rfm.ta.service.account.TaAccDetlService;
@@ -41,15 +34,7 @@ public class TaAccDtlAction implements Serializable {
     @ManagedProperty("#{taAccDetlService}")
     private TaAccDetlService taAccDetlService;
 
-    @ManagedProperty("#{taSbsService}")
-    private TaSbsService taSbsService;
-
     private TaTxnSbs taTxnSbs;
-    M8873 m8873 = new M8873();
-    M8872 m8872 = new M8872();
-    T924 t924 = new T924();
-    T846 t846 = new T846();
-    private List<T924.Bean> dataList = new ArrayList<>();
     // 账务交易明细
     private List<TaRsAccDtl> taRsAccDtlList;
     private List<TaRsAccDtl> taRsAccDtlList2;
@@ -67,155 +52,6 @@ public class TaAccDtlAction implements Serializable {
         taRsAccDtlList2 = taAccDetlService.selectedRecords(new TaRsAccDtl());
         if(taRsAccDtlList2.size()>0) {
             System.out.println("======>" + taRsAccDtlList.get(0).getRtnAccId());
-        }
-    }
-
-    public void onQrySBSdata() {
-        try {
-            m8873 = new M8873();
-            m8873.setERYDA1(erydat);
-            m8873.setBEGNUM("1");
-            SOFForm form = taSbsService.callSbsTxn("8873", m8873).get(0);
-            String formcode = form.getFormHeader().getFormCode();
-            dataList = new ArrayList<>();
-            if ("T924".equals(formcode)) {
-                t924 = (T924) form.getFormBody();
-                dataList.addAll(t924.getBeanList());
-                int m = Integer.parseInt(t924.getTotcnt()) / Integer.parseInt(t924.getCurcnt());
-                int n = Integer.parseInt(t924.getTotcnt()) % Integer.parseInt(t924.getCurcnt());
-                if (m > 0 && n > 0) {
-                    String tmp = "";
-                    for (int i = 1; i <= m; i++) {
-                        try {
-                            tmp = i * Integer.parseInt(t924.getCurcnt()) + 1 + "";
-                            m8873.setBEGNUM(tmp);
-                            SOFForm form2 = taSbsService.callSbsTxn("8123", m8873).get(0);
-                            String formcode2 = form.getFormHeader().getFormCode();
-                            if ("T924".equals(formcode)) {
-                                t924 = (T924) form2.getFormBody();
-                                dataList.addAll(t924.getBeanList());
-                            } else {
-                                logger.error(formcode2);
-                                MessageUtil.addErrorWithClientID("msgs", formcode2);
-                            }
-                        } catch (NumberFormatException e) {
-                            logger.error("查询失败", e);
-                            MessageUtil.addError("查询失败." + (e.getMessage() == null ? "" : e.getMessage()));
-                        }
-                    }
-                }
-                for (T924.Bean bean : dataList) {
-                    try {
-                        BeanHelper.copyFields(bean, taTxnSbs);
-                        //taAccDetlService.sbsdatcopy(taTxnSbs);
-                    } catch (Exception e) {
-                        logger.error("Bean 转换异常！", e);
-                        MessageUtil.addError("Bean 转换异常！." + (e.getMessage() == null ? "" : e.getMessage()));
-                    }
-                }
-            } else if ("W107".equals(formcode)) {
-                MessageUtil.addInfoWithClientID("msgs", formcode);
-            } else {
-                logger.error(formcode);
-                MessageUtil.addErrorWithClientID("msgs", formcode);
-            }
-        } catch (Exception e) {
-            logger.error("查询失败", e);
-            MessageUtil.addError("查询失败." + (e.getMessage() == null ? "" : e.getMessage()));
-        }
-    }
-
-    public String onReconciliation() {
-        if (taRsAccDtlList != null) {
-            try {
-                for (TaRsAccDtl taRsAccDtl : taRsAccDtlList) {
-                    for (int i = 0; i < dataList.size(); i++) {
-                        if (dataList.get(i).getMPCSEQ().equals(taRsAccDtl.getSerial())) {
-                            taRsAccDtlList.remove(taRsAccDtl);
-                            dataList.remove(i);
-                        }
-                    }
-                }
-                if (taRsAccDtlList == null) {
-                    MessageUtil.addInfo("对账成功！");
-                }
-            } catch (Exception e) {
-                MessageUtil.addError("对账异常");
-            }
-        } else {
-            MessageUtil.addInfo("今日无对账数据！");
-        }
-        onCreatFile();
-        //修改系统时间
-        return null;
-    }
-
-    public String onSendAll() {
-        /*File file =new File("D:/PF1237090020150710.dat");
-        boolean b = uploadFile("/tmp","PF12370900"+erydat+".dat",file);
-        if (b){
-            System.out.println("发送成功！");
-        }*/
-        return null;
-    }
-
-    public void onCreatFile() {
-        File file;
-        String filePath = "D:/brzfdc";
-        String fileName = "PF12370900"+erydat+".dat";//PF为固定字符，BB指监管银行代码（2位），CCCCCC 指城市代码（6位）YYYYMMDD为对账日期。
-        String newLineCh = "\r\n";       // 换行 适用于windows系统
-        StringBuffer line = new StringBuffer("");
-        StringBuffer body = new StringBuffer("");
-        try {
-            file = createFile(filePath, fileName);
-
-        } catch (IOException e) {
-            throw new RuntimeException(filePath + fileName + " 文件创建失败。", e);
-        }
-        try{
-            m8872 = new M8872(erydat);
-            SOFForm form = taSbsService.callSbsTxn("8872", m8872).get(0);
-            String formcode = form.getFormHeader().getFormCode();
-
-            if ("T846".equals(formcode)){
-                t846 =(T846) form.getFormBody();
-                if ("0".equals(t846.getDRCNT())&&"0.00".equals(t846.getDRAMT())){
-                    line.append(getLeftSpaceStr(t846.getDRCNT(),6)).append("|").append(getLeftSpaceStr("0",20)).append("|");
-                }else
-                    line.append(getLeftSpaceStr(t846.getDRCNT(),6)).append("|").append(getLeftSpaceStr(t846.getDRAMT(),20)).append("|");
-            }else {
-                logger.error(formcode);
-                MessageUtil.addErrorWithClientID("msgs", formcode);
-            }
-            for (TaRsAccDtl taRsAccDtl:taRsAccDtlList){
-                body.append(newLineCh).append(getLeftSpaceStr(taRsAccDtl.getTradeId(),4)).append("|")
-                .append(getLeftSpaceStr(taRsAccDtl.getBusiApplyId(), 14)).append("|")
-                .append(getLeftSpaceStr(taRsAccDtl.getInoutFlag(), 1)).append("|")
-                .append(getLeftSpaceStr(new DecimalFormat("#####0.00").format(taRsAccDtl.getRtnTradeAmt()), 20)).append("|")
-                .append(getLeftSpaceStr(taRsAccDtl.getRtnAccId(), 30)).append("|")
-                .append(getLeftSpaceStr(taRsAccDtl.getRtnFdcSerial(), 16)).append("|")
-                .append(getLeftSpaceStr(taRsAccDtl.getSerial(), 30)).append("|")
-                .append(getLeftSpaceStr(taRsAccDtl.getBranchId(), 30)).append("|")
-                .append(getLeftSpaceStr(taRsAccDtl.getOperId(), 30)).append("|")
-                .append(getLeftSpaceStr(taRsAccDtl.getTradeDate(), 10)).append("|");
-            }
-            if (file!=null){
-                try {
-                    FileWriter fw = new FileWriter(file);
-                    BufferedWriter bw = new BufferedWriter(fw);
-                    bw.write(line.toString());
-                    bw.write(body.toString());
-                    bw.flush();
-                    fw.close();
-                    bw.close();
-                    uploadFile("/home/feb/tmp",fileName,file);
-                }catch (Exception e){
-                    throw new RuntimeException(filePath + fileName + " 文件写入错误。", e);
-                }
-            }
-        }catch (Exception e){
-            logger.error("对账文件生成失败", e);
-            MessageUtil.addError("对账文件生成失败." + (e.getMessage() == null ? "" : e.getMessage()));
         }
     }
 
@@ -312,22 +148,6 @@ public class TaAccDtlAction implements Serializable {
         this.taRsAccDtlList2 = taRsAccDtlList2;
     }
 
-    public M8873 getM8873() {
-        return m8873;
-    }
-
-    public void setM8873(M8873 m8873) {
-        this.m8873 = m8873;
-    }
-
-    public T924 getT924() {
-        return t924;
-    }
-
-    public void setT924(T924 t924) {
-        this.t924 = t924;
-    }
-
     public List<TaRsAccDtl> getTaRsAccDtlList() {
         return taRsAccDtlList;
     }
@@ -358,38 +178,5 @@ public class TaAccDtlAction implements Serializable {
 
     public void setTaRsAccDetailList2(List<TaRsAccDtl> taRsAccDtlList2) {
         this.taRsAccDtlList2 = taRsAccDtlList2;
-    }
-
-    public TaSbsService getTaSbsService() {
-        return taSbsService;
-    }
-
-    public void setTaSbsService(TaSbsService taSbsService) {
-        this.taSbsService = taSbsService;
-    }
-
-
-    public List<T924.Bean> getDataList() {
-        return dataList;
-    }
-
-    public void setDataList(List<T924.Bean> dataList) {
-        this.dataList = dataList;
-    }
-
-    public M8872 getM8872() {
-        return m8872;
-    }
-
-    public void setM8872(M8872 m8872) {
-        this.m8872 = m8872;
-    }
-
-    public T846 getT846() {
-        return t846;
-    }
-
-    public void setT846(T846 t846) {
-        this.t846 = t846;
     }
 }
