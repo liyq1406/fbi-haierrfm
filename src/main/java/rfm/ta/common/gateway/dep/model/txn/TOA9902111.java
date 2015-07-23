@@ -7,11 +7,11 @@ import rfm.ta.common.gateway.dep.model.base.TOAHeader;
 import java.io.Serializable;
 
 /**
- * 泰安房产资金监管：建立监管
+ * 泰安房产资金监管：划拨冲正
  * User: hanjianlong
  * Date: 2015-07-16
  */
-public class TOA2001001 extends TOA implements Serializable {
+public class TOA9902111 extends TOA implements Serializable {
     public Header header = new Header();
     public Body body = new Body();
 
@@ -32,12 +32,9 @@ public class TOA2001001 extends TOA implements Serializable {
     public static class Body extends TOABody {
         /*01	结果	                4   0000表示成功
           02	预售资金监管平台流水	16
-          03	预售人名称	            255
-          04	预售项目地址            128
-          05    预售项目名称            128
         */
-        public String PRE_SALE_PER_NAME;             // 预售人名称	            255
-        public String PRE_SALE_PRO_ADDR;             // 预售项目地址            128
-        public String PRE_SALE_PRO_NAME;             // 预售项目名称            128
+        public String RES_CONTEXT;             // 报文主题内容
+
+        public String REMARK;                   // 备注
     }
 }

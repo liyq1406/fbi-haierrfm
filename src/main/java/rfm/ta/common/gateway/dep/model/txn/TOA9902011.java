@@ -7,11 +7,11 @@ import rfm.ta.common.gateway.dep.model.base.TOAHeader;
 import java.io.Serializable;
 
 /**
- * 泰安房产资金监管：记账结果查询
+ * 泰安房产资金监管：交存冲正
  * User: hanjianlong
  * Date: 2015-07-16
  */
-public class TOA2002501 extends TOA implements Serializable {
+public class TOA9902011 extends TOA implements Serializable {
     public Header header = new Header();
     public Body body = new Body();
 
@@ -31,13 +31,7 @@ public class TOA2002501 extends TOA implements Serializable {
 
     public static class Body extends TOABody {
         /*01	结果	                4   0000表示成功
-          02	记账结果	            1   0_成功 1_失败
-          03	预售资金监管平台记账流水16  业务记账流水
-          04	监管银行记账流水	    30  业务记账流水
-          05	预售资金监管平台流水	16
+          02	预售资金监管平台流水	16
         */
-        public String RES_CONTEXT;             // 报文主题内容
-
-        public String REMARK;                   // 备注
     }
 }

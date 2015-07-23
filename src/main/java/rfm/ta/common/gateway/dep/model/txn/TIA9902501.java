@@ -5,15 +5,14 @@ import rfm.ta.common.gateway.dep.model.base.TIABody;
 import rfm.ta.common.gateway.dep.model.base.TIAHeader;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
- * SBS: 批量多账户余额查询
- * User: zhanrui
- * Date: 2012-01-31
+ * 泰安房产资金监管：记账结果查询
+ * User: hanjianlong
+ * Date: 2015-07-16
  */
 
-public class TIA9008119 extends TIA implements Serializable {
+public class TIA9902501 extends TIA implements Serializable {
     public  Header header = new Header();
     public  Body body = new Body();
 
@@ -32,7 +31,16 @@ public class TIA9008119 extends TIA implements Serializable {
     }
 
     public static class Body extends TIABody {
-        public List<String> ACCTNUMS;
+        /*01	交易代码	    4	2102
+          02	监管银行代码	2
+          03	城市代码	    6
+          04	业务编号	    14 交存申请号 划拨业务编号 退还业务编号
+          05	查询网点	    30
+          06	查询人员	    30
+          07	发起方	        1 1_监管银行*/
+        public String BANK_ID;            // 监管银行代码	  2
+        public String CITY_ID;            // 城市代码	      6
+        public String BRANCH_ID;          // 网点号         30
+        public String INITIATOR;          // 发起方         1   1_监管银行
     }
-
 }

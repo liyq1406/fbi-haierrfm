@@ -22,8 +22,7 @@ import javax.jms.*;
 @Service
 public class DepService {
     private static final Logger logger = LoggerFactory.getLogger(DepService.class);
-
-    private static String DEP_BIZID = PropertyManager.getProperty("app_id");
+    private static String DEP_APPID = PropertyManager.getProperty("app_id");
     private static String DEP_USERNAME = PropertyManager.getProperty("jms.username");
     private static String DEP_PWD = PropertyManager.getProperty("jms.password");
 
@@ -35,27 +34,26 @@ public class DepService {
 
     /**
      * 通过MQ 向 DEP发送消息 (通用交易接口)
-     * @param channelId
-     * @param msgtxt
+     * @param tiaPara
      * @return
      * @throws javax.jms.JMSException
      */
-    public String sendDepMessage(final String channelId, final TIA msgtxt) throws JMSException {
-        TextMessage msg = (TextMessage) jmsSendTemplate.execute(new ProducerCallback<Object>() {
+    public String sendDepMessage(final TIA tiaPara) throws JMSException {
+        ObjectMessage msg = (ObjectMessage) jmsSendTemplate.execute(new ProducerCallback<Object>() {
             public Object doInJms(Session session, MessageProducer producer) throws JMSException {
-                ObjectMessage msg = session.createObjectMessage(msgtxt);
-                msg.setStringProperty("JMSX_CHANNELID", channelId);
-                msg.setStringProperty("JMSX_APPID", "HAIERRFM");
-                msg.setStringProperty("JMSX_BIZID", DEP_BIZID.toUpperCase());
+                ObjectMessage msg = session.createObjectMessage(tiaPara);
+                msg.setStringProperty("JMSX_CHANNELID", tiaPara.getHeader().CHANNEL_ID);
+                msg.setStringProperty("JMSX_APPID", DEP_APPID);
+                msg.setStringProperty("JMSX_BIZID", tiaPara.getHeader().BIZ_ID);
                 msg.setStringProperty("JMSX_USERID", DEP_USERNAME);
                 msg.setStringProperty("JMSX_PASSWORD", DEP_PWD);
                 producer.send(msg);
-                return msg;
+                return  msg;
             }
         });
         String msgid = msg.getJMSMessageID();
         logger.info("MQ消息发送, MSGID=" + msgid);
-        logger.debug("MQ消息发送, MSGID=" + msgid + "\n  报文内容: \n" + msg.getText());
+        logger.debug("MQ消息发送, MSGID=" + msgid + "\n  报文内容: \n" + msg.toString());
         return msgid;
     }
 

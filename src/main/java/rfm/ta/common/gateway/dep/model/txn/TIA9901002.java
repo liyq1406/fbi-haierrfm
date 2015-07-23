@@ -7,12 +7,12 @@ import rfm.ta.common.gateway.dep.model.base.TIAHeader;
 import java.io.Serializable;
 
 /**
- * 泰安房产资金监管：交存冲正
+ * 泰安房产资金监管：解除监管
  * User: hanjianlong
  * Date: 2015-07-16
  */
 
-public class TIA2002011 extends TIA implements Serializable {
+public class TIA9901002 extends TIA implements Serializable {
     public  Header header = new Header();
     public  Body body = new Body();
 
@@ -31,15 +31,23 @@ public class TIA2002011 extends TIA implements Serializable {
     }
 
     public static class Body extends TIABody {
-        /*01	交易代码	    4	2002
+        /*01	交易代码	    4	2001
           02	监管银行代码	2
           03	城市代码	    6
-          04	交存申请编号	14
-          05	银行冲正流水	30
-          06	冲正日期	    10	送系统日期即可
-          07	冲正网点	    30
-          08	冲正人员	    30
-          09	发起方	        1	1_监管银行*/
+          04	终止证明编号    14
+          05    监管专户账号    30
+          06    监管专户户名    150
+          07	流水号    	    30
+          08	日期	        10	送系统日期即可
+          09	网点号	        30
+          10	柜员号	        30
+          11	发起方	        1	1_监管银行*/
+        public String BANK_ID;            // 监管银行代码	  2
+        public String CITY_ID;            // 城市代码	      6
+        public String BRANCH_ID;          // 网点号         30
+        public String INITIATOR;          // 发起方         1   1_监管银行
+        public String ACC_ID;             // 监管专户账号   30
+        public String ACC_NAME;           // 监管专户户名   150
         public String TX_DATE;            // 日期           10  送系统日期即可
     }
 }

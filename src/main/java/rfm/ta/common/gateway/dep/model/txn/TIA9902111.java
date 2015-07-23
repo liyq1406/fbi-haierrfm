@@ -7,12 +7,12 @@ import rfm.ta.common.gateway.dep.model.base.TIAHeader;
 import java.io.Serializable;
 
 /**
- * 泰安房产资金监管：记账结果查询
+ * 泰安房产资金监管：划拨冲正
  * User: hanjianlong
  * Date: 2015-07-16
  */
 
-public class TIA2002501 extends TIA implements Serializable {
+public class TIA9902111 extends TIA implements Serializable {
     public  Header header = new Header();
     public  Body body = new Body();
 
@@ -34,10 +34,16 @@ public class TIA2002501 extends TIA implements Serializable {
         /*01	交易代码	    4	2102
           02	监管银行代码	2
           03	城市代码	    6
-          04	业务编号	    14 交存申请号 划拨业务编号 退还业务编号
-          05	查询网点	    30
-          06	查询人员	    30
-          07	发起方	        1 1_监管银行*/
-
+          04	划拨业务编号	14
+          05	银行冲正流水	30
+          06	记账日期	    10	送系统日期即可
+          07	记账网点	    30
+          08	记账人员	    30
+          09	发起方	        1	1_监管银行*/
+        public String BANK_ID;            // 监管银行代码	  2
+        public String CITY_ID;            // 城市代码	      6
+        public String BRANCH_ID;          // 网点号         30
+        public String INITIATOR;          // 发起方         1   1_监管银行
+        public String TX_DATE;            // 日期           10  送系统日期即可
     }
 }

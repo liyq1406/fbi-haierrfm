@@ -14,7 +14,7 @@ import java.lang.String;
  * Date: 2015-07-16
  */
 
-public class TIA2002102 extends TIA implements Serializable {
+public class TIA9902102 extends TIA implements Serializable {
     public  Header header = new Header();
     public  Body body = new Body();
 
@@ -48,7 +48,10 @@ public class TIA2002102 extends TIA implements Serializable {
           13	记账网点	    30
           14	记账人员	    30
           15	发起方	        1	1_监管银行*/
-
+        public String BANK_ID;            // 监管银行代码	  2
+        public String CITY_ID;            // 城市代码	      6
+        public String BRANCH_ID;          // 网点号         30
+        public String INITIATOR;          // 发起方         1   1_监管银行
         public String ACC_ID;             // 06	监管账号	    30	划拨验证的输出项
         public String RECV_ACC_ID;       // 07	收款单位账号	30	划拨验证的输出项
         public String TX_AMT;             // 08	划拨资金	    20	划拨验证的输出项

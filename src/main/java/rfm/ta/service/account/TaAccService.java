@@ -10,7 +10,7 @@ import platform.service.SystemService;
 import pub.platform.security.OperatorManager;
 import common.utils.ToolUtil;
 import rfm.ta.common.enums.*;
-import rfm.ta.common.gateway.dep.model.txn.TIA2001001;
+import rfm.ta.common.gateway.dep.model.txn.TIA9901001;
 import rfm.ta.repository.dao.TaRsAccMapper;
 import rfm.ta.repository.model.TaRsAcc;
 import rfm.ta.repository.model.TaRsAccExample;
@@ -28,7 +28,7 @@ import java.util.List;
 @Service
 public class TaAccService {
     private static final Logger logger = LoggerFactory.getLogger(TaAccService.class);
-    private static String DEP_CHANNEL_ID_RFM = "200";
+    private static String DEP_CHANNEL_ID_RFM = "990";
 
     @Autowired
     private TaRsAccMapper accountMapper;
@@ -213,7 +213,8 @@ public class TaAccService {
     @Transactional
     public void sendAndRecvRealTimeTxnMessage(TaRsAcc taRsAccPara) {
         try {
-            TIA2001001 tia2001001Temp=new TIA2001001() ;
+            TIA9901001 tia2001001Temp=new TIA9901001() ;
+            tia2001001Temp.header.CHANNEL_ID=DEP_CHANNEL_ID_RFM;
             tia2001001Temp.header.TX_CODE=EnuTaTxCode.TRADE_1001.getCode();      // 01   交易代码       4   2001
             tia2001001Temp.body.BANK_ID= EnuTaBankId.BANK_HAIER.getCode();       // 02   监管银行代码   2
             tia2001001Temp.body.CITY_ID= EnuTaCityId.CITY_TAIAN.getCode();       // 03   城市代码       6
@@ -227,10 +228,10 @@ public class TaAccService {
             tia2001001Temp.header.USER_ID=ToolUtil.getStrLastUpdDate() ;          // 11   柜员号         30
             tia2001001Temp.body.INITIATOR=EnuTaInitiatorId.INITIATOR.getCode() ;// 12   发起方         1   1_监管银行
             //通过MQ发送信息到DEP
-            String msgid=depService.sendDepMessage(DEP_CHANNEL_ID_RFM, tia2001001Temp);
-            handle1001Message(depService.recvDepMessage(msgid));
+            String strMsgid=depService.sendDepMessage(tia2001001Temp);
+            handle1001Message(depService.recvDepMessage(strMsgid));
             String strRtn="0000";
-            if(msgid!=""){
+            if(strMsgid!=""){
 
             }
 

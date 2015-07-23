@@ -124,13 +124,13 @@
     <!-- 实时发送-->
     <bean id="send.unipay" class="org.apache.activemq.command.ActiveMQQueue">
         <constructor-arg index="0">
-            <value>${queue.fip.to.dep}</value>
+            <value>${queue.rfm.to.dep}</value>
         </constructor-arg>
     </bean>
     <!-- 实时接收  -->
     <bean id="recv.unipay" class="org.apache.activemq.command.ActiveMQQueue">
         <constructor-arg index="0">
-            <value>${queue.fip.from.dep}</value>
+            <value>${queue.rfm.from.dep}</value>
         </constructor-arg>
     </bean>
 
