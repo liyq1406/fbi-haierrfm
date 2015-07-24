@@ -10,7 +10,7 @@ import platform.service.SystemService;
 import pub.platform.security.OperatorManager;
 import common.utils.ToolUtil;
 import rfm.ta.common.enums.*;
-import rfm.ta.common.gateway.dep.model.txn.TIA9901001;
+import org.fbi.dep.model.txn.TIA9901001;
 import rfm.ta.repository.dao.TaRsAccMapper;
 import rfm.ta.repository.model.TaRsAcc;
 import rfm.ta.repository.model.TaRsAccExample;

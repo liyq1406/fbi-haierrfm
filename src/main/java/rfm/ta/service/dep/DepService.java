@@ -6,7 +6,7 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.ProducerCallback;
 import org.springframework.stereotype.Service;
 import pub.platform.advance.utils.PropertyManager;
-import rfm.ta.common.gateway.dep.model.base.TIA;
+import org.fbi.dep.model.base.TIA;
 
 import javax.annotation.Resource;
 import javax.jms.*;
