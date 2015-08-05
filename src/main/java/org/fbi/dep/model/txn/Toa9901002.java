@@ -7,7 +7,7 @@ import org.fbi.dep.model.base.TOAHeader;
 import java.io.Serializable;
 
 /**
- * 泰安房产资金监管：撤销监管
+ * 娉板畨鎴夸骇璧勯噾鐩戠锛氭挙閿�鐩戠
  * User: hanjianlong
  * Date: 2015-07-16
  */
@@ -30,8 +30,8 @@ public class Toa9901002 extends TOA implements Serializable {
     }
 
     public static class Body extends TOABody {
-        /*01	结果	                4   0000表示成功
-          02	预售资金监管平台流水	16
+        /*01	缁撴灉	                4   0000琛ㄧず鎴愬姛
+          02	棰勫敭璧勯噾鐩戠骞冲彴娴佹按	16
         */
     }
 }
