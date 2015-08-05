@@ -7,7 +7,7 @@ import org.fbi.dep.model.base.TOAHeader;
 import java.io.Serializable;
 
 /**
- * Ì©°²·¿²ú×Ê½ğ¼à¹Ü£º½»´æÑéÖ¤
+ * æ³°å®‰æˆ¿äº§èµ„é‡‘ç›‘ç®¡ï¼šäº¤å­˜éªŒè¯
  * User: hanjianlong
  * Date: 2015-07-16
  */
@@ -30,16 +30,16 @@ public class Toa9902001 extends TOA implements Serializable {
     }
 
     public static class Body extends TOABody {
-        /*01	½á¹û	                4   0000±íÊ¾³É¹¦
-          02	ÕÊ»§Àà±ğ	            1   0£º¼à¹Ü»§£»
-          03	½»´æ½ğ¶î	            20  ÒÔ·ÖÎªµ¥Î»
-          04	¼à¹Ü×¨»§ÕËºÅ            30
-          05    ¼à¹Ü×¨»§»§Ãû            150
-          06    Ô¤ÊÛ×Ê½ğ¼à¹ÜÆ½Ì¨Á÷Ë®    16
+        /*01	ç»“æœ	                4   0000è¡¨ç¤ºæˆåŠŸ
+          02	å¸æˆ·ç±»åˆ«	            1   0ï¼šç›‘ç®¡æˆ·ï¼›
+          03	äº¤å­˜é‡‘é¢	            20  ä»¥åˆ†ä¸ºå•ä½
+          04	ç›‘ç®¡ä¸“æˆ·è´¦å·            30
+          05    ç›‘ç®¡ä¸“æˆ·æˆ·å            150
+          06    é¢„å”®èµ„é‡‘ç›‘ç®¡å¹³å°æµæ°´    16
         */
-        public String ACC_TYPE;           // ÕÊ»§Àà±ğ       1  0£ºÔ¤ÊÛ¼à¹Ü»§
-        public String TX_AMT;             // ½»´æ½ğ¶î	      20  ÒÔ·ÖÎªµ¥Î»
-        public String ACC_ID;             // ¼à¹Ü×¨»§ÕËºÅ   30
-        public String ACC_NAME;           // ¼à¹Ü×¨»§»§Ãû   150
+        public String ACC_TYPE;           // å¸æˆ·ç±»åˆ«       1  0ï¼šé¢„å”®ç›‘ç®¡æˆ·
+        public String TX_AMT;             // äº¤å­˜é‡‘é¢	      20  ä»¥åˆ†ä¸ºå•ä½
+        public String ACC_ID;             // ç›‘ç®¡ä¸“æˆ·è´¦å·   30
+        public String ACC_NAME;           // ç›‘ç®¡ä¸“æˆ·æˆ·å   150
     }
 }
