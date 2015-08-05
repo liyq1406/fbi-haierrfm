@@ -68,6 +68,93 @@ public class TaAccDtlAction implements Serializable {
         return tempFile;
     }
 
+    public void onCreatFile() {
+        File file;
+        String filePath = "d:";
+        String fileName = "PF12370900"+erydat+".dat";//PF?????????BB???????§Õ???2¦Ë????CCCCCC ????§Õ???6¦Ë??YYYYMMDD??????????
+        String newLineCh = "\r\n";       // ???? ??????windows??
+        StringBuffer line = new StringBuffer("");
+        StringBuffer body = new StringBuffer("");
+        try {
+            file = createFile(filePath, fileName);
+
+        } catch (IOException e) {
+            throw new RuntimeException(filePath + fileName + " ???????????", e);
+        }
+        try{
+            /*m8872 = new M8872(erydat);
+            SOFForm form = taSbsService.callSbsTxn("8872", m8872).get(0);
+            String formcode = form.getFormHeader().getFormCode();
+
+            if ("T846".equals(formcode)){
+                t846 =(T846) form.getFormBody();
+                if ("0".equals(t846.getDRCNT())&&"0.00".equals(t846.getDRAMT())){
+                    line.append(getLeftSpaceStr(t846.getDRCNT(),6)).append("|").append(getLeftSpaceStr("0",20)).append("|");
+                }else
+                    line.append(getLeftSpaceStr(t846.getDRCNT(),6)).append("|").append(getLeftSpaceStr(t846.getDRAMT(),20)).append("|");
+            }else {
+                logger.error(formcode);
+                MessageUtil.addErrorWithClientID("msgs", formcode);
+            }
+            for (TaRsAccDetail taRsAccDetail:taRsAccDetailList){
+                body.append(newLineCh).append(getLeftSpaceStr(taRsAccDetail.getTradeId(),4)).append("|")
+                        .append(getLeftSpaceStr(taRsAccDetail.getOriginId(), 14)).append("|")
+                        .append(getLeftSpaceStr(taRsAccDetail.getInoutFlag(), 1)).append("|")
+                        .append(getLeftSpaceStr(new DecimalFormat("#####0.00").format(taRsAccDetail.getTradeAmt()), 20)).append("|")
+                        .append(getLeftSpaceStr(taRsAccDetail.getAccountCode(), 30)).append("|")
+                        .append(getLeftSpaceStr(taRsAccDetail.getFdcSerial(), 16)).append("|")
+                        .append(getLeftSpaceStr(taRsAccDetail.getBankSerial(), 30)).append("|")
+                        .append(getLeftSpaceStr(taRsAccDetail.getBankBranchId(), 30)).append("|")
+                        .append(getLeftSpaceStr(taRsAccDetail.getBankOperId(), 30)).append("|")
+                        .append(getLeftSpaceStr(taRsAccDetail.getTradeDate(), 10)).append("|");
+            }*/
+            if (file!=null){
+                try {
+                    FileWriter fw = new FileWriter(file);
+                    BufferedWriter bw = new BufferedWriter(fw);
+                    bw.write(line.toString());
+                    bw.write(body.toString());
+                    bw.flush();
+                    fw.close();
+                    bw.close();
+                    uploadFile("/home/feb/tmp",fileName,file);
+                }catch (Exception e){
+                    throw new RuntimeException(filePath + fileName + " ???§Õ?????", e);
+                }
+            }
+        }catch (Exception e){
+            logger.error("??????????????", e);
+            MessageUtil.addError("??????????????." + (e.getMessage() == null ? "" : e.getMessage()));
+        }
+    }
+
+
+    public String onReconciliation() {
+        if (taRsAccDtlList != null) {
+            try {
+                /*for (TaRsAccDetail taRsAccDetail : taRsAccDtlList) {
+                    for (int i = 0; i < dataList.size(); i++) {
+                        if (dataList.get(i).getMPCSEQ().equals(taRsAccDetail.getFdcSerial())) {
+                            taRsAccDtlList.remove(taRsAccDetail);
+                            dataList.remove(i);
+                        }
+                    }
+                }
+                if (taRsAccDetailList == null) {
+                    MessageUtil.addInfo("????????");
+                }*/
+            } catch (Exception e) {
+                MessageUtil.addError("??????");
+            }
+        } else {
+            MessageUtil.addInfo("??????????????");
+        }
+        onCreatFile();
+        //????????
+        return null;
+    }
+
+
     //×ó¶ÔÆë
     public String getLeftSpaceStr(String strValue, int totleBytesLen) {
         if(strValue == null) strValue = "";
@@ -179,4 +266,5 @@ public class TaAccDtlAction implements Serializable {
     public void setTaRsAccDetailList2(List<TaRsAccDtl> taRsAccDtlList2) {
         this.taRsAccDtlList2 = taRsAccDtlList2;
     }
+
 }

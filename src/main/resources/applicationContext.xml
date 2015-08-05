@@ -60,7 +60,7 @@
     </bean>
 
     <!--quartz-->
-    <bean id="autoSendLoanTxnsJobDetailBean"
+    <!--<bean id="autoSendLoanTxnsJobDetailBean"
           class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <property name="targetObject" ref="cbusFdcActtxnService"/>
         <property name="targetMethod" value="autoSendLoanTxns"/>
@@ -69,9 +69,9 @@
     <bean id="autoSendLoanTxnsCronTriggerBean" class="org.springframework.scheduling.quartz.CronTriggerBean">
         <property name="jobDetail" ref="autoSendLoanTxnsJobDetailBean"/>
         <property name="cronExpression" value="0 0 8 * * ?"/>
-    </bean>
+    </bean>-->
 
-    <bean id="autoQryTxnsJobDetailBean"
+    <!--<bean id="autoQryTxnsJobDetailBean"
           class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <property name="targetObject" ref="cbusFdcActtxnService"/>
         <property name="targetMethod" value="qrySaveTodayCbusTxnsAndBals"/>
@@ -79,13 +79,13 @@
     </bean>
     <bean id="autoQryTxnsCronTriggerBean" class="org.springframework.scheduling.quartz.CronTriggerBean">
         <property name="jobDetail" ref="autoQryTxnsJobDetailBean"/>
-        <!--  每隔一小时 8：30 到 17：30 -->
-        <!--<property name="cronExpression" value="0 30 8-17 * * ?"/>-->
+        &lt;!&ndash;  每隔一小时 8：30 到 17：30 &ndash;&gt;
+        &lt;!&ndash;<property name="cronExpression" value="0 30 8-17 * * ?"/>&ndash;&gt;
         <property name="cronExpression" value="0 30 8-17 * * ?"/>
-    </bean>
+    </bean>-->
 
     <!-- 设置调度 -->
-    <bean id="myScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+    <!--<bean id="myScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="triggers">
             <list>
                 <ref bean="autoSendLoanTxnsCronTriggerBean"/>
@@ -98,7 +98,7 @@
                 <prop key="org.quartz.scheduler.instanceId">AUTO</prop>
             </props>
         </property>
-    </bean>
+    </bean>-->
 
     <!-- JMS-->
     <bean id="jmsConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">

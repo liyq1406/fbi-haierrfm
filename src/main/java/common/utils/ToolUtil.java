@@ -1,5 +1,6 @@
 package common.utils;
 
+import pub.platform.advance.utils.PropertyManager;
 import pub.platform.form.config.SystemAttributeNames;
 import pub.platform.security.OperatorManager;
 
@@ -17,7 +18,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ToolUtil {
-    private static String operResCtrl=null;
+    public static String TAFDC_MD5_KEY = "Haier_TAFDC_Payout";
+    public static String DEP_CHANNEL_ID_RFM = "990";
+    public static String DEP_APPID = PropertyManager.getProperty("app_id");
     public static final BigDecimal bigDecimal0=new BigDecimal(0);
     public static Boolean strIsDigit(String strPara){
         String strRegex = "[1-9]\\d*(\\.[1-9]\\d*)*";
@@ -142,6 +145,16 @@ public class ToolUtil {
         Integer intIndexof=strFrom.lastIndexOf(";")+1;
         String strTemp=strFrom.substring(intIndexof);
         return strTemp ;
+    }
+
+    public static String getStrReqSn_Back() {
+        Date date =new Date();
+        return dateFormat(date, "yyyyMMddHHmmssSSSZ");
+    }
+
+    public static String getStrAppReqSn_Back() {
+        Date date =new Date();
+        return DEP_APPID+dateFormat(date, "yyyyMMddHHmmssSSSZ");
     }
 
     public static String getStrLastUpdDate() {

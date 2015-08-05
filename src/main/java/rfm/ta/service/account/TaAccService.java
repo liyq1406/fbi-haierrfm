@@ -1,5 +1,9 @@
 package rfm.ta.service.account;
 
+import org.fbi.dep.model.txn.Tia9901002;
+import org.fbi.dep.model.txn.Toa9901001;
+import org.fbi.dep.model.txn.Toa9901002;
+import org.fbi.dep.model.txn.Tia9901001;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,10 +11,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import platform.service.PtenudetailService;
 import platform.service.SystemService;
+import pub.platform.advance.utils.PropertyManager;
 import pub.platform.security.OperatorManager;
 import common.utils.ToolUtil;
 import rfm.ta.common.enums.*;
-import org.fbi.dep.model.txn.TIA9901001;
 import rfm.ta.repository.dao.TaRsAccMapper;
 import rfm.ta.repository.model.TaRsAcc;
 import rfm.ta.repository.model.TaRsAccExample;
@@ -20,15 +24,14 @@ import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
- * User: zhangxiaobo
- * Date: 11-8-24
- * Time: 下午2:04
+ * User: hanjianlong
+ * Date: 15-6-30
+ * Time: 下午2:12
  * To change this template use File | Settings | File Templates.
  */
 @Service
 public class TaAccService {
     private static final Logger logger = LoggerFactory.getLogger(TaAccService.class);
-    private static String DEP_CHANNEL_ID_RFM = "990";
 
     @Autowired
     private TaRsAccMapper accountMapper;
@@ -36,36 +39,6 @@ public class TaAccService {
     private PtenudetailService ptenudetailService;
     @Autowired
     private DepService depService;
-
-    public TaRsAcc selectedRecordByPkid(String pkId) {
-        return accountMapper.selectByPrimaryKey(pkId);
-    }
-
-    public TaRsAcc selectCanRecvAccountByNo(String accountNo) {
-        TaRsAccExample accountExample = new TaRsAccExample();
-        accountExample.createCriteria().
-                andDeletedFlagEqualTo("0").
-                andStatusFlagEqualTo(ptenudetailService.getEnuSelectItem("TA_ACC_STATUS", 1).getValue().toString())
-        .andAccIdEqualTo(accountNo);
-        List<TaRsAcc> accountList = accountMapper.selectByExample(accountExample);
-        if (accountList.isEmpty()) {
-            throw new RuntimeException("没有查询到已监管账户！！");
-        }
-        return accountList.get(0);
-    }
-
-    public TaRsAcc selectCanPayAccountByNo(String accountNo) {
-        TaRsAccExample accountExample = new TaRsAccExample();
-        accountExample.createCriteria().
-                andDeletedFlagEqualTo("0").
-                andStatusFlagEqualTo(ptenudetailService.getEnuSelectItem("TA_ACC_STATUS", 1).getValue().toString()).
-                andAccIdEqualTo(accountNo);
-        List<TaRsAcc> accountList = accountMapper.selectByExample(accountExample);
-        if (accountList.isEmpty()) {
-            throw new RuntimeException("没有查询到未限制的已监管账户！请确认该账户已开启监管并未限制付款！");
-        }
-        return accountList.get(0);
-    }
 
     /**
      * 判断账号是否已存在
@@ -211,102 +184,88 @@ public class TaAccService {
      * @param taRsAccPara
      */
     @Transactional
-    public void sendAndRecvRealTimeTxnMessage(TaRsAcc taRsAccPara) {
+    public void sendAndRecvRealTimeTxn9901001(TaRsAcc taRsAccPara) {
         try {
-            TIA9901001 tia2001001Temp=new TIA9901001() ;
-            tia2001001Temp.header.CHANNEL_ID=DEP_CHANNEL_ID_RFM;
-            tia2001001Temp.header.TX_CODE=EnuTaTxCode.TRADE_1001.getCode();      // 01   交易代码       4   2001
-            tia2001001Temp.body.BANK_ID= EnuTaBankId.BANK_HAIER.getCode();       // 02   监管银行代码   2
-            tia2001001Temp.body.CITY_ID= EnuTaCityId.CITY_TAIAN.getCode();       // 03   城市代码       6
-            tia2001001Temp.header.BIZ_ID=taRsAccPara.getBizId();                  // 04   监管申请编号   14
-            tia2001001Temp.body.ACC_TYPE=taRsAccPara.getAccType();                // 05   帐户类别       1   0：预售监管户
-            tia2001001Temp.body.ACC_ID=taRsAccPara.getAccId();                    // 06   监管专户账号    30
-            tia2001001Temp.body.ACC_NAME=taRsAccPara.getAccName();                // 07   监管专户户名   150
-            tia2001001Temp.header.REQ_SN=taRsAccPara.getReqSn();                  // 08   流水号         30
-            tia2001001Temp.body.TX_DATE=ToolUtil.getStrLastUpdDate() ;            // 09   日期           10  送系统日期即可
-            tia2001001Temp.body.BRANCH_ID=ToolUtil.getStrLastUpdDate() ;          // 10   网点号         30
-            tia2001001Temp.header.USER_ID=ToolUtil.getStrLastUpdDate() ;          // 11   柜员号         30
-            tia2001001Temp.body.INITIATOR=EnuTaInitiatorId.INITIATOR.getCode() ;// 12   发起方         1   1_监管银行
+            taRsAccPara.setReqSn(ToolUtil.getStrAppReqSn_Back());
+            Tia9901001 tia9901001Temp=new Tia9901001();
+            tia9901001Temp.header.CHANNEL_ID=ToolUtil.DEP_CHANNEL_ID_RFM;
+            tia9901001Temp.header.TX_CODE=EnuTaTxCode.TRADE_1001.getCode();                     // 01   交易代码       4   1001
+            tia9901001Temp.body.BANK_ID= EnuTaBankId.BANK_HAIER.getCode();                      // 02   监管银行代码   2
+            tia9901001Temp.body.CITY_ID= EnuTaCityId.CITY_TAIAN.getCode();                      // 03   城市代码       6
+            tia9901001Temp.header.BIZ_ID=taRsAccPara.getBizId();                                  // 04   监管申请编号   14
+            tia9901001Temp.body.ACC_TYPE=taRsAccPara.getAccType();                                // 05   帐户类别       1   0：预售监管户
+            tia9901001Temp.body.ACC_ID=taRsAccPara.getAccId();                                    // 06   监管专户账号    30
+            tia9901001Temp.body.ACC_NAME=taRsAccPara.getAccName();                                // 07   监管专户户名   150
+            tia9901001Temp.header.REQ_SN=taRsAccPara.getReqSn();                                  // 08   流水号         30
+            tia9901001Temp.body.TX_DATE=ToolUtil.getStrLastUpdDate() ;                            // 09   日期           10  送系统日期即可
+            tia9901001Temp.body.BRANCH_ID=ToolUtil.getOperatorManager().getOperator().getDeptid();// 10   网点号         30
+            tia9901001Temp.header.USER_ID=ToolUtil.getOperatorManager().getOperatorId();          // 11   柜员号         30
+            tia9901001Temp.body.INITIATOR=EnuTaInitiatorId.INITIATOR.getCode() ;                 // 12   发起方         1   1_监管银行
             //通过MQ发送信息到DEP
-            String strMsgid=depService.sendDepMessage(tia2001001Temp);
-            handle1001Message(depService.recvDepMessage(strMsgid));
-            String strRtn="0000";
-            if(strMsgid!=""){
-
+            String strMsgid=depService.sendDepMessage(tia9901001Temp);
+            Toa9901001 toaPara=(Toa9901001)depService.recvDepMessage(strMsgid);
+            if(EnuTaTxnRtnCode.TXN_PROCESSED.getCode().equals(toaPara.header.RETURN_CODE)){
+                taRsAccPara.setPreSalePerName(toaPara.body.PRE_SALE_PER_NAME);
+                taRsAccPara.setPreSaleProAddr(toaPara.body.PRE_SALE_PRO_ADDR);
+                taRsAccPara.setPreSaleProName(toaPara.body.PRE_SALE_PRO_NAME);
+                taRsAccPara.setStatusFlag(EnuTaAccStatus.ACC_SUPV.getCode());
+                updateRecord(taRsAccPara);
+            }else{
+                 /*01	返回结果	    4
+                  02	错误原因描述	60
+                */
+                taRsAccPara.setReturnCode(toaPara.header.RETURN_CODE);
+                taRsAccPara.setReturnMsg(toaPara.header.RETURN_MSG);
+                logger.error("MQ消息返回失败");
+                throw new RuntimeException("MQ消息返回失败");
             }
-
-            taRsAccPara.setStatusFlag(EnuTaTxCode.TRADE_1001.getCode());
-            updateRecord(taRsAccPara);
         } catch (Exception e) {
-            logger.error("MQ消息发送失败", e);
-            throw new RuntimeException("MQ消息发送失败", e);
+            logger.error("建立监管失败", e);
+            throw new RuntimeException("建立监管失败", e);
         }
     }
 
     /**
-     * 处理泰安房产监管系统建立监管交易结果
+     * 发送泰安房产监管系统解除监管交易
      *
-     * @param message
+     * @param taRsAccPara
      */
     @Transactional
-    public void handle1001Message(String message) {
-        logger.info(" ========开始处理返回的100004消息==========");
-        logger.info(message);
-
-        /*TOA2001001 toa = TOA2001001.(message);
-        if (toa != null) {
-            String retcode_head = toa.INFO.RET_CODE;      //报文头返回码
-            String req_sn = toa.INFO.REQ_SN;              //交易流水号
-            String batch_sn = req_sn.substring(0, 11);    //解析交易流水号 得到批次号
-            String batch_detl_sn = req_sn.substring(11);  //解析交易流水号 得到批次内的顺序号
-            FipCutpaydetlExample example = new FipCutpaydetlExample();
-            example.createCriteria().andBatchSnEqualTo(batch_sn).andBatchDetlSnEqualTo(batch_detl_sn)
-                    .andArchiveflagEqualTo("0").andDeletedflagEqualTo("0");
-            List<FipCutpaydetl> cutpaydetlList = cutpaydetlMapper.selectByExample(example);
-            if (cutpaydetlList.size() != 1) {
-                logger.error("未查找到对应的扣款记录。" + req_sn);
-                throw new RuntimeException("未查找到对应的扣款记录。" + req_sn);
+    public void sendAndRecvRealTimeTxn9901002(TaRsAcc taRsAccPara) {
+        try {
+            taRsAccPara.setReqSn(ToolUtil.getStrAppReqSn_Back());
+            Tia9901002 tia9901002Temp=new Tia9901002() ;
+            tia9901002Temp.header.CHANNEL_ID=ToolUtil.DEP_CHANNEL_ID_RFM;
+            tia9901002Temp.header.TX_CODE=EnuTaTxCode.TRADE_1002.getCode();                     // 01   交易代码       4   1002
+            tia9901002Temp.body.BANK_ID= EnuTaBankId.BANK_HAIER.getCode();                      // 02   监管银行代码   2
+            tia9901002Temp.body.CITY_ID= EnuTaCityId.CITY_TAIAN.getCode();                      // 03   城市代码       6
+            tia9901002Temp.header.BIZ_ID=taRsAccPara.getBizId();                                  // 04   终止证明编号  14
+            tia9901002Temp.body.ACC_ID=taRsAccPara.getAccId();                                    // 05   监管专户账号  30
+            tia9901002Temp.body.ACC_NAME=taRsAccPara.getAccName();                                // 06   监管专户户名  150
+            tia9901002Temp.header.REQ_SN=taRsAccPara.getReqSn();                                  // 07   流水号        30
+            tia9901002Temp.body.TX_DATE=ToolUtil.getStrLastUpdDate() ;                            // 08   日期          10  送系统日期即可
+            tia9901002Temp.body.BRANCH_ID=ToolUtil.getOperatorManager().getOperator().getDeptid();// 09   网点号        30
+            tia9901002Temp.header.USER_ID=ToolUtil.getOperatorManager().getOperatorId();          // 10   柜员号        30
+            tia9901002Temp.body.INITIATOR=EnuTaInitiatorId.INITIATOR.getCode() ;                 // 11   发起方        1   1_监管银行
+            //通过MQ发送信息到DEP
+            String strMsgid=depService.sendDepMessage(tia9901002Temp);
+            Toa9901002 toaPara=(Toa9901002)depService.recvDepMessage(strMsgid);
+            if(EnuTaTxnRtnCode.TXN_PROCESSED.getCode().equals(toaPara.header.RETURN_CODE)){
+                taRsAccPara.setStatusFlag(EnuTaAccStatus.ACC_CANCL.getCode());
+                updateRecord(taRsAccPara);
+            }else{
+                 /*01	返回结果	    4
+                  02	错误原因描述	60
+                */
+                taRsAccPara.setReturnCode(toaPara.header.RETURN_CODE);
+                taRsAccPara.setReturnMsg(toaPara.header.RETURN_MSG);
+                updateRecord(taRsAccPara);
+                logger.error("MQ消息返回失败");
+                throw new RuntimeException("MQ消息返回失败");
             }
-            FipCutpaydetl record = cutpaydetlList.get(0);
-
-            if ("0000".equals(retcode_head)) { //报文头“0000”：处理完成
-                //已查找到数据库中对应的记录，可以进行日志记录
-                T100004Toa.Body.BodyDetail bodyDetail = toa.BODY.RET_DETAILS.get(0);
-                String retcode_detl = bodyDetail.RET_CODE;
-                if ("0000".equals(retcode_detl)) { //交易成功的唯一标志
-                    if (bodyDetail.ACCOUNT_NO.equals(record.getBiBankactno())) {
-                        long recordAmt = record.getPaybackamt().multiply(new BigDecimal(100)).longValue();
-                        long returnAmt = Integer.parseInt(bodyDetail.AMOUNT);
-                        if (recordAmt == returnAmt) {
-                            record.setBillstatus(BillStatus.CUTPAY_SUCCESS.getCode());
-                            record.setDateBankCutpay(new Date());
-                        } else {
-                            logger.error("返回金额不匹配");
-                            appendNewJoblog(record.getPkid(), "fip_cutpaydetl", "银联返回", "返回金额不匹配:" + returnAmt);
-                        }
-                    } else {
-                        logger.error("帐号不匹配");
-                        appendNewJoblog(record.getPkid(), "fip_cutpaydetl", "银联返回", "帐号不匹配" + bodyDetail.ACCOUNT_NO);
-                    }
-                } else {  //交易失败
-                    record.setBillstatus(BillStatus.CUTPAY_FAILED.getCode());
-                }
-                record.setTxRetcode(String.valueOf(retcode_detl));
-                record.setTxRetmsg(bodyDetail.ERR_MSG);
-            } else if ("1002".equals(retcode_head)) {//无法查询到该交易，可以重发  关键！
-                record.setBillstatus(BillStatus.RESEND_PEND.getCode());
-                record.setTxRetcode(String.valueOf(retcode_head));
-                record.setTxRetmsg(toa.INFO.ERR_MSG);
-            } else { //待查询 (TODO: 未处理 0001，0002)
-                record.setBillstatus(BillStatus.CUTPAY_QRY_PEND.getCode());
-                record.setTxRetcode(String.valueOf(retcode_head));
-                record.setTxRetmsg(toa.INFO.ERR_MSG);
-            }
-            record.setRecversion(record.getRecversion() + 1);
-            cutpaydetlMapper.updateByPrimaryKey(record);
-        } else { //
-            throw new RuntimeException("该笔交易记录为空，可能已被删除。 " + message);
-        }*/
-        logger.debug(" ................. 处理返回的消息结束........");
+        } catch (Exception e) {
+            logger.error("解除监管失败", e);
+            throw new RuntimeException("解除监管失败", e);
+        }
     }
 }

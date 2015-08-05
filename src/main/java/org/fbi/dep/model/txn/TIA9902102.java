@@ -14,7 +14,7 @@ import java.lang.String;
  * Date: 2015-07-16
  */
 
-public class TIA9902102 extends TIA implements Serializable {
+public class Tia9902102 extends TIA implements Serializable {
     public  Header header = new Header();
     public  Body body = new Body();
 

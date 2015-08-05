@@ -36,15 +36,6 @@
                         event.keyCode = 9;
                 }
             }
-            function openCom() {
-             var sfeature = "dialogwidth:300px; dialogheight:420px;center:yes;help:yes;resizable:yes;scroll:yes;status:yes";
-             var arg = new Object();
-             var rtn = dialog("../common/companyList.xhtml", arg, sfeature);
-             if (rtn != null) {
-             document.getElementById("form:companyId").value = rtn.companyid;
-             document.getElementById("form:companyName").value = rtn.companyname;
-             }
-             }
         </script>
     </ui:define>
     <ui:define name="content">

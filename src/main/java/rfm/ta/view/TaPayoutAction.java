@@ -1,18 +1,19 @@
 package rfm.ta.view;
 
+import com.longtu.framework.util.BeanUtil;
+import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import platform.service.PtenudetailService;
+import platform.common.utils.MessageUtil;
 import rfm.ta.common.enums.EnuTaTxCode;
-import rfm.ta.repository.model.TaRsAccDtl;
-import rfm.ta.service.account.TaAccDetlService;
-import rfm.ta.service.account.TaAccService;
+import rfm.ta.repository.model.TaTxnFdc;
+import rfm.ta.service.account.TaPayoutService;
+import rfm.ta.service.his.TaTxnFdcService;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
-import javax.faces.model.SelectItem;
 import java.util.List;
 
 /**
@@ -26,98 +27,130 @@ import java.util.List;
 @ViewScoped
 public class TaPayoutAction {
     private static final Logger logger = LoggerFactory.getLogger(TaPayoutAction.class);
-    @ManagedProperty(value = "#{taAccDetlService}")
-    private TaAccDetlService taAccDetlService;
-    @ManagedProperty(value = "#{ptenudetailService}")
-    private PtenudetailService ptenudetailService;
+    @ManagedProperty(value = "#{taTxnFdcService}")
+    private TaTxnFdcService taTxnFdcService;
 
-    private List<TaRsAccDtl> taRsAccDetailList;
-    private TaRsAccDtl taRsAccDetail;
-    private List<SelectItem> taTxCodeList;
+    @ManagedProperty(value = "#{taPayoutService}")
+    private TaPayoutService taPayoutService;
+
+    private TaTxnFdc taTxnFdcValiSend;
+    private TaTxnFdc taTxnFdcValiSendAndRecv;
+    private TaTxnFdc taTxnFdcActSend;
+    private TaTxnFdc taTxnFdcActSendAndRecv;
+    private TaTxnFdc taTxnFdcCanclSend;
+    private TaTxnFdc taTxnFdcCanclSendAndRecv;
 
     @PostConstruct
     public void init() {
-        taRsAccDetail=new TaRsAccDtl();
-        taTxCodeList=ptenudetailService.getTxCodeList();
+        taTxnFdcValiSend=new TaTxnFdc();
+        taTxnFdcValiSendAndRecv=new TaTxnFdc();
+        taTxnFdcActSend=new TaTxnFdc();
+        taTxnFdcActSendAndRecv=new TaTxnFdc();
+        taTxnFdcCanclSend=new TaTxnFdc();
+        taTxnFdcCanclSendAndRecv=new TaTxnFdc();
     }
 
     /*划拨验证用*/
     public void onBtnValiClick() {
+        // 发送验证信息
+        taTxnFdcValiSend.setTxCode(EnuTaTxCode.TRADE_2101.getCode());
+        taPayoutService.sendAndRecvRealTimeTxn9902101(taTxnFdcValiSend);
         /*验证后查询*/
-        onBtnValiQryClick();
-    }
-    /*划拨验证查询用*/
-    public void onBtnValiQryClick() {
-        taRsAccDetail.setTxCode(EnuTaTxCode.TRADE_2101.getCode());
-        taRsAccDetailList = taAccDetlService.selectedRecords(taRsAccDetail);
+        taTxnFdcValiSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcValiSend.getPkId());
     }
 
-    /*划拨记账用*/
+    /*验证后立即划拨记账用*/
     public void onBtnActClick() {
+        try {
+            // 发送验证信息
+            TaTxnFdc taTxnFdcTemp=new TaTxnFdc();
+            BeanUtils.copyProperties(taTxnFdcTemp,taTxnFdcValiSendAndRecv);
+            taTxnFdcTemp.setTxCode(EnuTaTxCode.TRADE_2102.getCode());
+            taPayoutService.sendAndRecvRealTimeTxn9902102(taTxnFdcTemp);
         /*记账后查询*/
-        onBtnActQryClick();
-    }
-    /*划拨记账查询用*/
-    public void onBtnActQryClick() {
-        taRsAccDetail.setTxCode(EnuTaTxCode.TRADE_2102.getCode());
-        taRsAccDetailList = taAccDetlService.selectedRecords(taRsAccDetail);
+            taTxnFdcActSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcTemp.getPkId());
+        }catch (Exception e){
+            logger.error("验证后立即划拨记账用，", e);
+            MessageUtil.addError(e.getMessage());
+        }
     }
 
     /*划拨冲正用*/
     public void onBtnCanclClick() {
-        /*冲正后查询*/
-        onBtnCanclQryClick();
-    }
-    /*划拨冲正查询用*/
-    public void onBtnCanclQryClick() {
-        taRsAccDetail.setTxCode(EnuTaTxCode.TRADE_2111.getCode());
-        taRsAccDetailList = taAccDetlService.selectedRecords(taRsAccDetail);
-    }
-
-    /*划拨查询用*/
-    public void onBtnQryClick() {
-        taRsAccDetailList = taAccDetlService.selectedRecords(taRsAccDetail);
-    }
-
-    public String reset() {
-        this.taRsAccDetail = new TaRsAccDtl();
-        if (!taRsAccDetailList.isEmpty()) {
-            taRsAccDetailList.clear();
+        try {
+            // 发送冲正信息
+            taTxnFdcCanclSend.setTxCode(EnuTaTxCode.TRADE_2111.getCode());
+            taPayoutService.sendAndRecvRealTimeTxn9902111(taTxnFdcCanclSend);
+            /*划拨冲正后查询*/
+            taTxnFdcCanclSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcCanclSend.getPkId());
+        }catch (Exception e){
+            logger.error("划拨冲正用，", e);
+            MessageUtil.addError(e.getMessage());
         }
-        return null;
     }
 
     //= = = = = = = = = = = = = = =  get set = = = = = = = = = = = = = = = =
-
-    public TaAccDetlService getTaAccDetlService() {
-        return taAccDetlService;
+    public TaPayoutService getTaPayoutService() {
+        return taPayoutService;
     }
 
-    public void setTaAccDetlService(TaAccDetlService taAccDetlService) {
-        this.taAccDetlService = taAccDetlService;
+    public void setTaPayoutService(TaPayoutService taPayoutService) {
+        this.taPayoutService = taPayoutService;
     }
 
-    public List<TaRsAccDtl> getTaRsAccDtlList() {
-        return taRsAccDetailList;
+    public TaTxnFdcService getTaTxnFdcService() {
+        return taTxnFdcService;
     }
 
-    public void setTaRsAccDtlList(List<TaRsAccDtl> taRsAccDetailList) {
-        this.taRsAccDetailList = taRsAccDetailList;
+    public void setTaTxnFdcService(TaTxnFdcService taTxnFdcService) {
+        this.taTxnFdcService = taTxnFdcService;
     }
 
-    public TaRsAccDtl getTaRsAccDtl() {
-        return taRsAccDetail;
+    public TaTxnFdc getTaTxnFdcValiSend() {
+        return taTxnFdcValiSend;
     }
 
-    public void setTaRsAccDtl(TaRsAccDtl taRsAccDetail) {
-        this.taRsAccDetail = taRsAccDetail;
+    public void setTaTxnFdcValiSend(TaTxnFdc taTxnFdcValiSend) {
+        this.taTxnFdcValiSend = taTxnFdcValiSend;
     }
 
-    public PtenudetailService getPtenudetailService() {
-        return ptenudetailService;
+    public TaTxnFdc getTaTxnFdcValiSendAndRecv() {
+        return taTxnFdcValiSendAndRecv;
     }
 
-    public void setPtenudetailService(PtenudetailService ptenudetailService) {
-        this.ptenudetailService = ptenudetailService;
+    public void setTaTxnFdcValiSendAndRecv(TaTxnFdc taTxnFdcValiSendAndRecv) {
+        this.taTxnFdcValiSendAndRecv = taTxnFdcValiSendAndRecv;
+    }
+
+    public TaTxnFdc getTaTxnFdcActSend() {
+        return taTxnFdcActSend;
+    }
+
+    public void setTaTxnFdcActSend(TaTxnFdc taTxnFdcActSend) {
+        this.taTxnFdcActSend = taTxnFdcActSend;
+    }
+
+    public TaTxnFdc getTaTxnFdcActSendAndRecv() {
+        return taTxnFdcActSendAndRecv;
+    }
+
+    public void setTaTxnFdcActSendAndRecv(TaTxnFdc taTxnFdcActSendAndRecv) {
+        this.taTxnFdcActSendAndRecv = taTxnFdcActSendAndRecv;
+    }
+
+    public TaTxnFdc getTaTxnFdcCanclSend() {
+        return taTxnFdcCanclSend;
+    }
+
+    public void setTaTxnFdcCanclSend(TaTxnFdc taTxnFdcCanclSend) {
+        this.taTxnFdcCanclSend = taTxnFdcCanclSend;
+    }
+
+    public TaTxnFdc getTaTxnFdcCanclSendAndRecv() {
+        return taTxnFdcCanclSendAndRecv;
+    }
+
+    public void setTaTxnFdcCanclSendAndRecv(TaTxnFdc taTxnFdcCanclSendAndRecv) {
+        this.taTxnFdcCanclSendAndRecv = taTxnFdcCanclSendAndRecv;
     }
 }

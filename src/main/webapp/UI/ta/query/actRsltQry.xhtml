@@ -1,0 +1,165 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/ui.xhtml">
+
+    <ui:define name="head">
+        <script type="text/javascript" language="javascript">
+            document.onkeydown = function TabReplace() {
+                if (event.keyCode == 13) {
+                    if (event.srcElement.tagName != 'BUTTON')
+                        event.keyCode = 9;
+                }
+            }
+        </script>
+        <style type="text/css">
+            .col-label1 {
+                width: 200px;
+                text-align: right;
+            }
+
+            .col-label2 {
+                width: 200px;
+                text-align: right;
+            }
+
+            .col-label3 {
+                width: 200px;
+                text-align: right;
+            }
+
+            .col-input1 {
+                width: 100px;
+            }
+
+            .col-input2 {
+                width: 100px;
+            }
+
+            .col-input3 {
+                width: 100px;
+            }
+
+            .col_remark {
+                width: 100px;
+                text-align: right;
+            }
+
+            .buttontab {
+                margin-top: 15px;
+                text-align: center;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="content">
+        <div style="margin:5px;" id="top">
+            <p:growl id="msgs" showDetail="false"/>
+            <h:form id="form">
+                <p:panel id="valiSend" header="【记账结果查询】发送">
+                    <h:panelGrid columns="2" cellspacing="3" style="width:100%">
+                        <h:panelGrid columns="2" cellspacing="3"
+                                     columnClasses="col-label1,col-input1">
+                            <h:outputLabel value="*【业务编号】:" for="bizId"/>
+                            <h:inputText autocomplete="off" id="bizId"
+                                         required="true" requiredMessage="必须输入业务编号！"
+                                         value="#{taActRsltAction.taTxnFdcValiSend.bizId}">
+                            </h:inputText>
+                        </h:panelGrid>
+                        <p:commandButton update="msgs,valiRecv" style="width: 80px"
+                                         action="#{taActRsltAction.onBtnQry()}"
+                                         id="btnValiSend" value="查询">
+                        </p:commandButton>
+                    </h:panelGrid>
+                </p:panel>
+                <p:ajaxStatus style="width:16px;height:16px;">
+                    <f:facet name="start">
+                        <h:graphicImage value="/images/ajaxloading.gif"/>
+                    </f:facet>
+                    <f:facet name="complete">
+                        <h:outputText value=""/>
+                    </f:facet>
+                </p:ajaxStatus>
+                <p:panel id="valiRecv" header="【记账结果查询】返回">
+                    <h:panelGrid>
+                        <h:panelGrid columns="6" cellspacing="3"
+                                     columnClasses="col-label1,col-input1,col-label2,col-input2,col-label3,col-input3">
+                            <h:outputLabel value="*【交易代码】:" for="rtnTxCodeVali"/>
+                            <h:inputText id="rtnTxCodeVali" readonly="true"
+                                         style="background-color:gainsboro"
+                                         value="#{taActRsltAction.taTxnFdcValiSendAndRecv.txCode}">
+                            </h:inputText>
+                            <h:outputLabel value="*【监管银行代码】:" for="rtnBankIdVali"/>
+                            <h:inputText id="rtnBankIdVali" readonly="true"
+                                         style="background-color:gainsboro"
+                                         value="#{taActRsltAction.taTxnFdcValiSendAndRecv.bankId}">
+                            </h:inputText>
+                            <h:outputLabel value="*【城市代码】:" for="rtnCityId"/>
+                            <h:inputText id="rtnCityId" readonly="true"
+                                         style="background-color:gainsboro"
+                                         value="#{taActRsltAction.taTxnFdcValiSendAndRecv.cityId}">
+                            </h:inputText>
+                            <h:outputLabel value="*【业务编号】:" for="rtnBizIdVali"/>
+                            <h:inputText id="rtnBizIdVali" readonly="true"
+                                         style="background-color:gainsboro"
+                                         value="#{taActRsltAction.taTxnFdcValiSendAndRecv.bizId}">
+                            </h:inputText>
+                            <h:outputLabel value="*【查询网点】:" for="rtnBranchIdVali"/>
+                            <h:inputText id="rtnBranchIdVali" readonly="true"
+                                         style="background-color:gainsboro"
+                                         value="#{taActRsltAction.taTxnFdcValiSendAndRecv.branchId}">
+                            </h:inputText>
+                            <h:outputLabel value="*【查询人员】:" for="rtnUserIdVali"/>
+                            <h:inputText id="rtnUserIdVali" readonly="true"
+                                         style="background-color:gainsboro"
+                                         value="#{taActRsltAction.taTxnFdcValiSendAndRecv.userId}">
+                            </h:inputText>
+                            <h:outputLabel value="*【发起方】:" for="rtnInitiatorVali"/>
+                            <h:inputText id="rtnInitiatorVali" readonly="true"
+                                         style="background-color:gainsboro"
+                                         value="#{taActRsltAction.taTxnFdcValiSendAndRecv.initiator}">
+                            </h:inputText>
+                        </h:panelGrid>
+                        <p:separator></p:separator>
+                        <h:panelGrid columns="6" cellspacing="3" style="width:100%"
+                                     columnClasses="col-label1,col-input1,col-label2,col-input2,col-label3,col-input3">
+                            <h:outputLabel value="*【结果】:" for="rtnReturnCodeVali"/>
+                            <h:inputText id="rtnReturnCodeVali" readonly="true"
+                                         style="background-color:gainsboro"
+                                         value="#{taActRsltAction.taTxnFdcValiSendAndRecv.returnCode}">
+                            </h:inputText>
+                            <h:outputLabel value="*【记账结果】:" for="rtnActRstl"/>
+                            <h:inputText  id="rtnActRstl" readonly="true"
+                                          style="background-color:gainsboro"
+                                          value="#{taActRsltAction.taTxnFdcValiSendAndRecv.actRstl}">
+                            </h:inputText>
+                            <h:outputLabel value="*【描述】:" for="rtnReturnMsgVali"/>
+                            <h:inputText id="rtnReturnMsgVali" readonly="true"
+                                         style="background-color:gainsboro"
+                                         value="#{taActRsltAction.taTxnFdcValiSendAndRecv.returnMsg}">
+                            </h:inputText>
+                            <h:outputLabel value="*【预售资金监管平台记账流水】:" for="rtnFdcActSn"/>
+                            <h:inputText  id="rtnFdcActSn" readonly="true"
+                                          style="background-color:gainsboro"
+                                          value="#{taActRsltAction.taTxnFdcValiSendAndRecv.fdcActSn}">
+                            </h:inputText>
+                            <h:outputLabel value="*【监管银行记账流水】:" for="rtnFdcBankActSn"/>
+                            <h:inputText  id="rtnFdcBankActSn" readonly="true"
+                                          style="background-color:gainsboro"
+                                          value="#{taActRsltAction.taTxnFdcValiSendAndRecv.fdcBankActSn}">
+                            </h:inputText>
+                            <h:outputLabel value="*【预售资金监管平台流水】:" for="rtnFdcSnVali"/>
+                            <h:inputText id="rtnFdcSnVali" readonly="true"
+                                         style="background-color:gainsboro"
+                                         value="#{taActRsltAction.taTxnFdcValiSendAndRecv.fdcSn}">
+                            </h:inputText>
+                        </h:panelGrid>
+                    </h:panelGrid>
+                </p:panel>
+            </h:form>
+        </div>
+    </ui:define>
+
+</ui:composition>

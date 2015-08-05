@@ -1,6 +1,6 @@
 package rfm.qd.gateway.service;
 
-import pub.platform.utils.ToolUtil;
+import common.utils.ToolUtil;
 import rfm.qd.gateway.cbus.CbusSocketClient;
 import rfm.qd.gateway.cbus.domain.base.MsgHeader;
 import rfm.qd.gateway.cbus.domain.txn.*;

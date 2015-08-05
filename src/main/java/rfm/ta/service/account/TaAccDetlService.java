@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import platform.service.SystemService;
 import pub.platform.security.OperatorManager;
 import common.utils.ToolUtil;
+import rfm.ta.repository.dao.TaRsAccDtlMapper;
 import rfm.ta.repository.dao.com.TaCommonMapper;
 import rfm.ta.repository.model.TaRsAccDtl;
 import rfm.ta.repository.model.TaRsAccDtlExample;
@@ -24,6 +25,9 @@ public class TaAccDetlService {
 
     @Autowired
     private TaCommonMapper commonMapper;
+
+    @Autowired
+    private TaRsAccDtlMapper taRsAccDtlMapper;
 
     /**
      * ÕË»§Ã÷Ï¸²éÑ¯*/
@@ -45,8 +49,7 @@ public class TaAccDetlService {
         }
         criteria.andDeletedFlagEqualTo("0");
         example.setOrderByClause("Trade_Date desc,acc_id");
-        //return taRsAccDtlMapper.selectByExample(example);
-        return null;
+        return taRsAccDtlMapper.selectByExample(example);
     }
 
     /**
@@ -58,8 +61,7 @@ public class TaAccDetlService {
         taRsAccDtl.setLastUpdBy(om.getOperatorId());
         taRsAccDtl.setLastUpdTime(ToolUtil.getStrLastUpdTime());
         taRsAccDtl.setReqSn(commonMapper.selectMaxAccDetailSerial());
-        //taRsAccDtl.setToSerial(taRsAccDtl.gett());
-        //taRsAccDtlMapper.insertSelective(taRsAccDtl);
+        taRsAccDtlMapper.insertSelective(taRsAccDtl);
     }
 
     /**
@@ -71,7 +73,6 @@ public class TaAccDetlService {
 
         criteria.andDeletedFlagEqualTo("0");
         example.setOrderByClause("account_code,local_serial");
-        return null;
-        //return taRsAccDtlMapper.selectByExample(example);
+        return taRsAccDtlMapper.selectByExample(example);
     }
 }

@@ -6,6 +6,7 @@
                 template="/templates/ui.xhtml">
 
     <ui:define name="head">
+        <script type="text/javascript" src="#{request.contextPath}/UI/support/pub.js"/>
         <script type="text/javascript" language="javascript">
             document.onkeydown = function TabReplace() {
                 if (event.keyCode == 13) {
@@ -14,24 +15,63 @@
                 }
             }
         </script>
+        <style type="text/css">
+            .col-label1 {
+                width: 200px;
+                text-align: right;
+            }
+
+            .col-label2 {
+                width: 200px;
+                text-align: right;
+            }
+
+            .col-label3 {
+                width: 200px;
+                text-align: right;
+            }
+
+            .col-input1 {
+                width: 100px;
+            }
+
+            .col-input2 {
+                width: 100px;
+            }
+
+            .col-input3 {
+                width: 100px;
+            }
+
+            .col_remark {
+                width: 100px;
+                text-align: right;
+            }
+
+            .buttontab {
+                margin-top: 15px;
+                text-align: center;
+            }
+        </style>
     </ui:define>
 
     <ui:define name="content">
         <div style="margin:5px;" id="top">
             <p:growl id="msgs" showDetail="false"/>
             <h:form id="actqueryForm">
-                <p:panel id="query" header="【划拨信息】查询">
+                <p:panel id="valiSend" header="【划拨沖正】发送">
                     <h:panelGrid columns="2" cellspacing="3" style="width:100%">
-                        <h:panelGrid columns="2" cellspacing="3" style="width:40%">
+                        <h:panelGrid columns="2" cellspacing="3"
+                                     columnClasses="col-label1,col-input1">
                             <h:outputLabel value="*【划拨申请编号】:" for="bizId"/>
                             <h:inputText autocomplete="off" id="bizId"
                                          required="true" requiredMessage="必须输入划拨申请编号！"
-                                         value="#{taPayoutAction.taRsAccDtl.bizId}">
+                                         value="#{taPayoutAction.taTxnFdcCanclSend.bizId}">
                             </h:inputText>
                         </h:panelGrid>
-                        <p:commandButton update="msgs,pdt" style="width: 80px"
+                        <p:commandButton update="msgs,canclRecv" style="width: 80px"
                                          action="#{taPayoutAction.onBtnCanclClick()}"
-                                         id="btnQuery" value="冲正">
+                                         id="btnCanclSend" value="沖正">
                         </p:commandButton>
                     </h:panelGrid>
                 </p:panel>
@@ -44,88 +84,21 @@
                     </f:facet>
                 </p:ajaxStatus>
 
-                <p:dataTable id="pdt" style="width:100%;"
-                             dynamic="true"
-                             value="#{taPayoutAction.taRsAccDtlList}"
-                             selectionMode="single"
-                             var="record"
-                             rowKey="#{record.pkId}"
-                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                             paginator="true" rows="15" paginatorPosition="bottom"
-                             scrollable="true"
-                             rowsPerPageTemplate="100,50,30,15,5"
-                             emptyMessage="数据记录为空...">
-
-                    <p:column headerText="交易代码" style="width: 80px;text-align:center">
-                        <h:outputText value="#{record.txCode}" style="text-align: center;"/>
-                    </p:column>
-
-                    <p:column headerText="监管银行代码" style="width: 80px;text-align:center">
-                        <h:outputText value="#{record.bankId}" style="text-align: right"/>
-                    </p:column>
-
-                    <p:column headerText="城市代码" style="width: 80px;text-align:center">
-                        <h:outputText value="#{record.cityId}" style="text-align: right"/>
-                    </p:column>
-
-                    <p:column headerText="划拨申请编号" style="width: 80px;text-align:center">
-                        <h:outputText value="#{record.bizId}" style="text-align: right"/>
-                    </p:column>
-
-                    <p:column headerText="划拨密码" style="width: 80px;text-align:center">
-                        <h:outputText value="#{record.password}" style="text-align: right"/>
-                    </p:column>
-
-                    <p:column headerText="验证流水" style="width: 80px;text-align:center">
-                        <h:outputText value="#{record.reqSn}"/>
-                    </p:column>
-                    <p:column headerText="验证日期" style="width: 80px;text-align:center">
-                        <h:outputText value="#{record.tradeDate}" style="text-align: right"/>
-                    </p:column>
-                    <p:column headerText="验证网点" style="width: 80px;text-align:center">
-                        <h:outputText value="#{record.branchId}" style="text-align: right"/>
-                    </p:column>
-                    <p:column headerText="验证人员" style="width: 80px;text-align:center">
-                        <h:outputText value="#{record.userId}" style="text-align: right"/>
-                    </p:column>
-                    <p:column headerText="发起方" style="width: 80px;text-align:center">
-                        <h:outputText value="#{record.initiator}" style="text-align: right"/>
-                    </p:column>
-                    <p:column headerText="结果" style="width: 80px;text-align:center">
-                        <h:outputText value="#{record.returnCode}" style="text-align: right"/>
-                    </p:column>
-                    <p:column headerText="监管账号" style="width: 80px;text-align:center">
-                        <h:outputText value="#{record.accId}" style="text-align: right"/>
-                    </p:column>
-                    <p:column headerText="监管账户名" style="width: 80px;text-align:center">
-                        <h:outputText value="#{record.accName}" style="text-align: right"/>
-                    </p:column>
-                    <p:column headerText="划拨金额" style="width: 80px;text-align:center">
-                        <h:outputText value="#{record.txAmt}" style="text-align: right"/>
-                    </p:column>
-                    <p:column headerText="收款银行" style="width: 80px;text-align:center">
-                        <h:outputText value="#{record.recvBank}" style="text-align: right"/>
-                    </p:column>
-                    <p:column headerText="收款单位账号" style="width: 80px;text-align:center">
-                        <h:outputText value="#{record.recvAccId}" style="text-align: right"/>
-                    </p:column>
-                    <p:column headerText="收款单位户名" style="width: 80px;text-align:center">
-                        <h:outputText value="#{record.recvAccName}" style="text-align: right"/>
-                    </p:column>
-                    <p:column headerText="项目名称" style="width: 80px;text-align:center">
-                        <h:outputText value="#{record.progName
-                        }" style="text-align: right"/>
-                    </p:column>
-                    <p:column headerText="开发企业名称" style="width: 80px;text-align:center">
-                        <h:outputText value="#{record.compName}" style="text-align: right"/>
-                    </p:column>
-                    <p:column headerText="预售资金监管平台流水" style="width: 160px;text-align:center">
-                        <h:outputText value="#{record.reqSn}" style="text-align: right"/>
-                    </p:column>
-                    <p:column headerText="描述" style="width: 80px;text-align:center">
-                        <h:outputText value="#{record.returnMsg}" style="text-align: right"/>
-                    </p:column>
-                </p:dataTable>
+                <p:panel id="canclRecv" header="【划拨沖正】返回">
+                    <h:panelGrid columns="4" cellspacing="3"
+                                 columnClasses="col-label1,col-input1">
+                        <h:outputLabel value="*【结果】:" for="rtnReturnCodeCancl"/>
+                        <h:inputText id="rtnReturnCodeCancl" readonly="true"
+                                     style="background-color:gainsboro"
+                                     value="#{taPayoutAction.taTxnFdcCanclSendAndRecv.returnCode}">
+                        </h:inputText>
+                        <h:outputLabel value="*【预售资金监管平台流水】:" for="rtnFdcSnCancl"/>
+                        <h:inputText id="rtnFdcSnCancl" readonly="true"
+                                     style="background-color:gainsboro"
+                                     value="#{taPayoutAction.taTxnFdcCanclSendAndRecv.fdcSn}">
+                        </h:inputText>
+                    </h:panelGrid>
+                </p:panel>
             </h:form>
         </div>
     </ui:define>

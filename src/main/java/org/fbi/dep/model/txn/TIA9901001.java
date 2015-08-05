@@ -11,7 +11,7 @@ import java.io.Serializable;
  * User: hanjianlong
  * Date: 2015-07-16
  */
-public class TIA9901001 extends TIA implements Serializable {
+public class Tia9901001 extends TIA implements Serializable {
     public  Header header = new Header();
     public  Body body = new Body();
 

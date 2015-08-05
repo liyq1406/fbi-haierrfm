@@ -59,18 +59,18 @@
         <div style="margin:5px;" id="top">
             <p:growl id="msgs" showDetail="false"/>
             <h:form id="actqueryForm">
-                <p:panel id="valiSend" header="【返还沖正】发送">
+                <p:panel id="valiSend" header="【交存沖正】发送">
                     <h:panelGrid columns="2" cellspacing="3" style="width:100%">
                         <h:panelGrid columns="2" cellspacing="3"
                                      columnClasses="col-label1,col-input1">
-                            <h:outputLabel value="*【返还申请编号】:" for="bizId"/>
+                            <h:outputLabel value="*【交存申请编号】:" for="bizId"/>
                             <h:inputText autocomplete="off" id="bizId"
-                                         required="true" requiredMessage="必须输入返还申请编号！"
-                                         value="#{taRefundAction.taTxnFdcCanclSend.bizId}">
+                                         required="true" requiredMessage="必须输入交存申请编号！"
+                                         value="#{taPaymentAction.taTxnFdcCanclSend.bizId}">
                             </h:inputText>
                         </h:panelGrid>
                         <p:commandButton update="msgs,canclRecv" style="width: 80px"
-                                         action="#{taRefundAction.onBtnCanclClick()}"
+                                         action="#{taPaymentAction.onBtnCanclClick()}"
                                          id="btnCanclSend" value="沖正">
                         </p:commandButton>
                     </h:panelGrid>
@@ -84,18 +84,18 @@
                     </f:facet>
                 </p:ajaxStatus>
 
-                <p:panel id="canclRecv" header="【返还沖正】返回">
+                <p:panel id="canclRecv" header="【交存沖正】返回">
                     <h:panelGrid columns="4" cellspacing="3"
                                  columnClasses="col-label1,col-input1">
                         <h:outputLabel value="*【结果】:" for="rtnReturnCodeCancl"/>
                         <h:inputText id="rtnReturnCodeCancl" readonly="true"
                                      style="background-color:gainsboro"
-                                     value="#{taRefundAction.taTxnFdcCanclSendAndRecv.returnCode}">
+                                     value="#{taPaymentAction.taTxnFdcCanclSendAndRecv.returnCode}">
                         </h:inputText>
                         <h:outputLabel value="*【预售资金监管平台流水】:" for="rtnFdcSnCancl"/>
                         <h:inputText id="rtnFdcSnCancl" readonly="true"
                                      style="background-color:gainsboro"
-                                     value="#{taRefundAction.taTxnFdcCanclSendAndRecv.fdcSn}">
+                                     value="#{taPaymentAction.taTxnFdcCanclSendAndRecv.fdcSn}">
                         </h:inputText>
                     </h:panelGrid>
                 </p:panel>

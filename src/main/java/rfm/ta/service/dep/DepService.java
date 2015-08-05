@@ -1,5 +1,6 @@
 package rfm.ta.service.dep;
 
+import org.fbi.dep.model.base.TOA;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jms.core.JmsTemplate;
@@ -57,20 +58,16 @@ public class DepService {
         return msgid;
     }
 
-    public String recvDepMessage(String msgid) {
-        Message msg = null;
+    public TOA recvDepMessage(String msgid) {
+        Object msg = null;
         try {
             String filter = "JMSCorrelationID = '" + msgid + "'";
-            msg = jmsRecvTemplate.receiveSelected(filter);
+            msg = jmsRecvTemplate.receiveSelectedAndConvert(filter);
 
             //TODO 超时处理
             if (msg != null) {
-                if (msg instanceof TextMessage) {
-                    logger.info("接收消息:" + ((TextMessage) msg).getText());
-                    return ((TextMessage) msg).getText();
-                } else {
-                    throw new RuntimeException("消息类型错误。");
-                }
+                //logger.info("接收消息:" + ((ObjectMessage) msg));
+                return ((TOA) msg);
             } else {
                 logger.info("超时");
                 throw new RuntimeException("接收报文超时.");

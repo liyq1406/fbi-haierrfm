@@ -2,6 +2,14 @@ package rfm.ta.common.enums;
 
 import java.util.Hashtable;
 
+/**
+ * 泰安房产中心交易号
+ * Created by IntelliJ IDEA.
+ * User: hanjianlong
+ * Date: 15-6-30
+ * Time: 下午2:12
+ * To change this template use File | Settings | File Templates.
+ */
 public enum EnuTaTxCode {
     TRADE_1001("1001", "建立监管"),
     TRADE_1002("1002", "解除监管"),

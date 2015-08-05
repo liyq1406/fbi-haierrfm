@@ -6,15 +6,13 @@ import org.slf4j.LoggerFactory;
 import platform.common.utils.MessageUtil;
 import rfm.ta.common.enums.EnuTaTxCode;
 import rfm.ta.repository.model.TaTxnFdc;
-import rfm.ta.service.account.TaPayoutService;
-import rfm.ta.service.account.TaRefundService;
+import rfm.ta.service.account.TaPaymentService;
 import rfm.ta.service.his.TaTxnFdcService;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
-import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -25,13 +23,13 @@ import java.util.List;
  */
 @ManagedBean
 @ViewScoped
-public class TaRefundAction {
-    private static final Logger logger = LoggerFactory.getLogger(TaRefundAction.class);
+public class TaPaymentAction {
+    private static final Logger logger = LoggerFactory.getLogger(TaPaymentAction.class);
     @ManagedProperty(value = "#{taTxnFdcService}")
     private TaTxnFdcService taTxnFdcService;
 
-    @ManagedProperty(value = "#{taRefundService}")
-    private TaRefundService taRefundService;
+    @ManagedProperty(value = "#{taPaymentService}")
+    private TaPaymentService taPaymentService;
 
     private TaTxnFdc taTxnFdcValiSend;
     private TaTxnFdc taTxnFdcValiSendAndRecv;
@@ -50,53 +48,52 @@ public class TaRefundAction {
         taTxnFdcCanclSendAndRecv=new TaTxnFdc();
     }
 
-    /*划拨验证用*/
+    /*交存验证用*/
     public void onBtnValiClick() {
         // 发送验证信息
-        taTxnFdcValiSend.setTxCode(EnuTaTxCode.TRADE_2201.getCode());
-        taRefundService.sendAndRecvRealTimeTxn9902201(taTxnFdcValiSend);
+        taTxnFdcValiSend.setTxCode(EnuTaTxCode.TRADE_2001.getCode());
+        taPaymentService.sendAndRecvRealTimeTxn9902001(taTxnFdcValiSend);
         /*验证后查询*/
         taTxnFdcValiSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcValiSend.getPkId());
     }
 
-    /*验证后立即划拨记账用*/
+    /*验证后立即交存记账用*/
     public void onBtnActClick() {
         try {
             // 发送验证信息
             TaTxnFdc taTxnFdcTemp=new TaTxnFdc();
             BeanUtils.copyProperties(taTxnFdcTemp,taTxnFdcValiSendAndRecv);
-            taTxnFdcTemp.setTxCode(EnuTaTxCode.TRADE_2202.getCode());
-            taRefundService.sendAndRecvRealTimeTxn9902202(taTxnFdcTemp);
+            taTxnFdcTemp.setTxCode(EnuTaTxCode.TRADE_2002.getCode());
+            taPaymentService.sendAndRecvRealTimeTxn9902002(taTxnFdcTemp);
         /*记账后查询*/
             taTxnFdcActSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcTemp.getPkId());
         }catch (Exception e){
-            logger.error("验证后立即划拨记账用，", e);
+            logger.error("验证后立即交存记账用，", e);
             MessageUtil.addError(e.getMessage());
         }
     }
 
-    /*划拨冲正用*/
+    /*交存冲正用*/
     public void onBtnCanclClick() {
         try {
             // 发送冲正信息
-            taTxnFdcCanclSend.setTxCode(EnuTaTxCode.TRADE_2211.getCode());
-            taRefundService.sendAndRecvRealTimeTxn9902211(taTxnFdcCanclSend);
-            /*划拨冲正后查询*/
+            taTxnFdcCanclSend.setTxCode(EnuTaTxCode.TRADE_2011.getCode());
+            taPaymentService.sendAndRecvRealTimeTxn9902011(taTxnFdcCanclSend);
+            /*交存冲正后查询*/
             taTxnFdcCanclSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcCanclSend.getPkId());
         }catch (Exception e){
-            logger.error("划拨冲正用，", e);
+            logger.error("交存冲正用，", e);
             MessageUtil.addError(e.getMessage());
         }
     }
 
     //= = = = = = = = = = = = = = =  get set = = = = = = = = = = = = = = = =
-
-    public TaRefundService getTaRefundService() {
-        return taRefundService;
+    public TaPaymentService getTaPaymentService() {
+        return taPaymentService;
     }
 
-    public void setTaRefundService(TaRefundService taRefundService) {
-        this.taRefundService = taRefundService;
+    public void setTaPaymentService(TaPaymentService taPaymentService) {
+        this.taPaymentService = taPaymentService;
     }
 
     public TaTxnFdcService getTaTxnFdcService() {

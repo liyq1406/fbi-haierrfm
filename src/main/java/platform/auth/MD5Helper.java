@@ -53,7 +53,7 @@ public class MD5Helper {
     }
 
     public static void main(String[] args)  {
-        String md5 = MD5Helper.getMD5String("1111");
+        String md5 = MD5Helper.getMD5String("Haier_TAFDC_Payout");
         System.out.println("md5:" + md5 );
     }
 }
