@@ -7,7 +7,7 @@ import org.fbi.dep.model.base.TOAHeader;
 import java.io.Serializable;
 
 /**
- * æ³°å®‰æˆ¿äº§èµ„é‡‘ç›‘ç®¡ï¼šè¿”è¿˜è®°è´¦
+ * Ì©°²·¿²ú×Ê½ğ¼à¹Ü£º·µ»¹¼ÇÕË
  * User: hanjianlong
  * Date: 2015-07-16
  */
@@ -30,8 +30,8 @@ public class Toa9902202 extends TOA implements Serializable {
     }
 
     public static class Body extends TOABody {
-        /*01	ç»“æœ	                4   0000è¡¨ç¤ºæˆåŠŸ
-          02	é¢„å”®èµ„é‡‘ç›‘ç®¡å¹³å°æµæ°´	16
+        /*01	½á¹û	                4   0000±íÊ¾³É¹¦
+          02	Ô¤ÊÛ×Ê½ğ¼à¹ÜÆ½Ì¨Á÷Ë®	16
         */
     }
 }

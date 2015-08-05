@@ -7,7 +7,7 @@ import org.fbi.dep.model.base.TOAHeader;
 import java.io.Serializable;
 
 /**
- * æ³°å®‰æˆ¿äº§èµ„é‡‘ç›‘ç®¡ï¼šåˆ’æ‹¨éªŒè¯
+ * Ì©°²·¿²ú×Ê½ğ¼à¹Ü£º»®²¦ÑéÖ¤
  * User: hanjianlong
  * Date: 2015-07-16
  */
@@ -30,24 +30,24 @@ public class Toa9902101 extends TOA implements Serializable {
     }
 
     public static class Body extends TOABody {
-        /*01	ç»“æœ	                4   0000è¡¨ç¤ºæˆåŠŸ
-          02	ç›‘ç®¡è´¦å·                30
-          03    ç›‘ç®¡è´¦æˆ·æˆ·å            150
-          04	åˆ’æ‹¨é‡‘é¢	            20  ä»¥åˆ†ä¸ºå•ä½
-          05	æ”¶æ¬¾é“¶è¡Œ	            90
-          06	æ”¶æ¬¾å•ä½è´¦å·	        30
-          07	æ”¶æ¬¾å•ä½æˆ·å	        150
-          08	é¡¹ç›®åç§°	            128
-          09	å¼€å‘ä¼ä¸šåç§°	        255
-          10    é¢„å”®èµ„é‡‘ç›‘ç®¡å¹³å°æµæ°´    16
+        /*01	½á¹û	                4   0000±íÊ¾³É¹¦
+          02	¼à¹ÜÕËºÅ                30
+          03    ¼à¹ÜÕË»§»§Ãû            150
+          04	»®²¦½ğ¶î	            20  ÒÔ·ÖÎªµ¥Î»
+          05	ÊÕ¿îÒøĞĞ	            90
+          06	ÊÕ¿îµ¥Î»ÕËºÅ	        30
+          07	ÊÕ¿îµ¥Î»»§Ãû	        150
+          08	ÏîÄ¿Ãû³Æ	            128
+          09	¿ª·¢ÆóÒµÃû³Æ	        255
+          10    Ô¤ÊÛ×Ê½ğ¼à¹ÜÆ½Ì¨Á÷Ë®    16
         */
-        public String ACC_ID;             // 02	ç›‘ç®¡è´¦å·        30
-        public String ACC_NAME;           // 03	ç›‘ç®¡è´¦æˆ·æˆ·å    150
-        public String TX_AMT;             // 04   åˆ’æ‹¨é‡‘é¢	    20  ä»¥åˆ†ä¸ºå•ä½
-        public String RECV_BANK;          // 05   æ”¶æ¬¾é“¶è¡Œ       90
-        public String RECV_ACC_ID;       // 06	æ”¶æ¬¾å•ä½è´¦å·	30
-        public String RECV_ACC_NAME;     // 07   æ”¶æ¬¾å•ä½æˆ·å	150
-        public String PROG_NAME;         // 08   é¡¹ç›®åç§°        128
-        public String COMP_NAME;         // 09   å¼€å‘ä¼ä¸šåç§°    255
+        public String ACC_ID;             // 02	¼à¹ÜÕËºÅ        30
+        public String ACC_NAME;           // 03	¼à¹ÜÕË»§»§Ãû    150
+        public String TX_AMT;             // 04   »®²¦½ğ¶î	    20  ÒÔ·ÖÎªµ¥Î»
+        public String RECV_BANK;          // 05   ÊÕ¿îÒøĞĞ       90
+        public String RECV_ACC_ID;       // 06	ÊÕ¿îµ¥Î»ÕËºÅ	30
+        public String RECV_ACC_NAME;     // 07   ÊÕ¿îµ¥Î»»§Ãû	150
+        public String PROG_NAME;         // 08   ÏîÄ¿Ãû³Æ        128
+        public String COMP_NAME;         // 09   ¿ª·¢ÆóÒµÃû³Æ    255
     }
 }

@@ -7,7 +7,7 @@ import org.fbi.dep.model.base.TOAHeader;
 import java.io.Serializable;
 
 /**
- * æ³°å®‰æˆ¿äº§èµ„é‡‘ç›‘ç®¡ï¼šè¿”è¿˜éªŒè¯
+ * Ì©°²·¿²ú×Ê½ğ¼à¹Ü£º·µ»¹ÑéÖ¤
  * User: hanjianlong
  * Date: 2015-07-16
  */
@@ -30,20 +30,20 @@ public class Toa9902201 extends TOA implements Serializable {
     }
 
     public static class Body extends TOABody {
-        /*01	ç»“æœ	                4   0000è¡¨ç¤ºæˆåŠŸ
-          02	ç›‘ç®¡è´¦å·                30
-          03    ç›‘ç®¡è´¦æˆ·æˆ·å            150
-          04	è¿”è¿˜é‡‘é¢	            20  ä»¥åˆ†ä¸ºå•ä½
-          05	ä¸šä¸»å§“å	            80
-          06	è¯ä»¶ç±»å‹    	        30
-          07	è¯ä»¶å·ç                 255
-          08    é¢„å”®èµ„é‡‘ç›‘ç®¡å¹³å°æµæ°´    16
+        /*01	½á¹û	                4   0000±íÊ¾³É¹¦
+          02	¼à¹ÜÕËºÅ                30
+          03    ¼à¹ÜÕË»§»§Ãû            150
+          04	·µ»¹½ğ¶î	            20  ÒÔ·ÖÎªµ¥Î»
+          05	ÒµÖ÷ĞÕÃû	            80
+          06	Ö¤¼şÀàĞÍ    	        30
+          07	Ö¤¼şºÅÂë                255
+          08    Ô¤ÊÛ×Ê½ğ¼à¹ÜÆ½Ì¨Á÷Ë®    16
         */
-        public String ACC_ID;           // 02	ç›‘ç®¡è´¦å·     30
-        public String ACC_NAME;        // 03	ç›‘ç®¡è´¦æˆ·æˆ·å 150
-        public String TX_AMT;          // 04   è¿”è¿˜é‡‘é¢	 20  ä»¥åˆ†ä¸ºå•ä½
-        public String OWNER_NAME;     // 05   ä¸šä¸»å§“å     80
-        public String CTFIC_TYPE;     // 06   è¯ä»¶ç±»å‹	 30
-        public String CTFIC_ID;       // 07   è¯ä»¶å·ç  	 255
+        public String ACC_ID;           // 02	¼à¹ÜÕËºÅ     30
+        public String ACC_NAME;        // 03	¼à¹ÜÕË»§»§Ãû 150
+        public String TX_AMT;          // 04   ·µ»¹½ğ¶î	 20  ÒÔ·ÖÎªµ¥Î»
+        public String OWNER_NAME;     // 05   ÒµÖ÷ĞÕÃû     80
+        public String CTFIC_TYPE;     // 06   Ö¤¼şÀàĞÍ	 30
+        public String CTFIC_ID;       // 07   Ö¤¼şºÅÂë 	 255
     }
 }

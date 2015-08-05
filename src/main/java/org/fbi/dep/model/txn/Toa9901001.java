@@ -7,7 +7,7 @@ import org.fbi.dep.model.base.TOAHeader;
 import java.io.Serializable;
 
 /**
- * æ³°å®‰æˆ¿äº§èµ„é‡‘ç›‘ç®¡ï¼šå»ºç«‹ç›‘ç®¡
+ * Ì©°²·¿²ú×Ê½ğ¼à¹Ü£º½¨Á¢¼à¹Ü
  * User: hanjianlong
  * Date: 2015-07-16
  */
@@ -30,14 +30,14 @@ public class Toa9901001 extends TOA implements Serializable {
     }
 
     public static class Body extends TOABody {
-        /*01	ç»“æœ	                4   0000è¡¨ç¤ºæˆåŠŸ
-          02	é¢„å”®èµ„é‡‘ç›‘ç®¡å¹³å°æµæ°´	16
-          03	é¢„å”®äººåç§°	            255
-          04	é¢„å”®é¡¹ç›®åœ°å€            128
-          05    é¢„å”®é¡¹ç›®åç§°            128
+        /*01	½á¹û	                4   0000±íÊ¾³É¹¦
+          02	Ô¤ÊÛ×Ê½ğ¼à¹ÜÆ½Ì¨Á÷Ë®	16
+          03	Ô¤ÊÛÈËÃû³Æ	            255
+          04	Ô¤ÊÛÏîÄ¿µØÖ·            128
+          05    Ô¤ÊÛÏîÄ¿Ãû³Æ            128
         */
-        public String PRE_SALE_PER_NAME;             // é¢„å”®äººåç§°	            255
-        public String PRE_SALE_PRO_ADDR;             // é¢„å”®é¡¹ç›®åœ°å€            128
-        public String PRE_SALE_PRO_NAME;             // é¢„å”®é¡¹ç›®åç§°            128
+        public String PRE_SALE_PER_NAME;             // Ô¤ÊÛÈËÃû³Æ	            255
+        public String PRE_SALE_PRO_ADDR;             // Ô¤ÊÛÏîÄ¿µØÖ·            128
+        public String PRE_SALE_PRO_NAME;             // Ô¤ÊÛÏîÄ¿Ãû³Æ            128
     }
 }
