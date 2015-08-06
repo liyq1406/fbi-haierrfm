@@ -7,7 +7,7 @@ import org.fbi.dep.model.base.TIAHeader;
 import java.io.Serializable;
 
 /**
- * æ³°å®‰æˆ¿äº§èµ„é‡‘ç›‘ç®¡ï¼šè¿”è¿˜è®°è´¦
+ * Ì©°²·¿²ú×Ê½ğ¼à¹Ü£º·µ»¹¼ÇÕË
  * User: hanjianlong
  * Date: 2015-07-16
  */
@@ -31,24 +31,24 @@ public class Tia9902202 extends TIA implements Serializable {
     }
 
     public static class Body extends TIABody {
-        /*01	äº¤æ˜“ä»£ç 	    4	2102
-          02	ç›‘ç®¡é“¶è¡Œä»£ç 	2
-          03	åŸå¸‚ä»£ç 	    6
-          04	è¿”è¿˜ä¸šåŠ¡ç¼–å·	14
-          05	è¿”è¿˜å¯†ç 	    32	MD5
-          06	ç›‘ç®¡è´¦å·	    30
-          07	è¿”è¿˜èµ„é‡‘	    20
-          08	é“¶è¡Œè®°è´¦æµæ°´	30
-          09	è®°è´¦æ—¥æœŸ	    10	é€ç³»ç»Ÿæ—¥æœŸå³å¯
-          10	è®°è´¦ç½‘ç‚¹	    30
-          11	è®°è´¦äººå‘˜	    30
-          12	å‘èµ·æ–¹	        1	1_ç›‘ç®¡é“¶è¡Œ*/
-        public String BANK_ID;            // ç›‘ç®¡é“¶è¡Œä»£ç 	  2
-        public String CITY_ID;            // åŸå¸‚ä»£ç 	      6
-        public String BRANCH_ID;          // ç½‘ç‚¹å·         30
-        public String INITIATOR;          // å‘èµ·æ–¹         1   1_ç›‘ç®¡é“¶è¡Œ
-        public String ACC_ID;             // 06	ç›‘ç®¡è´¦å·	    30
-        public String TX_AMT;             // 07	è¿”è¿˜èµ„é‡‘	    20
-        public String TX_DATE;            // æ—¥æœŸ           10  é€ç³»ç»Ÿæ—¥æœŸå³å¯
+        /*01	½»Ò×´úÂë	    4	2102
+          02	¼à¹ÜÒøĞĞ´úÂë	2
+          03	³ÇÊĞ´úÂë	    6
+          04	·µ»¹ÒµÎñ±àºÅ	14
+          05	·µ»¹ÃÜÂë	    32	MD5
+          06	¼à¹ÜÕËºÅ	    30
+          07	·µ»¹×Ê½ğ	    20
+          08	ÒøĞĞ¼ÇÕËÁ÷Ë®	30
+          09	¼ÇÕËÈÕÆÚ	    10	ËÍÏµÍ³ÈÕÆÚ¼´¿É
+          10	¼ÇÕËÍøµã	    30
+          11	¼ÇÕËÈËÔ±	    30
+          12	·¢Æğ·½	        1	1_¼à¹ÜÒøĞĞ*/
+        public String BANK_ID;            // ¼à¹ÜÒøĞĞ´úÂë	  2
+        public String CITY_ID;            // ³ÇÊĞ´úÂë	      6
+        public String BRANCH_ID;          // ÍøµãºÅ         30
+        public String INITIATOR;          // ·¢Æğ·½         1   1_¼à¹ÜÒøĞĞ
+        public String ACC_ID;             // 06	¼à¹ÜÕËºÅ	    30
+        public String TX_AMT;             // 07	·µ»¹×Ê½ğ	    20
+        public String TX_DATE;            // ÈÕÆÚ           10  ËÍÏµÍ³ÈÕÆÚ¼´¿É
     }
 }

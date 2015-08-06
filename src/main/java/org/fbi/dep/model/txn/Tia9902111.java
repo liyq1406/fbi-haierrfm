@@ -7,7 +7,7 @@ import org.fbi.dep.model.base.TIAHeader;
 import java.io.Serializable;
 
 /**
- * æ³°å®‰æˆ¿äº§èµ„é‡‘ç›‘ç®¡ï¼šåˆ’æ‹¨å†²æ­£
+ * Ì©°²·¿²ú×Ê½ğ¼à¹Ü£º»®²¦³åÕı
  * User: hanjianlong
  * Date: 2015-07-16
  */
@@ -31,19 +31,19 @@ public class Tia9902111 extends TIA implements Serializable {
     }
 
     public static class Body extends TIABody {
-        /*01	äº¤æ˜“ä»£ç 	    4	2102
-          02	ç›‘ç®¡é“¶è¡Œä»£ç 	2
-          03	åŸå¸‚ä»£ç 	    6
-          04	åˆ’æ‹¨ä¸šåŠ¡ç¼–å·	14
-          05	é“¶è¡Œå†²æ­£æµæ°´	30
-          06	è®°è´¦æ—¥æœŸ	    10	é€ç³»ç»Ÿæ—¥æœŸå³å¯
-          07	è®°è´¦ç½‘ç‚¹	    30
-          08	è®°è´¦äººå‘˜	    30
-          09	å‘èµ·æ–¹	        1	1_ç›‘ç®¡é“¶è¡Œ*/
-        public String BANK_ID;            // ç›‘ç®¡é“¶è¡Œä»£ç 	  2
-        public String CITY_ID;            // åŸå¸‚ä»£ç 	      6
-        public String BRANCH_ID;          // ç½‘ç‚¹å·         30
-        public String INITIATOR;          // å‘èµ·æ–¹         1   1_ç›‘ç®¡é“¶è¡Œ
-        public String TX_DATE;            // æ—¥æœŸ           10  é€ç³»ç»Ÿæ—¥æœŸå³å¯
+        /*01	½»Ò×´úÂë	    4	2102
+          02	¼à¹ÜÒøĞĞ´úÂë	2
+          03	³ÇÊĞ´úÂë	    6
+          04	»®²¦ÒµÎñ±àºÅ	14
+          05	ÒøĞĞ³åÕıÁ÷Ë®	30
+          06	¼ÇÕËÈÕÆÚ	    10	ËÍÏµÍ³ÈÕÆÚ¼´¿É
+          07	¼ÇÕËÍøµã	    30
+          08	¼ÇÕËÈËÔ±	    30
+          09	·¢Æğ·½	        1	1_¼à¹ÜÒøĞĞ*/
+        public String BANK_ID;            // ¼à¹ÜÒøĞĞ´úÂë	  2
+        public String CITY_ID;            // ³ÇÊĞ´úÂë	      6
+        public String BRANCH_ID;          // ÍøµãºÅ         30
+        public String INITIATOR;          // ·¢Æğ·½         1   1_¼à¹ÜÒøĞĞ
+        public String TX_DATE;            // ÈÕÆÚ           10  ËÍÏµÍ³ÈÕÆÚ¼´¿É
     }
 }

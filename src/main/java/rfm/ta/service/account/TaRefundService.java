@@ -13,7 +13,7 @@ import rfm.ta.common.enums.EnuTaCityId;
 import rfm.ta.common.enums.EnuTaInitiatorId;
 import rfm.ta.common.enums.EnuTaTxnRtnCode;
 import rfm.ta.repository.model.TaTxnFdc;
-import rfm.ta.service.dep.DepService;
+import rfm.ta.service.dep.DepMsgSendAndRecv;
 import rfm.ta.service.his.TaTxnFdcService;
 
 import java.math.BigDecimal;
@@ -32,7 +32,7 @@ public class TaRefundService {
     @Autowired
     private TaTxnFdcService taTxnFdcService;
     @Autowired
-    private DepService depService;
+    private DepMsgSendAndRecv depMsgSendAndRecv;
 
     /**
      * 发送泰安房产监管系统返还验证交易
@@ -63,11 +63,13 @@ public class TaRefundService {
             tia9902201Temp.body.BRANCH_ID=taTxnFdcPara.getBranchId();   // 08   验证网点号     30
             tia9902201Temp.header.USER_ID=taTxnFdcPara.getUserId();     // 09   验证柜员号     30
             tia9902201Temp.body.INITIATOR=taTxnFdcPara.getInitiator();  // 10   发起方         1   1_监管银行
-            //通过MQ发送信息到DEP
+
             taTxnFdcPara.setRecVersion(0);
             taTxnFdcService.insertRecord(taTxnFdcPara);
-            String strMsgid=depService.sendDepMessage(tia9902201Temp);
-            Toa9902201 toaPara=(Toa9902201)depService.recvDepMessage(strMsgid);
+
+            //通过MQ发送信息到DEP
+            String strMsgid= depMsgSendAndRecv.sendDepMessage(tia9902201Temp);
+            Toa9902201 toaPara=(Toa9902201) depMsgSendAndRecv.recvDepMessage(strMsgid);
             if(EnuTaTxnRtnCode.TXN_PROCESSED.getCode().equals(toaPara.header.RETURN_CODE)){
                  /*01	结果	                4   0000表示成功
                   02	监管账号                30
@@ -134,9 +136,14 @@ public class TaRefundService {
             tia9902202Temp.body.BRANCH_ID=taTxnFdcPara.getBranchId();        // 10   记账网点号     30
             tia9902202Temp.header.USER_ID=taTxnFdcPara.getUserId();          // 11   柜员号         30
             tia9902202Temp.body.INITIATOR=taTxnFdcPara.getInitiator();       // 12   发起方         1   1_监管银行
+
             //通过MQ发送信息到DEP
-            String strMsgid=depService.sendDepMessage(tia9902202Temp);
-            Toa9902202 toaPara=(Toa9902202)depService.recvDepMessage(strMsgid);
+            taTxnFdcPara.setRecVersion(0);
+            taTxnFdcService.insertRecord(taTxnFdcPara);
+
+            //通过MQ发送信息到DEP
+            String strMsgid= depMsgSendAndRecv.sendDepMessage(tia9902202Temp);
+            Toa9902202 toaPara=(Toa9902202) depMsgSendAndRecv.recvDepMessage(strMsgid);
             if(EnuTaTxnRtnCode.TXN_PROCESSED.getCode().equals(toaPara.header.RETURN_CODE)){
                 /*01	结果	                4   0000表示成功
                   02	预售资金监管平台流水	16
@@ -193,8 +200,8 @@ public class TaRefundService {
             taTxnFdcService.insertRecord(taTxnFdcPara);
 
             //通过MQ发送信息到DEP
-            String strMsgid=depService.sendDepMessage(tia9902211Temp);
-            Toa9902211 toaPara=(Toa9902211)depService.recvDepMessage(strMsgid);
+            String strMsgid= depMsgSendAndRecv.sendDepMessage(tia9902211Temp);
+            Toa9902211 toaPara=(Toa9902211) depMsgSendAndRecv.recvDepMessage(strMsgid);
             if(EnuTaTxnRtnCode.TXN_PROCESSED.getCode().equals(toaPara.header.RETURN_CODE)){
                 /*01	结果	                4   0000表示成功
                   02	预售资金监管平台流水	16

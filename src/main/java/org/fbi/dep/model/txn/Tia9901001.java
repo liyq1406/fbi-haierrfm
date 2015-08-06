@@ -7,7 +7,7 @@ import org.fbi.dep.model.base.TIAHeader;
 import java.io.Serializable;
 
 /**
- * æ³°å®‰æˆ¿äº§èµ„é‡‘ç›‘ç®¡ï¼šå»ºç«‹ç›‘ç®¡
+ * Ì©°²·¿²ú×Ê½ğ¼à¹Ü£º½¨Á¢¼à¹Ü
  * User: hanjianlong
  * Date: 2015-07-16
  */
@@ -30,25 +30,25 @@ public class Tia9901001 extends TIA implements Serializable {
     }
 
     public static class Body extends TIABody {
-        /*01	äº¤æ˜“ä»£ç 	    4	2001
-          02	ç›‘ç®¡é“¶è¡Œä»£ç 	2
-          03	åŸå¸‚ä»£ç 	    6
-          04	ç›‘ç®¡ç”³è¯·ç¼–å·    14
-          05    å¸æˆ·ç±»åˆ«        1  0ï¼šé¢„å”®ç›‘ç®¡æˆ·
-          06    ç›‘ç®¡ä¸“æˆ·è´¦å·    30
-          07    ç›‘ç®¡ä¸“æˆ·æˆ·å    150
-          08	æµæ°´å·    	    30
-          09	æ—¥æœŸ	        10	é€ç³»ç»Ÿæ—¥æœŸå³å¯
-          10	ç½‘ç‚¹å·	        30
-          11	æŸœå‘˜å·	        30
-          12	å‘èµ·æ–¹	        1	1_ç›‘ç®¡é“¶è¡Œ*/
-        public String BANK_ID;            // ç›‘ç®¡é“¶è¡Œä»£ç 	  2
-        public String CITY_ID;            // åŸå¸‚ä»£ç 	      6
-        public String BRANCH_ID;          // ç½‘ç‚¹å·         30
-        public String INITIATOR;          // å‘èµ·æ–¹         1   1_ç›‘ç®¡é“¶è¡Œ
-        public String ACC_TYPE;           // å¸æˆ·ç±»åˆ«       1  0ï¼šé¢„å”®ç›‘ç®¡æˆ·
-        public String ACC_ID;             // ç›‘ç®¡ä¸“æˆ·è´¦å·   30
-        public String ACC_NAME;           // ç›‘ç®¡ä¸“æˆ·æˆ·å   150
-        public String TX_DATE;            // æ—¥æœŸ           10  é€ç³»ç»Ÿæ—¥æœŸå³å¯
+        /*01	½»Ò×´úÂë	    4	2001
+          02	¼à¹ÜÒøĞĞ´úÂë	2
+          03	³ÇÊĞ´úÂë	    6
+          04	¼à¹ÜÉêÇë±àºÅ    14
+          05    ÕÊ»§Àà±ğ        1  0£ºÔ¤ÊÛ¼à¹Ü»§
+          06    ¼à¹Ü×¨»§ÕËºÅ    30
+          07    ¼à¹Ü×¨»§»§Ãû    150
+          08	Á÷Ë®ºÅ    	    30
+          09	ÈÕÆÚ	        10	ËÍÏµÍ³ÈÕÆÚ¼´¿É
+          10	ÍøµãºÅ	        30
+          11	¹ñÔ±ºÅ	        30
+          12	·¢Æğ·½	        1	1_¼à¹ÜÒøĞĞ*/
+        public String BANK_ID;            // ¼à¹ÜÒøĞĞ´úÂë	  2
+        public String CITY_ID;            // ³ÇÊĞ´úÂë	      6
+        public String BRANCH_ID;          // ÍøµãºÅ         30
+        public String INITIATOR;          // ·¢Æğ·½         1   1_¼à¹ÜÒøĞĞ
+        public String ACC_TYPE;           // ÕÊ»§Àà±ğ       1  0£ºÔ¤ÊÛ¼à¹Ü»§
+        public String ACC_ID;             // ¼à¹Ü×¨»§ÕËºÅ   30
+        public String ACC_NAME;           // ¼à¹Ü×¨»§»§Ãû   150
+        public String TX_DATE;            // ÈÕÆÚ           10  ËÍÏµÍ³ÈÕÆÚ¼´¿É
     }
 }

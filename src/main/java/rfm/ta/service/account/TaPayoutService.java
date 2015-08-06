@@ -8,10 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import platform.auth.MD5Helper;
-import pub.platform.advance.utils.PropertyManager;
 import rfm.ta.common.enums.*;
 import rfm.ta.repository.model.TaTxnFdc;
-import rfm.ta.service.dep.DepService;
+import rfm.ta.service.dep.DepMsgSendAndRecv;
 import rfm.ta.service.his.TaTxnFdcService;
 
 import java.math.BigDecimal;
@@ -30,7 +29,7 @@ public class TaPayoutService {
     @Autowired
     private TaTxnFdcService taTxnFdcService;
     @Autowired
-    private DepService depService;
+    private DepMsgSendAndRecv depMsgSendAndRecv;
 
     /**
      * 发送泰安房产监管系统划拨验证交易
@@ -61,11 +60,13 @@ public class TaPayoutService {
             tia9902101Temp.body.BRANCH_ID=taTxnFdcPara.getBranchId();   // 08   验证网点号     30
             tia9902101Temp.header.USER_ID=taTxnFdcPara.getUserId();     // 09   验证柜员号     30
             tia9902101Temp.body.INITIATOR=taTxnFdcPara.getInitiator();  // 10   发起方         1   1_监管银行
-            //通过MQ发送信息到DEP
+
             taTxnFdcPara.setRecVersion(0);
             taTxnFdcService.insertRecord(taTxnFdcPara);
-            String strMsgid=depService.sendDepMessage(tia9902101Temp);
-            Toa9902101 toaPara=(Toa9902101)depService.recvDepMessage(strMsgid);
+
+            //通过MQ发送信息到DEP
+            String strMsgid= depMsgSendAndRecv.sendDepMessage(tia9902101Temp);
+            Toa9902101 toaPara=(Toa9902101) depMsgSendAndRecv.recvDepMessage(strMsgid);
             if(EnuTaTxnRtnCode.TXN_PROCESSED.getCode().equals(toaPara.header.RETURN_CODE)){
                 /*01	结果	                4   0000表示成功
                   02	监管账号                30
@@ -139,9 +140,13 @@ public class TaPayoutService {
             tia9902102Temp.body.BRANCH_ID=taTxnFdcPara.getBranchId();        // 13   记账网点号     30
             tia9902102Temp.header.USER_ID=taTxnFdcPara.getUserId();          // 14   柜员号         30
             tia9902102Temp.body.INITIATOR=taTxnFdcPara.getInitiator();       // 15   发起方         1   1_监管银行
+
+            taTxnFdcPara.setRecVersion(0);
+            taTxnFdcService.insertRecord(taTxnFdcPara);
+
             //通过MQ发送信息到DEP
-            String strMsgid=depService.sendDepMessage(tia9902102Temp);
-            Toa9902102 toaPara=(Toa9902102)depService.recvDepMessage(strMsgid);
+            String strMsgid= depMsgSendAndRecv.sendDepMessage(tia9902102Temp);
+            Toa9902102 toaPara=(Toa9902102) depMsgSendAndRecv.recvDepMessage(strMsgid);
             if(EnuTaTxnRtnCode.TXN_PROCESSED.getCode().equals(toaPara.header.RETURN_CODE)){
                 /*01	结果	                4   0000表示成功
                   02	预售资金监管平台流水	16
@@ -198,8 +203,8 @@ public class TaPayoutService {
             taTxnFdcService.insertRecord(taTxnFdcPara);
 
             //通过MQ发送信息到DEP
-            String strMsgid=depService.sendDepMessage(tia9902111Temp);
-            Toa9902111 toaPara=(Toa9902111)depService.recvDepMessage(strMsgid);
+            String strMsgid= depMsgSendAndRecv.sendDepMessage(tia9902111Temp);
+            Toa9902111 toaPara=(Toa9902111) depMsgSendAndRecv.recvDepMessage(strMsgid);
             if(EnuTaTxnRtnCode.TXN_PROCESSED.getCode().equals(toaPara.header.RETURN_CODE)){
                 /*01	结果	                4   0000表示成功
                   02	预售资金监管平台流水	16

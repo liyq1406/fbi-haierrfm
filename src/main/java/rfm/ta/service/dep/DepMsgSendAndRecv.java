@@ -21,8 +21,8 @@ import javax.jms.*;
  * To change this template use File | Settings | File Templates.
  */
 @Service
-public class DepService {
-    private static final Logger logger = LoggerFactory.getLogger(DepService.class);
+public class DepMsgSendAndRecv {
+    private static final Logger logger = LoggerFactory.getLogger(DepMsgSendAndRecv.class);
     private static String DEP_APPID = PropertyManager.getProperty("app_id");
     private static String DEP_USERNAME = PropertyManager.getProperty("jms.username");
     private static String DEP_PWD = PropertyManager.getProperty("jms.password");

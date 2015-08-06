@@ -1,24 +1,18 @@
 package rfm.ta.view;
 
-import common.utils.ToolUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import platform.common.utils.MessageUtil;
 import platform.service.PtenudetailService;
-import pub.platform.advance.utils.PropertyManager;
-import pub.platform.utils.SerialNumber;
 import rfm.qd.service.RsSysctlService;
 import rfm.ta.repository.model.TaRsAcc;
 import rfm.ta.service.account.TaAccService;
-import rfm.ta.service.dep.DepService;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.model.SelectItem;
 import java.util.List;
 import java.util.Map;
 

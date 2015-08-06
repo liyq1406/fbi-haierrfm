@@ -13,10 +13,8 @@ import rfm.ta.common.enums.EnuTaCityId;
 import rfm.ta.common.enums.EnuTaInitiatorId;
 import rfm.ta.common.enums.EnuTaTxnRtnCode;
 import rfm.ta.repository.model.TaTxnFdc;
-import rfm.ta.service.dep.DepService;
+import rfm.ta.service.dep.DepMsgSendAndRecv;
 import rfm.ta.service.his.TaTxnFdcService;
-
-import java.math.BigDecimal;
 
 /**
  * Created by IntelliJ IDEA.
@@ -32,7 +30,7 @@ public class TaActRsltService {
     @Autowired
     private TaTxnFdcService taTxnFdcService;
     @Autowired
-    private DepService depService;
+    private DepMsgSendAndRecv depMsgSendAndRecv;
 
     /**
      * 发送泰安房产监管系统返还验证交易
@@ -63,8 +61,8 @@ public class TaActRsltService {
             //通过MQ发送信息到DEP
             taTxnFdcPara.setRecVersion(0);
             taTxnFdcService.insertRecord(taTxnFdcPara);
-            String strMsgid=depService.sendDepMessage(tia9902501Temp);
-            Toa9902501 toaPara=(Toa9902501)depService.recvDepMessage(strMsgid);
+            String strMsgid= depMsgSendAndRecv.sendDepMessage(tia9902501Temp);
+            Toa9902501 toaPara=(Toa9902501) depMsgSendAndRecv.recvDepMessage(strMsgid);
             if(EnuTaTxnRtnCode.TXN_PROCESSED.getCode().equals(toaPara.header.RETURN_CODE)){
                   /*  01    结果	                  4   0000表示成功
                       02    记账结果	              1   0_成功 1_失败

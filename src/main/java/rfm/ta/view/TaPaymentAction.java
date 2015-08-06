@@ -55,6 +55,7 @@ public class TaPaymentAction {
         taPaymentService.sendAndRecvRealTimeTxn9902001(taTxnFdcValiSend);
         /*验证后查询*/
         taTxnFdcValiSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcValiSend.getPkId());
+
     }
 
     /*验证后立即交存记账用*/

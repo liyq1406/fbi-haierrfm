@@ -11,14 +11,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import platform.service.PtenudetailService;
 import platform.service.SystemService;
-import pub.platform.advance.utils.PropertyManager;
 import pub.platform.security.OperatorManager;
 import common.utils.ToolUtil;
 import rfm.ta.common.enums.*;
 import rfm.ta.repository.dao.TaRsAccMapper;
 import rfm.ta.repository.model.TaRsAcc;
 import rfm.ta.repository.model.TaRsAccExample;
-import rfm.ta.service.dep.DepService;
+import rfm.ta.service.dep.DepMsgSendAndRecv;
 
 import java.util.List;
 
@@ -38,7 +37,7 @@ public class TaAccService {
     @Autowired
     private PtenudetailService ptenudetailService;
     @Autowired
-    private DepService depService;
+    private DepMsgSendAndRecv depMsgSendAndRecv;
 
     /**
      * 判断账号是否已存在
@@ -202,8 +201,8 @@ public class TaAccService {
             tia9901001Temp.header.USER_ID=ToolUtil.getOperatorManager().getOperatorId();          // 11   柜员号         30
             tia9901001Temp.body.INITIATOR=EnuTaInitiatorId.INITIATOR.getCode() ;                 // 12   发起方         1   1_监管银行
             //通过MQ发送信息到DEP
-            String strMsgid=depService.sendDepMessage(tia9901001Temp);
-            Toa9901001 toaPara=(Toa9901001)depService.recvDepMessage(strMsgid);
+            String strMsgid= depMsgSendAndRecv.sendDepMessage(tia9901001Temp);
+            Toa9901001 toaPara=(Toa9901001) depMsgSendAndRecv.recvDepMessage(strMsgid);
             if(EnuTaTxnRtnCode.TXN_PROCESSED.getCode().equals(toaPara.header.RETURN_CODE)){
                 taRsAccPara.setPreSalePerName(toaPara.body.PRE_SALE_PER_NAME);
                 taRsAccPara.setPreSaleProAddr(toaPara.body.PRE_SALE_PRO_ADDR);
@@ -248,8 +247,8 @@ public class TaAccService {
             tia9901002Temp.header.USER_ID=ToolUtil.getOperatorManager().getOperatorId();          // 10   柜员号        30
             tia9901002Temp.body.INITIATOR=EnuTaInitiatorId.INITIATOR.getCode() ;                 // 11   发起方        1   1_监管银行
             //通过MQ发送信息到DEP
-            String strMsgid=depService.sendDepMessage(tia9901002Temp);
-            Toa9901002 toaPara=(Toa9901002)depService.recvDepMessage(strMsgid);
+            String strMsgid= depMsgSendAndRecv.sendDepMessage(tia9901002Temp);
+            Toa9901002 toaPara=(Toa9901002) depMsgSendAndRecv.recvDepMessage(strMsgid);
             if(EnuTaTxnRtnCode.TXN_PROCESSED.getCode().equals(toaPara.header.RETURN_CODE)){
                 taRsAccPara.setStatusFlag(EnuTaAccStatus.ACC_CANCL.getCode());
                 updateRecord(taRsAccPara);
