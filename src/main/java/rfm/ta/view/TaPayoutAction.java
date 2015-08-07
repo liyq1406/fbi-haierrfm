@@ -2,6 +2,7 @@ package rfm.ta.view;
 
 import com.longtu.framework.util.BeanUtil;
 import org.apache.commons.beanutils.BeanUtils;
+import org.fbi.dep.model.base.TOA;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import platform.common.utils.MessageUtil;
@@ -62,13 +63,17 @@ public class TaPayoutAction {
     /*验证后立即划拨记账用*/
     public void onBtnActClick() {
         try {
-            // 发送验证信息
-            TaTxnFdc taTxnFdcTemp=new TaTxnFdc();
-            BeanUtils.copyProperties(taTxnFdcTemp,taTxnFdcValiSendAndRecv);
-            taTxnFdcTemp.setTxCode(EnuTaTxCode.TRADE_2102.getCode());
-            taPayoutService.sendAndRecvRealTimeTxn9902102(taTxnFdcTemp);
-        /*记账后查询*/
-            taTxnFdcActSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcTemp.getPkId());
+            // 往SBS发送记账信息
+            TOA toaSbs=taPayoutService.sendAndRecvRealTimeTxn900012102(taTxnFdcValiSendAndRecv);
+            if(toaSbs !=null) {
+                // 往泰安房地产中心发送记账信息
+                TaTxnFdc taTxnFdcTemp = new TaTxnFdc();
+                BeanUtils.copyProperties(taTxnFdcTemp, taTxnFdcValiSendAndRecv);
+                taTxnFdcTemp.setTxCode(EnuTaTxCode.TRADE_2102.getCode());
+                taPayoutService.sendAndRecvRealTimeTxn9902102(taTxnFdcTemp);
+                /*记账后查询*/
+                taTxnFdcActSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcTemp.getPkId());
+            }
         }catch (Exception e){
             logger.error("验证后立即划拨记账用，", e);
             MessageUtil.addError(e.getMessage());
@@ -78,11 +83,15 @@ public class TaPayoutAction {
     /*划拨冲正用*/
     public void onBtnCanclClick() {
         try {
-            // 发送冲正信息
-            taTxnFdcCanclSend.setTxCode(EnuTaTxCode.TRADE_2111.getCode());
-            taPayoutService.sendAndRecvRealTimeTxn9902111(taTxnFdcCanclSend);
-            /*划拨冲正后查询*/
-            taTxnFdcCanclSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcCanclSend.getPkId());
+            // 往SBS发送记账信息
+            TOA toaSbs=taPayoutService.sendAndRecvRealTimeTxn900012111(taTxnFdcValiSendAndRecv);
+            if(toaSbs !=null) {
+                // 往泰安房地产中心发送记账信息
+                taTxnFdcCanclSend.setTxCode(EnuTaTxCode.TRADE_2111.getCode());
+                taPayoutService.sendAndRecvRealTimeTxn9902111(taTxnFdcCanclSend);
+                /*划拨冲正后查询*/
+                taTxnFdcCanclSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcCanclSend.getPkId());
+            }
         }catch (Exception e){
             logger.error("划拨冲正用，", e);
             MessageUtil.addError(e.getMessage());

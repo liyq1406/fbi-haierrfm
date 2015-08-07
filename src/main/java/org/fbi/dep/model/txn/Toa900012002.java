@@ -7,11 +7,11 @@ import org.fbi.dep.model.base.TOAHeader;
 import java.io.Serializable;
 
 /**
- * 泰安房产资金监管：交存记账到泰安房产中心
+ * 泰安房产资金监管：交存记账到SBS
  * User: hanjianlong
  * Date: 2015-07-16
  */
-public class Toa9902002 extends TOA implements Serializable {
+public class Toa900012002 extends TOA implements Serializable {
     public Header header = new Header();
     public Body body = new Body();
 
@@ -30,8 +30,10 @@ public class Toa9902002 extends TOA implements Serializable {
     }
 
     public static class Body extends TOABody {
-        /*01	结果	                4   0000表示成功
-          02	预售资金监管平台流水	16
+        /*01	外围系统流水号
+          02	交易金额
         */
+        public String RTN_REQ_SN;
+        public String RTN_TX_AMT;
     }
 }

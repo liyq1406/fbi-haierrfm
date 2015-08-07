@@ -10,6 +10,7 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.ContextLoader;
 import org.springframework.web.context.WebApplicationContext;
+import rfm.ta.common.enums.EnuTaTxCode;
 import rfm.ta.service.account.TaPaymentService;
 
 import javax.faces.bean.ManagedProperty;
@@ -42,13 +43,25 @@ public class DepMsgListener implements MessageListener {
             propertyMap.put("JMSX_BIZID", txnCode);
             propertyMap.put("JMSX_SRCMSGFLAG", message.getStringProperty("JMSX_SRCMSGFLAG"));
             ObjectMessage objMsg = (ObjectMessage) message;
-            TIA tiaXml = (TIA)objMsg.getObject();
-            taPaymentService.sendAndRecvRealTimeTxn9902001(tiaXml);
-            logger.info("【fip接收dep交易】correlationID：" + correlationID + ",交易码:" + txnCode);
-            WebApplicationContext springContext = ContextLoader.getCurrentWebApplicationContext();
-            DepAbstractTxnProcessor cbsTxnProcessor = (DepAbstractTxnProcessor) springContext.getBean("depTxn" + txnCode + "Processor");
-            TOA toa = cbsTxnProcessor.run(tiaXml);
-            jmsRfmOutTemplate.send(new ObjectMessageCreator(toa, correlationID, propertyMap));
+            TIA tiaTmp = (TIA)objMsg.getObject();
+            TOA toaSbs;
+            TOA toaFdc;
+            if(EnuTaTxCode.TRADE_2001.getCode().equals(txnCode)){
+                toaFdc=taPaymentService.sendAndRecvRealTimeTxn9902001(tiaTmp);
+                jmsRfmOutTemplate.send(new ObjectMessageCreator(toaFdc, correlationID, propertyMap));
+            }else if(EnuTaTxCode.TRADE_2002.getCode().equals(txnCode)){
+                toaSbs=taPaymentService.sendAndRecvRealTimeTxn900012002(tiaTmp);
+                if(toaSbs!=null) {
+                    toaFdc = taPaymentService.sendAndRecvRealTimeTxn9902002(tiaTmp);
+                    jmsRfmOutTemplate.send(new ObjectMessageCreator(toaFdc, correlationID, propertyMap));
+                }
+            }else if(EnuTaTxCode.TRADE_2011.getCode().equals(txnCode)){
+                toaSbs=taPaymentService.sendAndRecvRealTimeTxn900012011(tiaTmp);
+                if(toaSbs!=null) {
+                    toaFdc = taPaymentService.sendAndRecvRealTimeTxn9902011(tiaTmp);
+                    jmsRfmOutTemplate.send(new ObjectMessageCreator(toaFdc, correlationID, propertyMap));
+                }
+            }
         } catch (Exception e) {
             logger.error("[fip]消息处理异常!", e);
         }

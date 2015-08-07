@@ -32,7 +32,7 @@
         </javaClientGenerator>
 
         <!--房地产资金监管银行接口类 -->
-        <table tableName="TA_TXN_FDC">
+        <table tableName="TA_TXN_SBS">
             <property name="ignoreQualifiersAtRuntime" value="true" />
             <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
         </table>

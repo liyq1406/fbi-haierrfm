@@ -166,6 +166,11 @@ public class ToolUtil {
         return dateFormat(date, "yyyy-MM-dd HH:mm:ss");
     }
 
+    public static String getNow(String strPara) {
+        Date date =new Date();
+        return dateFormat(date, strPara);
+    }
+
     public static String getStrDateThisPeriod() {
         Date date =new Date();
         return dateFormat(date, "yyyyMM");

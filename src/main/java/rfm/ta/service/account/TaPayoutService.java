@@ -1,6 +1,7 @@
 package rfm.ta.service.account;
 
 import common.utils.ToolUtil;
+import org.fbi.dep.model.base.TOA;
 import org.fbi.dep.model.txn.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,8 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 import platform.auth.MD5Helper;
 import rfm.ta.common.enums.*;
 import rfm.ta.repository.model.TaTxnFdc;
+import rfm.ta.repository.model.TaTxnSbs;
 import rfm.ta.service.dep.DepMsgSendAndRecv;
 import rfm.ta.service.his.TaTxnFdcService;
+import rfm.ta.service.his.TaTxnSbsService;
 
 import java.math.BigDecimal;
 
@@ -28,6 +31,10 @@ public class TaPayoutService {
 
     @Autowired
     private TaTxnFdcService taTxnFdcService;
+
+    @Autowired
+    private TaTxnSbsService taTxnSbsService;
+
     @Autowired
     private DepMsgSendAndRecv depMsgSendAndRecv;
 
@@ -107,6 +114,52 @@ public class TaPayoutService {
     }
 
     /**
+     * 发送泰安房产监管系统交存记账交易
+     *
+     * @param taTxnFdcPara
+     */
+    @Transactional
+    public TOA sendAndRecvRealTimeTxn900012102(TaTxnFdc taTxnFdcPara) {
+        try {
+            Tia900012102 tia900012102Temp=new Tia900012102();
+            TaTxnSbs taTxnSbsPara=new TaTxnSbs();
+            taTxnSbsPara.setAccId(taTxnFdcPara.getAccId().substring(0,14));           // 付款账号
+            taTxnSbsPara.setRecvAccId(taTxnFdcPara.getRecvAccId().substring(0,14));   // 收款账号
+            taTxnSbsPara.setTxAmt(taTxnFdcPara.getTxAmt().toString());                // 交易金额
+            taTxnSbsPara.setReqSn(taTxnFdcPara.getReqSn().substring(8,26));           // 外围系统流水
+            taTxnSbsPara.setTxDate(ToolUtil.getNow("yyyyMMdd"));                    // 交易日期
+            taTxnSbsPara.setTxTime(ToolUtil.getNow("HH:mm:ss"));                    // 交易时间
+            taTxnSbsPara.setUserId(taTxnFdcPara.getUserId());                         // 柜员号
+
+            tia900012102Temp.body.ACC_ID=taTxnSbsPara.getAccId();
+            tia900012102Temp.body.RECV_ACC_ID=taTxnSbsPara.getRecvAccId();
+            tia900012102Temp.body.TX_AMT=taTxnSbsPara.getTxAmt();
+            tia900012102Temp.body.TX_DATE=taTxnSbsPara.getTxDate();
+            tia900012102Temp.body.TX_TIME=taTxnSbsPara.getTxTime();
+            tia900012102Temp.header.REQ_SN=taTxnSbsPara.getReqSn();
+            tia900012102Temp.header.USER_ID=taTxnSbsPara.getUserId();
+
+            taTxnSbsPara.setRecVersion(0);
+            taTxnSbsService.insertRecord(taTxnSbsPara);
+
+            //通过MQ发送信息到DEP
+            String strMsgid= depMsgSendAndRecv.sendDepMessage(tia900012102Temp);
+            Toa900012102 toaPara=(Toa900012102) depMsgSendAndRecv.recvDepMessage(strMsgid);
+            if(taTxnSbsPara.getRtnReqSn().equals(taTxnSbsPara.getReqSn())){
+                /*01 返还的外围系统流水号
+                  02 返还的交易金额*/
+                taTxnSbsPara.setRtnReqSn(toaPara.body.RTN_REQ_SN);
+                taTxnSbsPara.setRtnTxAmt(toaPara.body.RTN_TX_AMT);
+                taTxnSbsService.updateRecord(taTxnSbsPara);
+                return toaPara;
+            }
+        } catch (Exception e) {
+            logger.error("交存记账失败", e);
+            throw new RuntimeException("交存记账失败", e);
+        }
+        return null;
+    }
+    /**
      * 发送泰安房产监管系统划拨记账交易
      *
      * @param taTxnFdcPara
@@ -170,6 +223,52 @@ public class TaPayoutService {
         }
     }
 
+    /**
+     * 发送泰安房产监管系统交存记账交易
+     *
+     * @param taTxnFdcPara
+     */
+    @Transactional
+    public TOA sendAndRecvRealTimeTxn900012111(TaTxnFdc taTxnFdcPara) {
+        try {
+            TaTxnSbs taTxnSbsPara=new TaTxnSbs();
+            Tia900012102 tia900012102Temp=new Tia900012102();
+            taTxnSbsPara.setAccId(taTxnFdcPara.getAccId());           // 付款账号
+            taTxnSbsPara.setRecvAccId(taTxnFdcPara.getRecvAccId());       // 收款账号
+            taTxnSbsPara.setTxAmt(taTxnFdcPara.getTxAmt().toString());// 交易金额
+            taTxnSbsPara.setReqSn(taTxnFdcPara.getReqSn());           // 外围系统流水
+            taTxnSbsPara.setTxDate(ToolUtil.getNow("yyyyMMdd"));     // 交易日期
+            taTxnSbsPara.setTxTime(ToolUtil.getNow("HH:mm:ss"));     // 交易时间
+            taTxnSbsPara.setUserId(taTxnFdcPara.getUserId());          // 柜员号
+
+            tia900012102Temp.body.ACC_ID=taTxnSbsPara.getAccId();
+            tia900012102Temp.body.RECV_ACC_ID=taTxnSbsPara.getRecvAccId();
+            tia900012102Temp.body.TX_AMT=taTxnSbsPara.getTxAmt();
+            tia900012102Temp.body.TX_DATE=taTxnSbsPara.getTxDate();
+            tia900012102Temp.body.TX_TIME=taTxnSbsPara.getTxTime();
+            tia900012102Temp.header.REQ_SN=taTxnSbsPara.getReqSn();
+            tia900012102Temp.header.USER_ID=taTxnSbsPara.getUserId();
+
+            taTxnSbsPara.setRecVersion(0);
+            taTxnSbsService.insertRecord(taTxnSbsPara);
+
+            //通过MQ发送信息到DEP
+            String strMsgid= depMsgSendAndRecv.sendDepMessage(tia900012102Temp);
+            Toa900012102 toaPara=(Toa900012102) depMsgSendAndRecv.recvDepMessage(strMsgid);
+            if(taTxnSbsPara.getRtnReqSn().equals(taTxnSbsPara.getReqSn())){
+                /*01 返还的外围系统流水号
+                  02 返还的交易金额*/
+                taTxnSbsPara.setRtnReqSn(toaPara.body.RTN_REQ_SN);
+                taTxnSbsPara.setRtnTxAmt(toaPara.body.RTN_TX_AMT);
+                taTxnSbsService.updateRecord(taTxnSbsPara);
+                return toaPara;
+            }
+        } catch (Exception e) {
+            logger.error("交存记账失败", e);
+            throw new RuntimeException("交存记账失败", e);
+        }
+        return null;
+    }
     /**
      * 发送泰安房产监管系统划拨冲正交易
      *
