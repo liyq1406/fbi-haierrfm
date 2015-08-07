@@ -62,7 +62,7 @@ public class TaPaymentService {
             taTxnFdcPara.setInitiator(tia9902001Temp.body.INITIATOR);  // 09   发起方         1   1_监管银行
             //通过MQ发送信息到DEP
             taTxnFdcPara.setRecVersion(0);
-            taTxnFdcService.insertRecord(taTxnFdcPara);
+            //taTxnFdcService.insertRecord(taTxnFdcPara);
 
             String strMsgid= depMsgSendAndRecv.sendDepMessage(tiaPara);
             Toa9902001 toaPara=(Toa9902001) depMsgSendAndRecv.recvDepMessage(strMsgid);
@@ -80,7 +80,7 @@ public class TaPaymentService {
                 taTxnFdcPara.setAccId(toaPara.body.ACC_ID);
                 taTxnFdcPara.setAccName(toaPara.body.ACC_NAME);
                 taTxnFdcPara.setFdcSn(toaPara.header.REQ_SN);
-                taTxnFdcService.updateRecord(taTxnFdcPara);
+                //taTxnFdcService.updateRecord(taTxnFdcPara);
                 return toaPara;
             }else{
                  /*01	返回结果	    4
@@ -88,7 +88,7 @@ public class TaPaymentService {
                 */
                 taTxnFdcPara.setReturnCode(toaPara.header.RETURN_CODE);
                 taTxnFdcPara.setReturnMsg(toaPara.header.RETURN_MSG);
-                taTxnFdcService.updateRecord(taTxnFdcPara);
+                //taTxnFdcService.updateRecord(taTxnFdcPara);
                 logger.error("MQ消息返回失败");
                 throw new RuntimeException("MQ消息返回失败");
             }

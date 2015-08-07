@@ -97,11 +97,11 @@
     <!--自动侦听，发送处理 -->
     <bean id="jmsRfmOutTemplate" class="org.springframework.jms.core.JmsTemplate">
         <property name="connectionFactory" ref="jmsConnectionFactory"/>
-        <property name="defaultDestinationName" value="${queue.rfm.send}"/>
+        <property name="defaultDestinationName" value="${queue.rfm.out}"/>
         <property name="timeToLive" value="${jms.timeToLive}"/>
     </bean>
     <jms:listener-container connection-factory="jmsConnectionFactory" concurrency="5">
-        <jms:listener destination="${queue.rfm.recv}" ref="depMsgListener"/>
+        <jms:listener destination="${queue.rfm.in}" ref="depMsgListener"/>
     </jms:listener-container>
 
 </beans>
