@@ -11,7 +11,7 @@ import java.io.Serializable;
  * User: hanjianlong
  * Date: 2015-07-16
  */
-public class Toa900012002 extends TOA implements Serializable {
+public class Toa900010002 extends TOA implements Serializable {
     public Header header = new Header();
     public Body body = new Body();
 

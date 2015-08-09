@@ -9,9 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import rfm.ta.common.enums.EnuTaBankId;
-import rfm.ta.common.enums.EnuTaCityId;
-import rfm.ta.common.enums.EnuTaInitiatorId;
 import rfm.ta.common.enums.EnuTaTxnRtnCode;
 import rfm.ta.repository.model.TaTxnFdc;
 import rfm.ta.repository.model.TaTxnSbs;
@@ -107,21 +104,21 @@ public class TaPaymentService {
     public TOA sendAndRecvRealTimeTxn900012002(TIA tiaPara) {
         try {
             TaTxnSbs taTxnSbsPara=new TaTxnSbs();
-            Tia900012002 tia900012002Temp=(Tia900012002)tiaPara ;
-            taTxnSbsPara.setAccId(tia900012002Temp.body.ACC_ID);   // 付款账号
-            taTxnSbsPara.setRecvAccId(tia900012002Temp.body.RECV_ACC_ID);   // 收款账号
-            taTxnSbsPara.setTxAmt(tia900012002Temp.body.TX_AMT);   // 交易金额
-            taTxnSbsPara.setReqSn(tia900012002Temp.header.REQ_SN); // 外围系统流水
+            Tia900010002 tia900010002Temp =(Tia900010002)tiaPara ;
+            taTxnSbsPara.setAccId(tia900010002Temp.body.ACC_ID);   // 付款账号
+            taTxnSbsPara.setRecvAccId(tia900010002Temp.body.RECV_ACC_ID);   // 收款账号
+            taTxnSbsPara.setTxAmt(tia900010002Temp.body.TX_AMT);   // 交易金额
+            taTxnSbsPara.setReqSn(tia900010002Temp.header.REQ_SN); // 外围系统流水
             taTxnSbsPara.setTxDate(ToolUtil.getNow("yyyyMMdd"));    // 交易日期
             taTxnSbsPara.setTxTime(ToolUtil.getNow("HH:mm:ss"));    // 交易时间
-            taTxnSbsPara.setUserId(tia900012002Temp.header.USER_ID);// 柜员号
+            taTxnSbsPara.setUserId(tia900010002Temp.header.USER_ID);// 柜员号
 
             taTxnSbsPara.setRecVersion(0);
             taTxnSbsService.insertRecord(taTxnSbsPara);
 
             //通过MQ发送信息到DEP
-            String strMsgid= depMsgSendAndRecv.sendDepMessage(tia900012002Temp);
-            Toa900012002 toaPara=(Toa900012002) depMsgSendAndRecv.recvDepMessage(strMsgid);
+            String strMsgid= depMsgSendAndRecv.sendDepMessage(tia900010002Temp);
+            Toa900010002 toaPara=(Toa900010002) depMsgSendAndRecv.recvDepMessage(strMsgid);
             if(taTxnSbsPara.getRtnReqSn().equals(taTxnSbsPara.getReqSn())){
                 /*01 返还的外围系统流水号
                   02 返还的交易金额*/
@@ -199,21 +196,21 @@ public class TaPaymentService {
     public TOA sendAndRecvRealTimeTxn900012011(TIA tiaPara) {
         try {
             TaTxnSbs taTxnSbsPara=new TaTxnSbs();
-            Tia900012002 tia900012002Temp=(Tia900012002)tiaPara ;
-            taTxnSbsPara.setAccId(tia900012002Temp.body.ACC_ID);   // 付款账号
-            taTxnSbsPara.setRecvAccId(tia900012002Temp.body.RECV_ACC_ID);   // 收款账号
-            taTxnSbsPara.setTxAmt(tia900012002Temp.body.TX_AMT);   // 交易金额
-            taTxnSbsPara.setReqSn(tia900012002Temp.header.REQ_SN); // 外围系统流水
+            Tia900010002 tia900010002Temp =(Tia900010002)tiaPara ;
+            taTxnSbsPara.setAccId(tia900010002Temp.body.ACC_ID);   // 付款账号
+            taTxnSbsPara.setRecvAccId(tia900010002Temp.body.RECV_ACC_ID);   // 收款账号
+            taTxnSbsPara.setTxAmt(tia900010002Temp.body.TX_AMT);   // 交易金额
+            taTxnSbsPara.setReqSn(tia900010002Temp.header.REQ_SN); // 外围系统流水
             taTxnSbsPara.setTxDate(ToolUtil.getNow("yyyyMMdd"));    // 交易日期
             taTxnSbsPara.setTxTime(ToolUtil.getNow("HH:mm:ss"));    // 交易时间
-            taTxnSbsPara.setUserId(tia900012002Temp.header.USER_ID);// 柜员号
+            taTxnSbsPara.setUserId(tia900010002Temp.header.USER_ID);// 柜员号
 
             taTxnSbsPara.setRecVersion(0);
             taTxnSbsService.insertRecord(taTxnSbsPara);
 
             //通过MQ发送信息到DEP
-            String strMsgid= depMsgSendAndRecv.sendDepMessage(tia900012002Temp);
-            Toa900012002 toaPara=(Toa900012002) depMsgSendAndRecv.recvDepMessage(strMsgid);
+            String strMsgid= depMsgSendAndRecv.sendDepMessage(tia900010002Temp);
+            Toa900010002 toaPara=(Toa900010002) depMsgSendAndRecv.recvDepMessage(strMsgid);
             if(taTxnSbsPara.getRtnReqSn().equals(taTxnSbsPara.getReqSn())){
                 /*01 返还的外围系统流水号
                   02 返还的交易金额*/

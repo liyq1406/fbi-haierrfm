@@ -12,7 +12,7 @@ import java.io.Serializable;
  * Date: 2015-07-16
  */
 
-public class Tia900012002 extends TIA implements Serializable {
+public class Tia900010002 extends TIA implements Serializable {
     public  Header header = new Header();
     public  Body body = new Body();
 

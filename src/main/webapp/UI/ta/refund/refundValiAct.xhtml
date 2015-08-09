@@ -86,102 +86,103 @@
                 <p:panel id="valiRecv" header="【返还验证】返回">
                     <h:panelGrid>
                         <h:panelGrid columns="6" cellspacing="3"
-                                     columnClasses="col-label1,col-input1,col-label2,col-input2,col-label3,col-input3">
-                            <h:outputLabel value="*【交易代码】:" for="rtnTxCodeVali"/>
+                                     columnClasses="col-label1,col-input1,col-label2,col-input2,col-label3,col-input3"
+                                     rendered="#{taRefundAction.strVisableByExecType}">
+                            <h:outputLabel value="【交易代码】:" for="rtnTxCodeVali"/>
                             <h:inputText id="rtnTxCodeVali" readonly="true"
                                          style="background-color:gainsboro"
                                          value="#{taRefundAction.taTxnFdcValiSendAndRecv.txCode}">
                             </h:inputText>
-                            <h:outputLabel value="*【监管银行代码】:" for="rtnBankIdVali"/>
+                            <h:outputLabel value="【监管银行代码】:" for="rtnBankIdVali"/>
                             <h:inputText id="rtnBankIdVali" readonly="true"
                                          style="background-color:gainsboro"
                                          value="#{taRefundAction.taTxnFdcValiSendAndRecv.bankId}">
                             </h:inputText>
-                            <h:outputLabel value="*【城市代码】:" for="rtnCityId"/>
+                            <h:outputLabel value="【城市代码】:" for="rtnCityId"/>
                             <h:inputText id="rtnCityId" readonly="true"
                                          style="background-color:gainsboro"
                                          value="#{taRefundAction.taTxnFdcValiSendAndRecv.cityId}">
                             </h:inputText>
-                            <h:outputLabel value="*【返还业务编号】:" for="rtnBizIdVali"/>
+                            <h:outputLabel value="【返还业务编号】:" for="rtnBizIdVali"/>
                             <h:inputText id="rtnBizIdVali" readonly="true"
                                          style="background-color:gainsboro"
                                          value="#{taRefundAction.taTxnFdcValiSendAndRecv.bizId}">
                             </h:inputText>
-                            <h:outputLabel value="*【支付密码】:" for="rtnPasswordVali"/>
+                            <h:outputLabel value="【支付密码】:" for="rtnPasswordVali"/>
                             <h:inputText id="rtnPasswordVali" readonly="true"
                                          style="background-color:gainsboro"
                                          value="#{taRefundAction.taTxnFdcValiSendAndRecv.password}">
                             </h:inputText>
-                            <h:outputLabel value="*【验证流水】:" for="rtnReqSnVali"/>
+                            <h:outputLabel value="【验证流水】:" for="rtnReqSnVali"/>
                             <h:inputText id="rtnReqSnVali" readonly="true"
                                          style="background-color:gainsboro"
                                          value="#{taRefundAction.taTxnFdcValiSendAndRecv.reqSn}">
                             </h:inputText>
-                            <h:outputLabel value="*【验证日期】:" for="rtnTradeDate"/>
+                            <h:outputLabel value="【验证日期】:" for="rtnTradeDate"/>
                             <h:inputText id="rtnTradeDate" readonly="true"
                                          style="background-color:gainsboro"
                                          value="#{taRefundAction.taTxnFdcValiSendAndRecv.tradeDate}">
                             </h:inputText>
-                            <h:outputLabel value="*【验证网点】:" for="rtnBranchIdVali"/>
+                            <h:outputLabel value="【验证网点】:" for="rtnBranchIdVali"/>
                             <h:inputText id="rtnBranchIdVali" readonly="true"
                                          style="background-color:gainsboro"
                                          value="#{taRefundAction.taTxnFdcValiSendAndRecv.branchId}">
                             </h:inputText>
-                            <h:outputLabel value="*【验证人员】:" for="rtnUserIdVali"/>
+                            <h:outputLabel value="【验证人员】:" for="rtnUserIdVali"/>
                             <h:inputText id="rtnUserIdVali" readonly="true"
                                          style="background-color:gainsboro"
                                          value="#{taRefundAction.taTxnFdcValiSendAndRecv.userId}">
                             </h:inputText>
-                            <h:outputLabel value="*【发起方】:" for="rtnInitiatorVali"/>
+                            <h:outputLabel value="【发起方】:" for="rtnInitiatorVali"/>
                             <h:inputText id="rtnInitiatorVali" readonly="true"
                                          style="background-color:gainsboro"
                                          value="#{taRefundAction.taTxnFdcValiSendAndRecv.initiator}">
                             </h:inputText>
                         </h:panelGrid>
-                        <p:separator></p:separator>
+                        <p:separator rendered="#{taRefundAction.strVisableByExecType}"></p:separator>
                         <h:panelGrid columns="6" cellspacing="3" style="width:100%"
                                      columnClasses="col-label1,col-input1,col-label2,col-input2,col-label3,col-input3">
-                            <h:outputLabel value="*【结果】:" for="rtnReturnCodeVali"/>
+                            <h:outputLabel value="【结果】:" for="rtnReturnCodeVali"/>
                             <h:inputText id="rtnReturnCodeVali" readonly="true"
                                          style="background-color:gainsboro"
                                          value="#{taRefundAction.taTxnFdcValiSendAndRecv.returnCode}">
                             </h:inputText>
-                            <h:outputLabel value="*【监管账号】:" for="rtnAccIdVali"/>
+                            <h:outputLabel value="【监管账号】:" for="rtnAccIdVali"/>
                             <h:inputText  id="rtnAccIdVali" readonly="true"
                                           style="background-color:gainsboro"
                                           value="#{taRefundAction.taTxnFdcValiSendAndRecv.accId}">
                             </h:inputText>
-                            <h:outputLabel value="*【监管账户户名】:" for="rtnAccNameVali"/>
+                            <h:outputLabel value="【监管账户户名】:" for="rtnAccNameVali"/>
                             <h:inputText  id="rtnAccNameVali" readonly="true"
                                           style="background-color:gainsboro"
                                           value="#{taRefundAction.taTxnFdcValiSendAndRecv.accName}">
                             </h:inputText>
-                            <h:outputLabel value="*【返还金额】:" for="rtnTxAmt"/>
+                            <h:outputLabel value="【返还金额】:" for="rtnTxAmt"/>
                             <h:inputText  id="rtnTxAmt" readonly="true"
                                           style="background-color:gainsboro"
                                           value="#{taRefundAction.taTxnFdcValiSendAndRecv.txAmt}">
                             </h:inputText>
-                            <h:outputLabel value="*【业主姓名】:" for="rtnOwnerName"/>
+                            <h:outputLabel value="【业主姓名】:" for="rtnOwnerName"/>
                             <h:inputText  id="rtnOwnerName" readonly="true"
                                           style="background-color:gainsboro"
                                           value="#{taRefundAction.taTxnFdcValiSendAndRecv.ownerName}">
                             </h:inputText>
-                            <h:outputLabel value="*【证件类型】:" for="rtnCtficType"/>
+                            <h:outputLabel value="【证件类型】:" for="rtnCtficType"/>
                             <h:inputText id="rtnCtficType" readonly="true"
                                          style="background-color:gainsboro"
                                          value="#{taRefundAction.taTxnFdcValiSendAndRecv.ctficType}">
                             </h:inputText>
-                            <h:outputLabel value="*【证件号码】:" for="rtnCtficId"/>
+                            <h:outputLabel value="【证件号码】:" for="rtnCtficId"/>
                             <h:inputText id="rtnCtficId" readonly="true"
                                          style="background-color:gainsboro"
                                          value="#{taRefundAction.taTxnFdcValiSendAndRecv.ctficId}">
                             </h:inputText>
-                            <h:outputLabel value="*【预售资金监管平台流水】:" for="rtnFdcSnVali"/>
+                            <h:outputLabel value="【预售监管平台流水】:" for="rtnFdcSnVali"/>
                             <h:inputText id="rtnFdcSnVali" readonly="true"
                                          style="background-color:gainsboro"
                                          value="#{taRefundAction.taTxnFdcValiSendAndRecv.fdcSn}">
                             </h:inputText>
-                            <h:outputLabel value="*【描述】:" for="rtnReturnMsgVali"/>
+                            <h:outputLabel value="【描述】:" for="rtnReturnMsgVali"/>
                             <h:inputText id="rtnReturnMsgVali" readonly="true"
                                          style="background-color:gainsboro"
                                          value="#{taRefundAction.taTxnFdcValiSendAndRecv.returnMsg}">
@@ -190,20 +191,30 @@
                     </h:panelGrid>
                 </p:panel>
                 <p:panel id="actSend" header="【返还记账】发送">
-                    <p:commandButton update="msgs,actRecv" style="width: 80px"
-                                     action="#{taRefundAction.onBtnActClick()}"
-                                     id="btnActSend" value="记账">
-                    </p:commandButton>
+                    <h:panelGrid columns="2" cellspacing="3" style="width:100%">
+                        <h:panelGrid columns="2" cellspacing="3"
+                                     columnClasses="col-label1,col-input1">
+                            <h:outputLabel value="【返还账号】:" for="recvAccId"/>
+                            <h:inputText autocomplete="off" id="recvAccId"
+                                         required="true" requiredMessage="必须输入返还目标账号！"
+                                         value="#{taRefundAction.taTxnFdcValiSendAndRecv.recvAccId}">
+                            </h:inputText>
+                        </h:panelGrid>
+                        <p:commandButton update="msgs,actRecv" style="width: 80px"
+                                         action="#{taRefundAction.onBtnActClick()}"
+                                         id="btnActSend" value="记账">
+                        </p:commandButton>
+                    </h:panelGrid>
                 </p:panel>
                 <p:panel id="actRecv" header="【返还记账】返回">
                     <h:panelGrid columns="4" cellspacing="3"
                                  columnClasses="col-label1,col-input1,col-label2,col-input2">
-                        <h:outputLabel value="*【结果】:" for="rtnReturnCodeAct"/>
+                        <h:outputLabel value="【结果】:" for="rtnReturnCodeAct"/>
                         <h:inputText id="rtnReturnCodeAct" readonly="true"
                                      style="background-color:gainsboro"
                                      value="#{taRefundAction.taTxnFdcActSendAndRecv.returnCode}">
                         </h:inputText>
-                        <h:outputLabel value="*【预售资金监管平台流水】:" for="rtnFdcSnAct"/>
+                        <h:outputLabel value="【预售监管平台流水】:" for="rtnFdcSnAct"/>
                         <h:inputText id="rtnFdcSnAct" readonly="true"
                                      style="background-color:gainsboro"
                                      value="#{taRefundAction.taTxnFdcActSendAndRecv.fdcSn}">

@@ -6,6 +6,8 @@ import org.fbi.dep.model.base.TOA;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import platform.common.utils.MessageUtil;
+import pub.platform.advance.utils.PropertyManager;
+import rfm.ta.common.enums.EnuExecType;
 import rfm.ta.common.enums.EnuTaTxCode;
 import rfm.ta.repository.model.TaTxnFdc;
 import rfm.ta.service.account.TaPayoutService;
@@ -28,6 +30,7 @@ import java.util.List;
 @ViewScoped
 public class TaPayoutAction {
     private static final Logger logger = LoggerFactory.getLogger(TaPayoutAction.class);
+    public static String EXEC_TYPE = PropertyManager.getProperty("execType");
     @ManagedProperty(value = "#{taTxnFdcService}")
     private TaTxnFdcService taTxnFdcService;
 
@@ -41,6 +44,8 @@ public class TaPayoutAction {
     private TaTxnFdc taTxnFdcCanclSend;
     private TaTxnFdc taTxnFdcCanclSendAndRecv;
 
+    private String strVisableByExecType;
+
     @PostConstruct
     public void init() {
         taTxnFdcValiSend=new TaTxnFdc();
@@ -49,6 +54,11 @@ public class TaPayoutAction {
         taTxnFdcActSendAndRecv=new TaTxnFdc();
         taTxnFdcCanclSend=new TaTxnFdc();
         taTxnFdcCanclSendAndRecv=new TaTxnFdc();
+        if(EnuExecType.EXEC_TYPE_DEBUG.getCode().equals(EXEC_TYPE)){
+            strVisableByExecType="true";
+        }else{
+            strVisableByExecType="false";
+        }
     }
 
     /*划拨验证用*/
@@ -84,7 +94,7 @@ public class TaPayoutAction {
     public void onBtnCanclClick() {
         try {
             // 往SBS发送记账信息
-            TOA toaSbs=taPayoutService.sendAndRecvRealTimeTxn900012111(taTxnFdcValiSendAndRecv);
+            TOA toaSbs=taPayoutService.sendAndRecvRealTimeTxn900012111(taTxnFdcCanclSend);
             if(toaSbs !=null) {
                 // 往泰安房地产中心发送记账信息
                 taTxnFdcCanclSend.setTxCode(EnuTaTxCode.TRADE_2111.getCode());
@@ -161,5 +171,9 @@ public class TaPayoutAction {
 
     public void setTaTxnFdcCanclSendAndRecv(TaTxnFdc taTxnFdcCanclSendAndRecv) {
         this.taTxnFdcCanclSendAndRecv = taTxnFdcCanclSendAndRecv;
+    }
+
+    public String getStrVisableByExecType() {
+        return strVisableByExecType;
     }
 }

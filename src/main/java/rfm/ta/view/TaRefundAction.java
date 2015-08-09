@@ -5,6 +5,8 @@ import org.fbi.dep.model.base.TOA;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import platform.common.utils.MessageUtil;
+import pub.platform.advance.utils.PropertyManager;
+import rfm.ta.common.enums.EnuExecType;
 import rfm.ta.common.enums.EnuTaTxCode;
 import rfm.ta.repository.model.TaTxnFdc;
 import rfm.ta.service.account.TaPayoutService;
@@ -28,6 +30,7 @@ import java.util.List;
 @ViewScoped
 public class TaRefundAction {
     private static final Logger logger = LoggerFactory.getLogger(TaRefundAction.class);
+    public static String EXEC_TYPE = PropertyManager.getProperty("execType");
     @ManagedProperty(value = "#{taTxnFdcService}")
     private TaTxnFdcService taTxnFdcService;
 
@@ -41,6 +44,8 @@ public class TaRefundAction {
     private TaTxnFdc taTxnFdcCanclSend;
     private TaTxnFdc taTxnFdcCanclSendAndRecv;
 
+    private String strVisableByExecType;
+
     @PostConstruct
     public void init() {
         taTxnFdcValiSend=new TaTxnFdc();
@@ -49,6 +54,11 @@ public class TaRefundAction {
         taTxnFdcActSendAndRecv=new TaTxnFdc();
         taTxnFdcCanclSend=new TaTxnFdc();
         taTxnFdcCanclSendAndRecv=new TaTxnFdc();
+        if(EnuExecType.EXEC_TYPE_DEBUG.getCode().equals(EXEC_TYPE)){
+            strVisableByExecType="true";
+        }else{
+            strVisableByExecType="false";
+        }
     }
 
     /*划拨验证用*/
@@ -164,5 +174,9 @@ public class TaRefundAction {
 
     public void setTaTxnFdcCanclSendAndRecv(TaTxnFdc taTxnFdcCanclSendAndRecv) {
         this.taTxnFdcCanclSendAndRecv = taTxnFdcCanclSendAndRecv;
+    }
+
+    public String getStrVisableByExecType() {
+        return strVisableByExecType;
     }
 }

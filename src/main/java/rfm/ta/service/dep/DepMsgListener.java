@@ -1,10 +1,8 @@
 package rfm.ta.service.dep;
 
 import common.utils.ToolUtil;
-import org.apache.commons.lang.StringUtils;
 import org.fbi.dep.model.base.TIA;
 import org.fbi.dep.model.base.TOA;
-import org.fbi.dep.model.txn.Tia910012001;
 import org.fbi.dep.model.txn.Tia9902001;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,16 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-import org.springframework.web.context.ContextLoader;
-import org.springframework.web.context.WebApplicationContext;
 import rfm.ta.common.enums.EnuTaBankId;
 import rfm.ta.common.enums.EnuTaCityId;
 import rfm.ta.common.enums.EnuTaInitiatorId;
 import rfm.ta.common.enums.EnuTaTxCode;
 import rfm.ta.service.account.TaPaymentService;
 
-import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.jms.Message;
 import javax.jms.MessageListener;

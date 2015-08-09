@@ -121,7 +121,7 @@ public class TaRefundService {
     @Transactional
     public TOA sendAndRecvRealTimeTxn900012202(TaTxnFdc taTxnFdcPara) {
         try {
-            Tia900012202 tia900012202Temp=new Tia900012202();
+            Tia900010002 tia900010002Temp=new Tia900010002();
             TaTxnSbs taTxnSbsPara=new TaTxnSbs();
             taTxnSbsPara.setAccId(taTxnFdcPara.getAccId().substring(0,14));           // 付款账号
             taTxnSbsPara.setRecvAccId(taTxnFdcPara.getRecvAccId().substring(0,14));   // 收款账号
@@ -131,20 +131,22 @@ public class TaRefundService {
             taTxnSbsPara.setTxTime(ToolUtil.getNow("HH:mm:ss"));     // 交易时间
             taTxnSbsPara.setUserId(taTxnFdcPara.getUserId());          // 柜员号
 
-            tia900012202Temp.body.ACC_ID=taTxnSbsPara.getAccId();
-            tia900012202Temp.body.RECV_ACC_ID=taTxnSbsPara.getRecvAccId();
-            tia900012202Temp.body.TX_AMT=taTxnSbsPara.getTxAmt();
-            tia900012202Temp.body.TX_DATE=taTxnSbsPara.getTxDate();
-            tia900012202Temp.body.TX_TIME=taTxnSbsPara.getTxTime();
-            tia900012202Temp.header.REQ_SN=taTxnSbsPara.getReqSn();
-            tia900012202Temp.header.USER_ID=taTxnSbsPara.getUserId();
+            // 返还是由监管户到普通账户
+            tia900010002Temp.body.ACC_ID=taTxnSbsPara.getAccId();
+            tia900010002Temp.body.RECV_ACC_ID=taTxnSbsPara.getRecvAccId();
+
+            tia900010002Temp.body.TX_AMT=taTxnSbsPara.getTxAmt();
+            tia900010002Temp.body.TX_DATE=taTxnSbsPara.getTxDate();
+            tia900010002Temp.body.TX_TIME=taTxnSbsPara.getTxTime();
+            tia900010002Temp.header.REQ_SN=taTxnSbsPara.getReqSn();
+            tia900010002Temp.header.USER_ID=taTxnSbsPara.getUserId();
 
             taTxnSbsPara.setRecVersion(0);
             taTxnSbsService.insertRecord(taTxnSbsPara);
 
             //通过MQ发送信息到DEP
-            String strMsgid= depMsgSendAndRecv.sendDepMessage(tia900012202Temp);
-            Toa900012202 toaPara=(Toa900012202) depMsgSendAndRecv.recvDepMessage(strMsgid);
+            String strMsgid= depMsgSendAndRecv.sendDepMessage(tia900010002Temp);
+            Toa900010002 toaPara=(Toa900010002) depMsgSendAndRecv.recvDepMessage(strMsgid);
             if(taTxnSbsPara.getRtnReqSn().equals(taTxnSbsPara.getReqSn())){
                 /*01 返还的外围系统流水号
                   02 返还的交易金额*/
@@ -230,7 +232,7 @@ public class TaRefundService {
     public TOA sendAndRecvRealTimeTxn900012211(TaTxnFdc taTxnFdcPara) {
         try {
             TaTxnSbs taTxnSbsPara=new TaTxnSbs();
-            Tia900012202 tia900012202Temp=new Tia900012202();
+            Tia900010002 tia900010002Temp=new Tia900010002();
             taTxnSbsPara.setAccId(taTxnFdcPara.getAccId());           // 付款账号
             taTxnSbsPara.setRecvAccId(taTxnFdcPara.getRecvAccId());       // 收款账号
             taTxnSbsPara.setTxAmt(taTxnFdcPara.getTxAmt().toString());// 交易金额
@@ -239,20 +241,22 @@ public class TaRefundService {
             taTxnSbsPara.setTxTime(ToolUtil.getNow("HH:mm:ss"));     // 交易时间
             taTxnSbsPara.setUserId(taTxnFdcPara.getUserId());          // 柜员号
 
-            tia900012202Temp.body.ACC_ID=taTxnSbsPara.getAccId();
-            tia900012202Temp.body.RECV_ACC_ID=taTxnSbsPara.getRecvAccId();
-            tia900012202Temp.body.TX_AMT=taTxnSbsPara.getTxAmt();
-            tia900012202Temp.body.TX_DATE=taTxnSbsPara.getTxDate();
-            tia900012202Temp.body.TX_TIME=taTxnSbsPara.getTxTime();
-            tia900012202Temp.header.REQ_SN=taTxnSbsPara.getReqSn();
-            tia900012202Temp.header.USER_ID=taTxnSbsPara.getUserId();
+            // 返还是由监管户到普通账户
+            tia900010002Temp.body.ACC_ID=taTxnSbsPara.getRecvAccId();
+            tia900010002Temp.body.RECV_ACC_ID=taTxnSbsPara.getAccId();
+
+            tia900010002Temp.body.TX_AMT=taTxnSbsPara.getTxAmt();
+            tia900010002Temp.body.TX_DATE=taTxnSbsPara.getTxDate();
+            tia900010002Temp.body.TX_TIME=taTxnSbsPara.getTxTime();
+            tia900010002Temp.header.REQ_SN=taTxnSbsPara.getReqSn();
+            tia900010002Temp.header.USER_ID=taTxnSbsPara.getUserId();
 
             taTxnSbsPara.setRecVersion(0);
             taTxnSbsService.insertRecord(taTxnSbsPara);
 
             //通过MQ发送信息到DEP
-            String strMsgid= depMsgSendAndRecv.sendDepMessage(tia900012202Temp);
-            Toa900012202 toaPara=(Toa900012202) depMsgSendAndRecv.recvDepMessage(strMsgid);
+            String strMsgid= depMsgSendAndRecv.sendDepMessage(tia900010002Temp);
+            Toa900010002 toaPara=(Toa900010002) depMsgSendAndRecv.recvDepMessage(strMsgid);
             if(taTxnSbsPara.getRtnReqSn().equals(taTxnSbsPara.getReqSn())){
                 /*01 返还的外围系统流水号
                   02 返还的交易金额*/
