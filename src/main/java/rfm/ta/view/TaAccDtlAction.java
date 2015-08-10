@@ -1,15 +1,19 @@
 package rfm.ta.view;
 
+import common.utils.ToolUtil;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
+import org.fbi.dep.model.base.TOA;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import platform.common.utils.MessageUtil;
 import pub.platform.advance.utils.PropertyManager;
 import rfm.ta.repository.model.TaRsAccDtl;
+import rfm.ta.repository.model.TaTxnFdc;
 import rfm.ta.repository.model.TaTxnSbs;
 import rfm.ta.service.account.TaAccDetlService;
+import rfm.ta.service.account.TaDayEndBalanceService;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -34,23 +38,32 @@ public class TaAccDtlAction implements Serializable {
     @ManagedProperty("#{taAccDetlService}")
     private TaAccDetlService taAccDetlService;
 
+    @ManagedProperty("#{taDayEndBalanceService}")
+    private TaDayEndBalanceService taDayEndBalanceService;
+
     private TaTxnSbs taTxnSbs;
     // 账务交易明细
     private List<TaRsAccDtl> taRsAccDtlList;
-    private List<TaRsAccDtl> taRsAccDtlList2;
+    private List<TaRsAccDtl> taRsAccDtlSbsList;
     private String erydat = new SimpleDateFormat("yyyyMMdd").format(new Date());
 
     @PostConstruct
     public void init(){
-        taRsAccDtlList = taAccDetlService.selectedRecords(new TaRsAccDtl());
+        TaRsAccDtl taRsAccDtlPara=new TaRsAccDtl();
+        taRsAccDtlPara.setTradeDate(ToolUtil.getNow("yyyyMMdd"));
+        taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtlPara);
         if(taRsAccDtlList.size()>0) {
             System.out.println("======>" + taRsAccDtlList.get(0).getAccId());
         }
     }
 
-    public void onQryLocaldatatest() {
-        taRsAccDtlList2 = taAccDetlService.selectedRecords(new TaRsAccDtl());
-        if(taRsAccDtlList2.size()>0) {
+    public void onQrySbsData() {
+    // 往SBS发送记账信息
+        TaTxnFdc taTxnFdcPara = new TaTxnFdc();
+        taTxnFdcPara.setTradeDate(ToolUtil.getNow("yyyyMMdd"));
+        TOA toaSbs=taDayEndBalanceService.sendAndRecvRealTimeTxn900012601(taTxnFdcPara);
+        taRsAccDtlSbsList = taAccDetlService.selectedRecords(new TaRsAccDtl());
+        if(taRsAccDtlSbsList.size()>0) {
             System.out.println("======>" + taRsAccDtlList.get(0).getAccId());
         }
     }
@@ -227,12 +240,12 @@ public class TaAccDtlAction implements Serializable {
         this.taTxnSbs = taTxnSbs;
     }
 
-    public List<TaRsAccDtl> getTaRsAccDtlList2() {
-        return taRsAccDtlList2;
+    public List<TaRsAccDtl> getTaRsAccDtlSbsList() {
+        return taRsAccDtlSbsList;
     }
 
-    public void setTaRsAccDtlList2(List<TaRsAccDtl> taRsAccDtlList2) {
-        this.taRsAccDtlList2 = taRsAccDtlList2;
+    public void setTaRsAccDtlSbsList(List<TaRsAccDtl> taRsAccDtlSbsList) {
+        this.taRsAccDtlSbsList = taRsAccDtlSbsList;
     }
 
     public List<TaRsAccDtl> getTaRsAccDtlList() {
@@ -259,12 +272,11 @@ public class TaAccDtlAction implements Serializable {
         this.taRsAccDtlList = taRsAccDtlList;
     }
 
-    public List<TaRsAccDtl> getTaRsAccDetailList2() {
-        return taRsAccDtlList2;
+    public TaDayEndBalanceService getTaDayEndBalanceService() {
+        return taDayEndBalanceService;
     }
 
-    public void setTaRsAccDetailList2(List<TaRsAccDtl> taRsAccDtlList2) {
-        this.taRsAccDtlList2 = taRsAccDtlList2;
+    public void setTaDayEndBalanceService(TaDayEndBalanceService taDayEndBalanceService) {
+        this.taDayEndBalanceService = taDayEndBalanceService;
     }
-
 }

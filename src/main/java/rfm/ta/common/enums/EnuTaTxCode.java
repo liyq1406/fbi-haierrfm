@@ -22,7 +22,8 @@ public enum EnuTaTxCode {
     TRADE_2201("2201", "返还验证"),
     TRADE_2202("2202", "返还记账"),
     TRADE_2211("2211", "返还冲正"),
-    TRADE_2501("2501", "记账结果查询");
+    TRADE_2501("2501", "记账结果查询"),
+    TRADE_2601("2601", "日终对账");
 
     private String code = null;
     private String title = null;
