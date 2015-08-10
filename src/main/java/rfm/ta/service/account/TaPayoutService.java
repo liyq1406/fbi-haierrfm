@@ -124,13 +124,13 @@ public class TaPayoutService {
             Tia900010002 tia900010002Temp=new Tia900010002();
             TaTxnSbs taTxnSbsPara=new TaTxnSbs();
             taTxnSbsPara.setTxCode(EnuTaTxCode.TRADE_2102.getCode());
-            taTxnSbsPara.setAccId(taTxnFdcPara.getAccId().substring(0,14));           // 付款账号
-            taTxnSbsPara.setRecvAccId(taTxnFdcPara.getRecvAccId().substring(0,14));   // 收款账号
-            taTxnSbsPara.setTxAmt(taTxnFdcPara.getTxAmt().toString());                // 交易金额
-            taTxnSbsPara.setReqSn(taTxnFdcPara.getReqSn().substring(8,26));           // 外围系统流水
-            taTxnSbsPara.setTxDate(ToolUtil.getNow("yyyyMMdd"));                    // 交易日期
-            taTxnSbsPara.setTxTime(ToolUtil.getNow("HH:mm:ss"));                    // 交易时间
-            taTxnSbsPara.setUserId(taTxnFdcPara.getUserId());                         // 柜员号
+            taTxnSbsPara.setAccId(taTxnFdcPara.getAccId().trim());         // 付款账号
+            taTxnSbsPara.setRecvAccId(taTxnFdcPara.getRecvAccId().trim()); // 收款账号
+            taTxnSbsPara.setTxAmt(taTxnFdcPara.getTxAmt().toString());     // 交易金额
+            taTxnSbsPara.setReqSn(taTxnFdcPara.getReqSn().substring(8,26));// 外围系统流水
+            taTxnSbsPara.setTxDate(ToolUtil.getNow("yyyyMMdd"));         // 交易日期
+            taTxnSbsPara.setTxTime(ToolUtil.getNow("HH:mm:ss"));         // 交易时间
+            taTxnSbsPara.setUserId(taTxnFdcPara.getUserId());              // 柜员号
 
             tia900010002Temp.header.CHANNEL_ID=ToolUtil.DEP_CHANNEL_ID_SBS;
             // 划拨是从监管户到一般账户
@@ -150,7 +150,7 @@ public class TaPayoutService {
             //通过MQ发送信息到DEP
             String strMsgid= depMsgSendAndRecv.sendDepMessage(tia900010002Temp);
             Toa900010002 toaPara=(Toa900010002) depMsgSendAndRecv.recvDepMessage(strMsgid);
-            if(taTxnSbsPara.getRtnReqSn().equals(taTxnSbsPara.getReqSn())){
+            if(ToolUtil.getStrIgnoreNull(taTxnSbsPara.getRtnReqSn()).equals(taTxnSbsPara.getReqSn())){
                 /*01 返还的外围系统流水号
                   02 返还的交易金额*/
                 taTxnSbsPara.setRtnReqSn(toaPara.body.RTN_REQ_SN);
@@ -159,8 +159,8 @@ public class TaPayoutService {
                 return toaPara;
             }
         } catch (Exception e) {
-            logger.error("交存记账失败", e);
-            throw new RuntimeException("交存记账失败", e);
+            logger.error("划拨记账失败", e);
+            throw new RuntimeException("划拨记账失败", e);
         }
         return null;
     }
@@ -271,8 +271,8 @@ public class TaPayoutService {
                 return toaPara;
             }
         } catch (Exception e) {
-            logger.error("交存记账失败", e);
-            throw new RuntimeException("交存记账失败", e);
+            logger.error("划拨记账失败", e);
+            throw new RuntimeException("划拨记账失败", e);
         }
         return null;
     }

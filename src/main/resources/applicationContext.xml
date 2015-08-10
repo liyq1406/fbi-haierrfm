@@ -72,23 +72,23 @@
     <!-- 发送和接收结合对 -->
     <bean id="jmsSendTemplate" class="org.springframework.jms.core.JmsTemplate">
         <property name="connectionFactory" ref="jmsConnectionFactory"/>
-        <property name="defaultDestination" ref="send.unipay"/>
+        <property name="defaultDestination" ref="send.rfm"/>
         <property name="timeToLive" value="${jms.timeToLive}"/>
     </bean>
     <bean id="jmsRecvTemplate" class="org.springframework.jms.core.JmsTemplate">
         <property name="connectionFactory" ref="jmsConnectionFactory"/>
-        <property name="defaultDestination" ref="recv.unipay"/>
+        <property name="defaultDestination" ref="recv.rfm"/>
         <property name="timeToLive" value="${jms.timeToLive}"/>
         <property name="receiveTimeout" value="${jms.realtime_receive_timeout}"/>
     </bean>
     <!-- 实时发送-->
-    <bean id="send.unipay" class="org.apache.activemq.command.ActiveMQQueue">
+    <bean id="send.rfm" class="org.apache.activemq.command.ActiveMQQueue">
         <constructor-arg index="0">
             <value>${queue.rfm.to.dep.object}</value>
         </constructor-arg>
     </bean>
     <!-- 实时接收  -->
-    <bean id="recv.unipay" class="org.apache.activemq.command.ActiveMQQueue">
+    <bean id="recv.rfm" class="org.apache.activemq.command.ActiveMQQueue">
         <constructor-arg index="0">
             <value>${queue.dep.to.rfm.object}</value>
         </constructor-arg>
