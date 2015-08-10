@@ -65,6 +65,23 @@ public class TaAccDetlService {
     }
 
     /**
+     * 插入
+     * @param taRsAccDtl
+     */
+    public void insertRecord(TaRsAccDtl taRsAccDtl) {
+        taRsAccDtlMapper.insert(taRsAccDtl);
+    }
+
+    /**
+     * 更新
+     * @param taRsAccDtl
+     * @return
+     */
+    public int updateRecord(TaRsAccDtl taRsAccDtl) {
+        return taRsAccDtlMapper.updateByPrimaryKeySelective(taRsAccDtl);
+    }
+
+    /**
      * 未发送前数据(包括退回)*/
     public List<TaRsAccDtl> selectedRecordsForChk(String tradeType, List<String> statusflags) {
         TaRsAccDtlExample example = new TaRsAccDtlExample();
