@@ -85,9 +85,9 @@ public class TaAccDetlService {
     public List<SelectItem> getActFlagList() {
         List<SelectItem> actFlagList = new ArrayList<SelectItem>();
         actFlagList.add(new SelectItem("", "È«²¿"));
-        actFlagList.add(new SelectItem(EnuActFlag.ACT_SUCCESS.getCode(), EnuActFlag.ACT_SUCCESS.getTitle()));
-        actFlagList.add(new SelectItem(EnuActFlag.ACT_UNKNOWN.getCode(), EnuActFlag.ACT_UNKNOWN.getTitle()));
-        actFlagList.add(new SelectItem(EnuActFlag.ACT_FAIL.getCode(), EnuActFlag.ACT_FAIL.getTitle()));
+        for(EnuActFlag actFlag:EnuActFlag.values()) {
+            actFlagList.add(new SelectItem(actFlag.getCode(), actFlag.getTitle()));
+        }
         return actFlagList;
     }
 
@@ -97,9 +97,10 @@ public class TaAccDetlService {
      */
     public Map<String, String> getActFlagMap() {
         Map<String, String> actFlagMap = new HashMap<>();
-        actFlagMap.put(EnuActFlag.ACT_SUCCESS.getCode(), EnuActFlag.ACT_SUCCESS.getTitle());
-        actFlagMap.put(EnuActFlag.ACT_UNKNOWN.getCode(), EnuActFlag.ACT_UNKNOWN.getTitle());
-        actFlagMap.put(EnuActFlag.ACT_FAIL.getCode(), EnuActFlag.ACT_FAIL.getTitle());
+        for(EnuActFlag actFlag:EnuActFlag.values()) {
+            actFlagMap.put(actFlag.getCode(), actFlag.getTitle());
+        }
+
         return actFlagMap;
     }
 
