@@ -114,7 +114,7 @@ public class TaRefundService {
     }
 
     /**
-     * 发送泰安房产监管系统交存记账交易
+     * 发送泰安房产监管系统返还记账交易（SBS）
      *
      * @param taTxnFdcPara
      */
@@ -123,13 +123,13 @@ public class TaRefundService {
         try {
             Tia900010002 tia900010002Temp=new Tia900010002();
             TaTxnSbs taTxnSbsPara=new TaTxnSbs();
-            taTxnSbsPara.setAccId(taTxnFdcPara.getAccId().substring(0,14));           // 付款账号
-            taTxnSbsPara.setRecvAccId(taTxnFdcPara.getRecvAccId().substring(0,14));   // 收款账号
-            taTxnSbsPara.setTxAmt(taTxnFdcPara.getTxAmt().toString());// 交易金额
-            taTxnSbsPara.setReqSn(taTxnFdcPara.getReqSn().substring(8,26));           // 外围系统流水
-            taTxnSbsPara.setTxDate(ToolUtil.getNow("yyyyMMdd"));     // 交易日期
-            taTxnSbsPara.setTxTime(ToolUtil.getNow("HH:mm:ss"));     // 交易时间
-            taTxnSbsPara.setUserId(taTxnFdcPara.getUserId());          // 柜员号
+            taTxnSbsPara.setAccId(taTxnFdcPara.getAccId().trim());           // 付款账号
+            taTxnSbsPara.setRecvAccId(taTxnFdcPara.getRecvAccId().trim());   // 收款账号
+            taTxnSbsPara.setTxAmt(taTxnFdcPara.getTxAmt().toString());      // 交易金额
+            taTxnSbsPara.setReqSn(taTxnFdcPara.getReqSn().substring(8,26)); // 外围系统流水
+            taTxnSbsPara.setTxDate(ToolUtil.getNow("yyyyMMdd"));          // 交易日期
+            taTxnSbsPara.setTxTime(ToolUtil.getNow("HH:mm:ss"));          // 交易时间
+            taTxnSbsPara.setUserId(taTxnFdcPara.getUserId());               // 柜员号
 
             // 返还是由监管户到普通账户
             tia900010002Temp.body.ACC_ID=taTxnSbsPara.getAccId();
@@ -162,7 +162,7 @@ public class TaRefundService {
         return null;
     }
     /**
-     * 发送泰安房产监管系统返还记账交易
+     * 发送泰安房产监管系统返还记账交易（TA_FDC)
      *
      * @param taTxnFdcPara
      */
@@ -224,7 +224,7 @@ public class TaRefundService {
     }
 
     /**
-     * 发送泰安房产监管系统交存记账交易
+     * 发送泰安房产监管系统返还冲正交易
      *
      * @param taTxnFdcPara
      */
