@@ -21,7 +21,9 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.model.SelectItem;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -44,6 +46,12 @@ public class TaPayoutAction {
     @ManagedProperty(value = "#{taAccDetlService}")
     private TaAccDetlService taAccDetlService;
 
+    // 记账成功标志
+    private List<SelectItem> actFlagList;
+    private Map<String, String> actFlagMap;
+    private TaRsAccDtl taRsAccDtl;
+    private List<TaRsAccDtl> taRsAccDtlList;
+
     private TaTxnFdc taTxnFdcValiSend;
     private TaTxnFdc taTxnFdcValiSendAndRecv;
     private TaTxnFdc taTxnFdcActSend;
@@ -55,6 +63,12 @@ public class TaPayoutAction {
 
     @PostConstruct
     public void init() {
+        // 查询用初始化
+        actFlagList = taAccDetlService.getActFlagList();
+        actFlagMap = taAccDetlService.getActFlagMap();
+        taRsAccDtl = new TaRsAccDtl();
+        taRsAccDtl.setActFlag(EnuActFlag.ACT_UNKNOWN.getCode());
+
         taTxnFdcValiSend=new TaTxnFdc();
         taTxnFdcValiSendAndRecv=new TaTxnFdc();
         taTxnFdcActSend=new TaTxnFdc();
@@ -159,7 +173,59 @@ public class TaPayoutAction {
         }
     }
 
+    /*画面查询用*/
+    public void onBtnQueryClick() {
+        taRsAccDtlList = taAccDetlService.selectedRecordsByCondition(taRsAccDtl.getActFlag(),
+                EnuTaTxCode.TRADE_2101.getCode().substring(0,2));
+    }
+
+    /*记账*/
+    public String onClick_Enable(TaRsAccDtl taRsAccDtl){
+//        try {
+//            taAccService.sendAndRecvRealTimeTxn9901001(taRsAccPara);
+//        } catch (Exception e) {
+//            logger.error("启用监管失败，", e);
+//            MessageUtil.addError(e.getMessage());
+//            return null;
+//        }
+//        MessageUtil.addInfo("启用监管成功。");
+//        confirmAccountNo = "";
+        return null;
+    }
+
     //= = = = = = = = = = = = = = =  get set = = = = = = = = = = = = = = = =
+    public List<SelectItem> getActFlagList() {
+        return actFlagList;
+    }
+
+    public void setActFlagList(List<SelectItem> actFlagList) {
+        this.actFlagList = actFlagList;
+    }
+
+    public Map<String, String> getActFlagMap() {
+        return actFlagMap;
+    }
+
+    public void setActFlagMap(Map<String, String> actFlagMap) {
+        this.actFlagMap = actFlagMap;
+    }
+
+    public TaRsAccDtl getTaRsAccDtl() {
+        return taRsAccDtl;
+    }
+
+    public void setTaRsAccDtl(TaRsAccDtl taRsAccDtl) {
+        this.taRsAccDtl = taRsAccDtl;
+    }
+
+    public List<TaRsAccDtl> getTaRsAccDtlList() {
+        return taRsAccDtlList;
+    }
+
+    public void setTaRsAccDtlList(List<TaRsAccDtl> taRsAccDtlList) {
+        this.taRsAccDtlList = taRsAccDtlList;
+    }
+
     public TaAccDetlService getTaAccDetlService() {
         return taAccDetlService;
     }

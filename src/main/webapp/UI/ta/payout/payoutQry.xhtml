@@ -1,0 +1,131 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/ui.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+            .input-col-m {
+                width: 60px;
+            }
+
+            .input-col-l {
+                width: 80px;
+            }
+
+            .input-col-xxl {
+                width: 1%;
+                text-align: right;
+            }
+
+            .col-95 {
+                text-align: right;
+            }
+
+            .col-5 {
+                text-align: left;
+            }
+        </style>
+        <script type="text/javascript" language="javascript">
+            document.onkeydown = function TabReplace() {
+                if (event.keyCode == 13) {
+                    if (event.srcElement.tagName != 'BUTTON')
+                        event.keyCode = 9;
+                }
+            }
+        </script>
+    </ui:define>
+
+    <ui:define name="content">
+        <div style="margin:5px;" id="top">
+            <p:growl id="msgs" showDetail="true"/>
+            <h:form id="actqueryForm">
+                <p:panel id="query" header="【监管账户信息】查询">
+                    <h:panelGrid columns="2" cellspacing="3" style="width:100%">
+                        <h:panelGrid columns="2" cellspacing="3" style=""
+                                     columnClasses="col-95,col-5,col-95,col-5">
+                            <h:outputLabel value="*【记账成功标志】:" for="actType"/>
+                            <h:selectOneMenu id="actType" value="#{taPayoutAction.taRsAccDtl.actFlag}" >
+                                <f:selectItems value="#{taPayoutAction.actFlagList}"/>
+                            </h:selectOneMenu>
+                        </h:panelGrid>
+                        <p:commandButton update="msgs,pdt" style="width: 80px"
+                                         action="#{taPayoutAction.onBtnQueryClick}" id="btnQuery" value="查询">
+                        </p:commandButton>
+                    </h:panelGrid>
+                </p:panel>
+                <p:ajaxStatus style="width:16px;height:16px;">
+                    <f:facet name="start">
+                        <h:graphicImage value="/images/ajaxloading.gif"/>
+                    </f:facet>
+                    <f:facet name="complete">
+                        <h:outputText value=""/>
+                    </f:facet>
+                </p:ajaxStatus>
+
+                <p:dataTable id="pdt" style="width:100%;"
+                             dynamic="true"
+                             value="#{taPayoutAction.taRsAccDtlList}"
+                             selectionMode="single"
+                             var="record"
+                             rowKey="#{record.pkId}"
+                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             paginator="true" rows="15" paginatorPosition="bottom"
+                             rowsPerPageTemplate="100,50,30,15,5"
+                             emptyMessage="数据记录为空...">
+                    <p:column headerText="监管账号" style="text-align:center">
+                        <h:outputText value="#{record.accId}" style="text-align: center;"/>
+                    </p:column>
+
+                    <p:column headerText="监管账户名" style="text-align:center">
+                        <h:outputText value="#{record.accName}" style="text-align: right"/>
+                    </p:column>
+
+                    <p:column headerText="划拨金额" style="text-align:center">
+                        <h:outputText value="#{record.txAmt}" style="text-align: right"/>
+                    </p:column>
+
+                    <p:column headerText="收款银行" style="text-align:center">
+                        <h:outputText value="#{record.recvBank}" style="text-align: right"/>
+                    </p:column>
+
+                    <p:column headerText="收款单位账号" style="text-align:center">
+                        <h:outputText value="#{record.recvAccId}" style="text-align: right"/>
+                    </p:column>
+
+                    <p:column headerText="收款单位户名" style="text-align:center">
+                        <h:outputText value="#{record.recvAccName}" style="text-align: right"/>
+                    </p:column>
+
+                    <p:column headerText="项目名称" style="text-align:center">
+                        <h:outputText value="#{record.progName}" style="text-align: right"/>
+                    </p:column>
+
+                    <p:column headerText="开发企业名称" style="text-align:center">
+                        <h:outputText value="#{record.compName}" style="text-align: right"/>
+                    </p:column>
+
+                    <p:column headerText="预售监管平台流水" style="text-align:center">
+                        <h:outputText value="#{record.fdcSn}" style="text-align: right"/>
+                    </p:column>
+
+                    <p:column headerText="记账成功标志" style="text-align:center">
+                        <h:outputText value="#{taRefundAction.actFlagMap.get(record.actFlag)}"/>
+                    </p:column>
+
+                    <p:column headerText="操作" style="text-align:center">
+                        <p:commandLink  value="记账" immediate="true" ajax="false"
+                                        action="#{taPayoutAction.onClick_Enable(record)}"
+                                        rendered="#{record.actFlag eq '1'?'true':'false'}"
+                                        style="color: blue">
+                        </p:commandLink>
+                    </p:column>
+
+                </p:dataTable>
+            </h:form>
+        </div>
+    </ui:define>
+
+</ui:composition>

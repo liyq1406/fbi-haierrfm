@@ -6,12 +6,17 @@ import org.springframework.stereotype.Service;
 import platform.service.SystemService;
 import pub.platform.security.OperatorManager;
 import common.utils.ToolUtil;
+import rfm.ta.common.enums.EnuActFlag;
 import rfm.ta.repository.dao.TaRsAccDtlMapper;
 import rfm.ta.repository.dao.com.TaCommonMapper;
 import rfm.ta.repository.model.TaRsAccDtl;
 import rfm.ta.repository.model.TaRsAccDtlExample;
 
+import javax.faces.model.SelectItem;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -53,6 +58,49 @@ public class TaAccDetlService {
         criteria.andDeletedFlagEqualTo("0");
         example.setOrderByClause("Trade_Date desc,acc_id");
         return taRsAccDtlMapper.selectByExample(example);
+    }
+
+    /**
+     * 操作查询
+     */
+    public List<TaRsAccDtl> selectedRecordsByCondition(String actFlag, String txCode) {
+        TaRsAccDtlExample example = new TaRsAccDtlExample();
+        TaRsAccDtlExample.Criteria criteria = example.createCriteria();
+        if (ToolUtil.getStrIgnoreNull(actFlag).trim().length()!=0) {
+            criteria.andActFlagEqualTo(actFlag.trim());
+        }
+
+        if (txCode !=null && !StringUtils.isEmpty(txCode.trim())) {
+            criteria.andTxCodeLike(txCode + "%");
+        }
+
+        criteria.andDeletedFlagEqualTo("0");
+        return taRsAccDtlMapper.selectByExample(example);
+    }
+
+    /**
+     * 取得记账成功标志List
+     * @return
+     */
+    public List<SelectItem> getActFlagList() {
+        List<SelectItem> actFlagList = new ArrayList<SelectItem>();
+        actFlagList.add(new SelectItem("", "全部"));
+        actFlagList.add(new SelectItem(EnuActFlag.ACT_SUCCESS.getCode(), EnuActFlag.ACT_SUCCESS.getTitle()));
+        actFlagList.add(new SelectItem(EnuActFlag.ACT_UNKNOWN.getCode(), EnuActFlag.ACT_UNKNOWN.getTitle()));
+        actFlagList.add(new SelectItem(EnuActFlag.ACT_FAIL.getCode(), EnuActFlag.ACT_FAIL.getTitle()));
+        return actFlagList;
+    }
+
+    /**
+     * 取得记账成功标志Map
+     * @return
+     */
+    public Map<String, String> getActFlagMap() {
+        Map<String, String> actFlagMap = new HashMap<>();
+        actFlagMap.put(EnuActFlag.ACT_SUCCESS.getCode(), EnuActFlag.ACT_SUCCESS.getTitle());
+        actFlagMap.put(EnuActFlag.ACT_UNKNOWN.getCode(), EnuActFlag.ACT_UNKNOWN.getTitle());
+        actFlagMap.put(EnuActFlag.ACT_FAIL.getCode(), EnuActFlag.ACT_FAIL.getTitle());
+        return actFlagMap;
     }
 
     /**
