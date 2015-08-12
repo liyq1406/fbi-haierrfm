@@ -134,6 +134,15 @@ public class TaAccDetlService {
     }
 
     /**
+     * 删除
+     * @param pkId
+     * @return
+     */
+    public int deleteRecord(String pkId) {
+        return taRsAccDtlMapper.deleteByPrimaryKey(pkId);
+    }
+
+    /**
      * 未发送前数据(包括退回)*/
     public List<TaRsAccDtl> selectedRecordsForChk(String tradeType, List<String> statusflags) {
         TaRsAccDtlExample example = new TaRsAccDtlExample();

@@ -150,19 +150,11 @@ public class TaPayoutService {
             //通过MQ发送信息到DEP
             String strMsgid= depMsgSendAndRecv.sendDepMessage(tia900010002Temp);
             Toa900010002 toaPara=(Toa900010002) depMsgSendAndRecv.recvDepMessage(strMsgid);
-            if(ToolUtil.getStrIgnoreNull(taTxnSbsPara.getRtnReqSn()).equals(taTxnSbsPara.getReqSn())){
-                /*01 返还的外围系统流水号
-                  02 返还的交易金额*/
-                taTxnSbsPara.setRtnReqSn(toaPara.body.RTN_REQ_SN);
-                taTxnSbsPara.setRtnTxAmt(toaPara.body.RTN_TX_AMT);
-                taTxnSbsService.updateRecord(taTxnSbsPara);
-                return toaPara;
-            }
+            return toaPara;
         } catch (Exception e) {
             logger.error("划拨记账失败", e);
             throw new RuntimeException("划拨记账失败", e);
         }
-        return null;
     }
     /**
      * 发送泰安房产监管系统划拨记账交易

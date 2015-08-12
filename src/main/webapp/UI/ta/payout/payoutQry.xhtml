@@ -75,6 +75,10 @@
                              paginator="true" rows="15" paginatorPosition="bottom"
                              rowsPerPageTemplate="100,50,30,15,5"
                              emptyMessage="数据记录为空...">
+                    <p:column headerText="划拨申请编号" style="text-align:center">
+                        <h:outputText value="#{record.bizId}" style="text-align: center;"/>
+                    </p:column>
+
                     <p:column headerText="监管账号" style="text-align:center">
                         <h:outputText value="#{record.accId}" style="text-align: center;"/>
                     </p:column>

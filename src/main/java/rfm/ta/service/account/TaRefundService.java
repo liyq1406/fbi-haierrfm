@@ -131,6 +131,7 @@ public class TaRefundService {
             taTxnSbsPara.setTxTime(ToolUtil.getNow("HH:mm:ss"));          // 交易时间
             taTxnSbsPara.setUserId(taTxnFdcPara.getUserId());               // 柜员号
 
+            tia900010002Temp.header.CHANNEL_ID=ToolUtil.DEP_CHANNEL_ID_SBS;
             // 返还是由监管户到普通账户
             tia900010002Temp.body.ACC_ID=taTxnSbsPara.getAccId();
             tia900010002Temp.body.RECV_ACC_ID=taTxnSbsPara.getRecvAccId();
@@ -140,6 +141,7 @@ public class TaRefundService {
             tia900010002Temp.body.TX_TIME=taTxnSbsPara.getTxTime();
             tia900010002Temp.header.REQ_SN=taTxnSbsPara.getReqSn();
             tia900010002Temp.header.USER_ID=taTxnSbsPara.getUserId();
+            tia900010002Temp.header.TX_CODE = taTxnSbsPara.getTxCode();
 
             taTxnSbsPara.setRecVersion(0);
             taTxnSbsService.insertRecord(taTxnSbsPara);
@@ -147,19 +149,11 @@ public class TaRefundService {
             //通过MQ发送信息到DEP
             String strMsgid= depMsgSendAndRecv.sendDepMessage(tia900010002Temp);
             Toa900010002 toaPara=(Toa900010002) depMsgSendAndRecv.recvDepMessage(strMsgid);
-            if(taTxnSbsPara.getRtnReqSn().equals(taTxnSbsPara.getReqSn())){
-                /*01 返还的外围系统流水号
-                  02 返还的交易金额*/
-                taTxnSbsPara.setRtnReqSn(toaPara.body.RTN_REQ_SN);
-                taTxnSbsPara.setRtnTxAmt(toaPara.body.RTN_TX_AMT);
-                taTxnSbsService.updateRecord(taTxnSbsPara);
-                return toaPara;
-            }
+            return toaPara;
         } catch (Exception e) {
             logger.error("交存记账失败", e);
             throw new RuntimeException("交存记账失败", e);
         }
-        return null;
     }
     /**
      * 发送泰安房产监管系统返还记账交易（TA_FDC)

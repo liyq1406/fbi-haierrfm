@@ -101,6 +101,22 @@ public class TaRefundAction {
                 MessageUtil.addError("必须输入返还账号！");
                 return;
             }
+
+            // 验证重复记账
+            TaRsAccDtl taRsAccDtl = new TaRsAccDtl();
+            taRsAccDtl.setBizId(taTxnFdcValiSendAndRecv.getBizId());
+            taRsAccDtl.setTxCode(EnuTaTxCode.TRADE_2201.getCode());
+            List<TaRsAccDtl> taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtl);
+            if(taRsAccDtlList.size() == 1){
+                String actFlag = taRsAccDtlList.get(0).getActFlag();
+                if(actFlag.equals(EnuActFlag.ACT_SUCCESS.getCode())){
+                    MessageUtil.addError("该返还申请编号已记账，不允许重复记账！");
+                } else if(actFlag.equals(EnuActFlag.ACT_UNKNOWN.getCode())){
+                    MessageUtil.addError("该返还申请编号记账时存在不明原因失败，请在返还验证查询画面进行记账！");
+                }
+                return;
+            }
+
             // 本地存取（对账用）
             TaRsAccDtl taRsAccDtlTemp = new TaRsAccDtl();
             BeanUtils.copyProperties(taRsAccDtlTemp, taTxnFdcValiSendAndRecv);
@@ -109,19 +125,29 @@ public class TaRefundAction {
             taAccDetlService.insertRecord(taRsAccDtlTemp);
 
             // 往SBS发送记账信息
-            TOA toaSbs=taRefundService.sendAndRecvRealTimeTxn900012202(taTxnFdcValiSendAndRecv);
+            sendAndRecvSBSAndFDC(taTxnFdcValiSendAndRecv, taRsAccDtlTemp);
+        }catch (Exception e){
+            logger.error("验证后立即划拨记账用，", e);
+            MessageUtil.addError(e.getMessage());
+        }
+    }
+
+    /*验证后立即划拨记账用*/
+    public void sendAndRecvSBSAndFDC(TaTxnFdc taTxnFdcPara,TaRsAccDtl taRsAccDtl) {
+        try {
+            // 往SBS发送记账信息
+            TOA toaSbs=taRefundService.sendAndRecvRealTimeTxn900012202(taTxnFdcPara);
             if(toaSbs!=null) {
                 if(("0000").equals(toaSbs.getHeader().RETURN_CODE)){ // SBS记账成功的处理
-                    taRsAccDtlTemp.setActFlag(EnuActFlag.ACT_SUCCESS.getCode());
-                    taAccDetlService.updateRecord(taRsAccDtlTemp);
+                    taRsAccDtl.setActFlag(EnuActFlag.ACT_SUCCESS.getCode());
+                    taAccDetlService.updateRecord(taRsAccDtl);
                 } else { // SBS记账失败的处理
-                    taRsAccDtlTemp.setActFlag(EnuActFlag.ACT_FAIL.getCode());
-                    taAccDetlService.updateRecord(taRsAccDtlTemp);
+                    taAccDetlService.deleteRecord(taRsAccDtl.getPkId());
                 }
 
                 // 往泰安房地产中心发送记账信息
                 TaTxnFdc taTxnFdcTemp = new TaTxnFdc();
-                BeanUtils.copyProperties(taTxnFdcTemp, taTxnFdcValiSendAndRecv);
+                BeanUtils.copyProperties(taTxnFdcTemp, taTxnFdcPara);
                 taTxnFdcTemp.setTxCode(EnuTaTxCode.TRADE_2202.getCode());
                 taRefundService.sendAndRecvRealTimeTxn9902202(taTxnFdcTemp);
             /*记账后查询*/
@@ -189,17 +215,16 @@ public class TaRefundAction {
     }
 
     /*记账*/
-    public String onClick_Enable(TaRsAccDtl taRsAccDtl){
-//        try {
-//            taAccService.sendAndRecvRealTimeTxn9901001(taRsAccPara);
-//        } catch (Exception e) {
-//            logger.error("启用监管失败，", e);
-//            MessageUtil.addError(e.getMessage());
-//            return null;
-//        }
-//        MessageUtil.addInfo("启用监管成功。");
-//        confirmAccountNo = "";
-        return null;
+    public void onClick_Enable(TaRsAccDtl taRsAccDtl){
+        try {
+            TaTxnFdc taTxnFdcPara = new TaTxnFdc();
+            BeanUtils.copyProperties(taTxnFdcPara, taRsAccDtl);
+            sendAndRecvSBSAndFDC(taTxnFdcPara, taRsAccDtl);
+            onBtnQueryClick();
+        } catch (Exception e) {
+            logger.error("记账，", e);
+            MessageUtil.addError(e.getMessage());
+        }
     }
 
     //= = = = = = = = = = = = = = =  get set = = = = = = = = = = = = = = = =
