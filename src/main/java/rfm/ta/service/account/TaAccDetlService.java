@@ -53,10 +53,10 @@ public class TaAccDetlService {
             criteria.andAccIdEqualTo(taRsAccDtlPara.getAccId());
         }
         if (taRsAccDtlPara.getTradeDate()!= null && !StringUtils.isEmpty(taRsAccDtlPara.getTradeDate().trim())) {
-            criteria.andAccIdEqualTo(taRsAccDtlPara.getTradeDate());
+            criteria.andTradeDateEqualTo(taRsAccDtlPara.getTradeDate());
         }
         criteria.andDeletedFlagEqualTo("0");
-        example.setOrderByClause("Trade_Date desc,acc_id");
+        example.setOrderByClause("acc_name");
         return taRsAccDtlMapper.selectByExample(example);
     }
 

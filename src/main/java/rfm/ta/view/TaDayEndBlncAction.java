@@ -5,6 +5,7 @@ import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
 import org.fbi.dep.model.base.TOA;
+import org.fbi.dep.model.txn.Toa900012601;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import platform.common.utils.MessageUtil;
@@ -13,13 +14,13 @@ import rfm.ta.repository.model.TaRsAccDtl;
 import rfm.ta.repository.model.TaTxnFdc;
 import rfm.ta.repository.model.TaTxnSbs;
 import rfm.ta.service.account.TaAccDetlService;
+import rfm.ta.service.account.TaDayEndBlncService;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import java.io.*;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,11 +32,14 @@ import java.util.List;
  */
 @ManagedBean
 @ViewScoped
-public class TaAccDtlAction implements Serializable {
-    private static Logger logger = LoggerFactory.getLogger(TaAccDtlAction.class);
+public class TaDayEndBlncAction implements Serializable {
+    private static Logger logger = LoggerFactory.getLogger(TaDayEndBlncAction.class);
 
     @ManagedProperty("#{taAccDetlService}")
     private TaAccDetlService taAccDetlService;
+
+    @ManagedProperty("#{taDayEndBlncService}")
+    private TaDayEndBlncService taDayEndBlncService;
 
     private TaTxnSbs taTxnSbs;
     // 账务交易明细
@@ -43,12 +47,37 @@ public class TaAccDtlAction implements Serializable {
     private List<TaRsAccDtl> taRsAccDtlSbsList;
     private String erydat = new SimpleDateFormat("yyyyMMdd").format(new Date());
 
+    private String strLocalTotalCounts;
+    private String strLocalTotalAmt;
+    private String strSbsTotalCounts;
+    private String strSbsTotalAmt;
+
     @PostConstruct
     public void init(){
+        strLocalTotalCounts="0";
+        strLocalTotalAmt="0";
+        strSbsTotalCounts="0";
+        strSbsTotalAmt="0";
         TaRsAccDtl taRsAccDtlPara=new TaRsAccDtl();
-        taRsAccDtlPara.setTradeDate(ToolUtil.getNow("yyyyMMdd"));
+        taRsAccDtlSbsList=new ArrayList<>();
+        taRsAccDtlPara.setTradeDate(ToolUtil.getNow("yyyy-MM-dd"));
         taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtlPara);
+        strLocalTotalCounts=String.valueOf(taRsAccDtlList.size());
         if(taRsAccDtlList.size()>0) {
+            System.out.println("======>" + taRsAccDtlList.get(0).getAccId());
+        }
+    }
+
+    public void onQrySbsData() {
+    // 往SBS发送记账信息
+        TaTxnFdc taTxnFdcPara = new TaTxnFdc();
+        taTxnFdcPara.setTradeDate(ToolUtil.getNow("yyyyMMdd"));
+        taTxnFdcPara.setReqSn(ToolUtil.getStrReqSn_Back());
+        Toa900012601 toa900012601Temp= (Toa900012601)taDayEndBlncService.sendAndRecvRealTimeTxn900012601(taTxnFdcPara);
+        strSbsTotalCounts=toa900012601Temp.body.DRCNT;
+        strSbsTotalAmt=toa900012601Temp.body.DRAMT;
+        //taRsAccDtlSbsList = taAccDetlService.selectedRecords(new TaRsAccDtl());
+        if(taRsAccDtlSbsList.size()>0) {
             System.out.println("======>" + taRsAccDtlList.get(0).getAccId());
         }
     }
@@ -126,43 +155,15 @@ public class TaAccDtlAction implements Serializable {
         }
     }
 
+    public String onBlnc() {
+        try {
 
-    public String onReconciliation() {
-        if (taRsAccDtlList != null) {
-            try {
-                /*for (TaRsAccDetail taRsAccDetail : taRsAccDtlList) {
-                    for (int i = 0; i < dataList.size(); i++) {
-                        if (dataList.get(i).getMPCSEQ().equals(taRsAccDetail.getFdcSerial())) {
-                            taRsAccDtlList.remove(taRsAccDetail);
-                            dataList.remove(i);
-                        }
-                    }
-                }
-                if (taRsAccDetailList == null) {
-                    MessageUtil.addInfo("????????");
-                }*/
-            } catch (Exception e) {
-                MessageUtil.addError("??????");
-            }
-        } else {
-            MessageUtil.addInfo("??????????????");
+        } catch (Exception e) {
+            MessageUtil.addError("??????");
         }
-        onCreatFile();
+        //onCreatFile();
         //????????
         return null;
-    }
-
-
-    //左对齐
-    public String getLeftSpaceStr(String strValue, int totleBytesLen) {
-        if(strValue == null) strValue = "";
-        if (strValue.getBytes().length < totleBytesLen) {
-            int spacelen = totleBytesLen - strValue.getBytes().length;
-            for (int i = 0; i < spacelen; i++) {
-                strValue += " ";
-            }
-        }
-        return strValue;
     }
 
     //ftp发送到房产中心
@@ -255,5 +256,45 @@ public class TaAccDtlAction implements Serializable {
 
     public void setTaRsAccDetailList(List<TaRsAccDtl> taRsAccDtlList) {
         this.taRsAccDtlList = taRsAccDtlList;
+    }
+
+    public TaDayEndBlncService getTaDayEndBlncService() {
+        return taDayEndBlncService;
+    }
+
+    public void setTaDayEndBlncService(TaDayEndBlncService taDayEndBlncService) {
+        this.taDayEndBlncService = taDayEndBlncService;
+    }
+
+    public String getStrLocalTotalCounts() {
+        return strLocalTotalCounts;
+    }
+
+    public void setStrLocalTotalCounts(String strLocalTotalCounts) {
+        this.strLocalTotalCounts = strLocalTotalCounts;
+    }
+
+    public String getStrSbsTotalCounts() {
+        return strSbsTotalCounts;
+    }
+
+    public void setStrSbsTotalCounts(String strSbsTotalCounts) {
+        this.strSbsTotalCounts = strSbsTotalCounts;
+    }
+
+    public String getStrLocalTotalAmt() {
+        return strLocalTotalAmt;
+    }
+
+    public void setStrLocalTotalAmt(String strLocalTotalAmt) {
+        this.strLocalTotalAmt = strLocalTotalAmt;
+    }
+
+    public String getStrSbsTotalAmt() {
+        return strSbsTotalAmt;
+    }
+
+    public void setStrSbsTotalAmt(String strSbsTotalAmt) {
+        this.strSbsTotalAmt = strSbsTotalAmt;
     }
 }

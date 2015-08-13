@@ -85,7 +85,7 @@ public class TaRefundAction {
         }
     }
 
-    /*划拨验证用*/
+    /*返还验证用*/
     public void onBtnValiClick() {
         // 发送验证信息
         taTxnFdcValiSend.setTxCode(EnuTaTxCode.TRADE_2201.getCode());
@@ -94,7 +94,7 @@ public class TaRefundAction {
         taTxnFdcValiSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcValiSend.getPkId());
     }
 
-    /*验证后立即划拨记账用*/
+    /*验证后立即返还记账用*/
     public void onBtnActClick() {
         try {
             if(StringUtils.isEmpty(taTxnFdcValiSendAndRecv.getRecvAccId())){
