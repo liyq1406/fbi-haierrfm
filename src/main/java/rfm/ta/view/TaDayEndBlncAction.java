@@ -23,6 +23,9 @@ import javax.faces.bean.ViewScoped;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -168,6 +171,21 @@ public class TaDayEndBlncAction implements Serializable {
 
     //ftp发送到房产中心
     public static boolean uploadFile(String path, String filename,File file) {
+    public static void main(String[] args) {
+        String targetPath = "rfmtest";
+        String filename = "a.dat";
+        Path path = Paths.get("D:\\项目资料", filename);
+        File file = path.toFile();
+        uploadFile(targetPath, filename, file);
+    }
+    /**
+     * ftp发送到房产中心
+     * @param targetPath ftp服务器目标路径
+     * @param filename
+     * @param file
+     * @return
+     */
+    public static boolean uploadFile(String targetPath, String filename,File file) {
         String fcurl = PropertyManager.getProperty("tarfmfdc_fcurl");
         String fcusername = PropertyManager.getProperty("tarfmfdc_fcusername");
         String fcpasswd = PropertyManager.getProperty("tarfmfdc_fcpasswd");
@@ -187,7 +205,7 @@ public class TaDayEndBlncAction implements Serializable {
                 return result;
             }
             // 转移工作目录至指定目录下
-            boolean change = ftpClient.changeWorkingDirectory(path);
+            boolean change = ftpClient.changeWorkingDirectory(targetPath);
             ftpClient.enterLocalPassiveMode(); //被动模式  默认为主动模式
             ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
             ftpClient.setBufferSize(3072);
