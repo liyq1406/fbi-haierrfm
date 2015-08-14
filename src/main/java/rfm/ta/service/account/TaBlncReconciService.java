@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import rfm.ta.common.enums.EnuTaTxCode;
+import rfm.ta.common.enums.EnuTaFdcTxCode;
 import rfm.ta.repository.model.TaRsAcc;
 import rfm.ta.service.dep.DepMsgSendAndRecv;
 
@@ -41,7 +41,7 @@ public class TaBlncReconciService {
 
             Tia900012701 tia900012701Temp = new Tia900012701();
             tia900012701Temp.header.CHANNEL_ID=ToolUtil.DEP_CHANNEL_ID_SBS; // 渠道
-            tia900012701Temp.header.TX_CODE=EnuTaTxCode.TRADE_2701.getCode(); // 交易代码
+            tia900012701Temp.header.TX_CODE=EnuTaFdcTxCode.TRADE_2701.getCode(); // 交易代码
 
             if(totalCount % pageSize == 0){
                 pageCount = totalCount / pageSize;
