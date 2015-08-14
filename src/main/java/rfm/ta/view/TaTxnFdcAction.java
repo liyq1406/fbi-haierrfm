@@ -1,12 +1,8 @@
 package rfm.ta.view;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import platform.common.utils.MessageUtil;
-import rfm.ta.common.enums.EnuTaTxCode;
 import rfm.ta.repository.model.TaTxnFdc;
-import rfm.ta.service.account.TaPayoutService;
 import rfm.ta.service.his.TaTxnFdcService;
 
 import javax.annotation.PostConstruct;

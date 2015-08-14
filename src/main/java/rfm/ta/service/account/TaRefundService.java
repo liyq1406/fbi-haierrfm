@@ -10,10 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import platform.auth.MD5Helper;
-import rfm.ta.common.enums.EnuTaBankId;
-import rfm.ta.common.enums.EnuTaCityId;
-import rfm.ta.common.enums.EnuTaInitiatorId;
-import rfm.ta.common.enums.EnuTaTxnRtnCode;
+import rfm.ta.common.enums.*;
 import rfm.ta.repository.model.TaTxnFdc;
 import rfm.ta.repository.model.TaTxnSbs;
 import rfm.ta.service.dep.DepMsgSendAndRecv;
@@ -114,7 +111,7 @@ public class TaRefundService {
     }
 
     /**
-     * 发送泰安房产监管系统返还记账交易（SBS）
+     * 发送SBS系统返还记账交易
      *
      * @param taTxnFdcPara
      */
@@ -123,6 +120,7 @@ public class TaRefundService {
         try {
             Tia900010002 tia900010002Temp=new Tia900010002();
             TaTxnSbs taTxnSbsPara=new TaTxnSbs();
+            taTxnSbsPara.setTxCode(EnuTaSbsTxCode.TRADE_0002.getCode());
             taTxnSbsPara.setAccId(taTxnFdcPara.getAccId().trim());           // 付款账号
             taTxnSbsPara.setRecvAccId(taTxnFdcPara.getRecvAccId().trim());   // 收款账号
             taTxnSbsPara.setTxAmt(taTxnFdcPara.getTxAmt().toString());      // 交易金额
@@ -218,7 +216,7 @@ public class TaRefundService {
     }
 
     /**
-     * 发送泰安房产监管系统返还冲正交易
+     * 发送SBS系统返还冲正交易
      *
      * @param taTxnFdcPara
      */
@@ -227,6 +225,7 @@ public class TaRefundService {
         try {
             TaTxnSbs taTxnSbsPara=new TaTxnSbs();
             Tia900010002 tia900010002Temp=new Tia900010002();
+            taTxnSbsPara.setTxCode(EnuTaSbsTxCode.TRADE_0002.getCode());
             taTxnSbsPara.setAccId(taTxnFdcPara.getAccId());           // 付款账号
             taTxnSbsPara.setRecvAccId(taTxnFdcPara.getRecvAccId());       // 收款账号
             taTxnSbsPara.setTxAmt(taTxnFdcPara.getTxAmt().toString());// 交易金额

@@ -114,7 +114,7 @@ public class TaPayoutService {
     }
 
     /**
-     * 发送泰安房产监管系统交存记账交易
+     * 发送SBS系统交存记账交易
      *
      * @param taTxnFdcPara
      */
@@ -123,7 +123,7 @@ public class TaPayoutService {
         try {
             Tia900010002 tia900010002Temp=new Tia900010002();
             TaTxnSbs taTxnSbsPara=new TaTxnSbs();
-            taTxnSbsPara.setTxCode(EnuTaTxCode.TRADE_2102.getCode());
+            taTxnSbsPara.setTxCode(EnuTaSbsTxCode.TRADE_0002.getCode());
             taTxnSbsPara.setAccId(taTxnFdcPara.getAccId().trim());         // 付款账号
             taTxnSbsPara.setRecvAccId(taTxnFdcPara.getRecvAccId().trim()); // 收款账号
             taTxnSbsPara.setTxAmt(taTxnFdcPara.getTxAmt().toString());     // 交易金额
@@ -230,6 +230,7 @@ public class TaPayoutService {
         try {
             TaTxnSbs taTxnSbsPara=new TaTxnSbs();
             Tia900010002 tia900010002Temp=new Tia900010002();
+            taTxnSbsPara.setTxCode(EnuTaSbsTxCode.TRADE_0002.getCode());
             taTxnSbsPara.setAccId(taTxnFdcPara.getAccId());           // 付款账号
             taTxnSbsPara.setRecvAccId(taTxnFdcPara.getRecvAccId());   // 收款账号
             taTxnSbsPara.setTxAmt(taTxnFdcPara.getTxAmt().toString());// 交易金额

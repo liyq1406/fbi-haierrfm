@@ -188,7 +188,7 @@ public class TaAccService {
             taRsAccPara.setReqSn(ToolUtil.getStrAppReqSn_Back());
             Tia9901001 tia9901001Temp=new Tia9901001();
             tia9901001Temp.header.CHANNEL_ID=ToolUtil.DEP_CHANNEL_ID_RFM;
-            tia9901001Temp.header.TX_CODE=EnuTaTxCode.TRADE_1001.getCode();                     // 01   交易代码       4   1001
+            tia9901001Temp.header.TX_CODE= EnuTaFdcTxCode.TRADE_1001.getCode();                     // 01   交易代码       4   1001
             tia9901001Temp.body.BANK_ID= EnuTaBankId.BANK_HAIER.getCode();                      // 02   监管银行代码   2
             tia9901001Temp.body.CITY_ID= EnuTaCityId.CITY_TAIAN.getCode();                      // 03   城市代码       6
             tia9901001Temp.header.BIZ_ID=taRsAccPara.getBizId();                                  // 04   监管申请编号   14
@@ -235,7 +235,7 @@ public class TaAccService {
             taRsAccPara.setReqSn(ToolUtil.getStrAppReqSn_Back());
             Tia9901002 tia9901002Temp=new Tia9901002() ;
             tia9901002Temp.header.CHANNEL_ID=ToolUtil.DEP_CHANNEL_ID_RFM;
-            tia9901002Temp.header.TX_CODE=EnuTaTxCode.TRADE_1002.getCode();                     // 01   交易代码       4   1002
+            tia9901002Temp.header.TX_CODE= EnuTaFdcTxCode.TRADE_1002.getCode();                     // 01   交易代码       4   1002
             tia9901002Temp.body.BANK_ID= EnuTaBankId.BANK_HAIER.getCode();                      // 02   监管银行代码   2
             tia9901002Temp.body.CITY_ID= EnuTaCityId.CITY_TAIAN.getCode();                      // 03   城市代码       6
             tia9901002Temp.header.BIZ_ID=taRsAccPara.getBizId();                                  // 04   终止证明编号  14

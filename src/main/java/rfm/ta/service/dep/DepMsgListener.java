@@ -10,10 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
-import rfm.ta.common.enums.EnuTaBankId;
-import rfm.ta.common.enums.EnuTaCityId;
-import rfm.ta.common.enums.EnuTaInitiatorId;
-import rfm.ta.common.enums.EnuTaTxCode;
+import rfm.ta.common.enums.*;
 import rfm.ta.service.account.TaPaymentService;
 
 import javax.faces.bean.ManagedProperty;
@@ -49,7 +46,7 @@ public class DepMsgListener implements MessageListener {
             TOA toaSbs;
             TOA toaFdc;
             txnCode = tiaTmp.getHeader().TX_CODE;
-            if(EnuTaTxCode.TRADE_2001.getCode().equals(txnCode)){
+            if(EnuTaFdcTxCode.TRADE_2001.getCode().equals(txnCode)){
                 /*01	交易代码	    4	2001
                   02	监管银行代码	2
                   03	城市代码	    6
@@ -67,15 +64,19 @@ public class DepMsgListener implements MessageListener {
                 tia9902001.body.INITIATOR=EnuTaInitiatorId.INITIATOR.getCode();  // 09   发起方         1   1_监管银行
                 toaFdc=taPaymentService.sendAndRecvRealTimeTxn9902001(tia9902001);
                 jmsRfmOutTemplate.send(new ObjectMessageCreator(toaFdc, correlationID, propertyMap));
-            }else if(EnuTaTxCode.TRADE_2002.getCode().equals(txnCode)){
+            }else if(EnuTaFdcTxCode.TRADE_2002.getCode().equals(txnCode)){
+                tiaTmp.getHeader().TX_CODE= EnuTaSbsTxCode.TRADE_0002.getCode();
                 toaSbs=taPaymentService.sendAndRecvRealTimeTxn900012002(tiaTmp);
                 if(toaSbs!=null) {
+                    tiaTmp.getHeader().TX_CODE= txnCode;
                     toaFdc = taPaymentService.sendAndRecvRealTimeTxn9902002(tiaTmp);
                     jmsRfmOutTemplate.send(new ObjectMessageCreator(toaFdc, correlationID, propertyMap));
                 }
-            }else if(EnuTaTxCode.TRADE_2011.getCode().equals(txnCode)){
+            }else if(EnuTaFdcTxCode.TRADE_2011.getCode().equals(txnCode)){
+                tiaTmp.getHeader().TX_CODE= EnuTaSbsTxCode.TRADE_0002.getCode();
                 toaSbs=taPaymentService.sendAndRecvRealTimeTxn900012011(tiaTmp);
                 if(toaSbs!=null) {
+                    tiaTmp.getHeader().TX_CODE= txnCode;
                     toaFdc = taPaymentService.sendAndRecvRealTimeTxn9902011(tiaTmp);
                     jmsRfmOutTemplate.send(new ObjectMessageCreator(toaFdc, correlationID, propertyMap));
                 }

@@ -7,14 +7,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import platform.common.utils.MessageUtil;
 import pub.platform.advance.utils.PropertyManager;
-import rfm.ta.common.enums.EnuActFlag;
-import rfm.ta.common.enums.EnuDelFlag;
-import rfm.ta.common.enums.EnuExecType;
-import rfm.ta.common.enums.EnuTaTxCode;
+import rfm.ta.common.enums.*;
 import rfm.ta.repository.model.TaRsAccDtl;
 import rfm.ta.repository.model.TaTxnFdc;
 import rfm.ta.service.account.TaAccDetlService;
-import rfm.ta.service.account.TaPayoutService;
 import rfm.ta.service.account.TaRefundService;
 import rfm.ta.service.his.TaTxnFdcService;
 
@@ -23,8 +19,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.model.SelectItem;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -88,7 +82,7 @@ public class TaRefundAction {
     /*返还验证用*/
     public void onBtnValiClick() {
         // 发送验证信息
-        taTxnFdcValiSend.setTxCode(EnuTaTxCode.TRADE_2201.getCode());
+        taTxnFdcValiSend.setTxCode(EnuTaFdcTxCode.TRADE_2201.getCode());
         taRefundService.sendAndRecvRealTimeTxn9902201(taTxnFdcValiSend);
         /*验证后查询*/
         taTxnFdcValiSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcValiSend.getPkId());
@@ -105,7 +99,7 @@ public class TaRefundAction {
             // 验证重复记账
             TaRsAccDtl taRsAccDtl = new TaRsAccDtl();
             taRsAccDtl.setBizId(taTxnFdcValiSendAndRecv.getBizId());
-            taRsAccDtl.setTxCode(EnuTaTxCode.TRADE_2201.getCode());
+            taRsAccDtl.setTxCode(EnuTaFdcTxCode.TRADE_2201.getCode());
             List<TaRsAccDtl> taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtl);
             if(taRsAccDtlList.size() == 1){
                 String actFlag = taRsAccDtlList.get(0).getActFlag();
@@ -136,7 +130,9 @@ public class TaRefundAction {
     public void sendAndRecvSBSAndFDC(TaTxnFdc taTxnFdcPara,TaRsAccDtl taRsAccDtl) {
         try {
             // 往SBS发送记账信息
-            TOA toaSbs=taRefundService.sendAndRecvRealTimeTxn900012202(taTxnFdcPara);
+            TaTxnFdc taTxnFdcTemp = new TaTxnFdc();
+            BeanUtils.copyProperties(taTxnFdcTemp, taTxnFdcPara);
+            TOA toaSbs=taRefundService.sendAndRecvRealTimeTxn900012202(taTxnFdcTemp);
             if(toaSbs!=null) {
                 if(("0000").equals(toaSbs.getHeader().RETURN_CODE)){ // SBS记账成功的处理
                     taRsAccDtl.setActFlag(EnuActFlag.ACT_SUCCESS.getCode());
@@ -146,9 +142,7 @@ public class TaRefundAction {
                 }
 
                 // 往泰安房地产中心发送记账信息
-                TaTxnFdc taTxnFdcTemp = new TaTxnFdc();
-                BeanUtils.copyProperties(taTxnFdcTemp, taTxnFdcPara);
-                taTxnFdcTemp.setTxCode(EnuTaTxCode.TRADE_2202.getCode());
+                taTxnFdcTemp.setTxCode(EnuTaFdcTxCode.TRADE_2202.getCode());
                 taRefundService.sendAndRecvRealTimeTxn9902202(taTxnFdcTemp);
             /*记账后查询*/
                 taTxnFdcActSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcTemp.getPkId());
@@ -165,7 +159,7 @@ public class TaRefundAction {
             // 本地存取（对账用）
             TaRsAccDtl taRsAccDtlTemp = new TaRsAccDtl();
             taRsAccDtlTemp.setBizId(taTxnFdcCanclSend.getBizId());
-            taRsAccDtlTemp.setTxCode(EnuTaTxCode.TRADE_2201.getCode());
+            taRsAccDtlTemp.setTxCode(EnuTaFdcTxCode.TRADE_2201.getCode());
             List<TaRsAccDtl> taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtlTemp);
             TaRsAccDtl taRsAccDtl = null;
             if(taRsAccDtlList.size() == 1){
@@ -182,6 +176,7 @@ public class TaRefundAction {
             }
 
             // 往SBS发送记账信息
+            taTxnFdcCanclSend.setTxCode(EnuTaSbsTxCode.TRADE_0002.getCode());
             TOA toaSbs=taRefundService.sendAndRecvRealTimeTxn900012211(taTxnFdcValiSendAndRecv);
             if(toaSbs!=null) {
                 if(taRsAccDtl != null) {
@@ -197,7 +192,7 @@ public class TaRefundAction {
                 // 往泰安房地产中心发送记账信息
                 TaTxnFdc taTxnFdcTemp = new TaTxnFdc();
                 BeanUtils.copyProperties(taTxnFdcTemp, taTxnFdcCanclSend);
-                taTxnFdcCanclSend.setTxCode(EnuTaTxCode.TRADE_2211.getCode());
+                taTxnFdcCanclSend.setTxCode(EnuTaFdcTxCode.TRADE_2211.getCode());
                 taRefundService.sendAndRecvRealTimeTxn9902211(taTxnFdcTemp);
                 /*划拨冲正后查询*/
                 taTxnFdcCanclSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcTemp.getPkId());
@@ -211,7 +206,7 @@ public class TaRefundAction {
     /*画面查询用*/
     public void onBtnQueryClick() {
         taRsAccDtlList = taAccDetlService.selectedRecordsByCondition(taRsAccDtl.getActFlag(),
-                EnuTaTxCode.TRADE_2201.getCode().substring(0,2));
+                EnuTaFdcTxCode.TRADE_2201.getCode().substring(0,2));
     }
 
     /*记账*/

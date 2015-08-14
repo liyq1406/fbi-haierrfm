@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import rfm.ta.common.enums.EnuTaSbsTxCode;
 import rfm.ta.common.enums.EnuTaTxnRtnCode;
 import rfm.ta.repository.model.TaTxnFdc;
 import rfm.ta.repository.model.TaTxnSbs;
@@ -105,6 +106,7 @@ public class TaPaymentService {
         try {
             TaTxnSbs taTxnSbsPara=new TaTxnSbs();
             Tia900010002 tia900010002Temp =(Tia900010002)tiaPara ;
+            taTxnSbsPara.setTxCode(EnuTaSbsTxCode.TRADE_0002.getCode());
             taTxnSbsPara.setAccId(tia900010002Temp.body.ACC_ID);   // 付款账号
             taTxnSbsPara.setRecvAccId(tia900010002Temp.body.RECV_ACC_ID);   // 收款账号
             taTxnSbsPara.setTxAmt(tia900010002Temp.body.TX_AMT);   // 交易金额
@@ -197,6 +199,7 @@ public class TaPaymentService {
         try {
             TaTxnSbs taTxnSbsPara=new TaTxnSbs();
             Tia900010002 tia900010002Temp =(Tia900010002)tiaPara ;
+            taTxnSbsPara.setTxCode(EnuTaSbsTxCode.TRADE_0002.getCode());
             taTxnSbsPara.setAccId(tia900010002Temp.body.ACC_ID);   // 付款账号
             taTxnSbsPara.setRecvAccId(tia900010002Temp.body.RECV_ACC_ID);   // 收款账号
             taTxnSbsPara.setTxAmt(tia900010002Temp.body.TX_AMT);   // 交易金额

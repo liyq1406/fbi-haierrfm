@@ -10,7 +10,7 @@ import java.util.Hashtable;
  * Time: 下午2:12
  * To change this template use File | Settings | File Templates.
  */
-public enum EnuTaTxCode {
+public enum EnuTaFdcTxCode {
     TRADE_1001("1001", "建立监管"),
     TRADE_1002("1002", "解除监管"),
     TRADE_2001("2001", "交存验证"),
@@ -27,9 +27,9 @@ public enum EnuTaTxCode {
 
     private String code = null;
     private String title = null;
-    private static Hashtable<String, EnuTaTxCode> aliasEnums;
+    private static Hashtable<String, EnuTaFdcTxCode> aliasEnums;
 
-    EnuTaTxCode(String code, String title) {
+    EnuTaFdcTxCode(String code, String title) {
         this.init(code, title);
     }
 
@@ -46,7 +46,7 @@ public enum EnuTaTxCode {
         aliasEnums.put(title, this);
     }
 
-    public static EnuTaTxCode valueOfAlias(String alias) {
+    public static EnuTaFdcTxCode valueOfAlias(String alias) {
         return aliasEnums.get(alias);
     }
 

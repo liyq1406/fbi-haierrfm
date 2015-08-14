@@ -1,16 +1,12 @@
 package rfm.ta.view;
 
-import com.longtu.framework.util.BeanUtil;
 import org.apache.commons.beanutils.BeanUtils;
 import org.fbi.dep.model.base.TOA;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import platform.common.utils.MessageUtil;
 import pub.platform.advance.utils.PropertyManager;
-import rfm.ta.common.enums.EnuActFlag;
-import rfm.ta.common.enums.EnuDelFlag;
-import rfm.ta.common.enums.EnuExecType;
-import rfm.ta.common.enums.EnuTaTxCode;
+import rfm.ta.common.enums.*;
 import rfm.ta.repository.model.TaRsAccDtl;
 import rfm.ta.repository.model.TaTxnFdc;
 import rfm.ta.service.account.TaAccDetlService;
@@ -22,7 +18,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.model.SelectItem;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 
@@ -86,7 +81,7 @@ public class TaPayoutAction {
     /*划拨验证用*/
     public void onBtnValiClick() {
         // 发送验证信息
-        taTxnFdcValiSend.setTxCode(EnuTaTxCode.TRADE_2101.getCode());
+        taTxnFdcValiSend.setTxCode(EnuTaFdcTxCode.TRADE_2101.getCode());
         taPayoutService.sendAndRecvRealTimeTxn9902101(taTxnFdcValiSend);
         /*验证后查询*/
         taTxnFdcValiSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcValiSend.getPkId());
@@ -98,7 +93,7 @@ public class TaPayoutAction {
             // 验证重复记账
             TaRsAccDtl taRsAccDtl = new TaRsAccDtl();
             taRsAccDtl.setBizId(taTxnFdcValiSendAndRecv.getBizId());
-            taRsAccDtl.setTxCode(EnuTaTxCode.TRADE_2101.getCode());
+            taRsAccDtl.setTxCode(EnuTaFdcTxCode.TRADE_2101.getCode());
             List<TaRsAccDtl> taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtl);
             if(taRsAccDtlList.size() == 1){
                 String actFlag = taRsAccDtlList.get(0).getActFlag();
@@ -129,7 +124,8 @@ public class TaPayoutAction {
     public void sendAndRecvSBSAndFDC(TaTxnFdc taTxnFdcPara,TaRsAccDtl taRsAccDtl) {
         try {
             // 往SBS发送记账信息
-            TOA toaSbs=taPayoutService.sendAndRecvRealTimeTxn900012102(taTxnFdcPara);
+            TaTxnFdc taTxnFdcTemp=(TaTxnFdc)BeanUtils.cloneBean(taTxnFdcPara);
+            TOA toaSbs=taPayoutService.sendAndRecvRealTimeTxn900012102(taTxnFdcTemp);
             if(toaSbs !=null) {
                 if(("0000").equals(toaSbs.getHeader().RETURN_CODE)){ // SBS记账成功的处理
                     taRsAccDtl.setActFlag(EnuActFlag.ACT_SUCCESS.getCode());
@@ -139,9 +135,8 @@ public class TaPayoutAction {
                 }
 
                 // 往泰安房地产中心发送记账信息
-                TaTxnFdc taTxnFdcTemp = new TaTxnFdc();
                 BeanUtils.copyProperties(taTxnFdcTemp, taTxnFdcPara);
-                taTxnFdcTemp.setTxCode(EnuTaTxCode.TRADE_2102.getCode());
+                taTxnFdcTemp.setTxCode(EnuTaFdcTxCode.TRADE_2102.getCode());
                 taPayoutService.sendAndRecvRealTimeTxn9902102(taTxnFdcTemp);
                 /*记账后查询*/
                 taTxnFdcActSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcTemp.getPkId());
@@ -158,7 +153,7 @@ public class TaPayoutAction {
             // 本地存取（对账用）
             TaRsAccDtl taRsAccDtlTemp = new TaRsAccDtl();
             taRsAccDtlTemp.setBizId(taTxnFdcCanclSend.getBizId());
-            taRsAccDtlTemp.setTxCode(EnuTaTxCode.TRADE_2101.getCode());
+            taRsAccDtlTemp.setTxCode(EnuTaFdcTxCode.TRADE_2101.getCode());
             List<TaRsAccDtl> taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtlTemp);
             TaRsAccDtl taRsAccDtl = null;
             if(taRsAccDtlList.size() == 1){
@@ -188,7 +183,7 @@ public class TaPayoutAction {
                 }
 
                 // 往泰安房地产中心发送记账信息
-                taTxnFdcCanclSend.setTxCode(EnuTaTxCode.TRADE_2111.getCode());
+                taTxnFdcCanclSend.setTxCode(EnuTaFdcTxCode.TRADE_2111.getCode());
                 taPayoutService.sendAndRecvRealTimeTxn9902111(taTxnFdcCanclSend);
                 /*划拨冲正后查询*/
                 taTxnFdcCanclSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcCanclSend.getPkId());
@@ -202,7 +197,7 @@ public class TaPayoutAction {
     /*画面查询用*/
     public void onBtnQueryClick() {
         taRsAccDtlList = taAccDetlService.selectedRecordsByCondition(taRsAccDtl.getActFlag(),
-                EnuTaTxCode.TRADE_2101.getCode().substring(0,2));
+                EnuTaFdcTxCode.TRADE_2101.getCode().substring(0,2));
     }
 
     /*记账*/

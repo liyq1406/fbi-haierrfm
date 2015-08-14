@@ -41,7 +41,7 @@ public class TaDayEndBlncService {
         try {
             Tia900012601 tia900012601Temp=new Tia900012601();
             TaTxnSbs taTxnSbsPara=new TaTxnSbs();
-            taTxnSbsPara.setTxCode(EnuTaTxCode.TRADE_2601.getCode());
+            taTxnSbsPara.setTxCode(EnuTaFdcTxCode.TRADE_2601.getCode());
             taTxnSbsPara.setReqSn(taTxnFdcPara.getReqSn());           // 外围系统流水
             taTxnSbsPara.setTxDate(ToolUtil.getNow("yyyyMMdd"));    // 交易日期
             taTxnSbsPara.setUserId(taTxnFdcPara.getUserId());         // 柜员号

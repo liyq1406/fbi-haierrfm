@@ -1,13 +1,10 @@
 package rfm.ta.view;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import platform.common.utils.MessageUtil;
-import rfm.ta.common.enums.EnuTaTxCode;
+import rfm.ta.common.enums.EnuTaFdcTxCode;
 import rfm.ta.repository.model.TaTxnFdc;
 import rfm.ta.service.account.TaActRsltService;
-import rfm.ta.service.account.TaPayoutService;
 import rfm.ta.service.his.TaTxnFdcService;
 
 import javax.annotation.PostConstruct;
@@ -44,7 +41,7 @@ public class TaActRsltAction {
     /*划拨验证用*/
     public void onBtnQry() {
         // 发送验证信息
-        taTxnFdcValiSend.setTxCode(EnuTaTxCode.TRADE_2501.getCode());
+        taTxnFdcValiSend.setTxCode(EnuTaFdcTxCode.TRADE_2501.getCode());
         taActRsltService.sendAndRecvRealTimeTxn9902501(taTxnFdcValiSend);
         /*验证后查询*/
         taTxnFdcValiSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcValiSend.getPkId());

@@ -4,7 +4,6 @@ import common.utils.ToolUtil;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
-import org.fbi.dep.model.base.TOA;
 import org.fbi.dep.model.txn.Toa900012601;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,9 +20,9 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -33,8 +32,8 @@ import java.util.List;
  */
 @ManagedBean
 @ViewScoped
-public class TaDayEndBlncAction implements Serializable {
-    private static Logger logger = LoggerFactory.getLogger(TaDayEndBlncAction.class);
+public class TaDayEndReconciAction implements Serializable {
+    private static Logger logger = LoggerFactory.getLogger(TaDayEndReconciAction.class);
 
     @ManagedProperty("#{taAccDetlService}")
     private TaAccDetlService taAccDetlService;
