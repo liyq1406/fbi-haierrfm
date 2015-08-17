@@ -70,9 +70,9 @@
                             <h:inputText autocomplete="off" id="bizId"
                                          value="#{taTxnFdcAction.taTxnFdc.bizId}">
                             </h:inputText>
-                            <h:outputLabel value="*【交易日期】:" for="tradeDate"/>
-                            <h:inputText autocomplete="off" id="tradeDate"
-                                         value="#{taTxnFdcAction.taTxnFdc.tradeDate}">
+                            <h:outputLabel value="*【交易日期】:" for="txDate"/>
+                            <h:inputText autocomplete="off" id="txDate"
+                                         value="#{taTxnFdcAction.taTxnFdc.txDate}">
                             </h:inputText>
                         </h:panelGrid>
                         <p:commandButton update="msgs,pdt" style="width: 80px"
@@ -125,7 +125,7 @@
                         <h:outputText value="#{record.reqSn}"/>
                     </p:column>
                     <p:column headerText="验证日期" style="width: 120px;text-align:center">
-                        <h:outputText value="#{record.tradeDate}" style="text-align: right"/>
+                        <h:outputText value="#{record.txDate}" style="text-align: right"/>
                     </p:column>
                     <p:column headerText="验证网点" style="width: 120px;text-align:center">
                         <h:outputText value="#{record.branchId}" style="text-align: right"/>

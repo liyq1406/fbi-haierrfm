@@ -71,11 +71,11 @@
                                 <p:column headerText="监管账号" style="text-align:center">
                                     <h:outputText value="#{record.accId}"/>
                                 </p:column>
-                                <!--<p:column headerText="账户余额">
-                                    <h:outputText value="#{record.}" style="float: right">
+                                <p:column headerText="账户余额">
+                                    <h:outputText value="#{record.txAmt}" style="float: right">
                                         <f:convertNumber type="number" pattern="#,###,###,###,##0.00"/>
                                     </h:outputText>
-                                </p:column>-->
+                                </p:column>
                                 <p:column headerText="日期" style="text-align:center">
                                     <h:outputText value="#{record.txDate}"/>
                                 </p:column>
