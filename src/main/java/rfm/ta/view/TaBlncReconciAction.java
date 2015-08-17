@@ -6,6 +6,8 @@ import org.fbi.dep.model.txn.Toa900012701;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import platform.common.utils.MessageUtil;
+import rfm.ta.common.enums.EnuTaBankId;
+import rfm.ta.common.enums.EnuTaCityId;
 import rfm.ta.repository.model.TaRsAcc;
 import rfm.ta.service.account.TaAccService;
 import rfm.ta.service.account.TaBlncReconciService;
@@ -97,7 +99,16 @@ public class TaBlncReconciAction {
 
             // test end
             if(toaSbs !=null && toaSbs.size() > 0) {
-                createFile(toaSbs);
+                String sysdate = ToolUtil.getStrLastUpdDate();
+                taRsAccList = new ArrayList<TaRsAcc>();
+                TaRsAcc taRsAcc = null;
+                for(Toa900012701 toa900012701:toaSbs){
+                    for(Toa900012701.BodyDetail bodyDetail:toa900012701.body.DETAILS){
+                        taRsAcc = new TaRsAcc();
+                        taRsAcc.setAccId(bodyDetail.ACTNUM);
+                        taRsAcc.setTxDate(sysdate);
+                    }
+                }
             }
         }catch (Exception e){
             logger.error("获取sbs数据，", e);
@@ -105,11 +116,29 @@ public class TaBlncReconciAction {
         }
     }
 
+    /**
+     * 余额对账
+     */
+    public void onReconciliation(){
+        try {
+            if(taRsAccList.size() <=0) {
+                return;
+            }
+
+//            createFile(taRsAccList);
+        } catch (Exception e) {
+            logger.error("余额对账，", e);
+            MessageUtil.addError(e.getMessage());
+        }
+    }
+
     private void createFile(List<Toa900012701> toaSbs) {
         String sysdate = ToolUtil.getStrLastUpdDate();
-        File file;
+        File file = null;
         String filePath = "d:";
-        String fileName = "BFBBCCCCCC"+ ToolUtil.getStrToday() +".dat";
+        String fileName = "BF" + EnuTaBankId.BANK_HAIER.getCode() +
+                EnuTaCityId.CITY_TAIAN.getCode() +
+                ToolUtil.getStrToday() +".dat";
         String newLineCh = "\r\n";
         StringBuffer line = new StringBuffer();
         FileWriter fw = null;
@@ -132,8 +161,10 @@ public class TaBlncReconciAction {
                 bw = new BufferedWriter(fw);
                 bw.write(line.toString());
                 bw.flush();
-                ToolUtil.uploadFile("rfmtest", fileName, file);
-                file.delete();
+                boolean result = ToolUtil.uploadFile("rfmtest", fileName, file);
+                if(!result){
+                    logger.error("ftp发送房产中心失败!");
+                }
             }
         } catch (Exception e) {
             throw new RuntimeException(filePath + fileName + ".dat", e);
@@ -149,6 +180,9 @@ public class TaBlncReconciAction {
                     bw.close();
                 } catch (IOException e) {
                 }
+            }
+            if(file != null && file.exists()){
+                file.delete();
             }
         }
     }
