@@ -89,7 +89,7 @@ public class TaPayoutService {
                 taTxnFdcPara.setReturnCode(toaPara.header.RETURN_CODE);
                 taTxnFdcPara.setAccId(toaPara.body.ACC_ID);
                 taTxnFdcPara.setAccName(toaPara.body.ACC_NAME);
-                taTxnFdcPara.setTxAmt(new BigDecimal(toaPara.body.TX_AMT.trim()));
+                taTxnFdcPara.setTxAmt(toaPara.body.TX_AMT);
                 taTxnFdcPara.setRecvBank(toaPara.body.RECV_BANK);
                 taTxnFdcPara.setRecvAccId(toaPara.body.RECV_ACC_ID);
                 taTxnFdcPara.setRecvAccName(toaPara.body.RECV_ACC_NAME);
@@ -128,7 +128,7 @@ public class TaPayoutService {
             taTxnSbsPara.setRecvAccId(taTxnFdcPara.getRecvAccId().trim()); // 收款账号
             taTxnSbsPara.setTxAmt(taTxnFdcPara.getTxAmt().toString());     // 交易金额
             taTxnSbsPara.setReqSn(taTxnFdcPara.getReqSn().substring(8,26));// 外围系统流水
-            taTxnSbsPara.setTxDate(ToolUtil.getNow("yyyyMMdd"));         // 交易日期
+            taTxnSbsPara.setTxDate(taTxnFdcPara.getTxDate());              // 交易日期
             taTxnSbsPara.setTxTime(ToolUtil.getNow("HH:mm:ss"));         // 交易时间
             taTxnSbsPara.setUserId(taTxnFdcPara.getUserId());              // 柜员号
 

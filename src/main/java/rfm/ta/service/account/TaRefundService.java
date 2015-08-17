@@ -88,7 +88,7 @@ public class TaRefundService {
                 taTxnFdcPara.setReturnCode(toaPara.header.RETURN_CODE);
                 taTxnFdcPara.setAccId(toaPara.body.ACC_ID);
                 taTxnFdcPara.setAccName(toaPara.body.ACC_NAME);
-                taTxnFdcPara.setTxAmt(new BigDecimal(toaPara.body.TX_AMT.trim()));
+                taTxnFdcPara.setTxAmt(toaPara.body.TX_AMT);
                 taTxnFdcPara.setOwnerName(toaPara.body.OWNER_NAME);
                 taTxnFdcPara.setCtficType(toaPara.body.CTFIC_TYPE);
                 taTxnFdcPara.setCtficId(toaPara.body.CTFIC_ID);

@@ -74,7 +74,7 @@ public class TaPaymentService {
                 */
                 taTxnFdcPara.setReturnCode(toaPara.header.RETURN_CODE);
                 taTxnFdcPara.setAccType(toaPara.body.ACC_TYPE);
-                taTxnFdcPara.setTxAmt(new BigDecimal(toaPara.body.TX_AMT.trim()));
+                taTxnFdcPara.setTxAmt(toaPara.body.TX_AMT.trim());
                 taTxnFdcPara.setAccId(toaPara.body.ACC_ID);
                 taTxnFdcPara.setAccName(toaPara.body.ACC_NAME);
                 taTxnFdcPara.setFdcSn(toaPara.header.REQ_SN);
@@ -149,12 +149,12 @@ public class TaPaymentService {
             taTxnFdcPara.setBankId(tia9902002Temp.body.BANK_ID);                // 02   监管银行代码   2
             taTxnFdcPara.setCityId(tia9902002Temp.body.CITY_ID);                // 03   城市代码       6
             taTxnFdcPara.setBizId(tia9902002Temp.header.BIZ_ID);               // 04   交存申请编号   14
-            taTxnFdcPara.setTxAmt(new BigDecimal(tia9902002Temp.body.TX_AMT)); // 08   交存资金       20 交存验证的输出项
+            taTxnFdcPara.setTxAmt(tia9902002Temp.body.TX_AMT);                 // 08   交存资金       20 交存验证的输出项
             taTxnFdcPara.setAccId(tia9902002Temp.body.ACC_ID);                  // 06   监管账号       30 交存验证的输出项
             taTxnFdcPara.setStlType(tia9902002Temp.body.STL_TYPE);             // 09   结算方式       2 01_ 现金 02_ 转账 03_ 支票
             taTxnFdcPara.setCheckId(tia9902002Temp.body.CHECK_ID);             // 10   支票号码       30
             taTxnFdcPara.setReqSn(tia9902002Temp.header.REQ_SN);               // 11   银行记账流水号 30
-            taTxnFdcPara.setTxDate(tia9902002Temp.body.TX_DATE);            // 12   记账日期       10  送系统日期即可
+            taTxnFdcPara.setTxDate(tia9902002Temp.body.TX_DATE);               // 12   记账日期       10  送系统日期即可
             taTxnFdcPara.setBranchId( tia9902002Temp.body.BRANCH_ID);          // 13   记账网点号     30
             taTxnFdcPara.setUserId(tia9902002Temp.header.USER_ID);            // 14   记账人员       30
             taTxnFdcPara.setInitiator(tia9902002Temp.body.INITIATOR);         // 15   发起方         1   1_监管银行

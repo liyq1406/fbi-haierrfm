@@ -1,5 +1,6 @@
 package rfm.ta.view;
 
+import common.utils.ToolUtil;
 import org.apache.commons.beanutils.BeanUtils;
 import org.fbi.dep.model.base.TOA;
 import org.slf4j.Logger;
@@ -113,6 +114,7 @@ public class TaPayoutAction {
             taAccDetlService.insertRecord(taRsAccDtlTemp);
 
             // 往SBS发送记账信息
+            taTxnFdcValiSendAndRecv.setTxDate(ToolUtil.getNow("yyyyMMdd"));
             sendAndRecvSBSAndFDC(taTxnFdcValiSendAndRecv, taRsAccDtlTemp);
         }catch (Exception e){
             logger.error("验证后立即划拨记账用，", e);
