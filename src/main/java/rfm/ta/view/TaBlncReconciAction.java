@@ -67,7 +67,7 @@ public class TaBlncReconciAction {
                     for(Toa900012701.BodyDetail bodyDetail:toa900012701.body.DETAILS){
                         taRsAcc = new TaRsAcc();
                         taRsAcc.setAccId(bodyDetail.ACTNUM);
-                        taRsAcc.setTxAmt(new BigDecimal(bodyDetail.BOKBAL));
+                        taRsAcc.setTxAmt(bodyDetail.BOKBAL);
                         taRsAcc.setTxDate(sysdate);
                         taRsAccList.add(taRsAcc);
                     }
@@ -128,7 +128,7 @@ public class TaBlncReconciAction {
                 for(TaRsAcc taRsAcc : taRsAccList){
                     line.append(StringUtils.rightPad(taRsAcc.getAccId(), 30, ' '));
                     line.append("|");
-                    line.append(StringUtils.rightPad(taRsAcc.getTxAmt().toString(), 20, ' '));
+                    line.append(StringUtils.rightPad(taRsAcc.getTxAmt(), 20, ' '));
                     line.append("|");
                     line.append(taRsAcc.getTxDate());
                     line.append("|");

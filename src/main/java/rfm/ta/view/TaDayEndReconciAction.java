@@ -234,6 +234,39 @@ public class TaDayEndReconciAction implements Serializable {
         ToolUtil.uploadFile(targetPath, filename, file);
     }
 
+    /**
+     * 比较两个List
+     * @param taRsAccDtlList1
+     * @param taRsAccDtlList2
+     */
+    private void Reconci(List<TaRsAccDtl> taRsAccDtlList1, List<TaRsAccDtl> taRsAccDtlList2){
+        // List2重复项
+        List<TaRsAccDtl> taRsAccDtlList2Repeat = new ArrayList<TaRsAccDtl>();
+        // 结果List
+        List<TaRsAccDtl> taRsAccDtlList = new ArrayList<TaRsAccDtl>();
+        boolean isExist = false;
+
+        // 遍历List1
+        for(TaRsAccDtl taRsAccDtl1:taRsAccDtlList1){
+            isExist = false;
+            // 遍历List2
+            for(TaRsAccDtl taRsAccDtl2:taRsAccDtlList2){
+                if(taRsAccDtl1.getAccId().equals(taRsAccDtl2.getAccId())
+                        &&taRsAccDtl1.getRecvAccId().equals(taRsAccDtl2.getRecvAccId())
+                        &&taRsAccDtl1.getBizId().equals(taRsAccDtl2.getBizId())){
+                    isExist = true;
+                    taRsAccDtlList2Repeat.add(taRsAccDtl2);
+                }
+            }
+            if(!isExist){
+                taRsAccDtlList.add(taRsAccDtl1);
+            }
+        }
+
+        taRsAccDtlList2.removeAll(taRsAccDtlList2Repeat);
+        taRsAccDtlList.addAll(taRsAccDtlList2);
+    }
+
     //= = = = = = = = = = = = get set = = = = = = = = = = = =
 
     public TaTxnSbs getTaTxnSbs() {
