@@ -173,7 +173,7 @@ public class TaDayEndReconciAction implements Serializable {
                     bw.flush();
                     fw.close();
                     bw.close();
-                    uploadFile("/home/feb/tmp",fileName,file);
+                    ToolUtil.uploadFile("/home/feb/tmp", fileName, file);
                 }catch (Exception e){
                     throw new RuntimeException(filePath + fileName + " ???д?????", e);
                 }
@@ -199,65 +199,9 @@ public class TaDayEndReconciAction implements Serializable {
         String filename = "a.dat";
         Path path = Paths.get("D:\\项目资料", filename);
         File file = path.toFile();
-        uploadFile(targetPath, filename, file);
+        ToolUtil.uploadFile(targetPath, filename, file);
     }
 
-    /**
-     * ftp发送到房产中心
-     * @param targetPath ftp服务器目标路径
-     * @param filename
-     * @param file
-     * @return
-     */
-    public static boolean uploadFile(String targetPath, String filename,File file) {
-        String fcurl = PropertyManager.getProperty("tarfmfdc_fcurl");
-        String fcusername = PropertyManager.getProperty("tarfmfdc_fcusername");
-        String fcpasswd = PropertyManager.getProperty("tarfmfdc_fcpasswd");
-        String encoding = PropertyManager.getProperty("tarfmfdc_fileEncoding");
-        FTPClient ftpClient = new FTPClient();
-        boolean result = false;
-        try {
-            int reply;
-            ftpClient.connect(fcurl);
-            ftpClient.login(fcusername, fcpasswd);
-            ftpClient.setControlEncoding(encoding);
-            // 检验是否连接成功
-            reply = ftpClient.getReplyCode();
-            if (!FTPReply.isPositiveCompletion(reply)) {
-                logger.error("连接失败！");
-                ftpClient.disconnect();
-                return result;
-            }
-            // 转移工作目录至指定目录下
-            boolean change = ftpClient.changeWorkingDirectory(targetPath);
-            ftpClient.enterLocalPassiveMode(); //被动模式  默认为主动模式
-            ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
-            ftpClient.setBufferSize(3072);
-            ftpClient.setControlEncoding("UTF-8");
-            FileInputStream input = null;
-            if (change) {
-                input= new FileInputStream(file);
-                result = ftpClient.storeFile(new String(filename.getBytes(encoding),"iso-8859-1"), input);
-                if (result) {
-                    logger.info("ftp发送房产中心成功!"+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-                }else {
-                    logger.error("ftp发送房产中心成功!"+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-                }
-            }
-            input.close();
-            ftpClient.logout();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (ftpClient.isConnected()) {
-                try {
-                    ftpClient.disconnect();
-                } catch (IOException ioe) {
-                }
-            }
-        }
-        return result;
-    }
     //= = = = = = = = = = = = get set = = = = = = = = = = = =
 
     public TaTxnSbs getTaTxnSbs() {

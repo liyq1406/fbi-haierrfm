@@ -1,5 +1,7 @@
 package rfm.ta.view;
 
+import common.utils.ToolUtil;
+import org.apache.commons.lang.StringUtils;
 import org.fbi.dep.model.txn.Toa900012701;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +14,11 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,18 +54,102 @@ public class TaBlncReconciAction {
             }
 
             // 发送监管账号到SBS查询余额
-            List<Toa900012701> toaSbs=taBlncReconciService.sendAndRecvRealTimeTxn900012701(taRsAccList);
-            if(toaSbs !=null) {
-//                if(("0000").equals(toaSbs.getHeader().RETURN_CODE)){ // SBS记账成功的处理
-//                    taRsAccDtl.setActFlag(EnuActFlag.ACT_SUCCESS.getCode());
-//                    taAccDetlService.updateRecord(taRsAccDtl);
-//                } else { // SBS记账失败的处理
-//                    taAccDetlService.deleteRecord(taRsAccDtl.getPkId());
-//                }
+            //List<Toa900012701> toaSbs=taBlncReconciService.sendAndRecvRealTimeTxn900012701(taRsAccList);
+            // test start
+            List<Toa900012701> toaSbs = new ArrayList<Toa900012701>();
+            Toa900012701 toa = null;
+            List<Toa900012701.BodyDetail> details = null;
+            Toa900012701.BodyDetail detail = null;
+
+            toa = new Toa900012701();
+            details = new ArrayList<Toa900012701.BodyDetail>();
+            detail = new Toa900012701.BodyDetail();
+            detail.setACTNUM("test1");
+            detail.setBOKBAL("10");
+            details.add(detail);
+            detail = new Toa900012701.BodyDetail();
+            detail.setACTNUM("test2");
+            detail.setBOKBAL("20");
+            details.add(detail);
+            detail = new Toa900012701.BodyDetail();
+            detail.setACTNUM("test3");
+            detail.setBOKBAL("30");
+            details.add(detail);
+            toa.body.DETAILS = details;
+            toaSbs.add(toa);
+
+            toa = new Toa900012701();
+            details = new ArrayList<Toa900012701.BodyDetail>();
+            detail = new Toa900012701.BodyDetail();
+            detail.setACTNUM("test4");
+            detail.setBOKBAL("40");
+            details.add(detail);
+            detail = new Toa900012701.BodyDetail();
+            detail.setACTNUM("test5");
+            detail.setBOKBAL("50");
+            details.add(detail);
+            detail = new Toa900012701.BodyDetail();
+            detail.setACTNUM("test6");
+            detail.setBOKBAL("60");
+            details.add(detail);
+            toa.body.DETAILS = details;
+            toaSbs.add(toa);
+
+            // test end
+            if(toaSbs !=null && toaSbs.size() > 0) {
+                createFile(toaSbs);
             }
         }catch (Exception e){
             logger.error("获取sbs数据，", e);
             MessageUtil.addError(e.getMessage());
+        }
+    }
+
+    private void createFile(List<Toa900012701> toaSbs) {
+        String sysdate = ToolUtil.getStrLastUpdDate();
+        File file;
+        String filePath = "d:";
+        String fileName = "BFBBCCCCCC"+ ToolUtil.getStrToday() +".dat";
+        String newLineCh = "\r\n";
+        StringBuffer line = new StringBuffer();
+        FileWriter fw = null;
+        BufferedWriter bw = null;
+        try {
+            file = ToolUtil.createFile(filePath, fileName);
+            if(file != null){
+                for(Toa900012701 toa900012701:toaSbs){
+                    for(Toa900012701.BodyDetail bodyDetail:toa900012701.body.DETAILS){
+                        line.append(StringUtils.rightPad(bodyDetail.ACTNUM, 30, ' '));
+                        line.append("|");
+                        line.append(StringUtils.rightPad(bodyDetail.BOKBAL, 20, ' '));
+                        line.append("|");
+                        line.append(sysdate);
+                        line.append("|");
+                        line.append(newLineCh);
+                    }
+                }
+                fw = new FileWriter(file);
+                bw = new BufferedWriter(fw);
+                bw.write(line.toString());
+                bw.flush();
+                ToolUtil.uploadFile("rfmtest", fileName, file);
+                file.delete();
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(filePath + fileName + ".dat", e);
+        } finally {
+            if(fw != null){
+                try {
+                    fw.close();
+                } catch (IOException e) {
+                }
+            }
+            if(bw != null) {
+                try {
+                    bw.close();
+                } catch (IOException e) {
+                }
+            }
         }
     }
 
