@@ -31,9 +31,7 @@ public class Tia900012602 extends TIA implements Serializable {
     }
 
     public static class Body extends TIABody {
-        /*
-          01    外围系统流水号
-          04	交易时间*/
         public String TX_DATE; // 交易日期
+        public String BEGNUM;  // 起始笔数
     }
 }

@@ -60,63 +60,62 @@
                                 <h:outputText value=""/>
                             </f:facet>
                         </p:ajaxStatus>
-                        <p:panelGrid id="pdts" columns="2">
-                            <p:dataTable id="pdt"  var="record"
-                                         value="#{taDayEndReconciAction.taRsAccDtlList}"
-                                         scrollWidth="550px"
-                                         paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                                         paginator="true" rows="15" paginatorPosition="bottom"
-                                         rowsPerPageTemplate="100,50,30,15,5"
-                                         scrollable="true"
-                                         resizableColumns="true"
-                                         emptyMessage="数据记录为空...">
-                                <f:facet name="header">
-                                    本日本地记账流水(总笔数：#{taDayEndReconciAction.strLocalTotalCounts}；总金额：#{taDayEndReconciAction.strLocalTotalAmt}）
-                                </f:facet>
-
-                                <p:column headerText="监管账号" style="width:200px;text-align:center">
-                                    <h:outputText value="#{record.accId}"/>
-                                </p:column>
-                                <p:column headerText="对方账号" style="width:200px;text-align:center">
-                                    <h:outputText value="#{record.recvAccId}"/>
-                                </p:column>
-                                <p:column headerText="对方账户名称" style="width:400px;text-align:center">
-                                    <h:outputText value="#{record.recvAccName}"/>
-                                </p:column>
-                                <p:column headerText="交易金额">
-                                    <h:outputText value="#{record.txAmt}" style="width:120px;text-align: right">
-                                        <f:convertNumber type="number" pattern="#,###,###,###,##0.00"/>
-                                    </h:outputText>
-                                </p:column>
-                            </p:dataTable>
-                            <p:dataTable id="sbspdt"  var="record"
-                                         value="#{taDayEndReconciAction.taRsAccDtlSbsList}"
-                                         scrollWidth="550px"
-                                         paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                                         paginator="true" rows="15" paginatorPosition="bottom"
-                                         rowsPerPageTemplate="100,50,30,15,5"
-                                         scrollable="true"
-                                         resizableColumns="true"
-                                         emptyMessage="数据记录为空...">
-                                <f:facet name="header">
-                                    本日SBS记账流水(总笔数：#{taDayEndReconciAction.strSbsTotalCounts}；总金额：#{taDayEndReconciAction.strSbsTotalAmt}）
-                                </f:facet>
-                                <p:column headerText="监管账号" style="text-align:center">
-                                    <h:outputText value="#{record.accId}"/>
-                                </p:column>
-                                <p:column headerText="对方账号" style="text-align:center">
-                                    <h:outputText value="#{record.recvAccId}"/>
-                                </p:column>
-                                <p:column headerText="对方账户名称" style="text-align:center">
-                                    <h:outputText value="#{record.recvAccName}"/>
-                                </p:column>
-                                <p:column headerText="交易金额">
-                                    <h:outputText value="#{record.txAmt}" style="float: right">
-                                        <f:convertNumber type="number" pattern="#,###,###,###,##0.00"/>
-                                    </h:outputText>
-                                </p:column>
-                            </p:dataTable>
-                        </p:panelGrid>
+                        <p:dataTable id="pdt"  var="record"
+                                     value="#{taDayEndReconciAction.taRsAccDtlList}"
+                                     paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     paginator="true" rows="15" paginatorPosition="bottom"
+                                     rowsPerPageTemplate="100,50,30,15,5"
+                                     resizableColumns="true"
+                                     emptyMessage="数据记录为空...">
+                            <f:facet name="header">
+                                本日本地记账流水(总笔数：#{taDayEndReconciAction.strLocalTotalCounts}；总金额：#{taDayEndReconciAction.strLocalTotalAmt}）
+                            </f:facet>
+                            <p:column headerText="交易号码" style="width:200px;text-align:center">
+                                <h:outputText value="#{record.txCode}"/>
+                            </p:column>
+                            <p:column headerText="业务编号" style="width:200px;text-align:center">
+                                <h:outputText value="#{record.bizId}"/>
+                            </p:column>
+                            <p:column headerText="监管账号" style="width:200px;text-align:center">
+                                <h:outputText value="#{record.accId}"/>
+                            </p:column>
+                            <p:column headerText="对方账号" style="width:200px;text-align:center">
+                                <h:outputText value="#{record.recvAccId}"/>
+                            </p:column>
+                            <p:column headerText="对方账户名称" style="width:400px;text-align:center">
+                                <h:outputText value="#{record.recvAccName}"/>
+                            </p:column>
+                            <p:column headerText="交易金额">
+                                <h:outputText value="#{record.txAmt}" style="float: right">
+                                    <f:convertNumber type="number" pattern="#,###,###,###,##0.00"/>
+                                </h:outputText>
+                            </p:column>
+                        </p:dataTable>
+                        <p:dataTable id="sbspdt"  var="record"
+                                     value="#{taDayEndReconciAction.taRsAccDtlSbsList}"
+                                     paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     paginator="true" rows="15" paginatorPosition="bottom"
+                                     rowsPerPageTemplate="100,50,30,15,5"
+                                     resizableColumns="true"
+                                     emptyMessage="数据记录为空...">
+                            <f:facet name="header">
+                                本日SBS记账流水(总笔数：#{taDayEndReconciAction.strSbsTotalCounts}；总金额：#{taDayEndReconciAction.strSbsTotalAmt}）
+                            </f:facet>
+                            <p:column headerText="监管账号" style="text-align:center">
+                                <h:outputText value="#{record.accId}"/>
+                            </p:column>
+                            <p:column headerText="对方账号" style="text-align:center">
+                                <h:outputText value="#{record.recvAccId}"/>
+                            </p:column>
+                            <p:column headerText="对方账户名称" style="text-align:center">
+                                <h:outputText value="#{record.recvAccName}"/>
+                            </p:column>
+                            <p:column headerText="交易金额">
+                                <h:outputText value="#{record.txAmt}" style="float: right">
+                                    <f:convertNumber type="number" pattern="#,###,###,###,##0.00"/>
+                                </h:outputText>
+                            </p:column>
+                        </p:dataTable>
                     </p:tab>
                 </p:tabView>
             </h:form>

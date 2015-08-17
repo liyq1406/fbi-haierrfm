@@ -5,6 +5,7 @@ import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
 import org.fbi.dep.model.txn.Toa900012601;
+import org.fbi.dep.model.txn.Toa900012602;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import platform.common.utils.MessageUtil;
@@ -23,6 +24,7 @@ import java.io.*;
 import java.text.SimpleDateFormat;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -58,6 +60,7 @@ public class TaDayEndReconciAction implements Serializable {
         strLocalTotalAmt="0";
         strSbsTotalCounts="0";
         strSbsTotalAmt="0";
+        taRsAccDtlSbsList=new ArrayList<>();
         TaRsAccDtl taRsAccDtlPara=new TaRsAccDtl();
         taRsAccDtlPara.setTradeDate(ToolUtil.getNow("yyyy-MM-dd"));
         taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtlPara);
@@ -74,7 +77,42 @@ public class TaDayEndReconciAction implements Serializable {
         taTxnFdcPara.setReqSn(ToolUtil.getStrReqSn_Back());
         Toa900012601 toa900012601Temp= (Toa900012601)taDayEndBlncService.sendAndRecvRealTimeTxn900012601(taTxnFdcPara);
         strSbsTotalCounts=toa900012601Temp.body.DRCNT;
+        int intSendTimes=Integer.parseInt(strSbsTotalCounts);
+
         strSbsTotalAmt=toa900012601Temp.body.DRAMT;
+
+        String totcnt = "";
+        String curcnt = "";
+        int m = 0;//取整
+        int n = 0;//取余
+
+        Toa900012602 toa900012602Temp= (Toa900012602)taDayEndBlncService.sendAndRecvRealTimeTxn900012602(taTxnFdcPara, "0");
+        List<Toa900012602.BodyDetail> detailsTemp =new ArrayList<>();
+        if (toa900012602Temp != null && toa900012602Temp.body!=null) {
+            if("0000".equals(toa900012602Temp.header.RETURN_CODE)) {
+                detailsTemp = toa900012602Temp.body.DETAILS;
+                totcnt = toa900012602Temp.body.TOTCNT;
+                curcnt = toa900012602Temp.body.CURCNT;
+            }
+        }
+
+        if (!totcnt.isEmpty()&&totcnt!=""){
+            //因为 totcnt是全局变量，所有在第一次查询之后，发起第二次交易时totcnt就不为空，所有要在第一次发起交易时清空
+            m = Integer.parseInt(totcnt) / Integer.parseInt(curcnt);
+            n = Integer.parseInt(totcnt) % Integer.parseInt(curcnt);
+            if (m>0&&n>0){
+                String tmp = "";
+                for (int j = 1; j <= m; j++) {
+                    tmp = j * Integer.parseInt(curcnt) + 1 + "";
+                    toa900012602Temp= (Toa900012602)taDayEndBlncService.sendAndRecvRealTimeTxn900012602(taTxnFdcPara,tmp);
+                    if("0000".equals(toa900012602Temp.header.RETURN_CODE)) {
+                        detailsTemp = toa900012602Temp.body.DETAILS;
+                        totcnt = toa900012602Temp.body.TOTCNT;
+                        curcnt = toa900012602Temp.body.CURCNT;
+                    }
+                }
+            }
+        }
         //taRsAccDtlSbsList = taAccDetlService.selectedRecords(new TaRsAccDtl());
         if(taRsAccDtlSbsList.size()>0) {
             System.out.println("======>" + taRsAccDtlList.get(0).getAccId());

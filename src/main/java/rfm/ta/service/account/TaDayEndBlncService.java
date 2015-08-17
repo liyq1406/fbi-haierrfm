@@ -61,4 +61,35 @@ public class TaDayEndBlncService {
             throw new RuntimeException("从SBS日间总数对账查询失败", e);
         }
     }
+    /**
+     * 发送泰安房产监管系统交存记账交易
+     *
+     * @param taTxnFdcPara
+     */
+    @Transactional
+    public TOA sendAndRecvRealTimeTxn900012602(TaTxnFdc taTxnFdcPara,String strBeginNumPara) {
+        try {
+            Tia900012602 tia900012602Temp=new Tia900012602();
+            TaTxnSbs taTxnSbsPara=new TaTxnSbs();
+            taTxnSbsPara.setTxCode(EnuTaFdcTxCode.TRADE_2602.getCode());
+            taTxnSbsPara.setReqSn(taTxnFdcPara.getReqSn());           // 外围系统流水
+            taTxnSbsPara.setTxDate(ToolUtil.getNow("yyyyMMdd"));    // 交易日期
+            taTxnSbsPara.setUserId(taTxnFdcPara.getUserId());         // 柜员号
+
+            tia900012602Temp.header.CHANNEL_ID=ToolUtil.DEP_CHANNEL_ID_SBS;
+            tia900012602Temp.body.TX_DATE=taTxnSbsPara.getTxDate();
+            tia900012602Temp.body.BEGNUM=strBeginNumPara;
+            tia900012602Temp.header.REQ_SN=taTxnSbsPara.getReqSn();
+            tia900012602Temp.header.USER_ID=taTxnSbsPara.getUserId();
+            tia900012602Temp.header.TX_CODE=taTxnSbsPara.getTxCode();
+
+            //通过MQ发送信息到DEP
+            String strMsgid= depMsgSendAndRecv.sendDepMessage(tia900012602Temp);
+            TOA toaPara = depMsgSendAndRecv.recvDepMessage(strMsgid);
+            return toaPara;
+        } catch (Exception e) {
+            logger.error("从SBS日间总数对账查询失败", e);
+            throw new RuntimeException("从SBS日间总数对账查询失败", e);
+        }
+    }
 }
