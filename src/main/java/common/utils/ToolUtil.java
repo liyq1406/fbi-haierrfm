@@ -7,6 +7,8 @@ import pub.platform.security.OperatorManager;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -519,6 +521,19 @@ public class ToolUtil {
 
     public static void main(String[] argv) {
         System.out.println(getDateString("2004-10-20"));
+    }
+
+    public static File createFile(String filePath, String fileName) throws IOException {
+        File dir = new File(filePath);
+        if (!dir.isDirectory() || !dir.exists()) {
+            dir.mkdirs();
+        }
+        File tempFile = new File(filePath, fileName);
+        if (tempFile.exists()) {
+            tempFile.delete();
+            tempFile.createNewFile();
+        }
+        return tempFile;
     }
 }
 

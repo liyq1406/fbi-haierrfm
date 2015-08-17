@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import platform.common.utils.MessageUtil;
 import pub.platform.advance.utils.PropertyManager;
+import rfm.ta.common.enums.EnuTaBankId;
+import rfm.ta.common.enums.EnuTaCityId;
 import rfm.ta.repository.model.TaRsAccDtl;
 import rfm.ta.repository.model.TaTxnFdc;
 import rfm.ta.repository.model.TaTxnSbs;
@@ -47,7 +49,6 @@ public class TaDayEndReconciAction implements Serializable {
     // 账务交易明细
     private List<TaRsAccDtl> taRsAccDtlList;
     private List<TaRsAccDtl> taRsAccDtlSbsList;
-    private String erydat = new SimpleDateFormat("yyyyMMdd").format(new Date());
 
     private String strLocalTotalCounts;
     private String strLocalTotalAmt;
@@ -75,6 +76,7 @@ public class TaDayEndReconciAction implements Serializable {
         TaTxnFdc taTxnFdcPara = new TaTxnFdc();
         taTxnFdcPara.setTradeDate(ToolUtil.getNow("yyyyMMdd"));
         taTxnFdcPara.setReqSn(ToolUtil.getStrReqSn_Back());
+        // 日终对账总数查询
         Toa900012601 toa900012601Temp= (Toa900012601)taDayEndBlncService.sendAndRecvRealTimeTxn900012601(taTxnFdcPara);
         strSbsTotalCounts=toa900012601Temp.body.DRCNT;
         int intSendTimes=Integer.parseInt(strSbsTotalCounts);
@@ -85,7 +87,7 @@ public class TaDayEndReconciAction implements Serializable {
         String curcnt = "";
         int m = 0;//取整
         int n = 0;//取余
-
+        // 日终对账余额查询
         Toa900012602 toa900012602Temp= (Toa900012602)taDayEndBlncService.sendAndRecvRealTimeTxn900012602(taTxnFdcPara, "0");
         List<Toa900012602.BodyDetail> detailsTemp =new ArrayList<>();
         if (toa900012602Temp != null && toa900012602Temp.body!=null) {
@@ -119,28 +121,18 @@ public class TaDayEndReconciAction implements Serializable {
         }
     }
 
-    private File createFile(String filePath, String fileName) throws IOException {
-        File dir = new File(filePath);
-        if (!dir.isDirectory() || !dir.exists()) {
-            dir.mkdirs();
-        }
-        File tempFile = new File(filePath, fileName);
-        if (tempFile.exists()) {
-            tempFile.delete();
-            tempFile.createNewFile();
-        }
-        return tempFile;
-    }
-
     public void onCreatFile() {
         File file;
         String filePath = "d:";
-        String fileName = "PF12370900"+erydat+".dat";//PF?????????BB???????д???2λ????CCCCCC ????д???6λ??YYYYMMDD??????????
-        String newLineCh = "\r\n";       // ???? ??????windows??
+        // PFBBCCCCCCYYYYMMDD.dat，PF为固定字符，BB指监管银行代码（2位），CCCCCC 指城市代码（6位）YYYYMMDD为对账日期。
+        String fileName = "PF"+ EnuTaBankId.BANK_HAIER.getCode()+
+                                 EnuTaCityId.CITY_TAIAN.getCode()+
+                                 ToolUtil.getNow("yyyyMMdd")+".dat";
+        String newLineCh = "\r\n";
         StringBuffer line = new StringBuffer("");
         StringBuffer body = new StringBuffer("");
         try {
-            file = createFile(filePath, fileName);
+            file = ToolUtil.createFile(filePath, fileName);
 
         } catch (IOException e) {
             throw new RuntimeException(filePath + fileName + " ???????????", e);
