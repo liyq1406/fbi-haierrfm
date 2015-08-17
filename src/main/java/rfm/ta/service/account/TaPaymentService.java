@@ -54,7 +54,7 @@ public class TaPaymentService {
             taTxnFdcPara.setCityId(tia9902001Temp.body.CITY_ID);       // 03   城市代码       6
             taTxnFdcPara.setBizId(tia9902001Temp.header.BIZ_ID);       // 04   交存申请编号   14
             taTxnFdcPara.setReqSn(tia9902001Temp.header.REQ_SN);       // 05   验证流水       30
-            taTxnFdcPara.setTradeDate(tia9902001Temp.body.TX_DATE);    // 06   验证日期       10  送系统日期即可
+            taTxnFdcPara.setTxDate(tia9902001Temp.body.TX_DATE);    // 06   验证日期       10  送系统日期即可
             taTxnFdcPara.setBranchId(tia9902001Temp.body.BRANCH_ID);   // 07   验证网点     30
             taTxnFdcPara.setUserId(tia9902001Temp.header.USER_ID);     // 08   验证人员     30
             taTxnFdcPara.setInitiator(tia9902001Temp.body.INITIATOR);  // 09   发起方         1   1_监管银行
@@ -154,7 +154,7 @@ public class TaPaymentService {
             taTxnFdcPara.setStlType(tia9902002Temp.body.STL_TYPE);             // 09   结算方式       2 01_ 现金 02_ 转账 03_ 支票
             taTxnFdcPara.setCheckId(tia9902002Temp.body.CHECK_ID);             // 10   支票号码       30
             taTxnFdcPara.setReqSn(tia9902002Temp.header.REQ_SN);               // 11   银行记账流水号 30
-            taTxnFdcPara.setTradeDate(tia9902002Temp.body.TX_DATE);            // 12   记账日期       10  送系统日期即可
+            taTxnFdcPara.setTxDate(tia9902002Temp.body.TX_DATE);            // 12   记账日期       10  送系统日期即可
             taTxnFdcPara.setBranchId( tia9902002Temp.body.BRANCH_ID);          // 13   记账网点号     30
             taTxnFdcPara.setUserId(tia9902002Temp.header.USER_ID);            // 14   记账人员       30
             taTxnFdcPara.setInitiator(tia9902002Temp.body.INITIATOR);         // 15   发起方         1   1_监管银行
@@ -244,7 +244,7 @@ public class TaPaymentService {
             taTxnFdcPara.setCityId(tia9902011Temp.body.CITY_ID);          // 03   城市代码       6
             taTxnFdcPara.setBizId(tia9902011Temp.header.BIZ_ID);           // 04   交存申请编号   14
             taTxnFdcPara.setReqSn(tia9902011Temp.header.REQ_SN);           // 05   银行冲正流水   30
-            taTxnFdcPara.setTradeDate(tia9902011Temp.body.TX_DATE);        // 06   冲正日期       10  送系统日期即可
+            taTxnFdcPara.setTxDate(tia9902011Temp.body.TX_DATE);        // 06   冲正日期       10  送系统日期即可
             taTxnFdcPara.setBranchId(tia9902011Temp.body.BRANCH_ID);       // 07   冲正网点       30
             taTxnFdcPara.setUserId(tia9902011Temp.header.USER_ID);         // 08   冲正人员       30
             taTxnFdcPara.setInitiator(tia9902011Temp.body.INITIATOR);      // 09   发起方         1   1_监管银行

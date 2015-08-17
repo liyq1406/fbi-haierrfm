@@ -58,8 +58,8 @@ public class TaTxnFdcService {
         if (ToolUtil.getStrIgnoreNull(taTxnFdcPara.getBizId()).trim().length()!=0) {
             rsActCrit.andBizIdLike("%"+taTxnFdcPara.getBizId().trim()+"%");
         }
-        if (ToolUtil.getStrIgnoreNull(taTxnFdcPara.getTradeDate()).trim().length()!=0) {
-            rsActCrit.andTradeDateEqualTo(taTxnFdcPara.getTradeDate().trim());
+        if (ToolUtil.getStrIgnoreNull(taTxnFdcPara.getTxDate()).trim().length()!=0) {
+            rsActCrit.andTxDateEqualTo(taTxnFdcPara.getTxDate().trim());
         }
         return taTxnFdcMapper.selectByExample(example);
     }

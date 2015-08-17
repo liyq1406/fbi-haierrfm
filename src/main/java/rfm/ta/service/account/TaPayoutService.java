@@ -50,7 +50,7 @@ public class TaPayoutService {
             taTxnFdcPara.setCityId(EnuTaCityId.CITY_TAIAN.getCode());
             taTxnFdcPara.setPassword(MD5Helper.getMD5String(ToolUtil.TAFDC_MD5_KEY));
             taTxnFdcPara.setReqSn(ToolUtil.getStrAppReqSn_Back());
-            taTxnFdcPara.setTradeDate(ToolUtil.getStrLastUpdDate());
+            taTxnFdcPara.setTxDate(ToolUtil.getStrLastUpdDate());
             taTxnFdcPara.setBranchId(ToolUtil.getOperatorManager().getOperator().getDeptid());
             taTxnFdcPara.setUserId(ToolUtil.getOperatorManager().getOperatorId());
             taTxnFdcPara.setInitiator(EnuTaInitiatorId.INITIATOR.getCode());
@@ -63,7 +63,7 @@ public class TaPayoutService {
             tia9902101Temp.header.BIZ_ID=taTxnFdcPara.getBizId();       // 04   划拨业务编号   14
             tia9902101Temp.header.PASSWORD=taTxnFdcPara.getPassword();  // 05   划拨密码       32 MD5
             tia9902101Temp.header.REQ_SN=taTxnFdcPara.getReqSn();       // 06   验证流水       30
-            tia9902101Temp.body.TX_DATE=taTxnFdcPara.getTradeDate();    // 07   验证日期       10  送系统日期即可
+            tia9902101Temp.body.TX_DATE=taTxnFdcPara.getTxDate();    // 07   验证日期       10  送系统日期即可
             tia9902101Temp.body.BRANCH_ID=taTxnFdcPara.getBranchId();   // 08   验证网点号     30
             tia9902101Temp.header.USER_ID=taTxnFdcPara.getUserId();     // 09   验证柜员号     30
             tia9902101Temp.body.INITIATOR=taTxnFdcPara.getInitiator();  // 10   发起方         1   1_监管银行
@@ -168,7 +168,7 @@ public class TaPayoutService {
             taTxnFdcPara.setCityId(EnuTaCityId.CITY_TAIAN.getCode());
             taTxnFdcPara.setPassword(MD5Helper.getMD5String(ToolUtil.TAFDC_MD5_KEY));
             taTxnFdcPara.setReqSn(ToolUtil.getStrAppReqSn_Back());
-            taTxnFdcPara.setTradeDate(ToolUtil.getStrLastUpdDate());
+            taTxnFdcPara.setTxDate(ToolUtil.getStrLastUpdDate());
             taTxnFdcPara.setBranchId(ToolUtil.getOperatorManager().getOperator().getDeptid());
             taTxnFdcPara.setUserId(ToolUtil.getOperatorManager().getOperatorId());
             taTxnFdcPara.setInitiator(EnuTaInitiatorId.INITIATOR.getCode());
@@ -186,7 +186,7 @@ public class TaPayoutService {
             tia9902102Temp.body.STL_TYPE=taTxnFdcPara.getStlType();          // 09   结算方式       2 01_ 现金 02_ 转账 03_ 支票
             tia9902102Temp.body.CHECK_ID=taTxnFdcPara.getCheckId();          // 10   支票号码       30
             tia9902102Temp.header.REQ_SN=taTxnFdcPara.getReqSn();            // 11   银行记账流水号 30
-            tia9902102Temp.body.TX_DATE=taTxnFdcPara.getTradeDate();         // 12   记账日期       10  送系统日期即可
+            tia9902102Temp.body.TX_DATE=taTxnFdcPara.getTxDate();         // 12   记账日期       10  送系统日期即可
             tia9902102Temp.body.BRANCH_ID=taTxnFdcPara.getBranchId();        // 13   记账网点号     30
             tia9902102Temp.header.USER_ID=taTxnFdcPara.getUserId();          // 14   柜员号         30
             tia9902102Temp.body.INITIATOR=taTxnFdcPara.getInitiator();       // 15   发起方         1   1_监管银行
@@ -280,7 +280,7 @@ public class TaPayoutService {
             taTxnFdcPara.setBankId(EnuTaBankId.BANK_HAIER.getCode());
             taTxnFdcPara.setCityId(EnuTaCityId.CITY_TAIAN.getCode());
             taTxnFdcPara.setReqSn(ToolUtil.getStrAppReqSn_Back());
-            taTxnFdcPara.setTradeDate(ToolUtil.getStrLastUpdDate());
+            taTxnFdcPara.setTxDate(ToolUtil.getStrLastUpdDate());
             taTxnFdcPara.setBranchId(ToolUtil.getOperatorManager().getOperator().getDeptid());
             taTxnFdcPara.setUserId(ToolUtil.getOperatorManager().getOperatorId());
             taTxnFdcPara.setInitiator(EnuTaInitiatorId.INITIATOR.getCode());
@@ -292,7 +292,7 @@ public class TaPayoutService {
             tia9902111Temp.body.CITY_ID= taTxnFdcPara.getCityId();          // 03   城市代码       6
             tia9902111Temp.header.BIZ_ID=taTxnFdcPara.getBizId();           // 04   划拨业务编号   14
             tia9902111Temp.header.REQ_SN=taTxnFdcPara.getReqSn();           // 05   银行记账流水号 30
-            tia9902111Temp.body.TX_DATE=taTxnFdcPara.getTradeDate();        // 06   记账日期       10  送系统日期即可
+            tia9902111Temp.body.TX_DATE=taTxnFdcPara.getTxDate();        // 06   记账日期       10  送系统日期即可
             tia9902111Temp.body.BRANCH_ID=taTxnFdcPara.getBranchId();       // 07   记账网点号     30
             tia9902111Temp.header.USER_ID=taTxnFdcPara.getUserId();         // 08   柜员号         30
             tia9902111Temp.body.INITIATOR=taTxnFdcPara.getInitiator();      // 09   发起方         1   1_监管银行

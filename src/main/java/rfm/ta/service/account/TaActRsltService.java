@@ -44,7 +44,7 @@ public class TaActRsltService {
             taTxnFdcPara.setCityId(EnuTaCityId.CITY_TAIAN.getCode());
             taTxnFdcPara.setPassword(MD5Helper.getMD5String(ToolUtil.TAFDC_MD5_KEY));
             taTxnFdcPara.setReqSn(ToolUtil.getStrAppReqSn_Back());
-            taTxnFdcPara.setTradeDate(ToolUtil.getStrLastUpdDate());
+            taTxnFdcPara.setTxDate(ToolUtil.getStrLastUpdDate());
             taTxnFdcPara.setBranchId(ToolUtil.getOperatorManager().getOperator().getDeptid());
             taTxnFdcPara.setUserId(ToolUtil.getOperatorManager().getOperatorId());
             taTxnFdcPara.setInitiator(EnuTaInitiatorId.INITIATOR.getCode());

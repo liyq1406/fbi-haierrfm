@@ -52,8 +52,8 @@ public class TaAccDetlService {
         if (taRsAccDtlPara.getAccId() != null && !StringUtils.isEmpty(taRsAccDtlPara.getAccId().trim())) {
             criteria.andAccIdEqualTo(taRsAccDtlPara.getAccId());
         }
-        if (taRsAccDtlPara.getTradeDate()!= null && !StringUtils.isEmpty(taRsAccDtlPara.getTradeDate().trim())) {
-            criteria.andTradeDateEqualTo(taRsAccDtlPara.getTradeDate());
+        if (taRsAccDtlPara.getTxDate()!= null && !StringUtils.isEmpty(taRsAccDtlPara.getTxDate().trim())) {
+            criteria.andTxDateEqualTo(taRsAccDtlPara.getTxDate());
         }
         criteria.andDeletedFlagEqualTo("0");
         example.setOrderByClause("acc_name");

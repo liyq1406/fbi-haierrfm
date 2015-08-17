@@ -63,7 +63,7 @@ public class TaDayEndReconciAction implements Serializable {
         strSbsTotalAmt="0";
         taRsAccDtlSbsList=new ArrayList<>();
         TaRsAccDtl taRsAccDtlPara=new TaRsAccDtl();
-        taRsAccDtlPara.setTradeDate(ToolUtil.getNow("yyyy-MM-dd"));
+        taRsAccDtlPara.setTxDate(ToolUtil.getNow("yyyy-MM-dd"));
         taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtlPara);
         strLocalTotalCounts=String.valueOf(taRsAccDtlList.size());
         if(taRsAccDtlList.size()>0) {
@@ -74,7 +74,7 @@ public class TaDayEndReconciAction implements Serializable {
     public void onQrySbsData() {
     // 往SBS发送记账信息
         TaTxnFdc taTxnFdcPara = new TaTxnFdc();
-        taTxnFdcPara.setTradeDate(ToolUtil.getNow("yyyyMMdd"));
+        taTxnFdcPara.setTxDate(ToolUtil.getNow("yyyyMMdd"));
         taTxnFdcPara.setReqSn(ToolUtil.getStrReqSn_Back());
         // 日终对账总数查询
         Toa900012601 toa900012601Temp= (Toa900012601)taDayEndBlncService.sendAndRecvRealTimeTxn900012601(taTxnFdcPara);
@@ -87,7 +87,7 @@ public class TaDayEndReconciAction implements Serializable {
         String curcnt = "";
         int m = 0;//取整
         int n = 0;//取余
-        // 日终对账余额查询
+        // 日终对账明细查询
         Toa900012602 toa900012602Temp= (Toa900012602)taDayEndBlncService.sendAndRecvRealTimeTxn900012602(taTxnFdcPara, "0");
         List<Toa900012602.BodyDetail> detailsTemp =new ArrayList<>();
         if (toa900012602Temp != null && toa900012602Temp.body!=null) {
