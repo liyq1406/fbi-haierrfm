@@ -1,4 +1,4 @@
-package rfm.ta.view;
+package rfm.ta.view.acc;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,7 +6,8 @@ import platform.common.utils.MessageUtil;
 import platform.service.PtenudetailService;
 import rfm.qd.service.RsSysctlService;
 import rfm.ta.repository.model.TaRsAcc;
-import rfm.ta.service.account.TaAccService;
+import rfm.ta.service.biz.acc.TaAccService;
+import rfm.ta.service.dep.TaFdcService;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -34,6 +35,9 @@ public class TaAccAction {
     private PtenudetailService ptenudetailService;
     @ManagedProperty(value = "#{rsSysctlService}")
     private RsSysctlService rsSysctlService;
+
+    @ManagedProperty(value = "#{taFdcService}")
+    private TaFdcService taFdcService;
 
     private List<TaRsAcc> taRsAccList;
     private String confirmAccountNo;
@@ -134,7 +138,7 @@ public class TaAccAction {
     /*∆Ù”√*/
     public String onClick_Enable(TaRsAcc taRsAccPara){
         try {
-            taAccService.sendAndRecvRealTimeTxn9901001(taRsAccPara);
+            taFdcService.sendAndRecvRealTimeTxn9901001(taRsAccPara);
         } catch (Exception e) {
             logger.error("∆Ù”√º‡π‹ ß∞‹£¨", e);
             MessageUtil.addError(e.getMessage());
@@ -147,7 +151,7 @@ public class TaAccAction {
     /*≥∑œ˙*/
     public String onClick_Unable(TaRsAcc taRsAccPara){
         try {
-            taAccService.sendAndRecvRealTimeTxn9901002(taRsAccPara);
+            taFdcService.sendAndRecvRealTimeTxn9901002(taRsAccPara);
         } catch (Exception e) {
             logger.error("Ω‚≥˝º‡π‹ ß∞‹£¨", e);
             MessageUtil.addError(e.getMessage());
@@ -159,12 +163,21 @@ public class TaAccAction {
     }
 
     //= = = = = = = = = = = = = = =  get set = = = = = = = = = = = = = = = =
+
     public TaAccService getTaAccService() {
         return taAccService;
     }
 
     public void setTaAccService(TaAccService taAccService) {
         this.taAccService = taAccService;
+    }
+
+    public TaFdcService getTaFdcService() {
+        return taFdcService;
+    }
+
+    public void setTaFdcService(TaFdcService taFdcService) {
+        this.taFdcService = taFdcService;
     }
 
     public String getConfirmAccountNo() {

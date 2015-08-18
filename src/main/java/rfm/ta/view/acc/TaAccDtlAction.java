@@ -1,28 +1,17 @@
-package rfm.ta.view;
+package rfm.ta.view.acc;
 
 import common.utils.ToolUtil;
-import org.apache.commons.net.ftp.FTP;
-import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.ftp.FTPReply;
-import org.fbi.dep.model.base.TOA;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import platform.common.utils.MessageUtil;
-import pub.platform.advance.utils.PropertyManager;
 import rfm.ta.repository.model.TaRsAccDtl;
-import rfm.ta.repository.model.TaTxnFdc;
 import rfm.ta.repository.model.TaTxnSbs;
-import rfm.ta.service.account.TaAccDetlService;
+import rfm.ta.service.biz.acc.TaAccDetlService;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import java.io.*;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**

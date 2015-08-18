@@ -11,10 +11,10 @@ import pub.platform.advance.utils.PropertyManager;
 import rfm.ta.common.enums.*;
 import rfm.ta.repository.model.TaRsAccDtl;
 import rfm.ta.repository.model.TaTxnFdc;
-import rfm.ta.service.account.TaAccDetlService;
-import rfm.ta.service.account.TaRefundService;
+import rfm.ta.service.biz.acc.TaAccDetlService;
+import rfm.ta.service.dep.TaFdcService;
 import rfm.ta.service.dep.TaSbsService;
-import rfm.ta.service.his.TaTxnFdcService;
+import rfm.ta.service.biz.his.TaTxnFdcService;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -39,8 +39,8 @@ public class TaRefundAction {
     @ManagedProperty(value = "#{taTxnFdcService}")
     private TaTxnFdcService taTxnFdcService;
 
-    @ManagedProperty(value = "#{taRefundService}")
-    private TaRefundService taRefundService;
+    @ManagedProperty(value = "#{taFdcService}")
+    private TaFdcService taFdcService;
 
     @ManagedProperty(value = "#{taAccDetlService}")
     private TaAccDetlService taAccDetlService;
@@ -88,7 +88,7 @@ public class TaRefundAction {
     public void onBtnValiClick() {
         // 发送验证信息
         taTxnFdcValiSend.setTxCode(EnuTaFdcTxCode.TRADE_2201.getCode());
-        taRefundService.sendAndRecvRealTimeTxn9902201(taTxnFdcValiSend);
+        taFdcService.sendAndRecvRealTimeTxn9902201(taTxnFdcValiSend);
         /*验证后查询*/
         taTxnFdcValiSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcValiSend.getPkId());
     }
@@ -138,25 +138,25 @@ public class TaRefundAction {
     }
 
     /*验证后立即划拨记账用*/
-    public Boolean sendAndRecvSBSAndFDC(TaRsAccDtl taRsAccDtl) {
+    public Boolean sendAndRecvSBSAndFDC(TaRsAccDtl taRsAccDtlPara) {
         try {
             // 往SBS发送记账信息
-            TOA toaSbs=taSbsService.sendAndRecvRealTimeTxn900010002(taRsAccDtl);
+            TOA toaSbs=taSbsService.sendAndRecvRealTimeTxn900010002(taRsAccDtlPara);
             if(toaSbs!=null) {
                 if(("0000").equals(toaSbs.getHeader().RETURN_CODE)){ // SBS记账成功的处理
-                    taRsAccDtl.setActFlag(EnuActFlag.ACT_SUCCESS.getCode());
-                    taAccDetlService.updateRecord(taRsAccDtl);
-                } else { // SBS记账失败的处理
-                    taAccDetlService.deleteRecord(taRsAccDtl.getPkId());
-                }
+                    taRsAccDtlPara.setActFlag(EnuActFlag.ACT_SUCCESS.getCode());
+                    taAccDetlService.updateRecord(taRsAccDtlPara);
 
-                // 往泰安房地产中心发送记账信息
-                TaTxnFdc taTxnFdcTemp = new TaTxnFdc();
-                BeanUtils.copyProperties(taTxnFdcTemp, taRsAccDtl);
-                taTxnFdcTemp.setTxCode(EnuTaFdcTxCode.TRADE_2202.getCode());
-                taRefundService.sendAndRecvRealTimeTxn9902202(taTxnFdcTemp);
-            /*记账后查询*/
-                taTxnFdcActSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcTemp.getPkId());
+                    // 往泰安房地产中心发送记账信息
+                    TaTxnFdc taTxnFdcTemp = new TaTxnFdc();
+                    BeanUtils.copyProperties(taTxnFdcTemp, taRsAccDtlPara);
+                    taTxnFdcTemp.setTxCode(EnuTaFdcTxCode.TRADE_2202.getCode());
+                    taFdcService.sendAndRecvRealTimeTxn9902202(taTxnFdcTemp);
+                    /*记账后查询*/
+                    taTxnFdcActSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcTemp.getPkId());
+                } else { // SBS记账失败的处理
+                    taAccDetlService.deleteRecord(taRsAccDtlPara.getPkId());
+                }
             }
             return true;
         }catch (Exception e){
@@ -212,18 +212,18 @@ public class TaRefundAction {
                     if(("0000").equals(toaSbs.getHeader().RETURN_CODE)){ // SBS记账成功的处理
                         taRsAccDtl.setActFlag(EnuActFlag.ACT_SUCCESS.getCode());
                         taAccDetlService.updateRecord(taRsAccDtl);
+
+                        // 往泰安房地产中心发送记账信息
+                        TaTxnFdc taTxnFdcTemp = new TaTxnFdc();
+                        BeanUtils.copyProperties(taTxnFdcTemp, taRsAccDtl);
+                        taTxnFdcCanclSend.setTxCode(EnuTaFdcTxCode.TRADE_2211.getCode());
+                        taFdcService.sendAndRecvRealTimeTxn9902211(taTxnFdcTemp);
+                        /*划拨冲正后查询*/
+                        taTxnFdcCanclSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcTemp.getPkId());
                     } else { // SBS记账失败的处理
                         taAccDetlService.deleteRecord(taRsAccDtl.getPkId());
                     }
                 }
-
-                // 往泰安房地产中心发送记账信息
-                TaTxnFdc taTxnFdcTemp = new TaTxnFdc();
-                BeanUtils.copyProperties(taTxnFdcTemp, taRsAccDtl);
-                taTxnFdcCanclSend.setTxCode(EnuTaFdcTxCode.TRADE_2211.getCode());
-                taRefundService.sendAndRecvRealTimeTxn9902211(taTxnFdcTemp);
-                /*划拨冲正后查询*/
-                taTxnFdcCanclSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcTemp.getPkId());
             }
         }catch (Exception e){
             logger.error("划拨冲正用，", e);
@@ -297,14 +297,6 @@ public class TaRefundAction {
         this.taAccDetlService = taAccDetlService;
     }
 
-    public TaRefundService getTaRefundService() {
-        return taRefundService;
-    }
-
-    public void setTaRefundService(TaRefundService taRefundService) {
-        this.taRefundService = taRefundService;
-    }
-
     public TaTxnFdcService getTaTxnFdcService() {
         return taTxnFdcService;
     }
@@ -363,5 +355,13 @@ public class TaRefundAction {
 
     public String getStrVisableByExecType() {
         return strVisableByExecType;
+    }
+
+    public TaFdcService getTaFdcService() {
+        return taFdcService;
+    }
+
+    public void setTaFdcService(TaFdcService taFdcService) {
+        this.taFdcService = taFdcService;
     }
 }

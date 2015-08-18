@@ -4,8 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rfm.ta.common.enums.EnuTaFdcTxCode;
 import rfm.ta.repository.model.TaTxnFdc;
-import rfm.ta.service.account.TaActRsltService;
-import rfm.ta.service.his.TaTxnFdcService;
+import rfm.ta.service.biz.his.TaTxnFdcService;
+import rfm.ta.service.dep.TaFdcService;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -26,8 +26,8 @@ public class TaActRsltAction {
     @ManagedProperty(value = "#{taTxnFdcService}")
     private TaTxnFdcService taTxnFdcService;
 
-    @ManagedProperty(value = "#{taActRsltService}")
-    private TaActRsltService taActRsltService;
+    @ManagedProperty(value = "#{taFdcService}")
+    private TaFdcService taFdcService;
 
     private TaTxnFdc taTxnFdcValiSend;
     private TaTxnFdc taTxnFdcValiSendAndRecv;
@@ -42,7 +42,7 @@ public class TaActRsltAction {
     public void onBtnQry() {
         // 发送验证信息
         taTxnFdcValiSend.setTxCode(EnuTaFdcTxCode.TRADE_2501.getCode());
-        taActRsltService.sendAndRecvRealTimeTxn9902501(taTxnFdcValiSend);
+        taFdcService.sendAndRecvRealTimeTxn9902501(taTxnFdcValiSend);
         /*验证后查询*/
         taTxnFdcValiSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcValiSend.getPkId());
     }
@@ -71,11 +71,11 @@ public class TaActRsltAction {
         this.taTxnFdcValiSendAndRecv = taTxnFdcValiSendAndRecv;
     }
 
-    public TaActRsltService getTaActRsltService() {
-        return taActRsltService;
+    public TaFdcService getTaFdcService() {
+        return taFdcService;
     }
 
-    public void setTaActRsltService(TaActRsltService taActRsltService) {
-        this.taActRsltService = taActRsltService;
+    public void setTaFdcService(TaFdcService taFdcService) {
+        this.taFdcService = taFdcService;
     }
 }

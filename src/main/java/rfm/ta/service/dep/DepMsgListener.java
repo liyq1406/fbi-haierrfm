@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
 import rfm.ta.common.enums.*;
-import rfm.ta.service.account.TaPaymentService;
 
 import javax.faces.bean.ManagedProperty;
 import javax.jms.Message;
@@ -28,8 +27,8 @@ public class DepMsgListener implements MessageListener {
     private JmsTemplate jmsRfmOutTemplate;
 
     @Autowired
-    @ManagedProperty(value = "#{taPaymentService}")
-    private TaPaymentService taPaymentService;
+    @ManagedProperty(value = "#{taFdcService}")
+    private TaFdcService taFdcService;
 
     @Override
     public void onMessage(Message message) {
@@ -62,22 +61,22 @@ public class DepMsgListener implements MessageListener {
                 tia9902001.body.CITY_ID= EnuTaCityId.CITY_TAIAN.getCode();        // 03   城市代码       6
                 tia9902001.body.TX_DATE=ToolUtil.getStrLastUpdDate();              // 06   验证日期       10  送系统日期即可
                 tia9902001.body.INITIATOR=EnuTaInitiatorId.INITIATOR.getCode();  // 09   发起方         1   1_监管银行
-                toaFdc=taPaymentService.sendAndRecvRealTimeTxn9902001(tia9902001);
+                toaFdc=taFdcService.sendAndRecvRealTimeTxn9902001(tia9902001);
                 jmsRfmOutTemplate.send(new ObjectMessageCreator(toaFdc, correlationID, propertyMap));
             }else if(EnuTaFdcTxCode.TRADE_2002.getCode().equals(txnCode)){
                 tiaTmp.getHeader().TX_CODE= EnuTaSbsTxCode.TRADE_0002.getCode();
-                toaSbs=taPaymentService.sendAndRecvRealTimeTxn900012002(tiaTmp);
+                toaSbs=taFdcService.sendAndRecvRealTimeTxn900012002(tiaTmp);
                 if(toaSbs!=null) {
                     tiaTmp.getHeader().TX_CODE= txnCode;
-                    toaFdc = taPaymentService.sendAndRecvRealTimeTxn9902002(tiaTmp);
+                    toaFdc = taFdcService.sendAndRecvRealTimeTxn9902002(tiaTmp);
                     jmsRfmOutTemplate.send(new ObjectMessageCreator(toaFdc, correlationID, propertyMap));
                 }
             }else if(EnuTaFdcTxCode.TRADE_2011.getCode().equals(txnCode)){
                 tiaTmp.getHeader().TX_CODE= EnuTaSbsTxCode.TRADE_0002.getCode();
-                toaSbs=taPaymentService.sendAndRecvRealTimeTxn900012011(tiaTmp);
+                toaSbs=taFdcService.sendAndRecvRealTimeTxn900012011(tiaTmp);
                 if(toaSbs!=null) {
                     tiaTmp.getHeader().TX_CODE= txnCode;
-                    toaFdc = taPaymentService.sendAndRecvRealTimeTxn9902011(tiaTmp);
+                    toaFdc = taFdcService.sendAndRecvRealTimeTxn9902011(tiaTmp);
                     jmsRfmOutTemplate.send(new ObjectMessageCreator(toaFdc, correlationID, propertyMap));
                 }
             }
@@ -86,11 +85,11 @@ public class DepMsgListener implements MessageListener {
         }
     }
 
-    public TaPaymentService getTaPaymentService() {
-        return taPaymentService;
+    public TaFdcService getTaFdcService() {
+        return taFdcService;
     }
 
-    public void setTaPaymentService(TaPaymentService taPaymentService) {
-        this.taPaymentService = taPaymentService;
+    public void setTaFdcService(TaFdcService taFdcService) {
+        this.taFdcService = taFdcService;
     }
 }

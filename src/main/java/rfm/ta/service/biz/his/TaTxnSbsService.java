@@ -1,4 +1,4 @@
-package rfm.ta.service.his;
+package rfm.ta.service.biz.his;
 
 import common.utils.ToolUtil;
 import org.slf4j.Logger;

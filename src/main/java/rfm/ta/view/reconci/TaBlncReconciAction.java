@@ -1,4 +1,4 @@
-package rfm.ta.view;
+package rfm.ta.view.reconci;
 
 import common.utils.ToolUtil;
 import org.apache.commons.lang.StringUtils;
@@ -9,8 +9,8 @@ import platform.common.utils.MessageUtil;
 import rfm.ta.common.enums.EnuTaBankId;
 import rfm.ta.common.enums.EnuTaCityId;
 import rfm.ta.repository.model.TaRsAcc;
-import rfm.ta.service.account.TaAccService;
-import rfm.ta.service.account.TaBlncReconciService;
+import rfm.ta.service.biz.acc.TaAccService;
+import rfm.ta.service.dep.TaSbsService;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -20,7 +20,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,8 +32,8 @@ import java.util.List;
 public class TaBlncReconciAction {
     private static final Logger logger = LoggerFactory.getLogger(TaBlncReconciAction.class);
 
-    @ManagedProperty(value = "#{taBlncReconciService}")
-    private TaBlncReconciService taBlncReconciService;
+    @ManagedProperty(value = "#{taSbsService}")
+    private TaSbsService taSbsService;
 
     @ManagedProperty(value = "#{taAccService}")
     private TaAccService taAccService;
@@ -57,7 +56,7 @@ public class TaBlncReconciAction {
             }
 
             // ∑¢ÀÕº‡π‹’À∫≈µΩSBS≤È—Ø”‡∂Ó
-            List<Toa900012701> toaSbs=taBlncReconciService.sendAndRecvRealTimeTxn900012701(taRsAccList);
+            List<Toa900012701> toaSbs=taSbsService.sendAndRecvRealTimeTxn900012701(taRsAccList);
 
             if(toaSbs !=null && toaSbs.size() > 0) {
                 String sysdate = ToolUtil.getStrLastUpdDate();
@@ -160,12 +159,12 @@ public class TaBlncReconciAction {
     }
 
     //= = = = = = = = = = = = = = =  get set = = = = = = = = = = = = = = = =
-    public TaBlncReconciService getTaBlncReconciService() {
-        return taBlncReconciService;
+    public TaSbsService getTaSbsService() {
+        return taSbsService;
     }
 
-    public void setTaBlncReconciService(TaBlncReconciService taBlncReconciService) {
-        this.taBlncReconciService = taBlncReconciService;
+    public void setTaSbsService(TaSbsService taSbsService) {
+        this.taSbsService = taSbsService;
     }
 
     public TaAccService getTaAccService() {

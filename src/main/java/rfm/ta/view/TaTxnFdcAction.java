@@ -3,7 +3,7 @@ package rfm.ta.view;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rfm.ta.repository.model.TaTxnFdc;
-import rfm.ta.service.his.TaTxnFdcService;
+import rfm.ta.service.biz.his.TaTxnFdcService;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;

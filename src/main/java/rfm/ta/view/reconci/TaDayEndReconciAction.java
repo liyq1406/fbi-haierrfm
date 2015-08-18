@@ -1,4 +1,4 @@
-package rfm.ta.view;
+package rfm.ta.view.reconci;
 
 import common.utils.ToolUtil;
 import org.apache.commons.lang.StringUtils;
@@ -12,8 +12,8 @@ import rfm.ta.common.enums.EnuTaCityId;
 import rfm.ta.repository.model.TaRsAccDtl;
 import rfm.ta.repository.model.TaTxnFdc;
 import rfm.ta.repository.model.TaTxnSbs;
-import rfm.ta.service.account.TaAccDetlService;
-import rfm.ta.service.account.TaDayEndBlncService;
+import rfm.ta.service.biz.acc.TaAccDetlService;
+import rfm.ta.service.dep.TaSbsService;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -37,8 +37,8 @@ public class TaDayEndReconciAction implements Serializable {
     @ManagedProperty("#{taAccDetlService}")
     private TaAccDetlService taAccDetlService;
 
-    @ManagedProperty("#{taDayEndBlncService}")
-    private TaDayEndBlncService taDayEndBlncService;
+    @ManagedProperty("#{taSbsService}")
+    private TaSbsService taSbsService;
 
     private TaTxnSbs taTxnSbs;
     // 账务交易明细
@@ -73,7 +73,7 @@ public class TaDayEndReconciAction implements Serializable {
             taTxnFdcPara.setTxDate(ToolUtil.getNow("yyyyMMdd"));
             taTxnFdcPara.setReqSn(ToolUtil.getStrReqSn_Back());
             // 日终对账总数查询
-            Toa900012601 toa900012601Temp = (Toa900012601) taDayEndBlncService.sendAndRecvRealTimeTxn900012601(taTxnFdcPara);
+            Toa900012601 toa900012601Temp = (Toa900012601) taSbsService.sendAndRecvRealTimeTxn900012601(taTxnFdcPara);
             strSbsTotalCounts = toa900012601Temp.body.DRCNT;
 
             strSbsTotalAmt = toa900012601Temp.body.DRAMT;
@@ -83,7 +83,7 @@ public class TaDayEndReconciAction implements Serializable {
             int m = 0;//取整
             int n = 0;//取余
             // 日终对账明细查询
-            Toa900012602 toa900012602Temp = (Toa900012602) taDayEndBlncService.sendAndRecvRealTimeTxn900012602(taTxnFdcPara, "0");
+            Toa900012602 toa900012602Temp = (Toa900012602) taSbsService.sendAndRecvRealTimeTxn900012602(taTxnFdcPara, "0");
             List<Toa900012602.Body.BodyDetail> detailsTemp = new ArrayList<>();
             if (toa900012602Temp != null && toa900012602Temp.body != null) {
                 if ("0000".equals(toa900012602Temp.header.RETURN_CODE)) {
@@ -112,7 +112,7 @@ public class TaDayEndReconciAction implements Serializable {
                     String tmp = "";
                     for (int j = 1; j <= m; j++) {
                         tmp = j * Integer.parseInt(curcnt) + 1 + "";
-                        toa900012602Temp = (Toa900012602) taDayEndBlncService.sendAndRecvRealTimeTxn900012602(taTxnFdcPara, tmp);
+                        toa900012602Temp = (Toa900012602) taSbsService.sendAndRecvRealTimeTxn900012602(taTxnFdcPara, tmp);
                         if ("0000".equals(toa900012602Temp.header.RETURN_CODE)) {
                             detailsTemp = toa900012602Temp.body.DETAILS;
                             totcnt = toa900012602Temp.body.TOTCNT;
@@ -169,7 +169,7 @@ public class TaDayEndReconciAction implements Serializable {
                     line.append(StringUtils.rightPad(taRsAccDtlUnit.getInoutFlag(), 1, ' '));
                     line.append(sysdate);
                     // 交易金额(20位)|
-                    line.append(StringUtils.rightPad(taRsAccDtlUnit.getTxAmt().toString(), 20, ' '));
+                    line.append(StringUtils.rightPad(taRsAccDtlUnit.getTxAmt(), 20, ' '));
                     line.append("|");
                     // 监管账号(30位)|
                     line.append(StringUtils.rightPad(taRsAccDtlUnit.getAccId(), 30, ' '));
@@ -308,12 +308,12 @@ public class TaDayEndReconciAction implements Serializable {
         this.taRsAccDtlList = taRsAccDtlList;
     }
 
-    public TaDayEndBlncService getTaDayEndBlncService() {
-        return taDayEndBlncService;
+    public TaSbsService getTaSbsService() {
+        return taSbsService;
     }
 
-    public void setTaDayEndBlncService(TaDayEndBlncService taDayEndBlncService) {
-        this.taDayEndBlncService = taDayEndBlncService;
+    public void setTaSbsService(TaSbsService taSbsService) {
+        this.taSbsService = taSbsService;
     }
 
     public String getStrLocalTotalCounts() {
