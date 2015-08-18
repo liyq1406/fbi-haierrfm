@@ -179,7 +179,7 @@ public class TaRefundAction {
                 if(actFlag.equals(EnuActFlag.ACT_SUCCESS.getCode())){
                     MessageUtil.addError("该返还申请编号已冲正，不允许重复冲正！");
                 } else if(actFlag.equals(EnuActFlag.ACT_UNKNOWN.getCode())){
-                    MessageUtil.addError("该返还申请编号 冲正时存在不明原因失败，请在返还查询画面进行冲正！");
+                    MessageUtil.addError("该返还申请编号冲正时存在不明原因失败，请在返还查询画面进行冲正！");
                 }
                 return;
             }
