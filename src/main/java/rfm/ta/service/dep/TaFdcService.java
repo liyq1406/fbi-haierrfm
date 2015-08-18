@@ -152,7 +152,7 @@ public class TaFdcService {
             taTxnFdcPara.setInitiator(tia9902001Temp.body.INITIATOR);  // 09   发起方         1   1_监管银行
             //通过MQ发送信息到DEP
             taTxnFdcPara.setRecVersion(0);
-            //taTxnFdcService.insertRecord(taTxnFdcPara);
+            taTxnFdcService.insertRecord(taTxnFdcPara);
 
             String strMsgid= depMsgSendAndRecv.sendDepMessage(tiaPara);
             Toa9902001 toaPara=(Toa9902001) depMsgSendAndRecv.recvDepMessage(strMsgid);
@@ -170,7 +170,7 @@ public class TaFdcService {
                 taTxnFdcPara.setAccId(toaPara.body.ACC_ID);
                 taTxnFdcPara.setAccName(toaPara.body.ACC_NAME);
                 taTxnFdcPara.setFdcSn(toaPara.header.REQ_SN);
-                //taTxnFdcService.updateRecord(taTxnFdcPara);
+                taTxnFdcService.updateRecord(taTxnFdcPara);
                 return toaPara;
             }else{
                  /*01	返回结果	    4
@@ -178,7 +178,7 @@ public class TaFdcService {
                 */
                 taTxnFdcPara.setReturnCode(toaPara.header.RETURN_CODE);
                 taTxnFdcPara.setReturnMsg(toaPara.header.RETURN_MSG);
-                //taTxnFdcService.updateRecord(taTxnFdcPara);
+                taTxnFdcService.updateRecord(taTxnFdcPara);
                 logger.error("MQ消息返回失败");
                 throw new RuntimeException("MQ消息返回失败");
             }
@@ -383,11 +383,6 @@ public class TaFdcService {
         try {
             taTxnFdcPara.setBankId(EnuTaBankId.BANK_HAIER.getCode());
             taTxnFdcPara.setCityId(EnuTaCityId.CITY_TAIAN.getCode());
-            taTxnFdcPara.setPassword(MD5Helper.getMD5String(ToolUtil.TAFDC_MD5_KEY));
-            taTxnFdcPara.setReqSn(ToolUtil.getStrAppReqSn_Back());
-            taTxnFdcPara.setTxDate(ToolUtil.getStrLastUpdDate());
-            taTxnFdcPara.setBranchId(ToolUtil.getOperatorManager().getOperator().getDeptid());
-            taTxnFdcPara.setUserId(ToolUtil.getOperatorManager().getOperatorId());
             taTxnFdcPara.setInitiator(EnuTaInitiatorId.INITIATOR.getCode());
 
             Tia9902101 tia9902101Temp=new Tia9902101() ;

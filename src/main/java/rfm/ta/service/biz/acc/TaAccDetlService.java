@@ -29,9 +29,6 @@ import java.util.Map;
 public class TaAccDetlService {
 
     @Autowired
-    private TaCommonMapper commonMapper;
-
-    @Autowired
     private TaRsAccDtlMapper taRsAccDtlMapper;
 
     /**
@@ -104,20 +101,7 @@ public class TaAccDetlService {
         for(EnuActFlag actFlag:EnuActFlag.values()) {
             actFlagMap.put(actFlag.getCode(), actFlag.getTitle());
         }
-
         return actFlagMap;
-    }
-
-    /**
-     * 插入*/
-    public void insertSelectedRecord(TaRsAccDtl taRsAccDtl) {
-        OperatorManager om = SystemService.getOperatorManager();
-        taRsAccDtl.setCreatedBy(om.getOperatorId());
-        taRsAccDtl.setCreatedTime(ToolUtil.getStrLastUpdTime());
-        taRsAccDtl.setLastUpdBy(om.getOperatorId());
-        taRsAccDtl.setLastUpdTime(ToolUtil.getStrLastUpdTime());
-        taRsAccDtl.setReqSn(commonMapper.selectMaxAccDetailSerial());
-        taRsAccDtlMapper.insertSelective(taRsAccDtl);
     }
 
     /**
@@ -125,6 +109,11 @@ public class TaAccDetlService {
      * @param taRsAccDtl
      */
     public void insertRecord(TaRsAccDtl taRsAccDtl) {
+        OperatorManager om = SystemService.getOperatorManager();
+        taRsAccDtl.setCreatedBy(om.getOperatorId());
+        taRsAccDtl.setCreatedTime(ToolUtil.getStrLastUpdTime());
+        taRsAccDtl.setLastUpdBy(om.getOperatorId());
+        taRsAccDtl.setLastUpdTime(ToolUtil.getStrLastUpdTime());
         taRsAccDtlMapper.insert(taRsAccDtl);
     }
 
@@ -144,17 +133,5 @@ public class TaAccDetlService {
      */
     public int deleteRecord(String pkId) {
         return taRsAccDtlMapper.deleteByPrimaryKey(pkId);
-    }
-
-    /**
-     * 未发送前数据(包括退回)*/
-    public List<TaRsAccDtl> selectedRecordsForChk(String tradeType, List<String> statusflags) {
-        TaRsAccDtlExample example = new TaRsAccDtlExample();
-        example.clear();
-        TaRsAccDtlExample.Criteria criteria = example.createCriteria();
-
-        criteria.andDeletedFlagEqualTo("0");
-        example.setOrderByClause("account_code,local_serial");
-        return taRsAccDtlMapper.selectByExample(example);
     }
 }

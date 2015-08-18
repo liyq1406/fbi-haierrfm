@@ -5,8 +5,10 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.fbi.dep.model.base.TOA;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import platform.auth.MD5Helper;
 import platform.common.utils.MessageUtil;
 import pub.platform.advance.utils.PropertyManager;
+import pub.platform.system.manage.dao.PtOperBean;
 import rfm.ta.common.enums.*;
 import rfm.ta.repository.model.TaRsAccDtl;
 import rfm.ta.repository.model.TaTxnFdc;
@@ -88,6 +90,11 @@ public class TaPayoutAction {
     public void onBtnValiClick() {
         // 发送验证信息
         taTxnFdcValiSend.setTxCode(EnuTaFdcTxCode.TRADE_2101.getCode());
+        taTxnFdcValiSend.setPassword(MD5Helper.getMD5String(ToolUtil.TAFDC_MD5_KEY));
+        taTxnFdcValiSend.setReqSn(ToolUtil.getStrAppReqSn_Back());
+        taTxnFdcValiSend.setTxDate(ToolUtil.getStrLastUpdDate());
+        taTxnFdcValiSend.setBranchId(ToolUtil.getOperatorManager().getOperator().getDeptid());
+        taTxnFdcValiSend.setUserId(ToolUtil.getOperatorManager().getOperatorId());
         taFdcService.sendAndRecvRealTimeTxn9902101(taTxnFdcValiSend);
         /*验证后查询*/
         taTxnFdcValiSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcValiSend.getPkId());
@@ -117,10 +124,15 @@ public class TaPayoutAction {
             taRsAccDtlTemp.setTxCode(EnuTaFdcTxCode.TRADE_2102.getCode());
             taRsAccDtlTemp.setDeletedFlag(EnuDelFlag.DEL_FALSE.getCode());
             taRsAccDtlTemp.setActFlag(EnuActFlag.ACT_UNKNOWN.getCode());
+            taRsAccDtlTemp.setPassword(MD5Helper.getMD5String(ToolUtil.TAFDC_MD5_KEY));
+            taRsAccDtlTemp.setReqSn(ToolUtil.getStrAppReqSn_Back());
+            taRsAccDtlTemp.setTxDate(ToolUtil.getStrLastUpdDate());
+            PtOperBean ptOperBeanTemp=ToolUtil.getOperatorManager().getOperator();
+            taRsAccDtlTemp.setBranchId(ptOperBeanTemp.getDeptid());
+            taRsAccDtlTemp.setUserId(ptOperBeanTemp.getOperid());
             taAccDetlService.insertRecord(taRsAccDtlTemp);
 
             // 往SBS发送记账信息
-            taTxnFdcValiSendAndRecv.setTxDate(ToolUtil.getNow("yyyyMMdd"));
             if(sendAndRecvSBSAndFDC(taRsAccDtlTemp)) {
                 MessageUtil.addInfo("划拨记账成功！");
             }else{
@@ -165,10 +177,10 @@ public class TaPayoutAction {
     public void onBtnCanclClick() {
         try {
             // 验证重复冲正
-            TaRsAccDtl taRsAccDtl = new TaRsAccDtl();
-            taRsAccDtl.setBizId(taTxnFdcCanclSend.getBizId());
-            taRsAccDtl.setTxCode(EnuTaFdcTxCode.TRADE_2111.getCode());
-            List<TaRsAccDtl> taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtl);
+            TaRsAccDtl taRsAccDtlTemp = new TaRsAccDtl();
+            taRsAccDtlTemp.setBizId(taTxnFdcCanclSend.getBizId());
+            taRsAccDtlTemp.setTxCode(EnuTaFdcTxCode.TRADE_2111.getCode());
+            List<TaRsAccDtl> taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtlTemp);
             if(taRsAccDtlList.size() == 1){
                 String actFlag = taRsAccDtlList.get(0).getActFlag();
                 if(actFlag.equals(EnuActFlag.ACT_SUCCESS.getCode())){
@@ -180,20 +192,20 @@ public class TaPayoutAction {
             }
 
             // 本地存取（对账用）
-            TaRsAccDtl taRsAccDtlTemp = new TaRsAccDtl();
+            taRsAccDtlTemp = new TaRsAccDtl();
             taRsAccDtlTemp.setBizId(taTxnFdcCanclSend.getBizId());
             taRsAccDtlTemp.setTxCode(EnuTaFdcTxCode.TRADE_2102.getCode());
             taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtlTemp);
-            taRsAccDtl = null;
+            taRsAccDtlTemp = null;
             if(taRsAccDtlList.size() == 1){
-                taRsAccDtl = taRsAccDtlList.get(0);
+                taRsAccDtlTemp = taRsAccDtlList.get(0);
                 // 与划拨记账：收款账号和付款账号关系正好颠倒
-                taRsAccDtl.setTxCode(EnuTaFdcTxCode.TRADE_2111.getCode());
-                String accId = taRsAccDtl.getAccId();
-                taRsAccDtl.setAccId(taRsAccDtl.getRecvAccId());
-                taRsAccDtl.setRecvAccId(accId);
-                taRsAccDtl.setActFlag(EnuActFlag.ACT_UNKNOWN.getCode());
-                taAccDetlService.insertRecord(taRsAccDtl);
+                taRsAccDtlTemp.setTxCode(EnuTaFdcTxCode.TRADE_2111.getCode());
+                String accId = taRsAccDtlTemp.getAccId();
+                taRsAccDtlTemp.setAccId(taRsAccDtlTemp.getRecvAccId());
+                taRsAccDtlTemp.setRecvAccId(accId);
+                taRsAccDtlTemp.setActFlag(EnuActFlag.ACT_UNKNOWN.getCode());
+                taAccDetlService.insertRecord(taRsAccDtlTemp);
             } else {
                 logger.error("查不到该笔冲正的相关划拨信息，请确认输入的划拨申请编号");
                 MessageUtil.addError("查不到该笔冲正的相关划拨信息，请确认输入的划拨申请编号");
@@ -201,22 +213,22 @@ public class TaPayoutAction {
             }
 
             // 往SBS发送记账信息
-            TOA toaSbs=taSbsService.sendAndRecvRealTimeTxn900010002(taRsAccDtl);
+            TOA toaSbs=taSbsService.sendAndRecvRealTimeTxn900010002(taRsAccDtlTemp);
             if(toaSbs !=null) {
-                if(taRsAccDtl != null) {
+                if(taRsAccDtlTemp != null) {
                     if(("0000").equals(toaSbs.getHeader().RETURN_CODE)){ // SBS记账成功的处理
-                        taRsAccDtl.setActFlag(EnuActFlag.ACT_SUCCESS.getCode());
-                        taAccDetlService.updateRecord(taRsAccDtl);
+                        taRsAccDtlTemp.setActFlag(EnuActFlag.ACT_SUCCESS.getCode());
+                        taAccDetlService.updateRecord(taRsAccDtlTemp);
 
                         // 往泰安房地产中心发送记账信息
                         TaTxnFdc taTxnFdcTemp = new TaTxnFdc();
-                        BeanUtils.copyProperties(taTxnFdcTemp, taRsAccDtl);
+                        BeanUtils.copyProperties(taTxnFdcTemp, taRsAccDtlTemp);
                         taTxnFdcCanclSend.setTxCode(EnuTaFdcTxCode.TRADE_2111.getCode());
                         taFdcService.sendAndRecvRealTimeTxn9902111(taTxnFdcTemp);
                         /*划拨冲正后查询*/
                         taTxnFdcCanclSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcTemp.getPkId());
                     } else { // SBS记账失败的处理
-                        taAccDetlService.deleteRecord(taRsAccDtl.getPkId());
+                        taAccDetlService.deleteRecord(taRsAccDtlTemp.getPkId());
                     }
                 }
             }

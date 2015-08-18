@@ -1,5 +1,6 @@
 package rfm.ta.service.biz.acc;
 
+import common.utils.ToolUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,12 +8,10 @@ import org.springframework.stereotype.Service;
 import platform.service.PtenudetailService;
 import platform.service.SystemService;
 import pub.platform.security.OperatorManager;
-import common.utils.ToolUtil;
-import rfm.ta.common.enums.*;
+import rfm.ta.common.enums.EnuTaArchivedFlag;
 import rfm.ta.repository.dao.TaRsAccMapper;
 import rfm.ta.repository.model.TaRsAcc;
 import rfm.ta.repository.model.TaRsAccExample;
-import rfm.ta.service.dep.DepMsgSendAndRecv;
 
 import java.util.List;
 
@@ -31,8 +30,6 @@ public class TaAccService {
     private TaRsAccMapper accountMapper;
     @Autowired
     private PtenudetailService ptenudetailService;
-    @Autowired
-    private DepMsgSendAndRecv depMsgSendAndRecv;
 
     /**
      * ≈–∂œ’À∫≈ «∑Ò“—¥Ê‘⁄
@@ -75,11 +72,6 @@ public class TaAccService {
         TaRsAccExample example = new TaRsAccExample();
         example.createCriteria().andDeletedFlagEqualTo("0");
         return accountMapper.selectByPrimaryKey(pkid);
-    }
-    public List<TaRsAcc> qryAllLockRecords() {
-        TaRsAccExample example = new TaRsAccExample();
-        example.createCriteria().andDeletedFlagEqualTo("0");
-        return accountMapper.selectByExample(example);
     }
 
     public List<TaRsAcc> qryAllMonitRecords() {

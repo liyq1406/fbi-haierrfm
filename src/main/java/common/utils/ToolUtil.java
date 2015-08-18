@@ -100,60 +100,6 @@ public class ToolUtil {
         return intValue==null?0:intValue ;
     }
 
-    public static String padLeft_DoLevel(Integer integerPara,String strTemp){
-        StringBuffer stringBuffer = new StringBuffer();
-        for (int j = 0; j < integerPara; j++) {
-            stringBuffer.append("&#8195;");
-        }
-        return stringBuffer.toString()+strTemp;
-    }
-
-    public static String padLeftSpace_DoLevel(Integer integerPara,String strTemp){
-        StringBuffer stringBuffer = new StringBuffer();
-        for (int j = 0; j < integerPara; j++) {
-            stringBuffer.append("   ");
-        }
-        return stringBuffer.toString()+strTemp;
-    }
-
-    public static String getMaxIdPlusOne(String strPreMaxIdPara,String strMaxIdPara){
-        try {
-            String strMaxId;
-
-            strMaxId= strMaxIdPara;
-            if(org.apache.commons.lang.StringUtils.isEmpty(strMaxId)){
-                strMaxId=strPreMaxIdPara+ ToolUtil.getStrToday()+"001";
-            }
-            else if(strIsDigit(strMaxId)) {
-                Integer intTemp=Integer.parseInt(strMaxId) ;
-                intTemp=intTemp+1;
-                strMaxId=intTemp.toString();
-            }else if(strMaxId .length()>3){
-                String strTemp=strMaxId.substring(strMaxId .length() -3).replaceFirst("^0+","");
-                if(strIsDigit(strTemp)){
-                    Integer intTemp=Integer.parseInt(strTemp) ;
-                    intTemp=intTemp+1;
-                    strMaxId=strMaxId.substring(0,strMaxId.length()-3)+ org.apache.commons.lang.StringUtils.leftPad(intTemp.toString(), 3, "0");
-                }else{
-                    strMaxId+="001";
-                }
-            }
-            return strMaxId;
-        } catch (Exception e) {
-            throw e;
-        }
-    }
-
-    /*字符串忽略空的情况*/
-    public static String getIgnoreSpaceOfStr(String strFrom){
-        if(strFrom==null){
-            return "";
-        }
-        Integer intIndexof=strFrom.lastIndexOf(";")+1;
-        String strTemp=strFrom.substring(intIndexof);
-        return strTemp ;
-    }
-
     public static String getStrReqSn_Back() {
         Date date =new Date();
         return dateFormat(date, "yyyyMMddHHmmssSSSZ");
@@ -176,17 +122,6 @@ public class ToolUtil {
     public static String getNow(String strPara) {
         Date date =new Date();
         return dateFormat(date, strPara);
-    }
-
-    public static String getStrDateThisPeriod() {
-        Date date =new Date();
-        return dateFormat(date, "yyyyMM");
-    }
-
-    public static String getStrDateLastPeriod() {
-        Date dateNow =new Date();
-        Date dateLast = getLastMonthDate(dateNow);
-        return ToolUtil.dateFormat(dateLast, "yyyyMM");
     }
 
     public static String getStrToday() {
@@ -226,19 +161,6 @@ public class ToolUtil {
         return cal.getTime();
     }
 
-    public static String getStrLastMonth(String strThisPeriodPara,int intPara){
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMM");
-        try {
-            Calendar cd = Calendar.getInstance();
-            cd.setTime(simpleDateFormat.parse(strThisPeriodPara));
-            cd.add(Calendar.MONTH, -intPara);//减少一月
-            return simpleDateFormat.format(cd.getTime());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return "";
-    }
-
     /**
      * 获取当前登录用户信息
      * @return
@@ -251,41 +173,6 @@ public class ToolUtil {
             throw new RuntimeException("用户未登录！");
         }
         return om;
-    }
-
-    public static String getDateSx(){
-        Calendar cal = Calendar.getInstance();
-        int hour = cal.get(Calendar.HOUR_OF_DAY);
-        if (hour >= 6 && hour < 8) {
-            return "早上好!";
-        } else if (hour >= 8 && hour < 11) {
-            return "上午好!";
-        } else if (hour >= 11 && hour < 13) {
-            return "中午好!";
-        } else if (hour >= 13 && hour < 18) {
-            return "下午好!";
-        } else {
-            return "晚上好!";
-        }
-    }
-
-    public static String getStrLastMonth(String strThisPeriodPara){
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMM");
-        try {
-            Calendar cd = Calendar.getInstance();
-            cd.setTime(simpleDateFormat.parse(strThisPeriodPara));
-            cd.add(Calendar.MONTH, -1);//减少一月
-            return simpleDateFormat.format(cd.getTime());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return "";
-    }
-
-    public static String getStrThisMonth(){
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMM");
-        Calendar cd = Calendar.getInstance();
-        return simpleDateFormat.format(cd.getTime());
     }
 
     /**
