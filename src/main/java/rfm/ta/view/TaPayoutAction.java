@@ -3,9 +3,6 @@ package rfm.ta.view;
 import common.utils.ToolUtil;
 import org.apache.commons.beanutils.BeanUtils;
 import org.fbi.dep.model.base.TOA;
-import org.fbi.dep.model.base.TOABody;
-import org.fbi.dep.model.base.TOAHeader;
-import org.fbi.dep.model.txn.Toa900010002;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import platform.common.utils.MessageUtil;
@@ -15,6 +12,7 @@ import rfm.ta.repository.model.TaRsAccDtl;
 import rfm.ta.repository.model.TaTxnFdc;
 import rfm.ta.service.account.TaAccDetlService;
 import rfm.ta.service.account.TaPayoutService;
+import rfm.ta.service.dep.TaSbsService;
 import rfm.ta.service.his.TaTxnFdcService;
 
 import javax.annotation.PostConstruct;
@@ -45,6 +43,9 @@ public class TaPayoutAction {
 
     @ManagedProperty(value = "#{taAccDetlService}")
     private TaAccDetlService taAccDetlService;
+
+    @ManagedProperty(value = "#{taSbsService}")
+    private TaSbsService taSbsService;
 
     // 记账成功标志
     private List<SelectItem> actFlagList;
@@ -104,7 +105,7 @@ public class TaPayoutAction {
                 if(actFlag.equals(EnuActFlag.ACT_SUCCESS.getCode())){
                     MessageUtil.addError("该划拨申请编号已记账，不允许重复记账！");
                 } else if(actFlag.equals(EnuActFlag.ACT_UNKNOWN.getCode())){
-                    MessageUtil.addError("该划拨申请编号记账时存在不明原因失败，请在划拨验证查询画面进行记账！");
+                    MessageUtil.addError("该划拨申请编号记账时存在不明原因失败，请在划拨查询画面进行记账！");
                 }
                 return;
             }
@@ -119,7 +120,7 @@ public class TaPayoutAction {
 
             // 往SBS发送记账信息
             taTxnFdcValiSendAndRecv.setTxDate(ToolUtil.getNow("yyyyMMdd"));
-            if(sendAndRecvSBSAndFDC(taTxnFdcValiSendAndRecv, taRsAccDtlTemp)) {
+            if(sendAndRecvSBSAndFDC(taRsAccDtlTemp)) {
                 MessageUtil.addInfo("划拨记账成功！");
             }else{
                 MessageUtil.addInfo("划拨记账失败！");
@@ -131,11 +132,10 @@ public class TaPayoutAction {
     }
 
     /*验证后立即划拨记账用*/
-    public Boolean sendAndRecvSBSAndFDC(TaTxnFdc taTxnFdcPara,TaRsAccDtl taRsAccDtl) {
+    public Boolean sendAndRecvSBSAndFDC(TaRsAccDtl taRsAccDtl) {
         try {
             // 往SBS发送记账信息
-            TaTxnFdc taTxnFdcTemp=(TaTxnFdc)BeanUtils.cloneBean(taTxnFdcPara);
-            TOA toaSbs=taPayoutService.sendAndRecvRealTimeTxn900012102(taTxnFdcTemp);
+            TOA toaSbs=taSbsService.sendAndRecvRealTimeTxn900010002(taRsAccDtl);
             if(toaSbs !=null) {
                 if(("0000").equals(toaSbs.getHeader().RETURN_CODE)){ // SBS记账成功的处理
                     taRsAccDtl.setActFlag(EnuActFlag.ACT_SUCCESS.getCode());
@@ -145,7 +145,8 @@ public class TaPayoutAction {
                 }
 
                 // 往泰安房地产中心发送记账信息
-                BeanUtils.copyProperties(taTxnFdcTemp, taTxnFdcPara);
+                TaTxnFdc taTxnFdcTemp=new TaTxnFdc();
+                BeanUtils.copyProperties(taTxnFdcTemp, taRsAccDtl);
                 taTxnFdcTemp.setTxCode(EnuTaFdcTxCode.TRADE_2102.getCode());
                 taPayoutService.sendAndRecvRealTimeTxn9902102(taTxnFdcTemp);
                 /*记账后查询*/
@@ -162,12 +163,27 @@ public class TaPayoutAction {
     /*划拨冲正用*/
     public void onBtnCanclClick() {
         try {
+            // 验证重复冲正
+            TaRsAccDtl taRsAccDtl = new TaRsAccDtl();
+            taRsAccDtl.setBizId(taTxnFdcCanclSend.getBizId());
+            taRsAccDtl.setTxCode(EnuTaFdcTxCode.TRADE_2111.getCode());
+            List<TaRsAccDtl> taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtl);
+            if(taRsAccDtlList.size() == 1){
+                String actFlag = taRsAccDtlList.get(0).getActFlag();
+                if(actFlag.equals(EnuActFlag.ACT_SUCCESS.getCode())){
+                    MessageUtil.addError("该划拨申请编号已冲正，不允许重复冲正！");
+                } else if(actFlag.equals(EnuActFlag.ACT_UNKNOWN.getCode())){
+                    MessageUtil.addError("该划拨申请编号冲正时存在不明原因失败，请在划拨查询画面进行冲正！");
+                }
+                return;
+            }
+
             // 本地存取（对账用）
             TaRsAccDtl taRsAccDtlTemp = new TaRsAccDtl();
             taRsAccDtlTemp.setBizId(taTxnFdcCanclSend.getBizId());
             taRsAccDtlTemp.setTxCode(EnuTaFdcTxCode.TRADE_2102.getCode());
-            List<TaRsAccDtl> taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtlTemp);
-            TaRsAccDtl taRsAccDtl = null;
+            taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtlTemp);
+            taRsAccDtl = null;
             if(taRsAccDtlList.size() == 1){
                 taRsAccDtl = taRsAccDtlList.get(0);
                 // 与划拨记账：收款账号和付款账号关系正好颠倒
@@ -184,7 +200,7 @@ public class TaPayoutAction {
             }
 
             // 往SBS发送记账信息
-            TOA toaSbs=taPayoutService.sendAndRecvRealTimeTxn900012111(taRsAccDtl);
+            TOA toaSbs=taSbsService.sendAndRecvRealTimeTxn900010002(taRsAccDtl);
             if(toaSbs !=null) {
                 if(taRsAccDtl != null) {
                     if(("0000").equals(toaSbs.getHeader().RETURN_CODE)){ // SBS记账成功的处理
@@ -197,7 +213,7 @@ public class TaPayoutAction {
 
                 // 往泰安房地产中心发送记账信息
                 TaTxnFdc taTxnFdcTemp = new TaTxnFdc();
-                BeanUtils.copyProperties(taTxnFdcTemp, taTxnFdcCanclSend);
+                BeanUtils.copyProperties(taTxnFdcTemp, taRsAccDtl);
                 taTxnFdcCanclSend.setTxCode(EnuTaFdcTxCode.TRADE_2111.getCode());
                 taPayoutService.sendAndRecvRealTimeTxn9902111(taTxnFdcTemp);
                 /*划拨冲正后查询*/
@@ -218,9 +234,7 @@ public class TaPayoutAction {
     /*记账*/
     public void onClick_Enable(TaRsAccDtl taRsAccDtl){
         try {
-            TaTxnFdc taTxnFdcPara = new TaTxnFdc();
-            BeanUtils.copyProperties(taTxnFdcPara, taRsAccDtl);
-            sendAndRecvSBSAndFDC(taTxnFdcPara, taRsAccDtl);
+            sendAndRecvSBSAndFDC(taRsAccDtl);
             onBtnQueryClick();
         } catch (Exception e) {
             logger.error("记账，", e);
@@ -229,6 +243,14 @@ public class TaPayoutAction {
     }
 
     //= = = = = = = = = = = = = = =  get set = = = = = = = = = = = = = = = =
+    public TaSbsService getTaSbsService() {
+        return taSbsService;
+    }
+
+    public void setTaSbsService(TaSbsService taSbsService) {
+        this.taSbsService = taSbsService;
+    }
+
     public List<SelectItem> getActFlagList() {
         return actFlagList;
     }
