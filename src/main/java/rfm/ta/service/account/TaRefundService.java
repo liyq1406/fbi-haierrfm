@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import platform.auth.MD5Helper;
 import rfm.ta.common.enums.*;
+import rfm.ta.repository.model.TaRsAccDtl;
 import rfm.ta.repository.model.TaTxnFdc;
 import rfm.ta.repository.model.TaTxnSbs;
 import rfm.ta.service.dep.DepMsgSendAndRecv;
@@ -221,15 +222,19 @@ public class TaRefundService {
      * @param taTxnFdcPara
      */
     @Transactional
-    public TOA sendAndRecvRealTimeTxn900012211(TaTxnFdc taTxnFdcPara) {
+    public TOA sendAndRecvRealTimeTxn900012211(TaRsAccDtl taTxnFdcPara) {
         try {
             TaTxnSbs taTxnSbsPara=new TaTxnSbs();
             Tia900010002 tia900010002Temp=new Tia900010002();
             taTxnSbsPara.setTxCode(EnuTaSbsTxCode.TRADE_0002.getCode());
             taTxnSbsPara.setAccId(taTxnFdcPara.getAccId());           // 付款账号
             taTxnSbsPara.setRecvAccId(taTxnFdcPara.getRecvAccId());       // 收款账号
-            taTxnSbsPara.setTxAmt(taTxnFdcPara.getTxAmt().toString());// 交易金额
-            taTxnSbsPara.setReqSn(taTxnFdcPara.getReqSn());           // 外围系统流水
+            taTxnSbsPara.setTxAmt(taTxnFdcPara.getTxAmt());// 交易金额
+            if(taTxnFdcPara.getReqSn() != null && taTxnFdcPara.getReqSn().length()>18){
+                taTxnSbsPara.setReqSn(taTxnFdcPara.getReqSn().substring(0,18)); // 外围系统流水
+            } else {
+                taTxnSbsPara.setReqSn(taTxnFdcPara.getReqSn());       // 外围系统流水
+            }
             taTxnSbsPara.setTxDate(ToolUtil.getNow("yyyyMMdd"));     // 交易日期
             taTxnSbsPara.setTxTime(ToolUtil.getNow("HH:mm:ss"));     // 交易时间
             taTxnSbsPara.setUserId(taTxnFdcPara.getUserId());          // 柜员号

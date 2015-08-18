@@ -3,6 +3,9 @@ package rfm.ta.view;
 import common.utils.ToolUtil;
 import org.apache.commons.beanutils.BeanUtils;
 import org.fbi.dep.model.base.TOA;
+import org.fbi.dep.model.base.TOABody;
+import org.fbi.dep.model.base.TOAHeader;
+import org.fbi.dep.model.txn.Toa900010002;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import platform.common.utils.MessageUtil;
@@ -169,26 +172,26 @@ public class TaPayoutAction {
                 taRsAccDtl = taRsAccDtlList.get(0);
                 // 与划拨记账：收款账号和付款账号关系正好颠倒
                 taRsAccDtl.setTxCode(EnuTaFdcTxCode.TRADE_2111.getCode());
+                String accId = taRsAccDtl.getAccId();
                 taRsAccDtl.setAccId(taRsAccDtl.getRecvAccId());
-                taRsAccDtl.setRecvAccId(taRsAccDtl.getAccId());
+                taRsAccDtl.setRecvAccId(accId);
                 taRsAccDtl.setActFlag(EnuActFlag.ACT_UNKNOWN.getCode());
                 taAccDetlService.insertRecord(taRsAccDtl);
             } else {
                 logger.error("查不到该笔冲正的相关划拨信息，请确认输入的划拨申请编号");
                 MessageUtil.addError("查不到该笔冲正的相关划拨信息，请确认输入的划拨申请编号");
+                return;
             }
 
             // 往SBS发送记账信息
-            taTxnFdcCanclSend.setTxCode(EnuTaSbsTxCode.TRADE_0002.getCode());
-            TOA toaSbs=taPayoutService.sendAndRecvRealTimeTxn900012111(taTxnFdcCanclSend);
+            TOA toaSbs=taPayoutService.sendAndRecvRealTimeTxn900012111(taRsAccDtl);
             if(toaSbs !=null) {
                 if(taRsAccDtl != null) {
                     if(("0000").equals(toaSbs.getHeader().RETURN_CODE)){ // SBS记账成功的处理
                         taRsAccDtl.setActFlag(EnuActFlag.ACT_SUCCESS.getCode());
                         taAccDetlService.updateRecord(taRsAccDtl);
                     } else { // SBS记账失败的处理
-                        taRsAccDtl.setActFlag(EnuActFlag.ACT_FAIL.getCode());
-                        taAccDetlService.updateRecord(taRsAccDtl);
+                        taAccDetlService.deleteRecord(taRsAccDtl.getPkId());
                     }
                 }
 

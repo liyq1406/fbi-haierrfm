@@ -175,18 +175,19 @@ public class TaRefundAction {
                 taRsAccDtl = taRsAccDtlList.get(0);
                 // 与返还记账：收款账号和付款账号关系正好颠倒
                 taRsAccDtl.setTxCode(EnuTaFdcTxCode.TRADE_2111.getCode());
+                String accId = taRsAccDtl.getAccId();
                 taRsAccDtl.setAccId(taRsAccDtl.getRecvAccId());
-                taRsAccDtl.setRecvAccId(taRsAccDtl.getAccId());
+                taRsAccDtl.setRecvAccId(accId);
                 taRsAccDtl.setActFlag(EnuActFlag.ACT_UNKNOWN.getCode());
                 taAccDetlService.insertRecord(taRsAccDtl);
             } else {
                 logger.error("查不到该笔冲正的相关划拨信息，请确认输入的划拨申请编号");
                 MessageUtil.addError("查不到该笔冲正的相关划拨信息，请确认输入的划拨申请编号");
+                return;
             }
 
             // 往SBS发送记账信息
-            taTxnFdcCanclSend.setTxCode(EnuTaSbsTxCode.TRADE_0002.getCode());
-            TOA toaSbs=taRefundService.sendAndRecvRealTimeTxn900012211(taTxnFdcValiSendAndRecv);
+            TOA toaSbs=taRefundService.sendAndRecvRealTimeTxn900012211(taRsAccDtl);
             if(toaSbs!=null) {
                 if(taRsAccDtl != null) {
                     if(("0000").equals(toaSbs.getHeader().RETURN_CODE)){ // SBS记账成功的处理
@@ -194,7 +195,7 @@ public class TaRefundAction {
                         taAccDetlService.updateRecord(taRsAccDtl);
                     } else { // SBS记账失败的处理
                         taRsAccDtl.setActFlag(EnuActFlag.ACT_FAIL.getCode());
-                        taAccDetlService.updateRecord(taRsAccDtl);
+                        taAccDetlService.deleteRecord(taRsAccDtl.getPkId());
                     }
                 }
 
