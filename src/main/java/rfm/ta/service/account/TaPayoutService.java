@@ -233,7 +233,7 @@ public class TaPayoutService {
             taTxnSbsPara.setTxCode(EnuTaSbsTxCode.TRADE_0002.getCode());
             taTxnSbsPara.setAccId(taTxnFdcPara.getAccId());           // 付款账号
             taTxnSbsPara.setRecvAccId(taTxnFdcPara.getRecvAccId());   // 收款账号
-            taTxnSbsPara.setTxAmt(taTxnFdcPara.getTxAmt().toString());// 交易金额
+            taTxnSbsPara.setTxAmt(taTxnFdcPara.getTxAmt());           // 交易金额
             taTxnSbsPara.setReqSn(taTxnFdcPara.getReqSn());           // 外围系统流水
             taTxnSbsPara.setTxDate(ToolUtil.getNow("yyyyMMdd"));     // 交易日期
             taTxnSbsPara.setTxTime(ToolUtil.getNow("HH:mm:ss"));     // 交易时间
