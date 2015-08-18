@@ -94,8 +94,8 @@ public class TaDayEndReconciAction implements Serializable {
             }
 
             // 临时用
-            TaRsAccDtl taRsAccDtlTemp=new TaRsAccDtl();
             for(Toa900012602.Body.BodyDetail bdUnit:detailsTemp){
+                TaRsAccDtl taRsAccDtlTemp=new TaRsAccDtl();
                 taRsAccDtlTemp.setAccId(bdUnit.ACTNUM);
                 taRsAccDtlTemp.setRecvAccId(bdUnit.BENACT);
                 taRsAccDtlTemp.setTxAmt(bdUnit.TXNAMT);
@@ -217,7 +217,9 @@ public class TaDayEndReconciAction implements Serializable {
 
     public String onBlnc() {
         try {
-            sendReconciFile(taRsAccDtlSbsList);
+            if(reconci(taRsAccDtlList,taRsAccDtlSbsList)) {
+                //sendReconciFile(taRsAccDtlSbsList);
+            }
         } catch (Exception e) {
             MessageUtil.addError("??????");
         }
@@ -235,24 +237,24 @@ public class TaDayEndReconciAction implements Serializable {
 
     /**
      * 比较两个List
-     * @param taRsAccDtlList1
-     * @param taRsAccDtlList2
+     * @param taRsAccDtlListPara1
+     * @param taRsAccDtlListPara2
      */
-    private void Reconci(List<TaRsAccDtl> taRsAccDtlList1, List<TaRsAccDtl> taRsAccDtlList2){
+    private Boolean reconci(List<TaRsAccDtl> taRsAccDtlListPara1, List<TaRsAccDtl> taRsAccDtlListPara2){
         // List2重复项
         List<TaRsAccDtl> taRsAccDtlList2Repeat = new ArrayList<TaRsAccDtl>();
         // 结果List
         List<TaRsAccDtl> taRsAccDtlList = new ArrayList<TaRsAccDtl>();
         boolean isExist = false;
-
         // 遍历List1
-        for(TaRsAccDtl taRsAccDtl1:taRsAccDtlList1){
+        for(TaRsAccDtl taRsAccDtl1:taRsAccDtlListPara1){
             isExist = false;
             // 遍历List2
-            for(TaRsAccDtl taRsAccDtl2:taRsAccDtlList2){
-                if(taRsAccDtl1.getAccId().equals(taRsAccDtl2.getAccId())
+            for(TaRsAccDtl taRsAccDtl2:taRsAccDtlListPara2){
+                if(taRsAccDtl1.getReqSn().substring(8,26).equals(taRsAccDtl2.getReqSn())
+                        &&taRsAccDtl1.getAccId().equals(taRsAccDtl2.getAccId())
                         &&taRsAccDtl1.getRecvAccId().equals(taRsAccDtl2.getRecvAccId())
-                        &&taRsAccDtl1.getBizId().equals(taRsAccDtl2.getBizId())){
+                        &&taRsAccDtl1.getTxAmt().equals(taRsAccDtl2.getTxAmt())){
                     isExist = true;
                     taRsAccDtlList2Repeat.add(taRsAccDtl2);
                 }
@@ -262,8 +264,10 @@ public class TaDayEndReconciAction implements Serializable {
             }
         }
 
-        taRsAccDtlList2.removeAll(taRsAccDtlList2Repeat);
-        taRsAccDtlList.addAll(taRsAccDtlList2);
+        taRsAccDtlListPara2.removeAll(taRsAccDtlList2Repeat);
+        taRsAccDtlListPara1=taRsAccDtlList;
+        //taRsAccDtlList.addAll(taRsAccDtlList2);
+        return true;
     }
 
     //= = = = = = = = = = = = get set = = = = = = = = = = = =

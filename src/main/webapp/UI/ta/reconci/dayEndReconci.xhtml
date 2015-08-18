@@ -65,12 +65,16 @@
                                      paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                      paginator="true" rows="15" paginatorPosition="bottom"
                                      rowsPerPageTemplate="100,50,30,15,5"
+                                     rowIndexVar="row"
                                      resizableColumns="true"
                                      scrollable="true"
                                      emptyMessage="数据记录为空...">
                             <f:facet name="header">
                                 本日本地记账流水(总笔数：#{taDayEndReconciAction.strLocalTotalCounts}；总金额：#{taDayEndReconciAction.strLocalTotalAmt}）
                             </f:facet>
+                            <p:column headerText="序号" style="width:30px">
+                                <h:outputText value="#{row + 1}"/>
+                            </p:column>
                             <p:column headerText="交易号码" style="width:100px;text-align:center">
                                 <h:outputText value="#{record.txCode}"/>
                             </p:column>
@@ -98,10 +102,14 @@
                                      paginator="true" rows="15" paginatorPosition="bottom"
                                      rowsPerPageTemplate="100,50,30,15,5"
                                      resizableColumns="true"
+                                     rowIndexVar="row"
                                      emptyMessage="数据记录为空...">
                             <f:facet name="header">
                                 本日SBS记账流水(总笔数：#{taDayEndReconciAction.strSbsTotalCounts}；总金额：#{taDayEndReconciAction.strSbsTotalAmt}）
                             </f:facet>
+                            <p:column headerText="序号" style="width:30px">
+                                <h:outputText value="#{row + 1}"/>
+                            </p:column>
                             <p:column headerText="监管账号" style="text-align:center">
                                 <h:outputText value="#{record.accId}"/>
                             </p:column>

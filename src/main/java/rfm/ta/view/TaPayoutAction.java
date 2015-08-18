@@ -146,9 +146,10 @@ public class TaPayoutAction {
 
     /*验证后立即划拨记账用*/
     public Boolean sendAndRecvSBSAndFDC(TaRsAccDtl taRsAccDtl) {
+        TOA toaSbs=null;
         try {
             // 往SBS发送记账信息
-            TOA toaSbs=taSbsService.sendAndRecvRealTimeTxn900010002(taRsAccDtl);
+            toaSbs=taSbsService.sendAndRecvRealTimeTxn900010002(taRsAccDtl);
             if(toaSbs !=null) {
                 if(("0000").equals(toaSbs.getHeader().RETURN_CODE)){ // SBS记账成功的处理
                     taRsAccDtl.setActFlag(EnuActFlag.ACT_SUCCESS.getCode());
@@ -159,10 +160,12 @@ public class TaPayoutAction {
                     BeanUtils.copyProperties(taTxnFdcTemp, taRsAccDtl);
                     taTxnFdcTemp.setTxCode(EnuTaFdcTxCode.TRADE_2102.getCode());
                     taFdcService.sendAndRecvRealTimeTxn9902102(taTxnFdcTemp);
-                /*记账后查询*/
+                    /*记账后查询*/
                     taTxnFdcActSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcTemp.getPkId());
+                    MessageUtil.addInfo(toaSbs.getHeader().RETURN_MSG);
                 } else { // SBS记账失败的处理
                     taAccDetlService.deleteRecord(taRsAccDtl.getPkId());
+                    MessageUtil.addInfo(toaSbs.getHeader().RETURN_MSG);
                 }
             }
             return true;
@@ -212,7 +215,8 @@ public class TaPayoutAction {
                 return;
             }
 
-            // 往SBS发送记账信息
+            // 往SBS和FDC发送记账信息
+            taRsAccDtlTemp.setReqSn(ToolUtil.getStrAppReqSn_Back());
             TOA toaSbs=taSbsService.sendAndRecvRealTimeTxn900010002(taRsAccDtlTemp);
             if(toaSbs !=null) {
                 if(taRsAccDtlTemp != null) {
