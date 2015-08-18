@@ -66,14 +66,15 @@
                                      paginator="true" rows="15" paginatorPosition="bottom"
                                      rowsPerPageTemplate="100,50,30,15,5"
                                      resizableColumns="true"
+                                     scrollable="true"
                                      emptyMessage="数据记录为空...">
                             <f:facet name="header">
                                 本日本地记账流水(总笔数：#{taDayEndReconciAction.strLocalTotalCounts}；总金额：#{taDayEndReconciAction.strLocalTotalAmt}）
                             </f:facet>
-                            <p:column headerText="交易号码" style="width:200px;text-align:center">
+                            <p:column headerText="交易号码" style="width:100px;text-align:center">
                                 <h:outputText value="#{record.txCode}"/>
                             </p:column>
-                            <p:column headerText="业务编号" style="width:200px;text-align:center">
+                            <p:column headerText="业务编号" style="width:100px;text-align:center">
                                 <h:outputText value="#{record.bizId}"/>
                             </p:column>
                             <p:column headerText="监管账号" style="width:200px;text-align:center">

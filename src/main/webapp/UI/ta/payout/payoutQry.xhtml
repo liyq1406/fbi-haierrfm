@@ -77,63 +77,13 @@
                              var="record"
                              rowKey="#{record.pkId}"
                              resizableColumns="true"
+                             scrollable="true"
                              paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                              paginator="true" rows="15" paginatorPosition="bottom"
                              rowsPerPageTemplate="100,50,30,15,5"
                              emptyMessage="数据记录为空...">
-                    <p:column headerText="划拨与冲正" style="text-align:center">
-                        <h:outputText value="#{record.txCode eq '2102'? '划拨':'冲正'}" style="text-align: center;"/>
-                    </p:column>
 
-                    <p:column headerText="划拨申请编号" style="text-align:center">
-                        <h:outputText value="#{record.bizId}" style="text-align: center;"/>
-                    </p:column>
-
-                    <p:column headerText="监管账号" style="text-align:center">
-                        <h:outputText value="#{record.accId}" style="text-align: center;"/>
-                    </p:column>
-
-                    <p:column headerText="监管账户名" style="text-align:center">
-                        <h:outputText value="#{record.accName}" style="text-align: right"/>
-                    </p:column>
-
-                    <p:column headerText="划拨金额" style="text-align:center">
-                        <h:outputText value="#{record.txAmt}" style="text-align: right"/>
-                    </p:column>
-
-                    <p:column headerText="收款银行" style="text-align:center">
-                        <h:outputText value="#{record.recvBank}" style="text-align: right"/>
-                    </p:column>
-
-                    <p:column headerText="收款单位账号" style="text-align:center">
-                        <h:outputText value="#{record.recvAccId}" style="text-align: right"/>
-                    </p:column>
-
-                    <p:column headerText="收款单位户名" style="text-align:center">
-                        <h:outputText value="#{record.recvAccName}" style="text-align: right"/>
-                    </p:column>
-
-                    <p:column headerText="交易日期" style="text-align:center">
-                        <h:outputText value="#{record.txDate}" style="text-align: right"/>
-                    </p:column>
-
-                    <p:column headerText="项目名称" style="text-align:center">
-                        <h:outputText value="#{record.progName}" style="text-align: right"/>
-                    </p:column>
-
-                    <p:column headerText="开发企业名称" style="text-align:center">
-                        <h:outputText value="#{record.compName}" style="text-align: right"/>
-                    </p:column>
-
-                    <p:column headerText="预售监管平台流水" style="text-align:center">
-                        <h:outputText value="#{record.fdcSn}" style="text-align: right"/>
-                    </p:column>
-
-                    <p:column headerText="记账成功标志" style="text-align:center">
-                        <h:outputText value="#{taRefundAction.actFlagMap.get(record.actFlag)}"/>
-                    </p:column>
-
-                    <p:column headerText="操作" style="text-align:center">
+                    <p:column headerText="操作" style="width:50px;text-align:center">
                         <p:commandLink  value="记账" immediate="true" ajax="false"
                                         action="#{taPayoutAction.onClick_Enable(record)}"
                                         rendered="#{record.actFlag eq '1'?'true':'false'}"
@@ -141,6 +91,57 @@
                         </p:commandLink>
                     </p:column>
 
+                    <p:column headerText="划拨与冲正" style="width:100px;text-align:center">
+                        <h:outputText value="#{record.txCode eq '2102'? '划拨':'冲正'}" style="text-align: center;"/>
+                    </p:column>
+
+                    <p:column headerText="划拨申请编号" style="width:110px;text-align:center">
+                        <h:outputText value="#{record.bizId}" style="text-align: center;"/>
+                    </p:column>
+
+                    <p:column headerText="付款账号" style="width:190px;text-align:center">
+                        <h:outputText value="#{record.accId}" style="text-align: center;"/>
+                    </p:column>
+
+                    <p:column headerText="付款账户名" style="width:360px;text-align:center">
+                        <h:outputText value="#{record.accName}" style="text-align: right"/>
+                    </p:column>
+
+                    <p:column headerText="划拨金额" style="width:80px;text-align:center">
+                        <h:outputText value="#{record.txAmt}" style="text-align: right"/>
+                    </p:column>
+
+                    <p:column headerText="收款银行" style="width:120px;text-align:center">
+                        <h:outputText value="#{record.recvBank}" style="text-align: right"/>
+                    </p:column>
+
+                    <p:column headerText="收款账号" style="width:190px;text-align:center">
+                        <h:outputText value="#{record.recvAccId}" style="text-align: right"/>
+                    </p:column>
+
+                    <p:column headerText="收款账户名" style="width:360px;text-align:center">
+                        <h:outputText value="#{record.recvAccName}" style="text-align: right"/>
+                    </p:column>
+
+                    <p:column headerText="交易日期" style="width:100px;text-align:center">
+                        <h:outputText value="#{record.txDate}" style="text-align: right"/>
+                    </p:column>
+
+                    <p:column headerText="项目名称" style="width:180px;text-align:center">
+                        <h:outputText value="#{record.progName}" style="text-align: right"/>
+                    </p:column>
+
+                    <p:column headerText="开发企业名称" style="width:180px;text-align:center">
+                        <h:outputText value="#{record.compName}" style="text-align: right"/>
+                    </p:column>
+
+                    <p:column headerText="预售监管平台流水" style="width:180px;text-align:center">
+                        <h:outputText value="#{record.fdcSn}" style="text-align: right"/>
+                    </p:column>
+
+                    <p:column headerText="记账成功标志" style="width:120px;text-align:center">
+                        <h:outputText value="#{taRefundAction.actFlagMap.get(record.actFlag)}"/>
+                    </p:column>
                 </p:dataTable>
             </h:form>
         </div>

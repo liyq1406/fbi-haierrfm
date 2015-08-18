@@ -32,12 +32,8 @@
         </javaClientGenerator>
 
         <!--房地产资金监管银行接口类 -->
-        <table tableName="TA_RS_ACC">
-            <property name="ignoreQualifiersAtRuntime" value="true" />
-            <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
-        </table>
 
-        <!--<table tableName="TA_RS_ACC">
+        <table tableName="TA_RS_ACC">
             <property name="ignoreQualifiersAtRuntime" value="true" />
             <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
         </table>
@@ -61,7 +57,6 @@
             <property name="ignoreQualifiersAtRuntime" value="true" />
             <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
         </table>
-        -->
     </context>
 
 </generatorConfiguration>

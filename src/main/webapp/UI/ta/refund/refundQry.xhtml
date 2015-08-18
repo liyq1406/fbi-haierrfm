@@ -75,47 +75,14 @@
                              selectionMode="single"
                              var="record"
                              rowKey="#{record.pkId}"
+                             resizableColumns="true"
+                             scrollable="true"
                              paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                              paginator="true" rows="15" paginatorPosition="bottom"
                              rowsPerPageTemplate="100,50,30,15,5"
                              emptyMessage="数据记录为空...">
-                    <p:column headerText="返还申请编号" style="text-align:center">
-                        <h:outputText value="#{record.bizId}" style="text-align: center;"/>
-                    </p:column>
 
-                    <p:column headerText="监管账号" style="text-align:center">
-                        <h:outputText value="#{record.accId}" style="text-align: center;"/>
-                    </p:column>
-
-                    <p:column headerText="监管账户户名" style="text-align:center">
-                        <h:outputText value="#{record.accName}" style="text-align: right"/>
-                    </p:column>
-
-                    <p:column headerText="返还金额" style="text-align:center">
-                        <h:outputText value="#{record.txAmt}" style="text-align: right"/>
-                    </p:column>
-
-                    <p:column headerText="业主姓名" style="text-align:center">
-                        <h:outputText value="#{record.ownerName}" style="text-align: right"/>
-                    </p:column>
-
-                    <p:column headerText="证件类型" style="text-align:center">
-                        <h:outputText value="#{record.ctficType}" style="text-align: right"/>
-                    </p:column>
-
-                    <p:column headerText="证件号码" style="text-align:center">
-                        <h:outputText value="#{record.ctficId}" style="text-align: right"/>
-                    </p:column>
-
-                    <p:column headerText="预售监管平台流水" style="text-align:center">
-                        <h:outputText value="#{record.fdcSn}" style="text-align: right"/>
-                    </p:column>
-
-                    <p:column headerText="记账成功标志" style="text-align:center">
-                        <h:outputText value="#{taRefundAction.actFlagMap.get(record.actFlag)}"/>
-                    </p:column>
-
-                    <p:column headerText="操作" style="text-align:center">
+                    <p:column headerText="操作" style="width:50px;text-align:center">
                         <p:commandLink  value="记账" immediate="true" ajax="false"
                                         action="#{taRefundAction.onClick_Enable(record)}"
                                         rendered="#{record.actFlag eq '1'?'true':'false'}"
@@ -123,6 +90,45 @@
                         </p:commandLink>
                     </p:column>
 
+                    <p:column headerText="划拨与冲正" style="width:100px;text-align:center">
+                        <h:outputText value="#{record.txCode eq '2202'? '返还':'冲正'}" style="text-align: center;"/>
+                    </p:column>
+
+                    <p:column headerText="返还申请编号" style="width:110px;text-align:center">
+                        <h:outputText value="#{record.bizId}" style="text-align: center;"/>
+                    </p:column>
+
+                    <p:column headerText="付款账号" style="width:190px;text-align:center">
+                        <h:outputText value="#{record.accId}" style="text-align: center;"/>
+                    </p:column>
+
+                    <p:column headerText="付款账户名" style="width:360px;text-align:center">
+                        <h:outputText value="#{record.accName}" style="text-align: right"/>
+                    </p:column>
+
+                    <p:column headerText="返还金额" style="width:80px;text-align:center">
+                        <h:outputText value="#{record.txAmt}" style="text-align: right"/>
+                    </p:column>
+
+                    <p:column headerText="业主姓名" style="width:190px;text-align:center">
+                        <h:outputText value="#{record.ownerName}" style="text-align: right"/>
+                    </p:column>
+
+                    <p:column headerText="证件类型" style="width:100px;text-align:center">
+                        <h:outputText value="#{record.ctficType}" style="text-align: right"/>
+                    </p:column>
+
+                    <p:column headerText="证件号码" style="width:160px;text-align:center">
+                        <h:outputText value="#{record.ctficId}" style="text-align: right"/>
+                    </p:column>
+
+                    <p:column headerText="预售监管平台流水" style="width:160px;text-align:center">
+                        <h:outputText value="#{record.fdcSn}" style="text-align: right"/>
+                    </p:column>
+
+                    <p:column headerText="记账成功标志" style="width:160px;text-align:center">
+                        <h:outputText value="#{taRefundAction.actFlagMap.get(record.actFlag)}"/>
+                    </p:column>
                 </p:dataTable>
             </h:form>
         </div>
