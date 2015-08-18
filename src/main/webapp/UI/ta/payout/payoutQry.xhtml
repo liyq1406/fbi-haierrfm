@@ -44,12 +44,17 @@
             <h:form id="actqueryForm">
                 <p:panel id="query" header="【监管账户信息】查询">
                     <h:panelGrid columns="2" cellspacing="3" style="width:100%">
-                        <h:panelGrid columns="2" cellspacing="3" style=""
+                        <h:panelGrid columns="4" cellspacing="3" style=""
                                      columnClasses="col-95,col-5,col-95,col-5">
                             <h:outputLabel value="*【记账成功标志】:" for="actType"/>
                             <h:selectOneMenu id="actType" value="#{taPayoutAction.taRsAccDtl.actFlag}" >
                                 <f:selectItems value="#{taPayoutAction.actFlagList}"/>
                             </h:selectOneMenu>
+
+                            <h:outputLabel value="【划拨申请编号】:" for="bizIdVali"/>
+                            <h:inputText id="bizIdVali"
+                                         value="#{taPayoutAction.taRsAccDtl.bizId}">
+                            </h:inputText>
                         </h:panelGrid>
                         <p:commandButton update="msgs,pdt" style="width: 80px"
                                          action="#{taPayoutAction.onBtnQueryClick}" id="btnQuery" value="查询">
@@ -71,10 +76,15 @@
                              selectionMode="single"
                              var="record"
                              rowKey="#{record.pkId}"
+                             resizableColumns="true"
                              paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                              paginator="true" rows="15" paginatorPosition="bottom"
                              rowsPerPageTemplate="100,50,30,15,5"
                              emptyMessage="数据记录为空...">
+                    <p:column headerText="划拨与冲正" style="text-align:center">
+                        <h:outputText value="#{record.txCode eq '2102'? '划拨':'冲正'}" style="text-align: center;"/>
+                    </p:column>
+
                     <p:column headerText="划拨申请编号" style="text-align:center">
                         <h:outputText value="#{record.bizId}" style="text-align: center;"/>
                     </p:column>

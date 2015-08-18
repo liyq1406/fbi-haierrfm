@@ -48,7 +48,7 @@
                             <p:menuitem type="push" value="获取sbs数据" icon="ui-icon ui-icon-plus"
                                         action="#{taDayEndReconciAction.onQrySbsData}" update="sbspdt,:form:msgs"
                                         ajax="true"/>
-                            <p:menuitem type="push" value="日终对账" icon="ui-icon ui-icon-copy"
+                            <p:menuitem type="push" value="日终对账数据发送" icon="ui-icon ui-icon-copy"
                                         action="#{taDayEndReconciAction.onBlnc}" update="pdt,sbspdt,:form:msgs"
                                         ajax="true"/>
                         </p:menubar>
@@ -106,9 +106,6 @@
                             </p:column>
                             <p:column headerText="对方账号" style="text-align:center">
                                 <h:outputText value="#{record.recvAccId}"/>
-                            </p:column>
-                            <p:column headerText="对方账户名称" style="text-align:center">
-                                <h:outputText value="#{record.recvAccName}"/>
                             </p:column>
                             <p:column headerText="交易金额">
                                 <h:outputText value="#{record.txAmt}" style="float: right">

@@ -96,7 +96,7 @@ public class TaDayEndReconciAction implements Serializable {
             // 临时用
             TaRsAccDtl taRsAccDtlTemp=new TaRsAccDtl();
             for(Toa900012602.Body.BodyDetail bdUnit:detailsTemp){
-                taRsAccDtlTemp.setTxCode(bdUnit.ACTNUM);
+                taRsAccDtlTemp.setAccId(bdUnit.ACTNUM);
                 taRsAccDtlTemp.setRecvAccId(bdUnit.BENACT);
                 taRsAccDtlTemp.setTxAmt(bdUnit.TXNAMT);
                 taRsAccDtlTemp.setTxDate(bdUnit.ERYTIM);
@@ -124,7 +124,6 @@ public class TaDayEndReconciAction implements Serializable {
             //taRsAccDtlSbsList = taAccDetlService.selectedRecords(new TaRsAccDtl());
             if (taRsAccDtlSbsList.size() > 0) {
                 MessageUtil.addInfo("获取SBS记账信息成功。");
-                System.out.println("======>" + taRsAccDtlList.get(0).getAccId());
             }
         }catch (Exception e){
             logger.error("查询对账信息失败", e);

@@ -1,5 +1,6 @@
 package rfm.ta.view;
 
+import common.utils.ToolUtil;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fbi.dep.model.base.TOA;
@@ -99,7 +100,7 @@ public class TaRefundAction {
             // 验证重复记账
             TaRsAccDtl taRsAccDtl = new TaRsAccDtl();
             taRsAccDtl.setBizId(taTxnFdcValiSendAndRecv.getBizId());
-            taRsAccDtl.setTxCode(EnuTaFdcTxCode.TRADE_2201.getCode());
+            taRsAccDtl.setTxCode(EnuTaFdcTxCode.TRADE_2202.getCode());
             List<TaRsAccDtl> taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtl);
             if(taRsAccDtlList.size() == 1){
                 String actFlag = taRsAccDtlList.get(0).getActFlag();
@@ -114,24 +115,29 @@ public class TaRefundAction {
             // 本地存取（对账用）
             TaRsAccDtl taRsAccDtlTemp = new TaRsAccDtl();
             BeanUtils.copyProperties(taRsAccDtlTemp, taTxnFdcValiSendAndRecv);
+            taRsAccDtlTemp.setTxCode(EnuTaFdcTxCode.TRADE_2202.getCode());
             taRsAccDtlTemp.setDeletedFlag(EnuDelFlag.DEL_FALSE.getCode());
             taRsAccDtlTemp.setActFlag(EnuActFlag.ACT_UNKNOWN.getCode());
             taAccDetlService.insertRecord(taRsAccDtlTemp);
 
             // 往SBS发送记账信息
-            sendAndRecvSBSAndFDC(taTxnFdcValiSendAndRecv, taRsAccDtlTemp);
+            taTxnFdcValiSendAndRecv.setTxDate(ToolUtil.getNow("yyyyMMdd"));
+            if(sendAndRecvSBSAndFDC(taTxnFdcValiSendAndRecv, taRsAccDtlTemp)) {
+                MessageUtil.addInfo("返还记账成功！");
+            }else{
+                MessageUtil.addInfo("返还记账失败！");
+            }
         }catch (Exception e){
-            logger.error("验证后立即划拨记账用，", e);
+            logger.error("验证后立即返还记账用，", e);
             MessageUtil.addError(e.getMessage());
         }
     }
 
     /*验证后立即划拨记账用*/
-    public void sendAndRecvSBSAndFDC(TaTxnFdc taTxnFdcPara,TaRsAccDtl taRsAccDtl) {
+    public Boolean sendAndRecvSBSAndFDC(TaTxnFdc taTxnFdcPara,TaRsAccDtl taRsAccDtl) {
         try {
             // 往SBS发送记账信息
-            TaTxnFdc taTxnFdcTemp = new TaTxnFdc();
-            BeanUtils.copyProperties(taTxnFdcTemp, taTxnFdcPara);
+            TaTxnFdc taTxnFdcTemp=(TaTxnFdc)BeanUtils.cloneBean(taTxnFdcPara);
             TOA toaSbs=taRefundService.sendAndRecvRealTimeTxn900012202(taTxnFdcTemp);
             if(toaSbs!=null) {
                 if(("0000").equals(toaSbs.getHeader().RETURN_CODE)){ // SBS记账成功的处理
@@ -142,14 +148,17 @@ public class TaRefundAction {
                 }
 
                 // 往泰安房地产中心发送记账信息
+                BeanUtils.copyProperties(taTxnFdcTemp, taTxnFdcPara);
                 taTxnFdcTemp.setTxCode(EnuTaFdcTxCode.TRADE_2202.getCode());
                 taRefundService.sendAndRecvRealTimeTxn9902202(taTxnFdcTemp);
             /*记账后查询*/
                 taTxnFdcActSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcTemp.getPkId());
             }
+            return true;
         }catch (Exception e){
             logger.error("验证后立即划拨记账用，", e);
             MessageUtil.addError(e.getMessage());
+            return false;
         }
     }
 
@@ -164,10 +173,10 @@ public class TaRefundAction {
             TaRsAccDtl taRsAccDtl = null;
             if(taRsAccDtlList.size() == 1){
                 taRsAccDtl = taRsAccDtlList.get(0);
-                String accId = taRsAccDtl.getAccId();
-                String recvAccId = taRsAccDtl.getRecvAccId();
-                taRsAccDtl.setAccId(recvAccId);
-                taRsAccDtl.setRecvAccId(accId);
+                // 与返还记账：收款账号和付款账号关系正好颠倒
+                taRsAccDtl.setTxCode(EnuTaFdcTxCode.TRADE_2111.getCode());
+                taRsAccDtl.setAccId(taRsAccDtl.getRecvAccId());
+                taRsAccDtl.setRecvAccId(taRsAccDtl.getAccId());
                 taRsAccDtl.setActFlag(EnuActFlag.ACT_UNKNOWN.getCode());
                 taAccDetlService.insertRecord(taRsAccDtl);
             } else {
@@ -205,8 +214,8 @@ public class TaRefundAction {
 
     /*画面查询用*/
     public void onBtnQueryClick() {
-        taRsAccDtlList = taAccDetlService.selectedRecordsByCondition(taRsAccDtl.getActFlag(),
-                EnuTaFdcTxCode.TRADE_2201.getCode().substring(0,2));
+        taRsAccDtl.setTxCode(EnuTaFdcTxCode.TRADE_2201.getCode().substring(0,2));
+        taRsAccDtlList = taAccDetlService.selectedRecordsByCondition(taRsAccDtl);
     }
 
     /*记账*/

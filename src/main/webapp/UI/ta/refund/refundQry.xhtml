@@ -44,12 +44,16 @@
             <h:form id="actqueryForm">
                 <p:panel id="query" header="【监管账户信息】查询">
                     <h:panelGrid columns="2" cellspacing="3" style="width:100%">
-                        <h:panelGrid columns="2" cellspacing="3" style=""
+                        <h:panelGrid columns="4" cellspacing="3" style=""
                                      columnClasses="col-95,col-5,col-95,col-5">
                             <h:outputLabel value="*【记账成功标志】:" for="actType"/>
                             <h:selectOneMenu id="actType" value="#{taRefundAction.taRsAccDtl.actFlag}" >
                                 <f:selectItems value="#{taRefundAction.actFlagList}"/>
                             </h:selectOneMenu>
+                            <h:outputLabel value="【返还申请编号】:" for="bizIdVali"/>
+                            <h:inputText id="bizIdVali"
+                                         value="#{taRefundAction.taRsAccDtl.bizId}">
+                            </h:inputText>
                         </h:panelGrid>
                         <p:commandButton update="msgs,pdt" style="width: 80px"
                                          action="#{taRefundAction.onBtnQueryClick}" id="btnQuery" value="查询">

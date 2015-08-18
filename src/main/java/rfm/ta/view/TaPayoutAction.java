@@ -94,7 +94,7 @@ public class TaPayoutAction {
             // 验证重复记账
             TaRsAccDtl taRsAccDtl = new TaRsAccDtl();
             taRsAccDtl.setBizId(taTxnFdcValiSendAndRecv.getBizId());
-            taRsAccDtl.setTxCode(EnuTaFdcTxCode.TRADE_2101.getCode());
+            taRsAccDtl.setTxCode(EnuTaFdcTxCode.TRADE_2102.getCode());
             List<TaRsAccDtl> taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtl);
             if(taRsAccDtlList.size() == 1){
                 String actFlag = taRsAccDtlList.get(0).getActFlag();
@@ -109,13 +109,18 @@ public class TaPayoutAction {
             // 本地存取（对账用）
             TaRsAccDtl taRsAccDtlTemp = new TaRsAccDtl();
             BeanUtils.copyProperties(taRsAccDtlTemp, taTxnFdcValiSendAndRecv);
+            taRsAccDtlTemp.setTxCode(EnuTaFdcTxCode.TRADE_2102.getCode());
             taRsAccDtlTemp.setDeletedFlag(EnuDelFlag.DEL_FALSE.getCode());
             taRsAccDtlTemp.setActFlag(EnuActFlag.ACT_UNKNOWN.getCode());
             taAccDetlService.insertRecord(taRsAccDtlTemp);
 
             // 往SBS发送记账信息
             taTxnFdcValiSendAndRecv.setTxDate(ToolUtil.getNow("yyyyMMdd"));
-            sendAndRecvSBSAndFDC(taTxnFdcValiSendAndRecv, taRsAccDtlTemp);
+            if(sendAndRecvSBSAndFDC(taTxnFdcValiSendAndRecv, taRsAccDtlTemp)) {
+                MessageUtil.addInfo("划拨记账成功！");
+            }else{
+                MessageUtil.addInfo("划拨记账失败！");
+            }
         }catch (Exception e){
             logger.error("验证后立即划拨记账用，", e);
             MessageUtil.addError(e.getMessage());
@@ -123,7 +128,7 @@ public class TaPayoutAction {
     }
 
     /*验证后立即划拨记账用*/
-    public void sendAndRecvSBSAndFDC(TaTxnFdc taTxnFdcPara,TaRsAccDtl taRsAccDtl) {
+    public Boolean sendAndRecvSBSAndFDC(TaTxnFdc taTxnFdcPara,TaRsAccDtl taRsAccDtl) {
         try {
             // 往SBS发送记账信息
             TaTxnFdc taTxnFdcTemp=(TaTxnFdc)BeanUtils.cloneBean(taTxnFdcPara);
@@ -143,9 +148,11 @@ public class TaPayoutAction {
                 /*记账后查询*/
                 taTxnFdcActSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcTemp.getPkId());
             }
+            return true;
         }catch (Exception e){
             logger.error("验证后立即划拨记账用，", e);
             MessageUtil.addError(e.getMessage());
+            return false;
         }
     }
 
@@ -155,15 +162,15 @@ public class TaPayoutAction {
             // 本地存取（对账用）
             TaRsAccDtl taRsAccDtlTemp = new TaRsAccDtl();
             taRsAccDtlTemp.setBizId(taTxnFdcCanclSend.getBizId());
-            taRsAccDtlTemp.setTxCode(EnuTaFdcTxCode.TRADE_2101.getCode());
+            taRsAccDtlTemp.setTxCode(EnuTaFdcTxCode.TRADE_2102.getCode());
             List<TaRsAccDtl> taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtlTemp);
             TaRsAccDtl taRsAccDtl = null;
             if(taRsAccDtlList.size() == 1){
                 taRsAccDtl = taRsAccDtlList.get(0);
-                String accId = taRsAccDtl.getAccId();
-                String recvAccId = taRsAccDtl.getRecvAccId();
-                taRsAccDtl.setAccId(recvAccId);
-                taRsAccDtl.setRecvAccId(accId);
+                // 与划拨记账：收款账号和付款账号关系正好颠倒
+                taRsAccDtl.setTxCode(EnuTaFdcTxCode.TRADE_2111.getCode());
+                taRsAccDtl.setAccId(taRsAccDtl.getRecvAccId());
+                taRsAccDtl.setRecvAccId(taRsAccDtl.getAccId());
                 taRsAccDtl.setActFlag(EnuActFlag.ACT_UNKNOWN.getCode());
                 taAccDetlService.insertRecord(taRsAccDtl);
             } else {
@@ -172,6 +179,7 @@ public class TaPayoutAction {
             }
 
             // 往SBS发送记账信息
+            taTxnFdcCanclSend.setTxCode(EnuTaSbsTxCode.TRADE_0002.getCode());
             TOA toaSbs=taPayoutService.sendAndRecvRealTimeTxn900012111(taTxnFdcCanclSend);
             if(toaSbs !=null) {
                 if(taRsAccDtl != null) {
@@ -185,8 +193,10 @@ public class TaPayoutAction {
                 }
 
                 // 往泰安房地产中心发送记账信息
+                TaTxnFdc taTxnFdcTemp = new TaTxnFdc();
+                BeanUtils.copyProperties(taTxnFdcTemp, taTxnFdcCanclSend);
                 taTxnFdcCanclSend.setTxCode(EnuTaFdcTxCode.TRADE_2111.getCode());
-                taPayoutService.sendAndRecvRealTimeTxn9902111(taTxnFdcCanclSend);
+                taPayoutService.sendAndRecvRealTimeTxn9902111(taTxnFdcTemp);
                 /*划拨冲正后查询*/
                 taTxnFdcCanclSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcCanclSend.getPkId());
             }
@@ -198,8 +208,8 @@ public class TaPayoutAction {
 
     /*画面查询用*/
     public void onBtnQueryClick() {
-        taRsAccDtlList = taAccDetlService.selectedRecordsByCondition(taRsAccDtl.getActFlag(),
-                EnuTaFdcTxCode.TRADE_2101.getCode().substring(0,2));
+        taRsAccDtl.setTxCode(EnuTaFdcTxCode.TRADE_2101.getCode().substring(0,2));
+        taRsAccDtlList = taAccDetlService.selectedRecordsByCondition(taRsAccDtl);
     }
 
     /*记账*/

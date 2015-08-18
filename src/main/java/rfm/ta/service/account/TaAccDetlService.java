@@ -63,15 +63,19 @@ public class TaAccDetlService {
     /**
      * ²Ù×÷²éÑ¯
      */
-    public List<TaRsAccDtl> selectedRecordsByCondition(String actFlag, String txCode) {
+    public List<TaRsAccDtl> selectedRecordsByCondition(TaRsAccDtl taRsAccDtlPara) {
         TaRsAccDtlExample example = new TaRsAccDtlExample();
         TaRsAccDtlExample.Criteria criteria = example.createCriteria();
-        if (ToolUtil.getStrIgnoreNull(actFlag).trim().length()!=0) {
-            criteria.andActFlagEqualTo(actFlag.trim());
+        if (ToolUtil.getStrIgnoreNull(taRsAccDtlPara.getActFlag()).trim().length()!=0) {
+            criteria.andActFlagEqualTo(taRsAccDtlPara.getActFlag().trim());
         }
 
-        if (txCode !=null && !StringUtils.isEmpty(txCode.trim())) {
-            criteria.andTxCodeLike(txCode + "%");
+        if (ToolUtil.getStrIgnoreNull(taRsAccDtlPara.getBizId()).trim().length()!=0) {
+            criteria.andBizIdLike("%"+taRsAccDtlPara.getBizId().trim()+"%");
+        }
+
+        if (ToolUtil.getStrIgnoreNull(taRsAccDtlPara.getTxCode()).trim().length()!=0) {
+            criteria.andTxCodeLike(taRsAccDtlPara.getTxCode() + "%");
         }
 
         criteria.andDeletedFlagEqualTo("0");
