@@ -214,7 +214,7 @@ public class TaPayoutAction {
                         taTxnFdcCanclSend.setTxCode(EnuTaFdcTxCode.TRADE_2111.getCode());
                         taFdcService.sendAndRecvRealTimeTxn9902111(taTxnFdcTemp);
                         /*划拨冲正后查询*/
-                        taTxnFdcCanclSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcCanclSend.getPkId());
+                        taTxnFdcCanclSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcTemp.getPkId());
                     } else { // SBS记账失败的处理
                         taAccDetlService.deleteRecord(taRsAccDtl.getPkId());
                     }
