@@ -56,51 +56,51 @@ public class DepMsgListener implements MessageListener {
             TOA toaFdc;
             txnCode = tiaTmp.getHeader().TX_CODE;
             if(EnuTaFdcTxCode.TRADE_2001.getCode().equals(txnCode)){
-                /*01	????	    4	2001
-                  02	??????	2
-                  03	????	    6
-                  04	??????    14
-                  05	????    	30
-                  06	????	    10	???????
-                  07	????	    30
-                  08	????	    30
-                  09	???	        1	1_????*/
+                /*01	交易代码	    4	2001
+                  02	监管银行代码	2
+                  03	城市代码	    6
+                  04	交存申请编号    14
+                  05	验证流水    	30
+                  06	验证日期	    10	送系统日期即可
+                  07	验证网点	    30
+                  08	验证人员	    30
+                  09	发起方	        1	1_监管银行*/
                 Tia9902001 tia9902001=(Tia9902001)tiaTmp;
                 tia9902001.header.CHANNEL_ID= ToolUtil.DEP_CHANNEL_ID_RFM;
-                tia9902001.body.BANK_ID= EnuTaBankId.BANK_HAIER.getCode();        // 02   ??????   2
-                tia9902001.body.CITY_ID= EnuTaCityId.CITY_TAIAN.getCode();        // 03   ????       6
-                tia9902001.body.TX_DATE=ToolUtil.getStrLastUpdDate();              // 06   ????       10  ???????
-                tia9902001.body.INITIATOR=EnuTaInitiatorId.INITIATOR.getCode();  // 09   ???         1   1_????
+                tia9902001.body.BANK_ID= EnuTaBankId.BANK_HAIER.getCode();        // 02   监管银行代码   2
+                tia9902001.body.CITY_ID= EnuTaCityId.CITY_TAIAN.getCode();        // 03   城市代码       6
+                tia9902001.body.TX_DATE=ToolUtil.getStrLastUpdDate();              // 06   验证日期       10  送系统日期即可
+                tia9902001.body.INITIATOR=EnuTaInitiatorId.INITIATOR.getCode();  // 09   发起方         1   1_监管银行
                 toaFdc=taFdcService.sendAndRecvRealTimeTxn9902001(tia9902001);
                 jmsRfmOutTemplate.send(new ObjectMessageCreator(toaFdc, correlationID, propertyMap));
-            }else{// ??
+            }else{// 记账
                 sendAndRecvSBSAndFDC(tiaTmp,correlationID,propertyMap);
             }
         } catch (Exception e) {
-            logger.error("[fip]??????!", e);
+            logger.error("[fip]消息处理异常!", e);
         }
     }
 
-    /*??????????*/
+    /*验证后立即划拨记账用*/
     public Boolean sendAndRecvSBSAndFDC(TIA tiaPara,String correlationID,HashMap<String, String> propertyMap) {
         try {
-            // ?SBS??????
+            // 往SBS发送记账信息
             Tia900010002 tia900010002Temp =(Tia900010002)tiaPara ;
             TaRsAccDtl taTxnFdcTemp=new TaRsAccDtl();
             taTxnFdcTemp.setTxCode(EnuTaSbsTxCode.TRADE_0002.getCode());
-            taTxnFdcTemp.setAccId(tia900010002Temp.body.ACC_ID);   // ????
-            taTxnFdcTemp.setRecvAccId(tia900010002Temp.body.RECV_ACC_ID);   // ????
-            taTxnFdcTemp.setTxAmt(tia900010002Temp.body.TX_AMT);   // ????
-            taTxnFdcTemp.setReqSn(tia900010002Temp.header.REQ_SN); // ??????
-            taTxnFdcTemp.setTxDate(ToolUtil.getNow("yyyyMMdd"));    // ????
-            taTxnFdcTemp.setUserId(tia900010002Temp.header.USER_ID);// ???
+            taTxnFdcTemp.setAccId(tia900010002Temp.body.ACC_ID);   // 付款账号
+            taTxnFdcTemp.setRecvAccId(tia900010002Temp.body.RECV_ACC_ID);   // 收款账号
+            taTxnFdcTemp.setTxAmt(tia900010002Temp.body.TX_AMT);   // 交易金额
+            taTxnFdcTemp.setReqSn(tia900010002Temp.header.REQ_SN); // 外围系统流水
+            taTxnFdcTemp.setTxDate(ToolUtil.getNow("yyyyMMdd"));    // 交易日期
+            taTxnFdcTemp.setUserId(tia900010002Temp.header.USER_ID);// 柜员号
             TOA toaSbs=taSbsService.sendAndRecvRealTimeTxn900010002(taTxnFdcTemp);
             if(toaSbs!=null) {
-                if(("0000").equals(toaSbs.getHeader().RETURN_CODE)){ // SBS???????
+                if(("0000").equals(toaSbs.getHeader().RETURN_CODE)){ // SBS记账成功的处理
                     taTxnFdcTemp.setActFlag(EnuActFlag.ACT_SUCCESS.getCode());
                     taAccDetlService.updateRecord(taTxnFdcTemp);
                     TOA toaFdc;
-                    // ??????????????
+                    // 往泰安房地产中心发送记账信息
                     if(EnuTaFdcTxCode.TRADE_2202.getCode().equals(taTxnFdcTemp.getTxCode())){
                         toaFdc=taFdcService.sendAndRecvRealTimeTxn9902002(tia900010002Temp);
                         jmsRfmOutTemplate.send(new ObjectMessageCreator(toaFdc, correlationID, propertyMap));
@@ -108,14 +108,14 @@ public class DepMsgListener implements MessageListener {
                         toaFdc=taFdcService.sendAndRecvRealTimeTxn9902011(tia900010002Temp);
                         jmsRfmOutTemplate.send(new ObjectMessageCreator(toaFdc, correlationID, propertyMap));
                     }
-                } else { // SBS???????
+                } else { // SBS记账失败的处理
                     taAccDetlService.deleteRecord(taTxnFdcTemp.getPkId());
                     return false;
                 }
             }
             return true;
         }catch (Exception e){
-            logger.error("??????????,", e);
+            logger.error("验证后立即交存记账用，", e);
             MessageUtil.addError(e.getMessage());
             return false;
         }

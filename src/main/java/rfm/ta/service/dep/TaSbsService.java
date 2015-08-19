@@ -209,7 +209,7 @@ public class TaSbsService {
                 pageCount = totalCount / pageSize + 1;
             }
 
-            List<Toa900012701> toaParas = null;
+            List<Toa900012701> toaParas = new ArrayList<>();
             List<Tia900012701.BodyDetail> details = null;
             Tia900012701.BodyDetail bodyDetail = null;
             for(int i=0; i<pageCount;i++){
@@ -225,6 +225,9 @@ public class TaSbsService {
                     details.add(bodyDetail);
                 }
 
+                String strTotcnt="000000"+String.valueOf(ToolUtil.getIntIgnoreNull(details.size()));
+                strTotcnt=strTotcnt.substring(strTotcnt.length()-6,strTotcnt.length());
+                tia900012701Temp.body.TOTCNT =strTotcnt;
                 tia900012701Temp.body.DETAILS = details;
 
                 //通过MQ发送信息到DEP
