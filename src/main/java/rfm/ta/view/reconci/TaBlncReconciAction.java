@@ -16,6 +16,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -116,7 +117,7 @@ public class TaBlncReconciAction {
      */
     private File createFile(String fileName) {
         File file = null;
-        String filePath = "d:";
+        String filePath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/upload/reconci");
         String newLineCh = "\r\n";
         StringBuffer line = new StringBuffer();
         FileWriter fw = null;

@@ -18,6 +18,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -100,7 +101,7 @@ public class TaDayEndReconciAction implements Serializable {
     private void sendReconciFile(List<TaRsAccDtl> taRsAccDtlListPara) {
         String sysdate = ToolUtil.getStrLastUpdDate();
         File file;
-        String filePath = "d:";
+        String filePath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/upload/reconci");
 
         String fileName = "PF"+ EnuTaBankId.BANK_HAIER.getCode()+
                 EnuTaCityId.CITY_TAIAN.getCode()+
