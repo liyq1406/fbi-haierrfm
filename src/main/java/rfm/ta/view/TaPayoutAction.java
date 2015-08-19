@@ -153,17 +153,21 @@ public class TaPayoutAction {
                     // 往泰安房地产中心发送记账信息
                     TaTxnFdc taTxnFdcTemp=new TaTxnFdc();
                     BeanUtils.copyProperties(taTxnFdcTemp, taRsAccDtlPara);
-                    if(EnuTaFdcTxCode.TRADE_2102.getCode().equals(taTxnFdcTemp.getTxCode())){
+                    if(EnuTaFdcTxCode.TRADE_2102.getCode().equals(taTxnFdcTemp.getTxCode())){ // 划拨记账
                         taFdcService.sendAndRecvRealTimeTxn9902102(taTxnFdcTemp);
-                    }else if(EnuTaFdcTxCode.TRADE_2111.getCode().equals(taTxnFdcTemp.getTxCode())){
+                        /*记账后查询*/
+                        taTxnFdcActSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcTemp.getPkId());
+                    }else if(EnuTaFdcTxCode.TRADE_2111.getCode().equals(taTxnFdcTemp.getTxCode())){ // 划拨冲正
                         taFdcService.sendAndRecvRealTimeTxn9902111(taTxnFdcTemp);
+                        /*记账后查询*/
+                        taTxnFdcCanclSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcTemp.getPkId());
                     }
-                    /*记账后查询*/
-                    taTxnFdcActSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcTemp.getPkId());
+
                     MessageUtil.addInfo(toaSbs.getHeader().RETURN_MSG);
                 } else { // SBS记账失败的处理
                     taAccDetlService.deleteRecord(taRsAccDtl.getPkId());
                     MessageUtil.addInfo(toaSbs.getHeader().RETURN_MSG);
+                    return false;
                 }
             }
             return true;

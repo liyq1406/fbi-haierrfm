@@ -153,15 +153,20 @@ public class TaRefundAction {
                     // 往泰安房地产中心发送记账信息
                     TaTxnFdc taTxnFdcTemp = new TaTxnFdc();
                     BeanUtils.copyProperties(taTxnFdcTemp, taRsAccDtlPara);
-                    if(EnuTaFdcTxCode.TRADE_2202.getCode().equals(taTxnFdcTemp.getTxCode())){
+                    if(EnuTaFdcTxCode.TRADE_2202.getCode().equals(taTxnFdcTemp.getTxCode())){ // 返还记账
                         taFdcService.sendAndRecvRealTimeTxn9902202(taTxnFdcTemp);
-                    }else if(EnuTaFdcTxCode.TRADE_2211.getCode().equals(taTxnFdcTemp.getTxCode())){
+                        /*记账后查询*/
+                        taTxnFdcActSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcTemp.getPkId());
+                    }else if(EnuTaFdcTxCode.TRADE_2211.getCode().equals(taTxnFdcTemp.getTxCode())){ // 返还冲正
                         taFdcService.sendAndRecvRealTimeTxn9902211(taTxnFdcTemp);
+                        /*记账后查询*/
+                        taTxnFdcCanclSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcTemp.getPkId());
                     }
-                    /*记账后查询*/
-                    taTxnFdcActSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcTemp.getPkId());
+
+                    MessageUtil.addInfo(toaSbs.getHeader().RETURN_MSG);
                 } else { // SBS记账失败的处理
                     taAccDetlService.deleteRecord(taRsAccDtlPara.getPkId());
+                    MessageUtil.addInfo(toaSbs.getHeader().RETURN_MSG);
                     return false;
                 }
             }
@@ -205,6 +210,7 @@ public class TaRefundAction {
                 taRsAccDtlTemp.setAccId(taRsAccDtlTemp.getRecvAccId());
                 taRsAccDtlTemp.setRecvAccId(accId);
                 taRsAccDtlTemp.setActFlag(EnuActFlag.ACT_UNKNOWN.getCode());
+                taRsAccDtlTemp.setReqSn(ToolUtil.getStrAppReqSn_Back());
                 taAccDetlService.insertRecord(taRsAccDtlTemp);
             } else {
                 logger.error("查不到该笔冲正的相关划拨信息，请确认输入的划拨申请编号");
