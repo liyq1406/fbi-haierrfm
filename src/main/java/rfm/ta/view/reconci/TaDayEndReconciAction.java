@@ -42,7 +42,7 @@ public class TaDayEndReconciAction implements Serializable {
 
     private TaTxnSbs taTxnSbs;
     // 账务交易明细
-    private List<TaRsAccDtl> taRsAccDtlList;
+    private List<TaRsAccDtl> taRsAccDtlLocalList;
     private List<TaRsAccDtl> taRsAccDtlSbsList;
 
     private String strLocalTotalCounts;
@@ -59,10 +59,10 @@ public class TaDayEndReconciAction implements Serializable {
         taRsAccDtlSbsList=new ArrayList<>();
         TaRsAccDtl taRsAccDtlPara=new TaRsAccDtl();
         taRsAccDtlPara.setTxDate(ToolUtil.getNow("yyyy-MM-dd"));
-        taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtlPara);
-        strLocalTotalCounts=String.valueOf(taRsAccDtlList.size());
-        if(taRsAccDtlList.size()>0) {
-            System.out.println("======>" + taRsAccDtlList.get(0).getAccId());
+        taRsAccDtlLocalList = taAccDetlService.selectedRecords(taRsAccDtlPara);
+        strLocalTotalCounts=String.valueOf(taRsAccDtlLocalList.size());
+        if(taRsAccDtlLocalList.size()>0) {
+            System.out.println("======>" + taRsAccDtlLocalList.get(0).getAccId());
         }
     }
 
@@ -84,27 +84,17 @@ public class TaDayEndReconciAction implements Serializable {
             int n = 0;//取余
             // 日终对账明细查询
             Toa900012602 toa900012602Temp = (Toa900012602) taSbsService.sendAndRecvRealTimeTxn900012602(taTxnFdcPara, "0");
-            List<Toa900012602.Body.BodyDetail> detailsTemp = new ArrayList<>();
             if (toa900012602Temp != null && toa900012602Temp.body != null) {
                 if ("0000".equals(toa900012602Temp.header.RETURN_CODE)) {
-                    detailsTemp = toa900012602Temp.body.DETAILS;
+                    taRsAccDtlSbsList.addAll(fromBodyDetailsToTaRsAccDtls(toa900012602Temp.body.DETAILS));
                     totcnt = toa900012602Temp.body.TOTCNT;
                     curcnt = toa900012602Temp.body.CURCNT;
                 }
-            }
-
-            // 临时用
-            for(Toa900012602.Body.BodyDetail bdUnit:detailsTemp){
-                TaRsAccDtl taRsAccDtlTemp=new TaRsAccDtl();
-                taRsAccDtlTemp.setAccId(bdUnit.ACTNUM);
-                taRsAccDtlTemp.setRecvAccId(bdUnit.BENACT);
-                taRsAccDtlTemp.setTxAmt(bdUnit.TXNAMT);
-                taRsAccDtlTemp.setTxDate(bdUnit.ERYTIM);
-                taRsAccDtlSbsList.add(taRsAccDtlTemp);
+            }else{
+                return;
             }
 
             if (!totcnt.isEmpty() && totcnt != "") {
-
                 //因为 totcnt是全局变量，所有在第一次查询之后，发起第二次交易时totcnt就不为空，所有要在第一次发起交易时清空
                 m = Integer.parseInt(totcnt) / Integer.parseInt(curcnt);
                 n = Integer.parseInt(totcnt) % Integer.parseInt(curcnt);
@@ -114,8 +104,7 @@ public class TaDayEndReconciAction implements Serializable {
                         tmp = j * Integer.parseInt(curcnt) + 1 + "";
                         toa900012602Temp = (Toa900012602) taSbsService.sendAndRecvRealTimeTxn900012602(taTxnFdcPara, tmp);
                         if ("0000".equals(toa900012602Temp.header.RETURN_CODE)) {
-                            detailsTemp = toa900012602Temp.body.DETAILS;
-                            totcnt = toa900012602Temp.body.TOTCNT;
+                            taRsAccDtlSbsList.addAll(fromBodyDetailsToTaRsAccDtls(toa900012602Temp.body.DETAILS));
                             curcnt = toa900012602Temp.body.CURCNT;
                         }
                     }
@@ -129,6 +118,19 @@ public class TaDayEndReconciAction implements Serializable {
             logger.error("查询对账信息失败", e);
             MessageUtil.addError("查询对账信息失败。");
         }
+    }
+
+    private List<TaRsAccDtl> fromBodyDetailsToTaRsAccDtls(List<Toa900012602.Body.BodyDetail> bodyDetailListPara){
+        List<TaRsAccDtl> taRsAccDtlListTemp=new ArrayList<>();
+        for(Toa900012602.Body.BodyDetail bdUnit:bodyDetailListPara){
+            TaRsAccDtl taRsAccDtlTemp=new TaRsAccDtl();
+            taRsAccDtlTemp.setAccId(bdUnit.ACTNUM);
+            taRsAccDtlTemp.setRecvAccId(bdUnit.BENACT);
+            taRsAccDtlTemp.setTxAmt(bdUnit.TXNAMT);
+            taRsAccDtlTemp.setTxDate(bdUnit.ERYTIM);
+            taRsAccDtlListTemp.add(taRsAccDtlTemp);
+        }
+        return taRsAccDtlListTemp;
     }
 
     private void sendReconciFile(List<TaRsAccDtl> taRsAccDtlListPara) {
@@ -215,17 +217,14 @@ public class TaDayEndReconciAction implements Serializable {
         }
     }
 
-    public String onBlnc() {
+    public void onBlnc() {
         try {
-            if(reconci(taRsAccDtlList,taRsAccDtlSbsList)) {
-                //sendReconciFile(taRsAccDtlSbsList);
+            if(reconci(taRsAccDtlLocalList,taRsAccDtlSbsList)) {
+                sendReconciFile(taRsAccDtlSbsList);
             }
         } catch (Exception e) {
-            MessageUtil.addError("??????");
+            MessageUtil.addError("日间对账发送失败！");
         }
-        //onCreatFile();
-        //????????
-        return null;
     }
     public static void main(String[] args) {
         String targetPath = "rfmtest";
@@ -237,20 +236,20 @@ public class TaDayEndReconciAction implements Serializable {
 
     /**
      * 比较两个List
-     * @param taRsAccDtlListPara1
-     * @param taRsAccDtlListPara2
+     * @param taRsAccDtlLocalListPara
+     * @param taRsAccDtlSbsListPara
      */
-    private Boolean reconci(List<TaRsAccDtl> taRsAccDtlListPara1, List<TaRsAccDtl> taRsAccDtlListPara2){
+    private Boolean reconci(List<TaRsAccDtl> taRsAccDtlLocalListPara, List<TaRsAccDtl> taRsAccDtlSbsListPara){
         // List2重复项
         List<TaRsAccDtl> taRsAccDtlList2Repeat = new ArrayList<TaRsAccDtl>();
         // 结果List
-        List<TaRsAccDtl> taRsAccDtlList = new ArrayList<TaRsAccDtl>();
+        List<TaRsAccDtl> taRsAccDtlLocalList = new ArrayList<TaRsAccDtl>();
         boolean isExist = false;
         // 遍历List1
-        for(TaRsAccDtl taRsAccDtl1:taRsAccDtlListPara1){
+        for(TaRsAccDtl taRsAccDtl1:taRsAccDtlLocalListPara){
             isExist = false;
             // 遍历List2
-            for(TaRsAccDtl taRsAccDtl2:taRsAccDtlListPara2){
+            for(TaRsAccDtl taRsAccDtl2:taRsAccDtlSbsListPara){
                 if(taRsAccDtl1.getReqSn().substring(8,26).equals(taRsAccDtl2.getReqSn())
                         &&taRsAccDtl1.getAccId().equals(taRsAccDtl2.getAccId())
                         &&taRsAccDtl1.getRecvAccId().equals(taRsAccDtl2.getRecvAccId())
@@ -260,13 +259,13 @@ public class TaDayEndReconciAction implements Serializable {
                 }
             }
             if(!isExist){
-                taRsAccDtlList.add(taRsAccDtl1);
+                taRsAccDtlLocalList.add(taRsAccDtl1);
             }
         }
 
-        taRsAccDtlListPara2.removeAll(taRsAccDtlList2Repeat);
-        taRsAccDtlListPara1=taRsAccDtlList;
-        //taRsAccDtlList.addAll(taRsAccDtlList2);
+        taRsAccDtlSbsListPara.removeAll(taRsAccDtlList2Repeat);
+        taRsAccDtlLocalListPara=taRsAccDtlLocalList;
+        //taRsAccDtlLocalList.addAll(taRsAccDtlList2);
         return true;
     }
 
@@ -288,14 +287,6 @@ public class TaDayEndReconciAction implements Serializable {
         this.taRsAccDtlSbsList = taRsAccDtlSbsList;
     }
 
-    public List<TaRsAccDtl> getTaRsAccDtlList() {
-        return taRsAccDtlList;
-    }
-
-    public void setTaRsAccDtlList(List<TaRsAccDtl> taRsAccDtlList) {
-        this.taRsAccDtlList = taRsAccDtlList;
-    }
-
     public TaAccDetlService getTaAccDetlService() {
         return taAccDetlService;
     }
@@ -304,12 +295,12 @@ public class TaDayEndReconciAction implements Serializable {
         this.taAccDetlService = taAccDetlService;
     }
 
-    public List<TaRsAccDtl> getTaRsAccDetailList() {
-        return taRsAccDtlList;
+    public List<TaRsAccDtl> getTaRsAccDtlLocalList() {
+        return taRsAccDtlLocalList;
     }
 
-    public void setTaRsAccDetailList(List<TaRsAccDtl> taRsAccDtlList) {
-        this.taRsAccDtlList = taRsAccDtlList;
+    public void setTaRsAccDtlLocalList(List<TaRsAccDtl> taRsAccDtlLocalList) {
+        this.taRsAccDtlLocalList = taRsAccDtlLocalList;
     }
 
     public TaSbsService getTaSbsService() {
