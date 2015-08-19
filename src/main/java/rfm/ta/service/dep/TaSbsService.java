@@ -152,7 +152,7 @@ public class TaSbsService {
     public List<Toa900012701> sendAndRecvRealTimeTxn900012701(List<TaRsAcc> taRsAccList) {
         try {
             int pageCount = 0; // 总页数
-            int pageSize = 3; // 每页记录个数
+            int pageSize = 50; // 每页记录个数
             int totalCount = taRsAccList.size(); // 总条数
             int loopCount = 0; // 循环条件
 
@@ -170,7 +170,7 @@ public class TaSbsService {
             List<Tia900012701.BodyDetail> details = null;
             Tia900012701.BodyDetail bodyDetail = null;
             for(int i=0; i<pageCount;i++){
-                details = new ArrayList<Tia900012701.BodyDetail>();
+                details = new ArrayList<>();
                 if(i == pageCount-1){ // 最后一页的处理
                     loopCount = totalCount;
                 } else{

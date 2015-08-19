@@ -6,6 +6,7 @@ import org.apache.commons.lang.StringUtils;
 import org.fbi.dep.model.base.TOA;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import platform.auth.MD5Helper;
 import platform.common.utils.MessageUtil;
 import pub.platform.advance.utils.PropertyManager;
 import rfm.ta.common.enums.*;
@@ -141,6 +142,11 @@ public class TaRefundAction {
     public Boolean sendAndRecvSBSAndFDC(TaRsAccDtl taRsAccDtlPara) {
         try {
             // 往SBS发送记账信息
+            taRsAccDtlPara.setPassword(MD5Helper.getMD5String(ToolUtil.TAFDC_MD5_KEY));
+            taRsAccDtlPara.setReqSn(ToolUtil.getStrAppReqSn_Back());
+            taRsAccDtlPara.setTxDate(ToolUtil.getStrLastUpdDate());
+            taRsAccDtlPara.setBranchId(ToolUtil.getOperatorManager().getOperator().getDeptid());
+            taRsAccDtlPara.setUserId(ToolUtil.getOperatorManager().getOperatorId());
             TOA toaSbs=taSbsService.sendAndRecvRealTimeTxn900010002(taRsAccDtlPara);
             if(toaSbs!=null) {
                 if(("0000").equals(toaSbs.getHeader().RETURN_CODE)){ // SBS记账成功的处理
@@ -160,7 +166,7 @@ public class TaRefundAction {
             }
             return true;
         }catch (Exception e){
-            logger.error("验证后立即划拨记账用，", e);
+            logger.error("验证后立即返还记账用，", e);
             MessageUtil.addError(e.getMessage());
             return false;
         }

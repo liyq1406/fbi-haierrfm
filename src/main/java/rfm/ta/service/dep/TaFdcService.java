@@ -647,11 +647,6 @@ public class TaFdcService {
         try {
             taTxnFdcPara.setBankId(EnuTaBankId.BANK_HAIER.getCode());
             taTxnFdcPara.setCityId(EnuTaCityId.CITY_TAIAN.getCode());
-            taTxnFdcPara.setPassword(MD5Helper.getMD5String(ToolUtil.TAFDC_MD5_KEY));
-            taTxnFdcPara.setReqSn(ToolUtil.getStrAppReqSn_Back());
-            taTxnFdcPara.setTxDate(ToolUtil.getStrLastUpdDate());
-            taTxnFdcPara.setBranchId(ToolUtil.getOperatorManager().getOperator().getDeptid());
-            taTxnFdcPara.setUserId(ToolUtil.getOperatorManager().getOperatorId());
             taTxnFdcPara.setInitiator(EnuTaInitiatorId.INITIATOR.getCode());
 
             Tia9902202 tia9902202Temp=new Tia9902202() ;
