@@ -72,8 +72,8 @@ public class TaSbsService {
             Toa900010002 toaPara=(Toa900010002) depMsgSendAndRecv.recvDepMessage(strMsgid);
             return toaPara;
         } catch (Exception e) {
-            logger.error("ªÆ≤¶º«’À ß∞‹", e);
-            throw new RuntimeException("ªÆ≤¶º«’À ß∞‹", e);
+            logger.error("º«’À ß∞‹", e);
+            throw new RuntimeException("º«’À ß∞‹", e);
         }
     }
 
