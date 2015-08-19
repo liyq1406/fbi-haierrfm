@@ -153,7 +153,11 @@ public class TaRefundAction {
                     // 往泰安房地产中心发送记账信息
                     TaTxnFdc taTxnFdcTemp = new TaTxnFdc();
                     BeanUtils.copyProperties(taTxnFdcTemp, taRsAccDtlPara);
-                    taFdcService.sendAndRecvRealTimeTxn9902202(taTxnFdcTemp);
+                    if(EnuTaFdcTxCode.TRADE_2202.getCode().equals(taTxnFdcTemp.getTxCode())){
+                        taFdcService.sendAndRecvRealTimeTxn9902202(taTxnFdcTemp);
+                    }else if(EnuTaFdcTxCode.TRADE_2211.getCode().equals(taTxnFdcTemp.getTxCode())){
+                        taFdcService.sendAndRecvRealTimeTxn9902211(taTxnFdcTemp);
+                    }
                     /*记账后查询*/
                     taTxnFdcActSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcTemp.getPkId());
                 } else { // SBS记账失败的处理

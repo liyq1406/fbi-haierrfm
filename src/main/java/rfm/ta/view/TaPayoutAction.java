@@ -153,7 +153,11 @@ public class TaPayoutAction {
                     // 往泰安房地产中心发送记账信息
                     TaTxnFdc taTxnFdcTemp=new TaTxnFdc();
                     BeanUtils.copyProperties(taTxnFdcTemp, taRsAccDtlPara);
-                    taFdcService.sendAndRecvRealTimeTxn9902102(taTxnFdcTemp);
+                    if(EnuTaFdcTxCode.TRADE_2102.getCode().equals(taTxnFdcTemp.getTxCode())){
+                        taFdcService.sendAndRecvRealTimeTxn9902102(taTxnFdcTemp);
+                    }else if(EnuTaFdcTxCode.TRADE_2111.getCode().equals(taTxnFdcTemp.getTxCode())){
+                        taFdcService.sendAndRecvRealTimeTxn9902111(taTxnFdcTemp);
+                    }
                     /*记账后查询*/
                     taTxnFdcActSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcTemp.getPkId());
                     MessageUtil.addInfo(toaSbs.getHeader().RETURN_MSG);
@@ -193,7 +197,6 @@ public class TaPayoutAction {
             taRsAccDtlTemp.setBizId(taTxnFdcCanclSend.getBizId());
             taRsAccDtlTemp.setTxCode(EnuTaFdcTxCode.TRADE_2102.getCode());
             taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtlTemp);
-            taRsAccDtlTemp = null;
             if(taRsAccDtlList.size() == 1){
                 taRsAccDtlTemp = taRsAccDtlList.get(0);
                 // 与划拨记账：收款账号和付款账号关系正好颠倒
