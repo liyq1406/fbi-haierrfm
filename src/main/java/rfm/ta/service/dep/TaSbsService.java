@@ -175,9 +175,10 @@ public class TaSbsService {
         List<TaRsAccDtl> taRsAccDtlListTemp=new ArrayList<>();
         for(Toa900012602.Body.BodyDetail bdUnit:bodyDetailListPara){
             TaRsAccDtl taRsAccDtlTemp=new TaRsAccDtl();
+            taRsAccDtlTemp.setReqSn(bdUnit.FBTIDX);
             taRsAccDtlTemp.setAccId(bdUnit.ACTNUM);
-            taRsAccDtlTemp.setRecvAccId(bdUnit.BENACT);
             taRsAccDtlTemp.setTxAmt(bdUnit.TXNAMT);
+            taRsAccDtlTemp.setRecvAccId(bdUnit.BENACT);
             taRsAccDtlTemp.setTxDate(bdUnit.ERYTIM);
             taRsAccDtlListTemp.add(taRsAccDtlTemp);
         }

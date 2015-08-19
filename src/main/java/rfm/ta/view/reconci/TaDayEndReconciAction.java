@@ -3,7 +3,6 @@ package rfm.ta.view.reconci;
 import common.utils.ToolUtil;
 import org.apache.commons.lang.StringUtils;
 import org.fbi.dep.model.txn.Toa900012601;
-import org.fbi.dep.model.txn.Toa900012602;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import platform.common.utils.MessageUtil;
@@ -22,6 +21,7 @@ import javax.faces.bean.ViewScoped;
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +49,7 @@ public class TaDayEndReconciAction implements Serializable {
     private String strLocalTotalAmt;
     private String strSbsTotalCounts;
     private String strSbsTotalAmt;
+    private DecimalFormat df = new DecimalFormat("#.00");
 
     @PostConstruct
     public void init(){
@@ -62,6 +63,12 @@ public class TaDayEndReconciAction implements Serializable {
         taRsAccDtlLocalList = taAccDetlService.selectedRecords(taRsAccDtlPara);
         strLocalTotalCounts=String.valueOf(taRsAccDtlLocalList.size());
         if(taRsAccDtlLocalList.size()>0) {
+            Double total = 0d;
+            for(TaRsAccDtl taRsAccDtl:taRsAccDtlLocalList){
+                total += Double.valueOf(taRsAccDtl.getTxAmt());
+                taRsAccDtl.setTxAmt(StringUtils.leftPad(df.format(Double.valueOf(taRsAccDtl.getTxAmt())),16,"0"));
+            }
+            strLocalTotalAmt = ToolUtil.getMoneyString(total);
             System.out.println("======>" + taRsAccDtlLocalList.get(0).getAccId());
         }
     }
@@ -176,8 +183,10 @@ public class TaDayEndReconciAction implements Serializable {
 
     public void onBlnc() {
         try {
+            List<TaRsAccDtl> taRsAccDtls = new ArrayList<>();
+            taRsAccDtls.addAll(taRsAccDtlLocalList);
             if(reconci(taRsAccDtlLocalList,taRsAccDtlSbsList)) {
-                sendReconciFile(taRsAccDtlSbsList);
+                sendReconciFile(taRsAccDtls);
             }
         } catch (Exception e) {
             MessageUtil.addError("日间对账发送失败！");
@@ -197,10 +206,10 @@ public class TaDayEndReconciAction implements Serializable {
      * @param taRsAccDtlSbsListPara
      */
     private Boolean reconci(List<TaRsAccDtl> taRsAccDtlLocalListPara, List<TaRsAccDtl> taRsAccDtlSbsListPara){
+        // List1重复项
+        List<TaRsAccDtl> taRsAccDtlList1Repeat = new ArrayList<TaRsAccDtl>();
         // List2重复项
         List<TaRsAccDtl> taRsAccDtlList2Repeat = new ArrayList<TaRsAccDtl>();
-        // 结果List
-        List<TaRsAccDtl> taRsAccDtlLocalList = new ArrayList<TaRsAccDtl>();
         boolean isExist = false;
         // 遍历List1
         for(TaRsAccDtl taRsAccDtl1:taRsAccDtlLocalListPara){
@@ -215,15 +224,19 @@ public class TaDayEndReconciAction implements Serializable {
                     taRsAccDtlList2Repeat.add(taRsAccDtl2);
                 }
             }
-            if(!isExist){
-                taRsAccDtlLocalList.add(taRsAccDtl1);
+            if(isExist){
+                taRsAccDtlList1Repeat.add(taRsAccDtl1);
             }
         }
 
+        taRsAccDtlLocalListPara.removeAll(taRsAccDtlList1Repeat);
         taRsAccDtlSbsListPara.removeAll(taRsAccDtlList2Repeat);
-        taRsAccDtlLocalListPara=taRsAccDtlLocalList;
-        //taRsAccDtlLocalList.addAll(taRsAccDtlList2);
-        return true;
+
+        if(taRsAccDtlLocalListPara.size() == 0 && taRsAccDtlSbsListPara.size() == 0){
+            return true;
+        }
+
+        return false;
     }
 
     //= = = = = = = = = = = = get set = = = = = = = = = = = =
