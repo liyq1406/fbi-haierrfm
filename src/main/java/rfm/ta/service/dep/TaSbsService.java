@@ -116,8 +116,11 @@ public class TaSbsService {
      * @param taTxnFdcPara
      */
     @Transactional
-    public TOA sendAndRecvRealTimeTxn900012602(TaTxnFdc taTxnFdcPara,String strBeginNumPara) {
+    public List<TaRsAccDtl> sendAndRecvRealTimeTxn900012602(TaTxnFdc taTxnFdcPara) {
         try {
+            List<TaRsAccDtl> taRsAccDtlListTemp=new ArrayList<>();
+
+            // 日终对账明细查询
             Tia900012602 tia900012602Temp=new Tia900012602();
             TaTxnSbs taTxnSbsPara=new TaTxnSbs();
             taTxnSbsPara.setTxCode(EnuTaFdcTxCode.TRADE_2602.getCode());
@@ -127,19 +130,58 @@ public class TaSbsService {
 
             tia900012602Temp.header.CHANNEL_ID=ToolUtil.DEP_CHANNEL_ID_SBS;
             tia900012602Temp.body.TX_DATE=taTxnSbsPara.getTxDate();
-            tia900012602Temp.body.BEGNUM=strBeginNumPara;
+            tia900012602Temp.body.BEGNUM="0";
             tia900012602Temp.header.REQ_SN=taTxnSbsPara.getReqSn();
             tia900012602Temp.header.USER_ID=taTxnSbsPara.getUserId();
             tia900012602Temp.header.TX_CODE=taTxnSbsPara.getTxCode();
 
             //通过MQ发送信息到DEP
             String strMsgid= depMsgSendAndRecv.sendDepMessage(tia900012602Temp);
-            TOA toaPara = depMsgSendAndRecv.recvDepMessage(strMsgid);
-            return toaPara;
+            Toa900012602 toa900012602Temp = (Toa900012602) depMsgSendAndRecv.recvDepMessage(strMsgid);
+
+            if (toa900012602Temp != null && toa900012602Temp.body != null) {
+                if ("0000".equals(toa900012602Temp.header.RETURN_CODE)) {
+                    // 填充首次数据
+                    taRsAccDtlListTemp.addAll(fromBodyDetailsToTaRsAccDtls(toa900012602Temp.body.DETAILS));
+                    String totcnt = toa900012602Temp.body.TOTCNT;
+                    String curcnt = toa900012602Temp.body.CURCNT;
+                    if (!totcnt.isEmpty() && totcnt != "") {
+                        //因为 totcnt是全局变量，所有在第一次查询之后，发起第二次交易时totcnt就不为空，所有要在第一次发起交易时清空
+                        int m = Integer.parseInt(totcnt) / Integer.parseInt(curcnt);
+                        int n = Integer.parseInt(totcnt) % Integer.parseInt(curcnt);
+                        if(n!=0){
+                            m=m+1;
+                        }
+                        for (int j = 1; j <= m; j++) {
+                            tia900012602Temp.body.BEGNUM= j * Integer.parseInt(curcnt) + 1 + "";
+                            strMsgid= depMsgSendAndRecv.sendDepMessage(tia900012602Temp);
+                            toa900012602Temp = (Toa900012602) depMsgSendAndRecv.recvDepMessage(strMsgid);
+                            if ("0000".equals(toa900012602Temp.header.RETURN_CODE)) {
+                                taRsAccDtlListTemp.addAll(fromBodyDetailsToTaRsAccDtls(toa900012602Temp.body.DETAILS));
+                                curcnt = toa900012602Temp.body.CURCNT;
+                            }
+                        }
+                    }
+                }
+            }
+            return taRsAccDtlListTemp;
         } catch (Exception e) {
             logger.error("从SBS日间总数对账查询失败", e);
             throw new RuntimeException("从SBS日间总数对账查询失败", e);
         }
+    }
+
+    private List<TaRsAccDtl> fromBodyDetailsToTaRsAccDtls(List<Toa900012602.Body.BodyDetail> bodyDetailListPara){
+        List<TaRsAccDtl> taRsAccDtlListTemp=new ArrayList<>();
+        for(Toa900012602.Body.BodyDetail bdUnit:bodyDetailListPara){
+            TaRsAccDtl taRsAccDtlTemp=new TaRsAccDtl();
+            taRsAccDtlTemp.setAccId(bdUnit.ACTNUM);
+            taRsAccDtlTemp.setRecvAccId(bdUnit.BENACT);
+            taRsAccDtlTemp.setTxAmt(bdUnit.TXNAMT);
+            taRsAccDtlTemp.setTxDate(bdUnit.ERYTIM);
+            taRsAccDtlListTemp.add(taRsAccDtlTemp);
+        }
+        return taRsAccDtlListTemp;
     }
 
     // 发送监管账号到SBS查询余额

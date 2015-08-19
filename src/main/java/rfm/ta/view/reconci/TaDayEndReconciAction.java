@@ -78,39 +78,9 @@ public class TaDayEndReconciAction implements Serializable {
 
             strSbsTotalAmt = toa900012601Temp.body.DRAMT;
 
-            String totcnt = "";
-            String curcnt = "";
-            int m = 0;//取整
-            int n = 0;//取余
             // 日终对账明细查询
-            Toa900012602 toa900012602Temp = (Toa900012602) taSbsService.sendAndRecvRealTimeTxn900012602(taTxnFdcPara, "0");
-            if (toa900012602Temp != null && toa900012602Temp.body != null) {
-                if ("0000".equals(toa900012602Temp.header.RETURN_CODE)) {
-                    taRsAccDtlSbsList.addAll(fromBodyDetailsToTaRsAccDtls(toa900012602Temp.body.DETAILS));
-                    totcnt = toa900012602Temp.body.TOTCNT;
-                    curcnt = toa900012602Temp.body.CURCNT;
-                }
-            }else{
-                return;
-            }
+            taRsAccDtlSbsList = taSbsService.sendAndRecvRealTimeTxn900012602(taTxnFdcPara);
 
-            if (!totcnt.isEmpty() && totcnt != "") {
-                //因为 totcnt是全局变量，所有在第一次查询之后，发起第二次交易时totcnt就不为空，所有要在第一次发起交易时清空
-                m = Integer.parseInt(totcnt) / Integer.parseInt(curcnt);
-                n = Integer.parseInt(totcnt) % Integer.parseInt(curcnt);
-                if (m > 0 && n > 0) {
-                    String tmp = "";
-                    for (int j = 1; j <= m; j++) {
-                        tmp = j * Integer.parseInt(curcnt) + 1 + "";
-                        toa900012602Temp = (Toa900012602) taSbsService.sendAndRecvRealTimeTxn900012602(taTxnFdcPara, tmp);
-                        if ("0000".equals(toa900012602Temp.header.RETURN_CODE)) {
-                            taRsAccDtlSbsList.addAll(fromBodyDetailsToTaRsAccDtls(toa900012602Temp.body.DETAILS));
-                            curcnt = toa900012602Temp.body.CURCNT;
-                        }
-                    }
-                }
-            }
-            //taRsAccDtlSbsList = taAccDetlService.selectedRecords(new TaRsAccDtl());
             if (taRsAccDtlSbsList.size() > 0) {
                 MessageUtil.addInfo("获取SBS记账信息成功。");
             }
@@ -118,19 +88,6 @@ public class TaDayEndReconciAction implements Serializable {
             logger.error("查询对账信息失败", e);
             MessageUtil.addError("查询对账信息失败。");
         }
-    }
-
-    private List<TaRsAccDtl> fromBodyDetailsToTaRsAccDtls(List<Toa900012602.Body.BodyDetail> bodyDetailListPara){
-        List<TaRsAccDtl> taRsAccDtlListTemp=new ArrayList<>();
-        for(Toa900012602.Body.BodyDetail bdUnit:bodyDetailListPara){
-            TaRsAccDtl taRsAccDtlTemp=new TaRsAccDtl();
-            taRsAccDtlTemp.setAccId(bdUnit.ACTNUM);
-            taRsAccDtlTemp.setRecvAccId(bdUnit.BENACT);
-            taRsAccDtlTemp.setTxAmt(bdUnit.TXNAMT);
-            taRsAccDtlTemp.setTxDate(bdUnit.ERYTIM);
-            taRsAccDtlListTemp.add(taRsAccDtlTemp);
-        }
-        return taRsAccDtlListTemp;
     }
 
     private void sendReconciFile(List<TaRsAccDtl> taRsAccDtlListPara) {
