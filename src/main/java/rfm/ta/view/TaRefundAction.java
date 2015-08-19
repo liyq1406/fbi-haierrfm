@@ -120,18 +120,20 @@ public class TaRefundAction {
             // 本地存取（对账用）
             TaRsAccDtl taRsAccDtlTemp = new TaRsAccDtl();
             BeanUtils.copyProperties(taRsAccDtlTemp, taTxnFdcValiSendAndRecv);
-            taRsAccDtlTemp.setReqSn(ToolUtil.getStrReqSn_Back());
             taRsAccDtlTemp.setTxCode(EnuTaFdcTxCode.TRADE_2202.getCode());
             taRsAccDtlTemp.setDeletedFlag(EnuDelFlag.DEL_FALSE.getCode());
             taRsAccDtlTemp.setActFlag(EnuActFlag.ACT_UNKNOWN.getCode());
+
+            taRsAccDtlTemp.setPassword(MD5Helper.getMD5String(ToolUtil.TAFDC_MD5_KEY));
+            taRsAccDtlTemp.setReqSn(ToolUtil.getStrAppReqSn_Back());
+            taRsAccDtlTemp.setTxDate(ToolUtil.getStrLastUpdDate());
+            taRsAccDtlTemp.setBranchId(ToolUtil.getOperatorManager().getOperator().getDeptid());
+            taRsAccDtlTemp.setUserId(ToolUtil.getOperatorManager().getOperatorId());
+
             taAccDetlService.insertRecord(taRsAccDtlTemp);
 
             // 往SBS和FDC发送记账信息
-            if(sendAndRecvSBSAndFDC(taRsAccDtlTemp)) {
-                MessageUtil.addInfo("返还记账成功！");
-            }else{
-                MessageUtil.addInfo("返还记账失败！");
-            }
+            sendAndRecvSBSAndFDC(taRsAccDtlTemp);
         }catch (Exception e){
             logger.error("验证后立即返还记账用，", e);
             MessageUtil.addError(e.getMessage());
@@ -142,11 +144,6 @@ public class TaRefundAction {
     public Boolean sendAndRecvSBSAndFDC(TaRsAccDtl taRsAccDtlPara) {
         try {
             // 往SBS发送记账信息
-            taRsAccDtlPara.setPassword(MD5Helper.getMD5String(ToolUtil.TAFDC_MD5_KEY));
-            taRsAccDtlPara.setReqSn(ToolUtil.getStrAppReqSn_Back());
-            taRsAccDtlPara.setTxDate(ToolUtil.getStrLastUpdDate());
-            taRsAccDtlPara.setBranchId(ToolUtil.getOperatorManager().getOperator().getDeptid());
-            taRsAccDtlPara.setUserId(ToolUtil.getOperatorManager().getOperatorId());
             TOA toaSbs=taSbsService.sendAndRecvRealTimeTxn900010002(taRsAccDtlPara);
             if(toaSbs!=null) {
                 if(("0000").equals(toaSbs.getHeader().RETURN_CODE)){ // SBS记账成功的处理
@@ -156,7 +153,6 @@ public class TaRefundAction {
                     // 往泰安房地产中心发送记账信息
                     TaTxnFdc taTxnFdcTemp = new TaTxnFdc();
                     BeanUtils.copyProperties(taTxnFdcTemp, taRsAccDtlPara);
-                    taTxnFdcTemp.setTxCode(EnuTaFdcTxCode.TRADE_2202.getCode());
                     taFdcService.sendAndRecvRealTimeTxn9902202(taTxnFdcTemp);
                     /*记账后查询*/
                     taTxnFdcActSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcTemp.getPkId());
@@ -211,27 +207,8 @@ public class TaRefundAction {
                 return;
             }
 
-            // 往SBS发送记账信息
-            taRsAccDtlTemp.setReqSn(ToolUtil.getStrReqSn_Back());
-            TOA toaSbs=taSbsService.sendAndRecvRealTimeTxn900010002(taRsAccDtlTemp);
-            if(toaSbs!=null) {
-                if(taRsAccDtlTemp != null) {
-                    if(("0000").equals(toaSbs.getHeader().RETURN_CODE)){ // SBS记账成功的处理
-                        taRsAccDtlTemp.setActFlag(EnuActFlag.ACT_SUCCESS.getCode());
-                        taAccDetlService.updateRecord(taRsAccDtlTemp);
-
-                        // 往泰安房地产中心发送记账信息
-                        TaTxnFdc taTxnFdcTemp = new TaTxnFdc();
-                        BeanUtils.copyProperties(taTxnFdcTemp, taRsAccDtlTemp);
-                        taTxnFdcCanclSend.setTxCode(EnuTaFdcTxCode.TRADE_2211.getCode());
-                        taFdcService.sendAndRecvRealTimeTxn9902211(taTxnFdcTemp);
-                        /*划拨冲正后查询*/
-                        taTxnFdcCanclSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcTemp.getPkId());
-                    } else { // SBS记账失败的处理
-                        taAccDetlService.deleteRecord(taRsAccDtlTemp.getPkId());
-                    }
-                }
-            }
+            // 往SBS和FDC发送记账信息
+            sendAndRecvSBSAndFDC(taRsAccDtlTemp);
         }catch (Exception e){
             logger.error("划拨冲正用，", e);
             MessageUtil.addError(e.getMessage());

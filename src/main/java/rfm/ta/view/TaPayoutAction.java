@@ -133,11 +133,7 @@ public class TaPayoutAction {
             taAccDetlService.insertRecord(taRsAccDtlTemp);
 
             // 往SBS发送记账信息
-            if(sendAndRecvSBSAndFDC(taRsAccDtlTemp)) {
-                MessageUtil.addInfo("划拨记账成功！");
-            }else{
-                MessageUtil.addInfo("划拨记账失败！");
-            }
+            sendAndRecvSBSAndFDC(taRsAccDtlTemp);
         }catch (Exception e){
             logger.error("验证后立即划拨记账用，", e);
             MessageUtil.addError(e.getMessage());
@@ -145,20 +141,18 @@ public class TaPayoutAction {
     }
 
     /*验证后立即划拨记账用*/
-    public Boolean sendAndRecvSBSAndFDC(TaRsAccDtl taRsAccDtl) {
-        TOA toaSbs=null;
+    public Boolean sendAndRecvSBSAndFDC(TaRsAccDtl taRsAccDtlPara) {
         try {
             // 往SBS发送记账信息
-            toaSbs=taSbsService.sendAndRecvRealTimeTxn900010002(taRsAccDtl);
+            TOA toaSbs=taSbsService.sendAndRecvRealTimeTxn900010002(taRsAccDtlPara);
             if(toaSbs !=null) {
                 if(("0000").equals(toaSbs.getHeader().RETURN_CODE)){ // SBS记账成功的处理
-                    taRsAccDtl.setActFlag(EnuActFlag.ACT_SUCCESS.getCode());
-                    taAccDetlService.updateRecord(taRsAccDtl);
+                    taRsAccDtlPara.setActFlag(EnuActFlag.ACT_SUCCESS.getCode());
+                    taAccDetlService.updateRecord(taRsAccDtlPara);
 
                     // 往泰安房地产中心发送记账信息
                     TaTxnFdc taTxnFdcTemp=new TaTxnFdc();
-                    BeanUtils.copyProperties(taTxnFdcTemp, taRsAccDtl);
-                    taTxnFdcTemp.setTxCode(EnuTaFdcTxCode.TRADE_2102.getCode());
+                    BeanUtils.copyProperties(taTxnFdcTemp, taRsAccDtlPara);
                     taFdcService.sendAndRecvRealTimeTxn9902102(taTxnFdcTemp);
                     /*记账后查询*/
                     taTxnFdcActSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcTemp.getPkId());
@@ -208,6 +202,7 @@ public class TaPayoutAction {
                 taRsAccDtlTemp.setAccId(taRsAccDtlTemp.getRecvAccId());
                 taRsAccDtlTemp.setRecvAccId(accId);
                 taRsAccDtlTemp.setActFlag(EnuActFlag.ACT_UNKNOWN.getCode());
+                taRsAccDtlTemp.setReqSn(ToolUtil.getStrAppReqSn_Back());
                 taAccDetlService.insertRecord(taRsAccDtlTemp);
             } else {
                 logger.error("查不到该笔冲正的相关划拨信息，请确认输入的划拨申请编号");
@@ -216,26 +211,7 @@ public class TaPayoutAction {
             }
 
             // 往SBS和FDC发送记账信息
-            taRsAccDtlTemp.setReqSn(ToolUtil.getStrAppReqSn_Back());
-            TOA toaSbs=taSbsService.sendAndRecvRealTimeTxn900010002(taRsAccDtlTemp);
-            if(toaSbs !=null) {
-                if(taRsAccDtlTemp != null) {
-                    if(("0000").equals(toaSbs.getHeader().RETURN_CODE)){ // SBS记账成功的处理
-                        taRsAccDtlTemp.setActFlag(EnuActFlag.ACT_SUCCESS.getCode());
-                        taAccDetlService.updateRecord(taRsAccDtlTemp);
-
-                        // 往泰安房地产中心发送记账信息
-                        TaTxnFdc taTxnFdcTemp = new TaTxnFdc();
-                        BeanUtils.copyProperties(taTxnFdcTemp, taRsAccDtlTemp);
-                        taTxnFdcCanclSend.setTxCode(EnuTaFdcTxCode.TRADE_2111.getCode());
-                        taFdcService.sendAndRecvRealTimeTxn9902111(taTxnFdcTemp);
-                        /*划拨冲正后查询*/
-                        taTxnFdcCanclSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcTemp.getPkId());
-                    } else { // SBS记账失败的处理
-                        taAccDetlService.deleteRecord(taRsAccDtlTemp.getPkId());
-                    }
-                }
-            }
+            sendAndRecvSBSAndFDC(taRsAccDtlTemp);
         }catch (Exception e){
             logger.error("划拨冲正用，", e);
             MessageUtil.addError(e.getMessage());
