@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import platform.common.utils.MessageUtil;
 import rfm.ta.common.enums.EnuTaBankId;
 import rfm.ta.common.enums.EnuTaCityId;
+import rfm.ta.common.enums.EnuTaFdcTxCode;
 import rfm.ta.repository.model.TaRsAccDtl;
 import rfm.ta.repository.model.TaTxnFdc;
 import rfm.ta.repository.model.TaTxnSbs;
@@ -25,7 +26,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Lichao.W At 2015/7/6 17:01
@@ -52,9 +55,11 @@ public class TaDayEndReconciAction implements Serializable {
     private String strSbsTotalCounts;
     private String strSbsTotalAmt;
     private DecimalFormat df = new DecimalFormat("#.00");
+    private Map<String, String> txCodeMap;
 
     @PostConstruct
     public void init(){
+        txCodeMap = getTxCodeMapByEnum();
         strLocalTotalCounts="0";
         strLocalTotalAmt="0";
         strSbsTotalCounts="0";
@@ -68,7 +73,7 @@ public class TaDayEndReconciAction implements Serializable {
             Double total = 0d;
             for(TaRsAccDtl taRsAccDtl:taRsAccDtlLocalList){
                 total += Double.valueOf(taRsAccDtl.getTxAmt());
-                taRsAccDtl.setTxAmt(StringUtils.leftPad(df.format(Double.valueOf(taRsAccDtl.getTxAmt())),16,"0"));
+                taRsAccDtl.setTxAmt(df.format(Double.valueOf(taRsAccDtl.getTxAmt())));
             }
             strLocalTotalAmt = ToolUtil.getMoneyString(total);
             System.out.println("======>" + taRsAccDtlLocalList.get(0).getAccId());
@@ -91,6 +96,9 @@ public class TaDayEndReconciAction implements Serializable {
             taRsAccDtlSbsList = taSbsService.sendAndRecvRealTimeTxn900012602(taTxnFdcPara);
 
             if (taRsAccDtlSbsList.size() > 0) {
+                for(TaRsAccDtl taRsAccDtl : taRsAccDtlSbsList) {
+                    taRsAccDtl.setTxAmt((Double.valueOf(taRsAccDtl.getTxAmt())).toString());
+                }
                 MessageUtil.addInfo("获取SBS记账信息成功。");
             }
         }catch (Exception e){
@@ -241,7 +249,27 @@ public class TaDayEndReconciAction implements Serializable {
         return false;
     }
 
+    /**
+     * 泰安房产中心交易号
+     *
+     * @return
+     */
+    private Map<String, String> getTxCodeMapByEnum() {
+        Map<String, String> map = new HashMap<>();
+        for(EnuTaFdcTxCode txCode:EnuTaFdcTxCode.values()) {
+            map.put(txCode.getCode(), txCode.getTitle());
+        }
+        return map;
+    }
+
     //= = = = = = = = = = = = get set = = = = = = = = = = = =
+    public Map<String, String> getTxCodeMap() {
+        return txCodeMap;
+    }
+
+    public void setTxCodeMap(Map<String, String> txCodeMap) {
+        this.txCodeMap = txCodeMap;
+    }
 
     public TaTxnSbs getTaTxnSbs() {
         return taTxnSbs;
