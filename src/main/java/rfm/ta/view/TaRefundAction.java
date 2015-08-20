@@ -121,7 +121,7 @@ public class TaRefundAction {
             TaRsAccDtl taRsAccDtlTemp = new TaRsAccDtl();
             BeanUtils.copyProperties(taRsAccDtlTemp, taTxnFdcValiSendAndRecv);
             taRsAccDtlTemp.setTxCode(EnuTaFdcTxCode.TRADE_2202.getCode());
-            taRsAccDtlTemp.setDeletedFlag(EnuDelFlag.DEL_FALSE.getCode());
+            taRsAccDtlTemp.setDeletedFlag(EnuTaArchivedFlag.ARCHIVED_FLAG0.getCode());
             taRsAccDtlTemp.setActFlag(EnuActFlag.ACT_UNKNOWN.getCode());
 
             taRsAccDtlTemp.setPassword(MD5Helper.getMD5String(ToolUtil.TAFDC_MD5_KEY));

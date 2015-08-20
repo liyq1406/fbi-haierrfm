@@ -39,7 +39,9 @@ public class TaAccService {
      */
     public boolean isExistInDb(TaRsAcc account) {
         TaRsAccExample example = new TaRsAccExample();
-        example.createCriteria().andAccIdEqualTo(account.getAccId());
+        TaRsAccExample.Criteria rsActCrit = example.createCriteria();
+        rsActCrit.andAccIdEqualTo(account.getAccId());
+        rsActCrit.andDeletedFlagEqualTo(EnuTaArchivedFlag.ARCHIVED_FLAG0.getCode());
         return accountMapper.countByExample(example) >= 1;
     }
 

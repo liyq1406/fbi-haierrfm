@@ -53,6 +53,7 @@ public class TaBlncReconciAction {
     public void onQryLocaldata() {
         try {
             if(taRsAccList.size() <=0) {
+                MessageUtil.addError("没有监管账号，无法获取sbs数据");
                 return;
             }
 
@@ -60,6 +61,14 @@ public class TaBlncReconciAction {
             List<Toa900012701> toaSbs=taSbsService.sendAndRecvRealTimeTxn900012701(taRsAccList);
 
             if(toaSbs !=null && toaSbs.size() > 0) {
+                // 遍历是否存在查询失败
+                for(Toa900012701 toa900012701:toaSbs) {
+                    if (!"0000".equals(toa900012701.header.RETURN_CODE)) {
+                        MessageUtil.addError(toa900012701.header.RETURN_MSG);
+                        return;
+                    }
+                }
+
                 String sysdate = ToolUtil.getStrLastUpdDate();
                 taRsAccList = new ArrayList<>();
                 TaRsAcc taRsAcc = null;
