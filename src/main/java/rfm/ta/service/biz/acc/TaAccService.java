@@ -10,6 +10,7 @@ import platform.service.SystemService;
 import pub.platform.security.OperatorManager;
 import rfm.ta.common.enums.EnuTaArchivedFlag;
 import rfm.ta.repository.dao.TaRsAccMapper;
+import rfm.ta.repository.dao.com.TaCommonMapper;
 import rfm.ta.repository.model.TaRsAcc;
 import rfm.ta.repository.model.TaRsAccExample;
 
@@ -30,19 +31,27 @@ public class TaAccService {
     private TaRsAccMapper accountMapper;
     @Autowired
     private PtenudetailService ptenudetailService;
+    @Autowired
+    private TaCommonMapper taCommonMapper;
 
     /**
      * 判断账号是否已存在
      *
-     * @param account
+     * @param taRsAcc
      * @return
      */
-    public boolean isExistInDb(TaRsAcc account) {
-        TaRsAccExample example = new TaRsAccExample();
-        TaRsAccExample.Criteria rsActCrit = example.createCriteria();
-        rsActCrit.andAccIdEqualTo(account.getAccId());
-        rsActCrit.andDeletedFlagEqualTo(EnuTaArchivedFlag.ARCHIVED_FLAG0.getCode());
-        return accountMapper.countByExample(example) >= 1;
+    public String isExistInDb(TaRsAcc taRsAcc) {
+        List<TaRsAcc> taRsAccList = taCommonMapper.selectTaRsAcc(taRsAcc);
+        for(TaRsAcc taRsAcc1 : taRsAccList) {
+            if(taRsAcc1.getBizId().equals(taRsAcc.getBizId())) {
+                return "申请编号已存在，请重新录入！";
+            } else if(taRsAcc1.getAccId().equals(taRsAcc.getAccId())) {
+                return "专户账号已存在，请重新录入！";
+            } else if(taRsAcc1.getAccName().equals(taRsAcc.getAccName())) {
+                return "专户名称已存在，请重新录入！";
+            }
+        }
+        return null;
     }
 
     /**
@@ -110,8 +119,9 @@ public class TaAccService {
      * @param account
      */
     public void insertRecord(TaRsAcc account) {
-        if (isExistInDb(account)) {
-            throw new RuntimeException("该账号已存在，请重新录入！");
+        String result = isExistInDb(account);
+        if (result != null) {
+            throw new RuntimeException(result);
         } else {
             OperatorManager om = SystemService.getOperatorManager();
             String strLastUpdTimeTemp= ToolUtil.getStrLastUpdTime();
