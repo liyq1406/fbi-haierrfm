@@ -107,15 +107,10 @@ public class TaDayEndReconciAction implements Serializable {
         }
     }
 
-    private void sendReconciFile(List<TaRsAccDtl> taRsAccDtlListPara) {
+    private File createFile(List<TaRsAccDtl> taRsAccDtlListPara, String fileName) {
         String sysdate = ToolUtil.getStrLastUpdDate();
         File file;
         String filePath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/upload/reconci");
-
-        String fileName = "PF"+ EnuTaBankId.BANK_HAIER.getCode()+
-                EnuTaCityId.CITY_TAIAN.getCode()+
-                ToolUtil.getNow("yyyyMMdd")+".dat";
-
         StringBuffer line = new StringBuffer();
         FileWriter fw = null;
         BufferedWriter bw = null;
@@ -123,56 +118,60 @@ public class TaDayEndReconciAction implements Serializable {
         try {
             file = ToolUtil.createFile(filePath, fileName);
             if(file != null){
-                // 汇总信息
-                // 交易总笔数(6位)|
-                line.append(StringUtils.rightPad(strLocalTotalCounts, 6, ' '));
-                line.append("|");
-                // 交易总金额(20位)|
-                line.append(StringUtils.rightPad(strLocalTotalAmt, 20, ' '));
-                line.append("|");
+                if(taRsAccDtlListPara == null || taRsAccDtlListPara.size() == 0) {
+                    line.append("0     |0                |");
+                } else {
+                    // 汇总信息
+                    // 交易总笔数(6位)|
+                    line.append(StringUtils.rightPad(strLocalTotalCounts, 6, ' '));
+                    line.append("|");
+                    // 交易总金额(20位)|
+                    line.append(StringUtils.rightPad(strLocalTotalAmt, 20, ' '));
+                    line.append("|");
 
-                line.append(newLineCh);
+                    line.append(newLineCh);
 
-                // 明细信息
-                for(TaRsAccDtl taRsAccDtlUnit:taRsAccDtlListPara){
-                    // 交易代码(4位)|
-                    line.append(StringUtils.rightPad(taRsAccDtlUnit.getTxCode(), 4, ' '));
-                    line.append("|");
-                    // 业务编号(14位，包括交存申请编号、划拨业务编号、返还业务编号)|
-                    line.append(StringUtils.rightPad(taRsAccDtlUnit.getBizId(), 14, ' '));
-                    line.append("|");
-                    // 借贷标志(1位，1_借/2_贷：交存/利息=1、划拨/返还=2)|
-                    line.append(StringUtils.rightPad(taRsAccDtlUnit.getInoutFlag(), 1, ' '));
-                    line.append(sysdate);
-                    // 交易金额(20位)|
-                    line.append(StringUtils.rightPad(taRsAccDtlUnit.getTxAmt(), 20, ' '));
-                    line.append("|");
-                    // 监管账号(30位)|
-                    line.append(StringUtils.rightPad(taRsAccDtlUnit.getAccId(), 30, ' '));
-                    line.append("|");
-                    // 预售资金监管平台流水(16位)|
-                    line.append(StringUtils.rightPad(taRsAccDtlUnit.getFdcSn(), 16, ' '));
-                    line.append("|");
-                    // 监管银行记账流水(30位)|
-                    line.append(StringUtils.rightPad(taRsAccDtlUnit.getFdcBankActSn(), 30, ' '));
-                    line.append("|");
-                    // 监管银行记账网点(30位)|
-                    line.append(StringUtils.rightPad(taRsAccDtlUnit.getBankId(), 30, ' '));
-                    line.append("|");
-                    // 监管银行记账人员(30位)|
-                    line.append(StringUtils.rightPad(taRsAccDtlUnit.getUserId(), 30, ' '));
-                    line.append("|");
-                    // 记账日期(10位，YYYY-MM-DD)|
-                    line.append(StringUtils.rightPad(taRsAccDtlUnit.getTxDate(), 10, ' '));
-                    line.append("|");
+                    // 明细信息
+                    for(TaRsAccDtl taRsAccDtlUnit:taRsAccDtlListPara){
+                        // 交易代码(4位)|
+                        line.append(StringUtils.rightPad(taRsAccDtlUnit.getTxCode(), 4, ' '));
+                        line.append("|");
+                        // 业务编号(14位，包括交存申请编号、划拨业务编号、返还业务编号)|
+                        line.append(StringUtils.rightPad(taRsAccDtlUnit.getBizId(), 14, ' '));
+                        line.append("|");
+                        // 借贷标志(1位，1_借/2_贷：交存/利息=1、划拨/返还=2)|
+                        line.append(StringUtils.rightPad(taRsAccDtlUnit.getInoutFlag(), 1, ' '));
+                        line.append(sysdate);
+                        // 交易金额(20位)|
+                        line.append(StringUtils.rightPad(taRsAccDtlUnit.getTxAmt(), 20, ' '));
+                        line.append("|");
+                        // 监管账号(30位)|
+                        line.append(StringUtils.rightPad(taRsAccDtlUnit.getAccId(), 30, ' '));
+                        line.append("|");
+                        // 预售资金监管平台流水(16位)|
+                        line.append(StringUtils.rightPad(taRsAccDtlUnit.getFdcSn(), 16, ' '));
+                        line.append("|");
+                        // 监管银行记账流水(30位)|
+                        line.append(StringUtils.rightPad(taRsAccDtlUnit.getFdcBankActSn(), 30, ' '));
+                        line.append("|");
+                        // 监管银行记账网点(30位)|
+                        line.append(StringUtils.rightPad(taRsAccDtlUnit.getBankId(), 30, ' '));
+                        line.append("|");
+                        // 监管银行记账人员(30位)|
+                        line.append(StringUtils.rightPad(taRsAccDtlUnit.getUserId(), 30, ' '));
+                        line.append("|");
+                        // 记账日期(10位，YYYY-MM-DD)|
+                        line.append(StringUtils.rightPad(taRsAccDtlUnit.getTxDate(), 10, ' '));
+                        line.append("|");
+                    }
                 }
+
                 fw = new FileWriter(file);
                 bw = new BufferedWriter(fw);
                 bw.write(line.toString());
                 bw.flush();
-                ToolUtil.uploadFile("rfmtest", fileName, file);
-                file.delete();
             }
+            return file;
         } catch (Exception e) {
             throw new RuntimeException(filePath + fileName + ".dat", e);
         } finally {
@@ -192,14 +191,30 @@ public class TaDayEndReconciAction implements Serializable {
     }
 
     public void onBlnc() {
+        File file = null;
         try {
             List<TaRsAccDtl> taRsAccDtls = new ArrayList<>();
             taRsAccDtls.addAll(taRsAccDtlLocalList);
             if(reconci(taRsAccDtlLocalList,taRsAccDtlSbsList)) {
-                sendReconciFile(taRsAccDtls);
+                String fileName = "PF"+ EnuTaBankId.BANK_HAIER.getCode()+
+                        EnuTaCityId.CITY_TAIAN.getCode()+
+                        ToolUtil.getNow("yyyyMMdd")+".dat";
+                file = createFile(taRsAccDtls, fileName);
+                if(file != null){
+                    boolean result = ToolUtil.uploadFile("rfmtest", fileName, file);
+                    if(result){
+                        MessageUtil.addInfo("ftp发送房产中心成功!");
+                    } else{
+                        MessageUtil.addError("ftp发送房产中心失败!");
+                    }
+                }
             }
         } catch (Exception e) {
             MessageUtil.addError("日间对账发送失败！");
+        } finally {
+            if(file != null && file.exists()) {
+                file.delete();
+            }
         }
     }
     public static void main(String[] args) {
