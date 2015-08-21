@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import platform.service.PtenudetailService;
 import platform.service.SystemService;
+import pub.platform.advance.utils.RfmMessage;
 import pub.platform.security.OperatorManager;
 import rfm.ta.common.enums.EnuTaArchivedFlag;
 import rfm.ta.repository.dao.TaRsAccMapper;
@@ -44,11 +45,11 @@ public class TaAccService {
         List<TaRsAcc> taRsAccList = taCommonMapper.selectTaRsAcc(taRsAcc);
         for(TaRsAcc taRsAcc1 : taRsAccList) {
             if(taRsAcc1.getBizId().equals(taRsAcc.getBizId())) {
-                return "申请编号已存在，请重新录入！";
+                return RfmMessage.getProperty("AccountRegistration.E001");
             } else if(taRsAcc1.getAccId().equals(taRsAcc.getAccId())) {
-                return "专户账号已存在，请重新录入！";
+                return RfmMessage.getProperty("AccountRegistration.E002");
             } else if(taRsAcc1.getAccName().equals(taRsAcc.getAccName())) {
-                return "专户名称已存在，请重新录入！";
+                return RfmMessage.getProperty("AccountRegistration.E003");
             }
         }
         return null;
