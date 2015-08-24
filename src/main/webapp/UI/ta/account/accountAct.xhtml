@@ -77,39 +77,14 @@
                              selectionMode="single"
                              var="record"
                              rowKey="#{record.pkId}"
+                             resizableColumns="true"
+                             scrollable="true"
                              paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                              paginator="true" rows="15" paginatorPosition="bottom"
                              rowsPerPageTemplate="100,50,30,15,5"
                              emptyMessage="数据记录为空...">
-                    <p:column headerText="账户类别" style="text-align:left">
-                        <h:outputText value="#{ptenudetailAction.taAccTypeMap.get(record.accType)}"/>
-                    </p:column>
 
-                    <p:column headerText="账号" style="text-align:center">
-                        <h:outputText value="#{record.accId}" style="text-align: center;"/>
-                    </p:column>
-
-                    <p:column headerText="名称" style="text-align:center">
-                        <h:outputText value="#{record.accName}" style="text-align: right"/>
-                    </p:column>
-
-                    <p:column headerText="预售人名称" style="text-align:center">
-                        <h:outputText value="#{record.preSalePerName}" style="text-align: right"/>
-                    </p:column>
-
-                    <p:column headerText="预售项目名称" style="text-align:center">
-                        <h:outputText value="#{record.preSaleProName}" style="text-align: right"/>
-                    </p:column>
-
-                    <p:column headerText="预售项目地址" style="text-align:center">
-                        <h:outputText value="#{record.preSaleProAddr}" style="text-align: right"/>
-                    </p:column>
-
-                    <p:column headerText="监管状态" style="text-align:center">
-                        <h:outputText value="#{ptenudetailAction.taAccStatusMap.get(record.statusFlag)}"/>
-                    </p:column>
-
-                    <p:column headerText="操作" style="text-align:center">
+                    <p:column headerText="操作" style="width:60px;text-align:center">
                         <p:commandLink  value="启用" immediate="true" ajax="false"
                                         action="#{taAccAction.onClick_Enable(record)}"
                                         rendered="#{record.statusFlag eq '1'?'false':'true'}"
@@ -117,6 +92,37 @@
                         </p:commandLink>
                     </p:column>
 
+                    <p:column headerText="监管状态" style="width:100px;text-align:center">
+                        <h:outputText value="#{ptenudetailAction.taAccStatusMap.get(record.statusFlag)}"/>
+                    </p:column>
+
+                    <p:column headerText="监管申请编号" style="width:160px;text-align:center">
+                        <h:outputText value="#{record.bizId}" style="text-align: center;"/>
+                    </p:column>
+
+                    <p:column headerText="账户类别" style="width:110px;text-align:left">
+                        <h:outputText value="#{ptenudetailAction.taAccTypeMap.get(record.accType)}"/>
+                    </p:column>
+
+                    <p:column headerText="账号" style="width:200px;text-align:center">
+                        <h:outputText value="#{record.accId}" style="text-align: center;"/>
+                    </p:column>
+
+                    <p:column headerText="名称" style="width:260px;text-align:center">
+                        <h:outputText value="#{record.accName}" style="text-align: right"/>
+                    </p:column>
+
+                    <p:column headerText="预售人名称" style="width:260px;text-align:center">
+                        <h:outputText value="#{record.preSalePerName}" style="text-align: right"/>
+                    </p:column>
+
+                    <p:column headerText="预售项目名称" style="width:260px;text-align:center">
+                        <h:outputText value="#{record.preSaleProName}" style="text-align: right"/>
+                    </p:column>
+
+                    <p:column headerText="预售项目地址" style="width:260px;text-align:center">
+                        <h:outputText value="#{record.preSaleProAddr}" style="text-align: right"/>
+                    </p:column>
                 </p:dataTable>
             </h:form>
         </div>

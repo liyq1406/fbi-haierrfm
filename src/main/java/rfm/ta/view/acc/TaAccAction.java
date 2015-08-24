@@ -137,17 +137,15 @@ public class TaAccAction {
     }
 
     /*启用*/
-    public String onClick_Enable(TaRsAcc taRsAccPara){
+    public void onClick_Enable(TaRsAcc taRsAccPara){
         try {
             taFdcService.sendAndRecvRealTimeTxn9901001(taRsAccPara);
+            MessageUtil.addInfo(RfmMessage.getProperty("AccountOpening.I001"));
+            confirmAccountNo = "";
         } catch (Exception e) {
             logger.error("启用监管失败，", e);
             MessageUtil.addError(e.getMessage());
-            return null;
         }
-        MessageUtil.addInfo(RfmMessage.getProperty("AccountOpening.I001"));
-        confirmAccountNo = "";
-        return null;
     }
     /*撤销*/
     public String onClick_Unable(TaRsAcc taRsAccPara){

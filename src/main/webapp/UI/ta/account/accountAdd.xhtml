@@ -98,12 +98,12 @@
                              rowsPerPageTemplate="100,50,30,15,5"
                              emptyMessage="数据记录为空...">
 
-                    <p:column headerText="账户类别" style="text-align:left">
-                        <h:outputText value="#{ptenudetailAction.taAccTypeMap.get(record.accType)}"/>
-                    </p:column>
-
                     <p:column headerText="申请编号" style="text-align:left">
                         <h:outputText value="#{record.bizId}"/>
+                    </p:column>
+
+                    <p:column headerText="账户类别" style="text-align:left">
+                        <h:outputText value="#{ptenudetailAction.taAccTypeMap.get(record.accType)}"/>
                     </p:column>
 
                     <p:column headerText="专户账号" style="text-align:left">
