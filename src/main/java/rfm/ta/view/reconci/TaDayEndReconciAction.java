@@ -22,8 +22,6 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import java.io.*;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,7 +62,7 @@ public class TaDayEndReconciAction implements Serializable {
         strLocalTotalAmt="0";
         strSbsTotalCounts="0";
         strSbsTotalAmt="0";
-        taRsAccDtlSbsList=new ArrayList<>();
+        taRsAccDtlSbsList=new ArrayList<TaRsAccDtl>();
         TaRsAccDtl taRsAccDtlPara=new TaRsAccDtl();
         taRsAccDtlPara.setTxDate(ToolUtil.getNow("yyyy-MM-dd"));
         taRsAccDtlLocalList = taAccDetlService.selectedRecords(taRsAccDtlPara);
@@ -193,7 +191,7 @@ public class TaDayEndReconciAction implements Serializable {
     public void onBlnc() {
         File file = null;
         try {
-            List<TaRsAccDtl> taRsAccDtls = new ArrayList<>();
+            List<TaRsAccDtl> taRsAccDtls = new ArrayList<TaRsAccDtl>();
             taRsAccDtls.addAll(taRsAccDtlLocalList);
             if(reconci(taRsAccDtlLocalList,taRsAccDtlSbsList)) {
                 String fileName = "PF"+ EnuTaBankId.BANK_HAIER.getCode()+
@@ -216,13 +214,6 @@ public class TaDayEndReconciAction implements Serializable {
                 file.delete();
             }
         }
-    }
-    public static void main(String[] args) {
-        String targetPath = "rfmtest";
-        String filename = "a.dat";
-        Path path = Paths.get("D:\\项目资料", filename);
-        File file = path.toFile();
-        ToolUtil.uploadFile(targetPath, filename, file);
     }
 
     /**
@@ -270,7 +261,7 @@ public class TaDayEndReconciAction implements Serializable {
      * @return
      */
     private Map<String, String> getTxCodeMapByEnum() {
-        Map<String, String> map = new HashMap<>();
+        Map<String, String> map = new HashMap<String, String>();
         for(EnuTaFdcTxCode txCode:EnuTaFdcTxCode.values()) {
             map.put(txCode.getCode(), txCode.getTitle());
         }

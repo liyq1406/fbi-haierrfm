@@ -70,7 +70,7 @@ public class TaBlncReconciAction {
                 }
 
                 String sysdate = ToolUtil.getStrLastUpdDate();
-                taRsAccList = new ArrayList<>();
+                taRsAccList = new ArrayList<TaRsAcc>();
                 TaRsAcc taRsAcc = null;
                 for(Toa900012701 toa900012701:toaSbs){
                     for(Toa900012701.BodyDetail bodyDetail:toa900012701.body.DETAILS){

@@ -42,7 +42,7 @@ public class PtenudetailService {
      */
     public List<SelectItem> getEnuSelectItemList(String enuName, boolean isSelectAll, boolean isExpandID) {
         List<Ptenudetail> records = selectEnuDetail(enuName);
-        List<SelectItem> items = new ArrayList<>();
+        List<SelectItem> items = new ArrayList<SelectItem>();
         SelectItem item;
         if (isSelectAll) {
             item = new SelectItem("", "È«²¿");

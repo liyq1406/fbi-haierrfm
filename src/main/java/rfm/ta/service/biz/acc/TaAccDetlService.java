@@ -97,7 +97,7 @@ public class TaAccDetlService {
      * @return
      */
     public Map<String, String> getActFlagMap() {
-        Map<String, String> actFlagMap = new HashMap<>();
+        Map<String, String> actFlagMap = new HashMap<String, String>();
         for(EnuActFlag actFlag:EnuActFlag.values()) {
             actFlagMap.put(actFlag.getCode(), actFlag.getTitle());
         }

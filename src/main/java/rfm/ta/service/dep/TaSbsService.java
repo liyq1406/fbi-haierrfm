@@ -118,7 +118,7 @@ public class TaSbsService {
     @Transactional
     public List<TaRsAccDtl> sendAndRecvRealTimeTxn900012602(TaTxnFdc taTxnFdcPara) {
         try {
-            List<TaRsAccDtl> taRsAccDtlListTemp=new ArrayList<>();
+            List<TaRsAccDtl> taRsAccDtlListTemp=new ArrayList<TaRsAccDtl>();
 
             // 日终对账明细查询
             Tia900012602 tia900012602Temp=new Tia900012602();
@@ -172,7 +172,7 @@ public class TaSbsService {
     }
 
     private List<TaRsAccDtl> fromBodyDetailsToTaRsAccDtls(List<Toa900012602.Body.BodyDetail> bodyDetailListPara){
-        List<TaRsAccDtl> taRsAccDtlListTemp=new ArrayList<>();
+        List<TaRsAccDtl> taRsAccDtlListTemp=new ArrayList<TaRsAccDtl>();
         for(Toa900012602.Body.BodyDetail bdUnit:bodyDetailListPara){
             TaRsAccDtl taRsAccDtlTemp=new TaRsAccDtl();
             taRsAccDtlTemp.setReqSn(bdUnit.FBTIDX);
@@ -209,11 +209,11 @@ public class TaSbsService {
                 pageCount = totalCount / pageSize + 1;
             }
 
-            List<Toa900012701> toaParas = new ArrayList<>();
+            List<Toa900012701> toaParas = new ArrayList<Toa900012701>();
             List<Tia900012701.BodyDetail> details = null;
             Tia900012701.BodyDetail bodyDetail = null;
             for(int i=0; i<pageCount;i++){
-                details = new ArrayList<>();
+                details = new ArrayList<Tia900012701.BodyDetail>();
                 if(i == pageCount-1){ // 最后一页的处理
                     loopCount = totalCount;
                 } else{
