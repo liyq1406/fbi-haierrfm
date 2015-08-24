@@ -40,7 +40,7 @@
 
     <ui:define name="content">
         <div style="margin:5px;" id="top">
-            <p:growl id="msgs" showDetail="true"/>
+            <p:growl id="msgs" showDetail="false"/>
             <h:form id="actqueryForm">
                 <p:panel id="query" header="【监管账户信息】管理">
                     <h:panelGrid columns="2" cellspacing="3" style="width:100%">
@@ -59,14 +59,16 @@
                             </h:inputText>
 
                             <h:outputLabel value="*【申请编号】:" for="originId"/>
-                            <h:inputText id="originId" value="#{taAccAction.taRsAcc.bizId}"/>
+                            <h:inputText id="originId" required="true"
+                                         requiredMessage="必须输入申请编号！" value="#{taAccAction.taRsAcc.bizId}"/>
 
                             <h:outputLabel value="*【名称】:" for="accName"/>
-                            <h:inputText id="accName" value="#{taAccAction.taRsAcc.accName}"/>
+                            <h:inputText id="accName" required="true" requiredMessage="必须输入名称！" value="#{taAccAction.taRsAcc.accName}"/>
 
                             <h:outputLabel value="*【监管状态】:" for="statusFlag"/>
                             <h:inputText id="statusFlag"
                                          readonly="true"
+                                         style="background-color:gainsboro;"
                                          value="#{ptenudetailAction.taAccStatusMap.get(taAccAction.taRsAcc.statusFlag)}"/>
                         </h:panelGrid>
                         <h:panelGrid id="btns" columns="1" style="text-align:center;">

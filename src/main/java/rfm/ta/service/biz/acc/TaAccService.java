@@ -45,11 +45,28 @@ public class TaAccService {
         List<TaRsAcc> taRsAccList = taCommonMapper.selectTaRsAcc(taRsAcc);
         for(TaRsAcc taRsAcc1 : taRsAccList) {
             if(taRsAcc1.getBizId().equals(taRsAcc.getBizId())) {
-                return RfmMessage.getProperty("AccountRegistration.E001");
-            } else if(taRsAcc1.getAccId().equals(taRsAcc.getAccId())) {
                 return RfmMessage.getProperty("AccountRegistration.E002");
-            } else if(taRsAcc1.getAccName().equals(taRsAcc.getAccName())) {
+            } else if(taRsAcc1.getAccId().equals(taRsAcc.getAccId())) {
                 return RfmMessage.getProperty("AccountRegistration.E003");
+            } else if(taRsAcc1.getAccName().equals(taRsAcc.getAccName())) {
+                return RfmMessage.getProperty("AccountRegistration.E004");
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 更新时判断申请编号、名称是否已存在
+     * @param taRsAcc
+     * @return
+     */
+    private String isExistInDbUpdate(TaRsAcc taRsAcc) {
+        List<TaRsAcc> taRsAccList = taCommonMapper.selectTaRsAccUpdate(taRsAcc);
+        for(TaRsAcc taRsAcc1 : taRsAccList) {
+            if(taRsAcc1.getBizId().equals(taRsAcc.getBizId())) {
+                return RfmMessage.getProperty("AccountManagement.E001");
+            } else if(taRsAcc1.getAccName().equals(taRsAcc.getAccName())) {
+                return RfmMessage.getProperty("AccountManagement.E002");
             }
         }
         return null;
@@ -138,20 +155,25 @@ public class TaAccService {
      * 通过主键更新
      */
     public int updateRecord(TaRsAcc account) {
-        if (isModifiable(account)) {
-            try {
-                OperatorManager om = SystemService.getOperatorManager();
-                account.setLastUpdBy(om.getOperatorId());
-            } catch (Exception e) {
-                // 默认用户
-//                account.setLastUpdBy("");
-            }
-            String strLastUpdTimeTemp=ToolUtil.getStrLastUpdTime();
-            account.setLastUpdTime(strLastUpdTimeTemp);
-            account.setRecVersion(account.getRecVersion() + 1);
-            return accountMapper.updateByPrimaryKeySelective(account);
+        String result = isExistInDbUpdate(account);
+        if (result != null) {
+            throw new RuntimeException(result);
         } else {
-            throw new RuntimeException("账户并发更新冲突！ActPkid=" + account.getPkId());
+            if (isModifiable(account)) {
+                try {
+                    OperatorManager om = SystemService.getOperatorManager();
+                    account.setLastUpdBy(om.getOperatorId());
+                } catch (Exception e) {
+                    // 默认用户
+//                account.setLastUpdBy("");
+                }
+                String strLastUpdTimeTemp=ToolUtil.getStrLastUpdTime();
+                account.setLastUpdTime(strLastUpdTimeTemp);
+                account.setRecVersion(account.getRecVersion() + 1);
+                return accountMapper.updateByPrimaryKeySelective(account);
+            } else {
+                throw new RuntimeException("账户并发更新冲突！ActPkid=" + account.getPkId());
+            }
         }
     }
 

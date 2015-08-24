@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import platform.common.utils.MessageUtil;
 import platform.service.PtenudetailService;
+import pub.platform.advance.utils.RfmMessage;
 import rfm.qd.service.RsSysctlService;
 import rfm.ta.repository.model.TaRsAcc;
 import rfm.ta.service.biz.acc.TaAccService;
@@ -80,7 +81,7 @@ public class TaAccAction {
     public String onAdd() {
         try {
             if (!confirmAccountNo.equalsIgnoreCase(taRsAcc.getAccId())) {
-                MessageUtil.addError("两次输入的监管账户号不一致！");
+                MessageUtil.addError(RfmMessage.getProperty("AccountRegistration.E001"));
                 return null;
             }
             // 初始帐户余额均为可用
@@ -90,7 +91,7 @@ public class TaAccAction {
             MessageUtil.addError(e.getMessage());
             return null;
         }
-        MessageUtil.addInfo("新增数据完成。");
+        MessageUtil.addInfo(RfmMessage.getProperty("AccountRegistration.I001"));
         taRsAccList = taAccService.qryAllRecords();
         this.taRsAcc = new TaRsAcc();
         confirmAccountNo = "";
@@ -106,7 +107,7 @@ public class TaAccAction {
             MessageUtil.addError(e.getMessage());
             return null;
         }
-        MessageUtil.addInfo("修改数据完成。");
+        MessageUtil.addInfo(RfmMessage.getProperty("AccountManagement.I001"));
         confirmAccountNo = "";
         return null;
     }
@@ -118,7 +119,7 @@ public class TaAccAction {
             MessageUtil.addError(e.getMessage());
             return null;
         }
-        MessageUtil.addInfo("删除数据完成。");
+        MessageUtil.addInfo(RfmMessage.getProperty("AccountManagement.I002"));
         return null;
     }
 
@@ -144,7 +145,7 @@ public class TaAccAction {
             MessageUtil.addError(e.getMessage());
             return null;
         }
-        MessageUtil.addInfo("启用监管成功。");
+        MessageUtil.addInfo(RfmMessage.getProperty("AccountOpening.I001"));
         confirmAccountNo = "";
         return null;
     }
@@ -157,7 +158,7 @@ public class TaAccAction {
             MessageUtil.addError(e.getMessage());
             return null;
         }
-        MessageUtil.addInfo("解除监管成功。");
+        MessageUtil.addInfo(RfmMessage.getProperty("AccountCancel.I001"));
         confirmAccountNo = "";
         return null;
     }

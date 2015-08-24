@@ -5,7 +5,7 @@ function FocusUsername() {
 }
 function ValidateLength() {
 	if(!(trimStr(document.winform.username.value).length >= 1)) {	
-		window.alert("必须输入用户标识！");
+		window.alert("必须输入用户名！");
 		document.winform.username.focus();
 		document.winform.username.select();
 		return false;

@@ -53,20 +53,21 @@
 
                             <h:outputLabel value="*【专户账号】:" for="accId"/>
                             <h:inputText autocomplete="off" id="accId" style="width:192px;" required="true"
-                                         requiredMessage="必须输入监管账号！" value="#{taAccAction.taRsAcc.accId}">
+                                         requiredMessage="必须输入专户账号！" value="#{taAccAction.taRsAcc.accId}">
                             </h:inputText>
 
                             <h:outputLabel value="*【申请编号】:" for="originId"/>
-                            <h:inputText id="originId" value="#{taAccAction.taRsAcc.bizId}"/>
+                            <h:inputText id="originId" required="true"
+                                         requiredMessage="必须输入申请编号！" value="#{taAccAction.taRsAcc.bizId}"/>
 
                             <h:outputLabel value="*【确认专户账号】:" for="confirmAccountNo"/>
                             <h:inputText autocomplete="off" id="confirmAccountNo" style="width:192px;" required="true"
-                                         requiredMessage="必须输入确认监管账号！" value="#{taAccAction.confirmAccountNo}">
+                                         requiredMessage="必须输入确认专户账号！" value="#{taAccAction.confirmAccountNo}">
                             </h:inputText>
 
                             <h:outputLabel value="*【专户名称】:" for="accName"/>
                             <h:inputText id="accName" value="#{taAccAction.taRsAcc.accName}"
-                                         required="true" requiredMessage="必须输入账户名称！" style="width:192px;"/>
+                                         required="true" requiredMessage="必须输入专户名称！" style="width:192px;"/>
                         </h:panelGrid>
                         <h:panelGrid style="width:20%">
                             <p:commandButton id="saveBtn" ajax="true" value="保存"
