@@ -26,27 +26,6 @@ public class TaTxnSbsService {
     private TaTxnSbsMapper taTxnSbsMapper;
 
     /**
-     * 是否并发更新冲突
-     *
-     * @param
-     * @return
-     */
-    public boolean isModifiable(TaTxnSbs taTxnSbsPara) {
-        TaTxnSbs taTxnSbsTemp = taTxnSbsMapper.selectByPrimaryKey(taTxnSbsPara.getPkId());
-        if (!taTxnSbsPara.getRecVersion().equals(taTxnSbsTemp.getRecVersion())) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * 操作查询
-     */
-    public TaTxnSbs selectedRecordsByKey(String strTaTxnSbsPara) {
-        return taTxnSbsMapper.selectByPrimaryKey(strTaTxnSbsPara);
-    }
-
-    /**
      * 操作查询
      */
     public List<TaTxnSbs> selectedAllRecords(TaTxnSbs taTxnSbsPara) {
@@ -60,26 +39,8 @@ public class TaTxnSbsService {
      * @param taTxnSbsPara
      */
     public void insertRecord(TaTxnSbs taTxnSbsPara) {
-        String strOperId=ToolUtil.getOperatorManager().getOperatorId();
-        String strLastUpdTimeTemp= ToolUtil.getStrLastUpdTime();
-        taTxnSbsPara.setCreatedBy(strOperId);
-        taTxnSbsPara.setCreatedTime(strLastUpdTimeTemp);
+        taTxnSbsPara.setCreatedTime(ToolUtil.getStrLastUpdTime());
+        taTxnSbsPara.setRecVersion(0);
         taTxnSbsMapper.insert(taTxnSbsPara);
-    }
-
-    /**
-     * 通过主键更新
-     */
-    public int updateRecord(TaTxnSbs taTxnSbsPara) {
-        if (isModifiable(taTxnSbsPara)) {
-            String strOperId=ToolUtil.getOperatorManager().getOperatorId();
-            String strLastUpdTimeTemp=ToolUtil.getStrLastUpdTime();
-            taTxnSbsPara.setLastUpdBy(strOperId);
-            taTxnSbsPara.setLastUpdTime(strLastUpdTimeTemp);
-            taTxnSbsPara.setRecVersion(taTxnSbsPara.getRecVersion() + 1);
-            return taTxnSbsMapper.updateByPrimaryKeySelective(taTxnSbsPara);
-        } else {
-            throw new RuntimeException("并发更新冲突！Pkid=" + taTxnSbsPara.getPkId());
-        }
     }
 }

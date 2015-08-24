@@ -93,10 +93,6 @@ public class TaPayoutAction {
         // 发送验证信息
         taTxnFdcValiSend.setTxCode(EnuTaFdcTxCode.TRADE_2101.getCode());
         taTxnFdcValiSend.setPassword(MD5Helper.getMD5String(ToolUtil.TAFDC_MD5_KEY));
-        taTxnFdcValiSend.setReqSn(ToolUtil.getStrAppReqSn_Back());
-        taTxnFdcValiSend.setTxDate(ToolUtil.getStrLastUpdDate());
-        taTxnFdcValiSend.setBranchId(ToolUtil.getOperatorManager().getOperator().getDeptid());
-        taTxnFdcValiSend.setUserId(ToolUtil.getOperatorManager().getOperatorId());
         taFdcService.sendAndRecvRealTimeTxn9902101(taTxnFdcValiSend);
         /*验证后查询*/
         taTxnFdcValiSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcValiSend.getPkId());
@@ -141,6 +137,9 @@ public class TaPayoutAction {
             PtOperBean ptOperBeanTemp=ToolUtil.getOperatorManager().getOperator();
             taRsAccDtlTemp.setBranchId(ptOperBeanTemp.getDeptid());
             taRsAccDtlTemp.setUserId(ptOperBeanTemp.getOperid());
+
+            taRsAccDtl.setCreatedBy(taRsAccDtlTemp.getUserId());
+
             taAccDetlService.insertRecord(taRsAccDtlTemp);
 
             // 往SBS发送记账信息
@@ -221,6 +220,7 @@ public class TaPayoutAction {
                 taRsAccDtlTemp.setRecvAccId(accId);
                 taRsAccDtlTemp.setActFlag(EnuActFlag.ACT_UNKNOWN.getCode());
                 taRsAccDtlTemp.setReqSn(ToolUtil.getStrAppReqSn_Back());
+
                 taAccDetlService.insertRecord(taRsAccDtlTemp);
             } else {
                 logger.error(RfmMessage.getProperty("TransferCorrection.E001"));

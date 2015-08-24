@@ -69,10 +69,8 @@ public class TaTxnFdcService {
      * @param taTxnFdcPara
      */
     public void insertRecord(TaTxnFdc taTxnFdcPara) {
-        String strOperId=ToolUtil.getOperatorManager().getOperatorId();
-        String strLastUpdTimeTemp= ToolUtil.getStrLastUpdTime();
-        taTxnFdcPara.setCreatedBy(strOperId);
-        taTxnFdcPara.setCreatedTime(strLastUpdTimeTemp);
+        taTxnFdcPara.setCreatedTime(ToolUtil.getStrLastUpdTime());
+        taTxnFdcPara.setRecVersion(0);
         taTxnFdcMapper.insert(taTxnFdcPara);
     }
 
@@ -81,10 +79,7 @@ public class TaTxnFdcService {
      */
     public int updateRecord(TaTxnFdc taTxnFdcPara) {
         if (isModifiable(taTxnFdcPara)) {
-            String strOperId=ToolUtil.getOperatorManager().getOperatorId();
-            String strLastUpdTimeTemp=ToolUtil.getStrLastUpdTime();
-            taTxnFdcPara.setLastUpdBy(strOperId);
-            taTxnFdcPara.setLastUpdTime(strLastUpdTimeTemp);
+            taTxnFdcPara.setLastUpdTime(ToolUtil.getStrLastUpdTime());
             taTxnFdcPara.setRecVersion(taTxnFdcPara.getRecVersion() + 1);
             return taTxnFdcMapper.updateByPrimaryKeySelective(taTxnFdcPara);
         } else {

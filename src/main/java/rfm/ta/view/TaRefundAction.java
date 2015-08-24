@@ -138,6 +138,8 @@ public class TaRefundAction {
             taRsAccDtlTemp.setBranchId(ToolUtil.getOperatorManager().getOperator().getDeptid());
             taRsAccDtlTemp.setUserId(ToolUtil.getOperatorManager().getOperatorId());
 
+            taRsAccDtlTemp.setCreatedBy(taRsAccDtlTemp.getUserId());
+
             taAccDetlService.insertRecord(taRsAccDtlTemp);
 
             // 往SBS和FDC发送记账信息
@@ -219,6 +221,7 @@ public class TaRefundAction {
                 taRsAccDtlTemp.setRecvAccId(accId);
                 taRsAccDtlTemp.setActFlag(EnuActFlag.ACT_UNKNOWN.getCode());
                 taRsAccDtlTemp.setReqSn(ToolUtil.getStrAppReqSn_Back());
+
                 taAccDetlService.insertRecord(taRsAccDtlTemp);
             } else {
                 logger.error(RfmMessage.getProperty("ReturnCorrection.E003"));

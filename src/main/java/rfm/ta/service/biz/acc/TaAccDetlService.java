@@ -109,11 +109,8 @@ public class TaAccDetlService {
      * @param taRsAccDtl
      */
     public void insertRecord(TaRsAccDtl taRsAccDtl) {
-        OperatorManager om = SystemService.getOperatorManager();
-        taRsAccDtl.setCreatedBy(om.getOperatorId());
         taRsAccDtl.setCreatedTime(ToolUtil.getStrLastUpdTime());
-        taRsAccDtl.setLastUpdBy(om.getOperatorId());
-        taRsAccDtl.setLastUpdTime(ToolUtil.getStrLastUpdTime());
+        taRsAccDtl.setRecVersion(0);
         taRsAccDtlMapper.insert(taRsAccDtl);
     }
 
@@ -123,6 +120,8 @@ public class TaAccDetlService {
      * @return
      */
     public int updateRecord(TaRsAccDtl taRsAccDtl) {
+        taRsAccDtl.setLastUpdTime(ToolUtil.getStrLastUpdTime());
+        taRsAccDtl.setRecVersion(taRsAccDtl.getRecVersion() + 1);
         return taRsAccDtlMapper.updateByPrimaryKeySelective(taRsAccDtl);
     }
 

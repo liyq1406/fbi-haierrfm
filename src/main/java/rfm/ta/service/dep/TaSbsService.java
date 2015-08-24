@@ -64,7 +64,6 @@ public class TaSbsService {
             tia900010002Temp.header.USER_ID=taTxnSbsPara.getUserId();
             tia900010002Temp.header.TX_CODE=taTxnSbsPara.getTxCode();
 
-            taTxnSbsPara.setRecVersion(0);
             taTxnSbsService.insertRecord(taTxnSbsPara);
 
             //通过MQ发送信息到DEP

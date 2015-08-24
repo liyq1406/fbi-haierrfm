@@ -42,19 +42,16 @@ public class DepMsgListener implements MessageListener {
 
     @Override
     public void onMessage(Message message) {
-        String txnCode = null;
-        String correlationID = null;
         try {
-            correlationID = message.getJMSCorrelationID();
+            String correlationID = message.getJMSCorrelationID();
             HashMap<String, String> propertyMap = new HashMap<String, String>();
             propertyMap.put("JMSX_CHANNELID", message.getStringProperty("JMSX_CHANNELID"));
             propertyMap.put("JMSX_APPID", message.getStringProperty("JMSX_APPID"));
             propertyMap.put("JMSX_SRCMSGFLAG", message.getStringProperty("JMSX_SRCMSGFLAG"));
             ObjectMessage objMsg = (ObjectMessage) message;
             TIA tiaTmp = (TIA)objMsg.getObject();
-            TOA toaSbs;
             TOA toaFdc;
-            txnCode = tiaTmp.getHeader().TX_CODE;
+            String txnCode = tiaTmp.getHeader().TX_CODE;
             if(EnuTaFdcTxCode.TRADE_2001.getCode().equals(txnCode)){
                 /*01	交易代码	    4	2001
                   02	监管银行代码	2
@@ -81,7 +78,7 @@ public class DepMsgListener implements MessageListener {
         }
     }
 
-    /*验证后立即划拨记账用*/
+    /*验证后立即交存记账用*/
     public Boolean sendAndRecvSBSAndFDC(TIA tiaPara,String correlationID,HashMap<String, String> propertyMap) {
         try {
             // 往SBS发送记账信息
@@ -98,6 +95,7 @@ public class DepMsgListener implements MessageListener {
             if(toaSbs!=null) {
                 if(("0000").equals(toaSbs.getHeader().RETURN_CODE)){ // SBS记账成功的处理
                     taTxnFdcTemp.setActFlag(EnuActFlag.ACT_SUCCESS.getCode());
+                    taTxnFdcTemp.setLastUpdBy(taTxnFdcTemp.getUserId());
                     taAccDetlService.updateRecord(taTxnFdcTemp);
                     TOA toaFdc;
                     // 往泰安房地产中心发送记账信息

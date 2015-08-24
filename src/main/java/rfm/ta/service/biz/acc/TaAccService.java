@@ -141,12 +141,8 @@ public class TaAccService {
         if (result != null) {
             throw new RuntimeException(result);
         } else {
-            OperatorManager om = SystemService.getOperatorManager();
-            String strLastUpdTimeTemp= ToolUtil.getStrLastUpdTime();
-            account.setCreatedBy(om.getOperatorId());
-            account.setCreatedTime(strLastUpdTimeTemp);
-            account.setLastUpdBy(om.getOperatorId());
-            account.setLastUpdTime(strLastUpdTimeTemp);
+            account.setCreatedTime(ToolUtil.getStrLastUpdTime());
+            account.setRecVersion(0);
             accountMapper.insertSelective(account);
         }
     }
@@ -160,15 +156,7 @@ public class TaAccService {
             throw new RuntimeException(result);
         } else {
             if (isModifiable(account)) {
-                try {
-                    OperatorManager om = SystemService.getOperatorManager();
-                    account.setLastUpdBy(om.getOperatorId());
-                } catch (Exception e) {
-                    // 默认用户
-//                account.setLastUpdBy("");
-                }
-                String strLastUpdTimeTemp=ToolUtil.getStrLastUpdTime();
-                account.setLastUpdTime(strLastUpdTimeTemp);
+                account.setLastUpdTime(ToolUtil.getStrLastUpdTime());
                 account.setRecVersion(account.getRecVersion() + 1);
                 return accountMapper.updateByPrimaryKeySelective(account);
             } else {
@@ -182,15 +170,7 @@ public class TaAccService {
      */
     public int deleteRecord(TaRsAcc account) {
         if (isModifiable(account)) {
-            try {
-                OperatorManager om = SystemService.getOperatorManager();
-                account.setLastUpdBy(om.getOperatorId());
-            } catch (Exception e) {
-                // 默认用户
-//                account.setLastUpdBy("");
-            }
-            String strLastUpdTimeTemp=ToolUtil.getStrLastUpdTime();
-            account.setLastUpdTime(strLastUpdTimeTemp);
+            account.setLastUpdTime(ToolUtil.getStrLastUpdTime());
             account.setRecVersion(account.getRecVersion() + 1);
             account.setDeletedFlag(EnuTaArchivedFlag.ARCHIVED_FLAG1.getCode());
             return accountMapper.updateByPrimaryKeySelective(account);

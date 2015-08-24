@@ -147,12 +147,16 @@ public class TaFdcService {
             taTxnFdcPara.setBranchId(tia9902001Temp.body.BRANCH_ID);   // 07   验证网点     30
             taTxnFdcPara.setUserId(tia9902001Temp.header.USER_ID);     // 08   验证人员     30
             taTxnFdcPara.setInitiator(tia9902001Temp.body.INITIATOR);  // 09   发起方         1   1_监管银行
-            //通过MQ发送信息到DEP
-            taTxnFdcPara.setRecVersion(0);
+
+            taTxnFdcPara.setCreatedBy(taTxnFdcPara.getUserId());
+
             taTxnFdcService.insertRecord(taTxnFdcPara);
 
             String strMsgid= depMsgSendAndRecv.sendDepMessage(tiaPara);
             Toa9902001 toaPara=(Toa9902001) depMsgSendAndRecv.recvDepMessage(strMsgid);
+
+            taTxnFdcPara.setLastUpdBy(taTxnFdcPara.getUserId());
+
             if(EnuTaTxnRtnCode.TXN_PROCESSED.getCode().equals(toaPara.header.RETURN_CODE)){
                 /*01	结果	                4   0000表示成功
                   02	帐户类别	            1   0：监管户；
@@ -209,12 +213,16 @@ public class TaFdcService {
             taTxnFdcPara.setUserId(tia9902002Temp.header.USER_ID);            // 14   记账人员       30
             taTxnFdcPara.setInitiator(tia9902002Temp.body.INITIATOR);         // 15   发起方         1   1_监管银行
 
-            taTxnFdcPara.setRecVersion(0);
+            taTxnFdcPara.setCreatedBy(taTxnFdcPara.getUserId());
+
             taTxnFdcService.insertRecord(taTxnFdcPara);
 
             //通过MQ发送信息到DEP
             String strMsgid= depMsgSendAndRecv.sendDepMessage(tia9902002Temp);
             Toa9902002 toaPara=(Toa9902002) depMsgSendAndRecv.recvDepMessage(strMsgid);
+
+            taTxnFdcPara.setLastUpdBy(taTxnFdcPara.getUserId());
+
             if(EnuTaTxnRtnCode.TXN_PROCESSED.getCode().equals(toaPara.header.RETURN_CODE)){
                 /*01	结果	                4   0000表示成功
                   02	预售资金监管平台流水	16
@@ -260,13 +268,16 @@ public class TaFdcService {
             taTxnFdcPara.setUserId(tia9902011Temp.header.USER_ID);         // 08   冲正人员       30
             taTxnFdcPara.setInitiator(tia9902011Temp.body.INITIATOR);      // 09   发起方         1   1_监管银行
 
-            //通过MQ发送信息到DEP
-            taTxnFdcPara.setRecVersion(0);
+            taTxnFdcPara.setCreatedBy(taTxnFdcPara.getUserId());
+
             taTxnFdcService.insertRecord(taTxnFdcPara);
 
             //通过MQ发送信息到DEP
             String strMsgid= depMsgSendAndRecv.sendDepMessage(tia9902011Temp);
             Toa9902011 toaPara=(Toa9902011) depMsgSendAndRecv.recvDepMessage(strMsgid);
+
+            taTxnFdcPara.setLastUpdBy(taTxnFdcPara.getUserId());
+
             if(EnuTaTxnRtnCode.TXN_PROCESSED.getCode().equals(toaPara.header.RETURN_CODE)){
                 /*01	结果	                4   0000表示成功
                   02	预售资金监管平台流水	16
@@ -302,6 +313,11 @@ public class TaFdcService {
         try {
             taTxnFdcPara.setBankId(EnuTaBankId.BANK_HAIER.getCode());
             taTxnFdcPara.setCityId(EnuTaCityId.CITY_TAIAN.getCode());
+            taTxnFdcPara.setReqSn(ToolUtil.getStrAppReqSn_Back());
+            taTxnFdcPara.setTxDate(ToolUtil.getStrLastUpdDate());
+            taTxnFdcPara.setBranchId(ToolUtil.getOperatorManager().getOperator().getDeptid());
+            taTxnFdcPara.setUserId(ToolUtil.getOperatorManager().getOperatorId());
+            taTxnFdcPara.setInitiator(EnuTaInitiatorId.INITIATOR.getCode());
             taTxnFdcPara.setInitiator(EnuTaInitiatorId.INITIATOR.getCode());
 
             Tia9902101 tia9902101Temp=new Tia9902101() ;
@@ -317,12 +333,16 @@ public class TaFdcService {
             tia9902101Temp.header.USER_ID=taTxnFdcPara.getUserId();     // 09   验证柜员号     30
             tia9902101Temp.body.INITIATOR=taTxnFdcPara.getInitiator();  // 10   发起方         1   1_监管银行
 
-            taTxnFdcPara.setRecVersion(0);
+            taTxnFdcPara.setCreatedBy(taTxnFdcPara.getUserId());
+
             taTxnFdcService.insertRecord(taTxnFdcPara);
 
             //通过MQ发送信息到DEP
             String strMsgid= depMsgSendAndRecv.sendDepMessage(tia9902101Temp);
             Toa9902101 toaPara=(Toa9902101) depMsgSendAndRecv.recvDepMessage(strMsgid);
+
+            taTxnFdcPara.setLastUpdBy(taTxnFdcPara.getUserId());
+
             if(EnuTaTxnRtnCode.TXN_PROCESSED.getCode().equals(toaPara.header.RETURN_CODE)){
                 /*01	结果	                4   0000表示成功
                   02	监管账号                30
@@ -397,12 +417,16 @@ public class TaFdcService {
             tia9902102Temp.header.USER_ID=taTxnFdcPara.getUserId();          // 14   柜员号         30
             tia9902102Temp.body.INITIATOR=taTxnFdcPara.getInitiator();       // 15   发起方         1   1_监管银行
 
-            taTxnFdcPara.setRecVersion(0);
+            taTxnFdcPara.setCreatedBy(taTxnFdcPara.getUserId());
+
             taTxnFdcService.insertRecord(taTxnFdcPara);
 
             //通过MQ发送信息到DEP
             String strMsgid= depMsgSendAndRecv.sendDepMessage(tia9902102Temp);
             Toa9902102 toaPara=(Toa9902102) depMsgSendAndRecv.recvDepMessage(strMsgid);
+
+            taTxnFdcPara.setLastUpdBy(taTxnFdcPara.getUserId());
+
             if(EnuTaTxnRtnCode.TXN_PROCESSED.getCode().equals(toaPara.header.RETURN_CODE)){
                 /*01	结果	                4   0000表示成功
                   02	预售资金监管平台流水	16
@@ -454,13 +478,16 @@ public class TaFdcService {
             tia9902111Temp.header.USER_ID=taTxnFdcPara.getUserId();         // 08   柜员号         30
             tia9902111Temp.body.INITIATOR=taTxnFdcPara.getInitiator();      // 09   发起方         1   1_监管银行
 
-            //通过MQ发送信息到DEP
-            taTxnFdcPara.setRecVersion(0);
+            taTxnFdcPara.setCreatedBy(taTxnFdcPara.getUserId());
+
             taTxnFdcService.insertRecord(taTxnFdcPara);
 
             //通过MQ发送信息到DEP
             String strMsgid= depMsgSendAndRecv.sendDepMessage(tia9902111Temp);
             Toa9902111 toaPara=(Toa9902111) depMsgSendAndRecv.recvDepMessage(strMsgid);
+
+            taTxnFdcPara.setLastUpdBy(taTxnFdcPara.getUserId());
+
             if(EnuTaTxnRtnCode.TXN_PROCESSED.getCode().equals(toaPara.header.RETURN_CODE)){
                 /*01	结果	                4   0000表示成功
                   02	预售资金监管平台流水	16
@@ -515,12 +542,16 @@ public class TaFdcService {
             tia9902201Temp.header.USER_ID=taTxnFdcPara.getUserId();     // 09   验证柜员号     30
             tia9902201Temp.body.INITIATOR=taTxnFdcPara.getInitiator();  // 10   发起方         1   1_监管银行
 
-            taTxnFdcPara.setRecVersion(0);
+            taTxnFdcPara.setCreatedBy(taTxnFdcPara.getUserId());
+
             taTxnFdcService.insertRecord(taTxnFdcPara);
 
             //通过MQ发送信息到DEP
             String strMsgid= depMsgSendAndRecv.sendDepMessage(tia9902201Temp);
             Toa9902201 toaPara=(Toa9902201) depMsgSendAndRecv.recvDepMessage(strMsgid);
+
+            taTxnFdcPara.setLastUpdBy(taTxnFdcPara.getUserId());
+
             if(EnuTaTxnRtnCode.TXN_PROCESSED.getCode().equals(toaPara.header.RETURN_CODE)){
                  /*01	结果	                4   0000表示成功
                   02	监管账号                30
@@ -566,6 +597,10 @@ public class TaFdcService {
         try {
             taTxnFdcPara.setBankId(EnuTaBankId.BANK_HAIER.getCode());
             taTxnFdcPara.setCityId(EnuTaCityId.CITY_TAIAN.getCode());
+            taTxnFdcPara.setReqSn(ToolUtil.getStrAppReqSn_Back());
+            taTxnFdcPara.setTxDate(ToolUtil.getStrLastUpdDate());
+            taTxnFdcPara.setBranchId(ToolUtil.getOperatorManager().getOperator().getDeptid());
+            taTxnFdcPara.setUserId(ToolUtil.getOperatorManager().getOperatorId());
             taTxnFdcPara.setInitiator(EnuTaInitiatorId.INITIATOR.getCode());
 
             Tia9902202 tia9902202Temp=new Tia9902202() ;
@@ -583,13 +618,16 @@ public class TaFdcService {
             tia9902202Temp.header.USER_ID=taTxnFdcPara.getUserId();          // 11   柜员号         30
             tia9902202Temp.body.INITIATOR=taTxnFdcPara.getInitiator();       // 12   发起方         1   1_监管银行
 
-            //通过MQ发送信息到DEP
-            taTxnFdcPara.setRecVersion(0);
+            taTxnFdcPara.setCreatedBy(taTxnFdcPara.getUserId());
+
             taTxnFdcService.insertRecord(taTxnFdcPara);
 
             //通过MQ发送信息到DEP
             String strMsgid= depMsgSendAndRecv.sendDepMessage(tia9902202Temp);
             Toa9902202 toaPara=(Toa9902202) depMsgSendAndRecv.recvDepMessage(strMsgid);
+
+            taTxnFdcPara.setLastUpdBy(taTxnFdcPara.getUserId());
+
             if(EnuTaTxnRtnCode.TXN_PROCESSED.getCode().equals(toaPara.header.RETURN_CODE)){
                 /*01	结果	                4   0000表示成功
                   02	预售资金监管平台流水	16
@@ -641,13 +679,16 @@ public class TaFdcService {
             tia9902211Temp.header.USER_ID=taTxnFdcPara.getUserId();         // 08  柜员号          30
             tia9902211Temp.body.INITIATOR=taTxnFdcPara.getInitiator();      // 09  发起方          1   1_监管银行
 
-            //通过MQ发送信息到DEP
-            taTxnFdcPara.setRecVersion(0);
+            taTxnFdcPara.setCreatedBy(taTxnFdcPara.getUserId());
+
             taTxnFdcService.insertRecord(taTxnFdcPara);
 
             //通过MQ发送信息到DEP
             String strMsgid= depMsgSendAndRecv.sendDepMessage(tia9902211Temp);
             Toa9902211 toaPara=(Toa9902211) depMsgSendAndRecv.recvDepMessage(strMsgid);
+
+            taTxnFdcPara.setLastUpdBy(taTxnFdcPara.getUserId());
+
             if(EnuTaTxnRtnCode.TXN_PROCESSED.getCode().equals(toaPara.header.RETURN_CODE)){
                 /*01	结果	                4   0000表示成功
                   02	预售资金监管平台流水	16
@@ -698,11 +739,16 @@ public class TaFdcService {
             tia9902501Temp.body.BRANCH_ID=taTxnFdcPara.getBranchId();   // 05   查询网点       30
             tia9902501Temp.header.USER_ID=taTxnFdcPara.getUserId();     // 06   查询人员       30
             tia9902501Temp.body.INITIATOR=taTxnFdcPara.getInitiator();  // 07   发起方         1   1_监管银行
-            //通过MQ发送信息到DEP
-            taTxnFdcPara.setRecVersion(0);
+
+            taTxnFdcPara.setCreatedBy(taTxnFdcPara.getUserId());
+
             taTxnFdcService.insertRecord(taTxnFdcPara);
+
             String strMsgid= depMsgSendAndRecv.sendDepMessage(tia9902501Temp);
             Toa9902501 toaPara=(Toa9902501) depMsgSendAndRecv.recvDepMessage(strMsgid);
+
+            taTxnFdcPara.setLastUpdBy(taTxnFdcPara.getUserId());
+
             if(EnuTaTxnRtnCode.TXN_PROCESSED.getCode().equals(toaPara.header.RETURN_CODE)){
                   /*  01    结果	                  4   0000表示成功
                       02    记账结果	              1   0_成功 1_失败
