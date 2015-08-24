@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import platform.auth.MD5Helper;
 import platform.common.utils.MessageUtil;
 import pub.platform.advance.utils.PropertyManager;
+import pub.platform.advance.utils.RfmMessage;
 import rfm.ta.common.enums.*;
 import rfm.ta.repository.model.TaRsAccDtl;
 import rfm.ta.repository.model.TaTxnFdc;
@@ -98,7 +99,14 @@ public class TaRefundAction {
     public void onBtnActClick() {
         try {
             if(StringUtils.isEmpty(taTxnFdcValiSendAndRecv.getRecvAccId())){
-                MessageUtil.addError("必须输入返还账号！");
+                MessageUtil.addError(RfmMessage.getProperty("ReturnVerification.E001"));
+                return;
+            }
+
+            if(taTxnFdcValiSendAndRecv.getReturnCode() == null ||
+                    !taTxnFdcValiSendAndRecv.getReturnCode().equals("0000") ||
+                    StringUtils.isEmpty(taTxnFdcValiSendAndRecv.getAccId())) {
+                MessageUtil.addError(RfmMessage.getProperty("ReturnVerification.E002"));
                 return;
             }
 
@@ -110,9 +118,9 @@ public class TaRefundAction {
             if(taRsAccDtlList.size() == 1){
                 String actFlag = taRsAccDtlList.get(0).getActFlag();
                 if(actFlag.equals(EnuActFlag.ACT_SUCCESS.getCode())){
-                    MessageUtil.addError("该返还申请编号已记账，不允许重复记账！");
+                    MessageUtil.addError(RfmMessage.getProperty("ReturnVerification.E003"));
                 } else if(actFlag.equals(EnuActFlag.ACT_UNKNOWN.getCode())){
-                    MessageUtil.addError("该返还申请编号记账时存在不明原因失败，请在返还查询画面进行记账！");
+                    MessageUtil.addError(RfmMessage.getProperty("ReturnVerification.E004"));
                 }
                 return;
             }
@@ -189,9 +197,9 @@ public class TaRefundAction {
             if(taRsAccDtlList.size() == 1){
                 String actFlag = taRsAccDtlList.get(0).getActFlag();
                 if(actFlag.equals(EnuActFlag.ACT_SUCCESS.getCode())){
-                    MessageUtil.addError("该返还申请编号已冲正，不允许重复冲正！");
+                    MessageUtil.addError(RfmMessage.getProperty("ReturnCorrection.E001"));
                 } else if(actFlag.equals(EnuActFlag.ACT_UNKNOWN.getCode())){
-                    MessageUtil.addError("该返还申请编号冲正时存在不明原因失败，请在返还查询画面进行冲正！");
+                    MessageUtil.addError(RfmMessage.getProperty("ReturnCorrection.E002"));
                 }
                 return;
             }
@@ -213,8 +221,8 @@ public class TaRefundAction {
                 taRsAccDtlTemp.setReqSn(ToolUtil.getStrAppReqSn_Back());
                 taAccDetlService.insertRecord(taRsAccDtlTemp);
             } else {
-                logger.error("查不到该笔冲正的相关划拨信息，请确认输入的划拨申请编号");
-                MessageUtil.addError("查不到该笔冲正的相关划拨信息，请确认输入的划拨申请编号");
+                logger.error(RfmMessage.getProperty("ReturnCorrection.E003"));
+                MessageUtil.addError(RfmMessage.getProperty("ReturnCorrection.E003"));
                 return;
             }
 

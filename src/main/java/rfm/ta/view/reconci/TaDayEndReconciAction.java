@@ -7,6 +7,7 @@ import org.fbi.dep.model.txn.Toa900012602;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import platform.common.utils.MessageUtil;
+import pub.platform.advance.utils.RfmMessage;
 import rfm.ta.common.enums.EnuTaBankId;
 import rfm.ta.common.enums.EnuTaCityId;
 import rfm.ta.common.enums.EnuTaFdcTxCode;
@@ -95,9 +96,9 @@ public class TaDayEndReconciAction implements Serializable {
 
             if (taRsAccDtlSbsList.size() > 0) {
                 for(TaRsAccDtl taRsAccDtl : taRsAccDtlSbsList) {
-                    taRsAccDtl.setTxAmt((Double.valueOf(taRsAccDtl.getTxAmt())).toString());
+                    taRsAccDtl.setTxAmt(df.format(Double.valueOf(taRsAccDtl.getTxAmt())));
                 }
-                MessageUtil.addInfo("获取SBS记账信息成功。");
+                MessageUtil.addInfo(RfmMessage.getProperty("DayEndReconciliation.I001"));
             }
         }catch (Exception e){
             logger.error("查询对账信息失败", e);
@@ -128,7 +129,7 @@ public class TaDayEndReconciAction implements Serializable {
                     line.append("|");
 
                     line.append(newLineCh);
-
+                    String txCode = null;
                     // 明细信息
                     for(TaRsAccDtl taRsAccDtlUnit:taRsAccDtlListPara){
                         // 交易代码(4位)|
@@ -137,9 +138,15 @@ public class TaDayEndReconciAction implements Serializable {
                         // 业务编号(14位，包括交存申请编号、划拨业务编号、返还业务编号)|
                         line.append(StringUtils.rightPad(taRsAccDtlUnit.getBizId(), 14, ' '));
                         line.append("|");
-                        // 借贷标志(1位，1_借/2_贷：交存/利息=1、划拨/返还=2)|
-                        line.append(StringUtils.rightPad(taRsAccDtlUnit.getInoutFlag(), 1, ' '));
-                        line.append(sysdate);
+                        txCode = taRsAccDtlUnit.getTxCode().substring(0,2);
+                        if(txCode.equals("20")) {
+                            // 借贷标志(1位，1_借/2_贷：交存/利息=1、划拨/返还=2)|
+                            line.append(StringUtils.rightPad("1", 1, ' '));
+                        } else{
+                            // 借贷标志(1位，1_借/2_贷：交存/利息=1、划拨/返还=2)|
+                            line.append(StringUtils.rightPad("2", 1, ' '));
+                        }
+                        line.append("|");
                         // 交易金额(20位)|
                         line.append(StringUtils.rightPad(taRsAccDtlUnit.getTxAmt(), 20, ' '));
                         line.append("|");
@@ -161,6 +168,7 @@ public class TaDayEndReconciAction implements Serializable {
                         // 记账日期(10位，YYYY-MM-DD)|
                         line.append(StringUtils.rightPad(taRsAccDtlUnit.getTxDate(), 10, ' '));
                         line.append("|");
+                        line.append(newLineCh);
                     }
                 }
 
@@ -201,9 +209,9 @@ public class TaDayEndReconciAction implements Serializable {
                 if(file != null){
                     boolean result = ToolUtil.uploadFile("rfmtest", fileName, file);
                     if(result){
-                        MessageUtil.addInfo("ftp发送房产中心成功!");
+                        MessageUtil.addInfo(RfmMessage.getProperty("DayEndReconciliation.I002"));
                     } else{
-                        MessageUtil.addError("ftp发送房产中心失败!");
+                        MessageUtil.addError(RfmMessage.getProperty("DayEndReconciliation.E001"));
                     }
                 }
             }

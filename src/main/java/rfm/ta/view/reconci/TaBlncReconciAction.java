@@ -6,6 +6,7 @@ import org.fbi.dep.model.txn.Toa900012701;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import platform.common.utils.MessageUtil;
+import pub.platform.advance.utils.RfmMessage;
 import rfm.ta.common.enums.EnuTaBankId;
 import rfm.ta.common.enums.EnuTaCityId;
 import rfm.ta.repository.model.TaRsAcc;
@@ -53,7 +54,7 @@ public class TaBlncReconciAction {
     public void onQryLocaldata() {
         try {
             if(taRsAccList.size() <=0) {
-                MessageUtil.addError("没有监管账号，无法获取sbs数据");
+                MessageUtil.addError(RfmMessage.getProperty("BalanceReconciliation.E001"));
                 return;
             }
 
@@ -81,6 +82,9 @@ public class TaBlncReconciAction {
                         taRsAccList.add(taRsAcc);
                     }
                 }
+                if(taRsAccList.size() > 0) {
+                    MessageUtil.addInfo(RfmMessage.getProperty("BalanceReconciliation.I001"));
+                }
             }
         }catch (Exception e){
             logger.error("获取sbs数据，", e);
@@ -95,6 +99,7 @@ public class TaBlncReconciAction {
         File file = null;
         try {
             if(taRsAccList.size() <=0) {
+                MessageUtil.addError(RfmMessage.getProperty("BalanceReconciliation.E002"));
                 return;
             }
             String fileName = "BF" + EnuTaBankId.BANK_HAIER.getCode() +
@@ -104,9 +109,9 @@ public class TaBlncReconciAction {
             if(file != null){
                 boolean result = ToolUtil.uploadFile("rfmtest", fileName, file);
                 if(result){
-                    MessageUtil.addInfo("ftp发送房产中心成功!");
+                    MessageUtil.addInfo(RfmMessage.getProperty("BalanceReconciliation.I002"));
                 } else{
-                    MessageUtil.addError("ftp发送房产中心失败!");
+                    MessageUtil.addError(RfmMessage.getProperty("BalanceReconciliation.E003"));
                 }
             }
         } catch (Exception e) {

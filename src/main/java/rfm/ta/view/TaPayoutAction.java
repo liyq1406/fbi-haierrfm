@@ -2,12 +2,14 @@ package rfm.ta.view;
 
 import common.utils.ToolUtil;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.StringUtils;
 import org.fbi.dep.model.base.TOA;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import platform.auth.MD5Helper;
 import platform.common.utils.MessageUtil;
 import pub.platform.advance.utils.PropertyManager;
+import pub.platform.advance.utils.RfmMessage;
 import pub.platform.system.manage.dao.PtOperBean;
 import rfm.ta.common.enums.*;
 import rfm.ta.repository.model.TaRsAccDtl;
@@ -98,11 +100,20 @@ public class TaPayoutAction {
         taFdcService.sendAndRecvRealTimeTxn9902101(taTxnFdcValiSend);
         /*验证后查询*/
         taTxnFdcValiSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcValiSend.getPkId());
+        if(taTxnFdcValiSendAndRecv == null) {
+            MessageUtil.addError(RfmMessage.getProperty("TransferVerification.E001"));
+        }
     }
 
     /*验证后立即划拨记账用*/
     public void onBtnActClick() {
         try {
+            if(taTxnFdcValiSendAndRecv.getReturnCode() == null ||
+                    !taTxnFdcValiSendAndRecv.getReturnCode().equals("0000") ||
+                    StringUtils.isEmpty(taTxnFdcValiSendAndRecv.getAccId())) {
+                MessageUtil.addError(RfmMessage.getProperty("TransferVerification.E004"));
+                return;
+            }
             // 验证重复记账
             TaRsAccDtl taRsAccDtl = new TaRsAccDtl();
             taRsAccDtl.setBizId(taTxnFdcValiSendAndRecv.getBizId());
@@ -111,9 +122,9 @@ public class TaPayoutAction {
             if(taRsAccDtlList.size() == 1){
                 String actFlag = taRsAccDtlList.get(0).getActFlag();
                 if(actFlag.equals(EnuActFlag.ACT_SUCCESS.getCode())){
-                    MessageUtil.addError("该划拨申请编号已记账，不允许重复记账！");
+                    MessageUtil.addError(RfmMessage.getProperty("TransferVerification.E002"));
                 } else if(actFlag.equals(EnuActFlag.ACT_UNKNOWN.getCode())){
-                    MessageUtil.addError("该划拨申请编号记账时存在不明原因失败，请在划拨查询画面进行记账！");
+                    MessageUtil.addError(RfmMessage.getProperty("TransferVerification.E003"));
                 }
                 return;
             }
@@ -189,9 +200,9 @@ public class TaPayoutAction {
             if(taRsAccDtlList.size() == 1){
                 String actFlag = taRsAccDtlList.get(0).getActFlag();
                 if(actFlag.equals(EnuActFlag.ACT_SUCCESS.getCode())){
-                    MessageUtil.addError("该划拨申请编号已冲正，不允许重复冲正！");
+                    MessageUtil.addError(RfmMessage.getProperty("TransferCorrection.E001"));
                 } else if(actFlag.equals(EnuActFlag.ACT_UNKNOWN.getCode())){
-                    MessageUtil.addError("该划拨申请编号冲正时存在不明原因失败，请在划拨查询画面进行冲正！");
+                    MessageUtil.addError(RfmMessage.getProperty("TransferCorrection.E002"));
                 }
                 return;
             }
@@ -212,8 +223,8 @@ public class TaPayoutAction {
                 taRsAccDtlTemp.setReqSn(ToolUtil.getStrAppReqSn_Back());
                 taAccDetlService.insertRecord(taRsAccDtlTemp);
             } else {
-                logger.error("查不到该笔冲正的相关划拨信息，请确认输入的划拨申请编号");
-                MessageUtil.addError("查不到该笔冲正的相关划拨信息，请确认输入的划拨申请编号");
+                logger.error(RfmMessage.getProperty("TransferCorrection.E001"));
+                MessageUtil.addError(RfmMessage.getProperty("TransferCorrection.E003"));
                 return;
             }
 
