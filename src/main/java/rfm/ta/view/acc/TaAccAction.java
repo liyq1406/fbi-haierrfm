@@ -144,21 +144,19 @@ public class TaAccAction {
             confirmAccountNo = "";
         } catch (Exception e) {
             logger.error("∆Ù”√º‡π‹ ß∞‹£¨", e);
-            MessageUtil.addError(e.getMessage());
+            MessageUtil.addError(taRsAccPara.getReturnMsg()+e.getMessage());
         }
     }
     /*≥∑œ˙*/
-    public String onClick_Unable(TaRsAcc taRsAccPara){
+    public void onClick_Unable(TaRsAcc taRsAccPara){
         try {
             taFdcService.sendAndRecvRealTimeTxn9901002(taRsAccPara);
+            MessageUtil.addInfo(RfmMessage.getProperty("AccountCancel.I001"));
+            confirmAccountNo = "";
         } catch (Exception e) {
             logger.error("Ω‚≥˝º‡π‹ ß∞‹£¨", e);
-            MessageUtil.addError(e.getMessage());
-            return null;
+            MessageUtil.addError(taRsAccPara.getReturnMsg()+e.getMessage());
         }
-        MessageUtil.addInfo(RfmMessage.getProperty("AccountCancel.I001"));
-        confirmAccountNo = "";
-        return null;
     }
 
     //= = = = = = = = = = = = = = =  get set = = = = = = = = = = = = = = = =

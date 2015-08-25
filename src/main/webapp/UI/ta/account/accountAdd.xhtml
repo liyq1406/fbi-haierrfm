@@ -97,6 +97,9 @@
                              paginator="true" rows="15" paginatorPosition="bottom"
                              rowsPerPageTemplate="100,50,30,15,5"
                              emptyMessage="数据记录为空...">
+                    <p:column headerText="监管状态" style="width:100px;text-align:center">
+                        <h:outputText value="#{ptenudetailAction.taAccStatusMap.get(record.statusFlag)}"/>
+                    </p:column>
 
                     <p:column headerText="申请编号" style="text-align:left">
                         <h:outputText value="#{record.bizId}"/>
