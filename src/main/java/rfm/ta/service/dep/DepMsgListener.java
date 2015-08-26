@@ -52,6 +52,7 @@ public class DepMsgListener implements MessageListener {
             TIA tiaTmp = (TIA)objMsg.getObject();
             TOA toaFdc;
             String txnCode = tiaTmp.getHeader().TX_CODE;
+            tiaTmp.getHeader().REQ_SN=ToolUtil.getStrAppReqSn_Back();// 网银传过来的流水号是32位UUID
             if(EnuTaFdcTxCode.TRADE_2001.getCode().equals(txnCode)){
                 /*01	交易代码	    4	2001
                   02	监管银行代码	2
