@@ -52,6 +52,6 @@ public class Tia9902002 extends TIA implements Serializable {
         public String ACC_ID;             // 06	监管账号	    30	划拨验证的输出项
         public String STL_TYPE;           // 07   结算方式	    2	01_ 现金 02_ 转账 03_ 支票
         public String CHECK_ID;           // 08   支票号码	    30
-        public String TX_DATE;            // 日期           10  送系统日期即可
+        public String TX_DATE;            // 09   日期           10  送系统日期即可
     }
 }

@@ -133,4 +133,31 @@ public class TaAccDetlService {
     public int deleteRecord(String pkId) {
         return taRsAccDtlMapper.deleteByPrimaryKey(pkId);
     }
+
+    /**
+     * É¾³ý
+     * @param taRsAccDtlPara
+     * @return
+     */
+    public int deleteRecord(TaRsAccDtl taRsAccDtlPara) {
+        TaRsAccDtlExample example = new TaRsAccDtlExample();
+        TaRsAccDtlExample.Criteria criteria = example.createCriteria();
+        if (ToolUtil.getStrIgnoreNull(taRsAccDtlPara.getReqSn()).trim().length()!=0) {
+            criteria.andReqSnEqualTo(taRsAccDtlPara.getReqSn().trim());
+        }
+
+        if (ToolUtil.getStrIgnoreNull(taRsAccDtlPara.getAccId()).trim().length()!=0) {
+            criteria.andAccIdEqualTo(taRsAccDtlPara.getAccId().trim());
+        }
+
+        if (ToolUtil.getStrIgnoreNull(taRsAccDtlPara.getTxAmt()).trim().length()!=0) {
+            criteria.andTxAmtEqualTo(taRsAccDtlPara.getTxAmt());
+        }
+
+        if (ToolUtil.getStrIgnoreNull(taRsAccDtlPara.getRecvAccId()).trim().length()!=0) {
+            criteria.andRecvAccIdEqualTo(taRsAccDtlPara.getRecvAccId());
+        }
+
+        return taRsAccDtlMapper.deleteByExample(example);
+    }
 }

@@ -27,17 +27,15 @@ public class DepMsgListener implements MessageListener {
 
     private static Logger logger = LoggerFactory.getLogger(DepMsgListener.class);
     @Autowired
-    @Qualifier(value = "jmsRfmOutTemplate")
     private JmsTemplate jmsRfmOutTemplate;
 
-    @ManagedProperty(value = "#{taSbsService}")
+    @Autowired
     private TaSbsService taSbsService;
 
     @Autowired
-    @ManagedProperty(value = "#{taFdcService}")
     private TaFdcService taFdcService;
 
-    @ManagedProperty(value = "#{taAccDetlService}")
+    @Autowired
     private TaAccDetlService taAccDetlService;
 
     @Override
@@ -108,7 +106,9 @@ public class DepMsgListener implements MessageListener {
                         jmsRfmOutTemplate.send(new ObjectMessageCreator(toaFdc, correlationID, propertyMap));
                     }
                 } else { // SBS记账失败的处理
-                    taAccDetlService.deleteRecord(taTxnFdcTemp.getPkId());
+                    logger.error("返还异常:返回码（"+toaSbs.getHeader().RETURN_CODE+");返回信息（"+toaSbs.getHeader().RETURN_MSG+")");
+                    jmsRfmOutTemplate.send(new ObjectMessageCreator(toaSbs, correlationID, propertyMap));
+                    taAccDetlService.deleteRecord(taTxnFdcTemp);
                     return false;
                 }
             }
