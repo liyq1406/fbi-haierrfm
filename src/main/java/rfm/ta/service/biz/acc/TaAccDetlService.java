@@ -133,31 +133,4 @@ public class TaAccDetlService {
     public int deleteRecord(String pkId) {
         return taRsAccDtlMapper.deleteByPrimaryKey(pkId);
     }
-
-    /**
-     * É¾³ý
-     * @param taRsAccDtlPara
-     * @return
-     */
-    public int deleteRecord(TaRsAccDtl taRsAccDtlPara) {
-        TaRsAccDtlExample example = new TaRsAccDtlExample();
-        TaRsAccDtlExample.Criteria criteria = example.createCriteria();
-        if (ToolUtil.getStrIgnoreNull(taRsAccDtlPara.getReqSn()).trim().length()!=0) {
-            criteria.andReqSnEqualTo(taRsAccDtlPara.getReqSn().trim());
-        }
-
-        if (ToolUtil.getStrIgnoreNull(taRsAccDtlPara.getSpvsnAccId()).trim().length()!=0) {
-            criteria.andSpvsnAccIdEqualTo(taRsAccDtlPara.getSpvsnAccId().trim());
-        }
-
-        if (ToolUtil.getStrIgnoreNull(taRsAccDtlPara.getTxAmt()).trim().length()!=0) {
-            criteria.andTxAmtEqualTo(taRsAccDtlPara.getTxAmt());
-        }
-
-        if (ToolUtil.getStrIgnoreNull(taRsAccDtlPara.getGerlAccId()).trim().length()!=0) {
-            criteria.andGerlAccIdEqualTo(taRsAccDtlPara.getGerlAccId());
-        }
-
-        return taRsAccDtlMapper.deleteByExample(example);
-    }
 }
