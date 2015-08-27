@@ -44,7 +44,7 @@ public class TaSbsService {
             Tia900010002 tia900010002Temp=new Tia900010002();
             TaTxnSbs taTxnSbsPara=new TaTxnSbs();
             taTxnSbsPara.setTxCode(EnuTaSbsTxCode.TRADE_0002.getCode());
-            taTxnSbsPara.setSpvsnAccId(taTxnFdcPara.getSpvsnAccId().trim());         // 付款账号
+            taTxnSbsPara.setSpvsnAccId(taTxnFdcPara.getSpvsnAccId().trim());// 付款账号
             taTxnSbsPara.setGerlAccId(taTxnFdcPara.getGerlAccId().trim()); // 收款账号
             taTxnSbsPara.setTxAmt(taTxnFdcPara.getTxAmt());                // 交易金额
             taTxnSbsPara.setReqSn(taTxnFdcPara.getReqSn().substring(8,26));// 外围系统流水
