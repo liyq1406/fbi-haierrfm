@@ -160,7 +160,7 @@ public class TaDayEndReconciAction implements Serializable {
                         line.append(StringUtils.rightPad(taRsAccDtlUnit.getFdcBankActSn(), 30, ' '));
                         line.append("|");
                         // 监管银行记账网点(30位)|
-                        line.append(StringUtils.rightPad(taRsAccDtlUnit.getBankId(), 30, ' '));
+                        line.append(StringUtils.rightPad(taRsAccDtlUnit.getSpvsnBankId(), 30, ' '));
                         line.append("|");
                         // 监管银行记账人员(30位)|
                         line.append(StringUtils.rightPad(taRsAccDtlUnit.getUserId(), 30, ' '));
