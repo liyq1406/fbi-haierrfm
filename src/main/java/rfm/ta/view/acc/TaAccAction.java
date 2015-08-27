@@ -81,24 +81,25 @@ public class TaAccAction {
     }
 
     /*登记画面用*/
-    public String onAdd() {
+    public void onAdd() {
         try {
             if (!confirmAccountNo.equalsIgnoreCase(taRsAcc.getSpvsnAccId())) {
                 MessageUtil.addError(RfmMessage.getProperty("AccountRegistration.E001"));
-                return null;
+                return;
             }
             // 初始帐户余额均为可用
             taAccService.insertRecord(taRsAcc);
+
+            taRsAccList = taAccService.selectedRecordsByCondition(
+                    taRsAcc.getSpvsnAccType(),
+                    taRsAcc.getSpvsnAccId(),
+                    taRsAcc.getSpvsnAccName());
+            confirmAccountNo = "";
+            MessageUtil.addInfo(RfmMessage.getProperty("AccountRegistration.I001"));
         } catch (Exception e) {
             logger.error("新增数据失败，", e);
             MessageUtil.addError(e.getMessage());
-            return null;
         }
-        MessageUtil.addInfo(RfmMessage.getProperty("AccountRegistration.I001"));
-        taRsAccList = taAccService.qryAllRecords();
-        this.taRsAcc = new TaRsAcc();
-        confirmAccountNo = "";
-        return null;
     }
 
     /*管理明细画面用*/

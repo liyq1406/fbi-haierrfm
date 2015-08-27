@@ -23,12 +23,27 @@ import java.util.List;
 @Component
 public interface TaCommonMapper {
 
-    @Select("select t.biz_id as bizId,t.acc_id as accId,t.acc_name as accName from ta_rs_acc t where t.deleted_flag = '0' and (t.acc_id = #{taRsAcc.accId}" +
-            " or t.biz_id = #{taRsAcc.bizId} or t.acc_name = #{taRsAcc.accName})")
+    @Select("select t.biz_id as bizId," +
+            " t.SPVSN_ACC_ID as spvsnAccId," +
+            " t.SPVSN_ACC_NAME as spvsnAccName " +
+            " from ta_rs_acc t " +
+            " where t.deleted_flag = '0'" +
+            " and (t.SPVSN_ACC_ID = #{taRsAcc.spvsnAccId}" +
+            " or t.biz_id = #{taRsAcc.bizId}" +
+            " or t.SPVSN_ACC_NAME = #{taRsAcc.spvsnAccName})")
     List<TaRsAcc> selectTaRsAcc(@Param("taRsAcc") TaRsAcc taRsAcc);
 
-    @Select("select t.biz_id as bizId,t.acc_id as accId,t.acc_name as accName from ta_rs_acc t where t.deleted_flag = '0' and t.acc_id != #{taRsAcc.accId}" +
-            " and (t.biz_id = #{taRsAcc.bizId} or t.acc_name = #{taRsAcc.accName})")
+    @Select("select t.biz_id as bizId," +
+            " t.SPVSN_ACC_ID as spvsnAccId," +
+            " t.SPVSN_ACC_NAME as spvsnAccName" +
+            " from ta_rs_acc t" +
+            " where t.deleted_flag = '0'" +
+            " and" +
+            " t.SPVSN_ACC_ID != #{taRsAcc.spvsnAccId}" +
+            " and" +
+            " (t.biz_id = #{taRsAcc.bizId}" +
+            " or" +
+            " t.SPVSN_ACC_NAME = #{taRsAcc.spvsnAccName})")
     List<TaRsAcc> selectTaRsAccUpdate(@Param("taRsAcc") TaRsAcc taRsAcc);
 
     @Select("select nvl(max(company_id)+1,'1000000001') from rs_fdccompany")

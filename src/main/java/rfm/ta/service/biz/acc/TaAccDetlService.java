@@ -53,7 +53,7 @@ public class TaAccDetlService {
             criteria.andTxDateEqualTo(taRsAccDtlPara.getTxDate());
         }
         criteria.andDeletedFlagEqualTo("0");
-        example.setOrderByClause("acc_name");
+        example.setOrderByClause("SPVSN_ACC_NAME");
         return taRsAccDtlMapper.selectByExample(example);
     }
 
