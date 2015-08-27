@@ -46,9 +46,9 @@ public class TaAccService {
         for(TaRsAcc taRsAcc1 : taRsAccList) {
             if(taRsAcc1.getBizId().equals(taRsAcc.getBizId())) {
                 return RfmMessage.getProperty("AccountRegistration.E002");
-            } else if(taRsAcc1.getAccId().equals(taRsAcc.getAccId())) {
+            } else if(taRsAcc1.getSpvsnAccId().equals(taRsAcc.getSpvsnAccId())) {
                 return RfmMessage.getProperty("AccountRegistration.E003");
-            } else if(taRsAcc1.getAccName().equals(taRsAcc.getAccName())) {
+            } else if(taRsAcc1.getSpvsnAccName().equals(taRsAcc.getSpvsnAccName())) {
                 return RfmMessage.getProperty("AccountRegistration.E004");
             }
         }
@@ -65,7 +65,7 @@ public class TaAccService {
         for(TaRsAcc taRsAcc1 : taRsAccList) {
             if(taRsAcc1.getBizId().equals(taRsAcc.getBizId())) {
                 return RfmMessage.getProperty("AccountManagement.E001");
-            } else if(taRsAcc1.getAccName().equals(taRsAcc.getAccName())) {
+            } else if(taRsAcc1.getSpvsnAccName().equals(taRsAcc.getSpvsnAccName())) {
                 return RfmMessage.getProperty("AccountManagement.E002");
             }
         }
@@ -120,13 +120,13 @@ public class TaAccService {
         TaRsAccExample.Criteria rsActCrit = example.createCriteria();
         rsActCrit.andDeletedFlagEqualTo("0");
         if (ToolUtil.getStrIgnoreNull(strAccTypePara).trim().length()!=0) {
-            rsActCrit.andAccTypeEqualTo(strAccTypePara);
+            rsActCrit.andSpvsnAccTypeEqualTo(strAccTypePara);
         }
         if (ToolUtil.getStrIgnoreNull(strAccIdPara).trim().length()!=0) {
-            rsActCrit.andAccIdLike("%"+strAccIdPara+"%");
+            rsActCrit.andSpvsnAccIdLike("%"+strAccIdPara+"%");
         }
         if (ToolUtil.getStrIgnoreNull(strAccNamePara).trim().length()!=0) {
-            rsActCrit.andAccNameLike("%" + strAccNamePara + "%");
+            rsActCrit.andSpvsnAccNameLike("%" + strAccNamePara + "%");
         }
         return accountMapper.selectByExample(example);
     }

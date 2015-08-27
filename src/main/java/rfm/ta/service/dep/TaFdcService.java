@@ -46,13 +46,13 @@ public class TaFdcService {
             taRsAccPara.setReqSn(ToolUtil.getStrAppReqSn_Back());
             Tia9901001 tia9901001Temp=new Tia9901001();
             tia9901001Temp.header.CHANNEL_ID=ToolUtil.DEP_CHANNEL_ID_RFM;
-            tia9901001Temp.header.TX_CODE= EnuTaFdcTxCode.TRADE_1001.getCode();                     // 01   交易代码       4   1001
-            tia9901001Temp.body.BANK_ID= EnuTaBankId.BANK_HAIER.getCode();                      // 02   监管银行代码   2
+            tia9901001Temp.header.TX_CODE= EnuTaFdcTxCode.TRADE_1001.getCode();                 // 01   交易代码       4   1001
+            tia9901001Temp.body.SPVSN_BANK_ID= EnuTaBankId.BANK_HAIER.getCode();               // 02   监管银行代码   2
             tia9901001Temp.body.CITY_ID= EnuTaCityId.CITY_TAIAN.getCode();                      // 03   城市代码       6
             tia9901001Temp.header.BIZ_ID=taRsAccPara.getBizId();                                  // 04   监管申请编号   14
-            tia9901001Temp.body.ACC_TYPE=taRsAccPara.getAccType();                                // 05   帐户类别       1   0：预售监管户
-            tia9901001Temp.body.ACC_ID=taRsAccPara.getAccId();                                    // 06   监管专户账号    30
-            tia9901001Temp.body.ACC_NAME=taRsAccPara.getAccName();                                // 07   监管专户户名   150
+            tia9901001Temp.body.SPVSN_ACC_TYPE=taRsAccPara.getSpvsnAccType();                    // 05   帐户类别       1   0：预售监管户
+            tia9901001Temp.body.SPVSN_ACC_ID=taRsAccPara.getSpvsnAccId();                        // 06   监管专户账号    30
+            tia9901001Temp.body.SPVSN_ACC_NAME=taRsAccPara.getSpvsnAccName();                    // 07   监管专户户名   150
             tia9901001Temp.header.REQ_SN=taRsAccPara.getReqSn();                                  // 08   流水号         30
             tia9901001Temp.body.TX_DATE=ToolUtil.getStrLastUpdDate() ;                            // 09   日期           10  送系统日期即可
             tia9901001Temp.body.BRANCH_ID=ToolUtil.getOperatorManager().getOperator().getDeptid();// 10   网点号         30
@@ -94,12 +94,12 @@ public class TaFdcService {
             taRsAccPara.setReqSn(ToolUtil.getStrAppReqSn_Back());
             Tia9901002 tia9901002Temp=new Tia9901002() ;
             tia9901002Temp.header.CHANNEL_ID=ToolUtil.DEP_CHANNEL_ID_RFM;
-            tia9901002Temp.header.TX_CODE= EnuTaFdcTxCode.TRADE_1002.getCode();                     // 01   交易代码       4   1002
-            tia9901002Temp.body.BANK_ID= EnuTaBankId.BANK_HAIER.getCode();                      // 02   监管银行代码   2
+            tia9901002Temp.header.TX_CODE= EnuTaFdcTxCode.TRADE_1002.getCode();                // 01   交易代码       4   1002
+            tia9901002Temp.body.SPVSN_BANK_ID= EnuTaBankId.BANK_HAIER.getCode();               // 02   监管银行代码   2
             tia9901002Temp.body.CITY_ID= EnuTaCityId.CITY_TAIAN.getCode();                      // 03   城市代码       6
             tia9901002Temp.header.BIZ_ID=taRsAccPara.getBizId();                                  // 04   终止证明编号  14
-            tia9901002Temp.body.ACC_ID=taRsAccPara.getAccId();                                    // 05   监管专户账号  30
-            tia9901002Temp.body.ACC_NAME=taRsAccPara.getAccName();                                // 06   监管专户户名  150
+            tia9901002Temp.body.SPVSN_ACC_ID=taRsAccPara.getSpvsnAccId();                        // 05   监管专户账号  30
+            tia9901002Temp.body.SPVSN_ACC_NAME=taRsAccPara.getSpvsnAccName();                    // 06   监管专户户名  150
             tia9901002Temp.header.REQ_SN=taRsAccPara.getReqSn();                                  // 07   流水号        30
             tia9901002Temp.body.TX_DATE=ToolUtil.getStrLastUpdDate() ;                            // 08   日期          10  送系统日期即可
             tia9901002Temp.body.BRANCH_ID=ToolUtil.getOperatorManager().getOperator().getDeptid();// 09   网点号        30
@@ -139,7 +139,7 @@ public class TaFdcService {
             Tia9902001 tia9902001Temp=(Tia9902001)tiaPara;
             TaTxnFdc taTxnFdcPara=new TaTxnFdc();
             taTxnFdcPara.setTxCode(tia9902001Temp.header.TX_CODE);     // 01   交易代码       4   2001
-            taTxnFdcPara.setBankId(tia9902001Temp.body.BANK_ID);       // 02   监管银行代码   2
+            taTxnFdcPara.setBankId(tia9902001Temp.body.SPVSN_BANK_ID);       // 02   监管银行代码   2
             taTxnFdcPara.setCityId(tia9902001Temp.body.CITY_ID);       // 03   城市代码       6
             taTxnFdcPara.setBizId(tia9902001Temp.header.BIZ_ID);       // 04   交存申请编号   14
             taTxnFdcPara.setReqSn(tia9902001Temp.header.REQ_SN);       // 05   验证流水       30
@@ -166,10 +166,10 @@ public class TaFdcService {
                   06    预售资金监管平台流水    16
                 */
                 taTxnFdcPara.setReturnCode(toaPara.header.RETURN_CODE);
-                taTxnFdcPara.setAccType(toaPara.body.ACC_TYPE);
+                taTxnFdcPara.setSpvsnAccType(toaPara.body.SPVSN_ACC_TYPE);
                 taTxnFdcPara.setTxAmt(toaPara.body.TX_AMT.trim());
-                taTxnFdcPara.setAccId(toaPara.body.ACC_ID);
-                taTxnFdcPara.setAccName(toaPara.body.ACC_NAME);
+                taTxnFdcPara.setSpvsnAccId(toaPara.body.SPVSN_ACC_ID);
+                taTxnFdcPara.setSpvsnAccName(toaPara.body.SPVSN_ACC_NAME);
                 taTxnFdcPara.setFdcSn(toaPara.header.REQ_SN);
                 taTxnFdcService.updateRecord(taTxnFdcPara);
                 return toaPara;
@@ -200,18 +200,18 @@ public class TaFdcService {
             TaTxnFdc taTxnFdcPara=new TaTxnFdc();
             Tia9902002 tia9902002Temp=(Tia9902002)tiaPara ;
             taTxnFdcPara.setTxCode(tia9902002Temp.header.TX_CODE);              // 01   交易代码       4   2002
-            taTxnFdcPara.setBankId(tia9902002Temp.body.BANK_ID);                // 02   监管银行代码   2
+            taTxnFdcPara.setBankId(tia9902002Temp.body.SPVSN_BANK_ID);         // 02   监管银行代码   2
             taTxnFdcPara.setCityId(tia9902002Temp.body.CITY_ID);                // 03   城市代码       6
-            taTxnFdcPara.setBizId(tia9902002Temp.header.BIZ_ID);               // 04   交存申请编号   14
-            taTxnFdcPara.setTxAmt(tia9902002Temp.body.TX_AMT);                 // 08   交存资金       20 交存验证的输出项
-            taTxnFdcPara.setAccId(tia9902002Temp.body.ACC_ID);                  // 06   监管账号       30 交存验证的输出项
+            taTxnFdcPara.setBizId(tia9902002Temp.header.BIZ_ID);                // 04   交存申请编号   14
+            taTxnFdcPara.setTxAmt(tia9902002Temp.body.TX_AMT);                  // 08   交存资金       20 交存验证的输出项
+            taTxnFdcPara.setSpvsnAccId(tia9902002Temp.body.SPVSN_ACC_ID);      // 06   监管账号       30 交存验证的输出项
             taTxnFdcPara.setStlType(tia9902002Temp.body.STL_TYPE);             // 09   结算方式       2 01_ 现金 02_ 转账 03_ 支票
             taTxnFdcPara.setCheckId(tia9902002Temp.body.CHECK_ID);             // 10   支票号码       30
             taTxnFdcPara.setReqSn(tia9902002Temp.header.REQ_SN);               // 11   银行记账流水号 30
             taTxnFdcPara.setTxDate(tia9902002Temp.body.TX_DATE);               // 12   记账日期       10  送系统日期即可
             taTxnFdcPara.setBranchId( tia9902002Temp.body.BRANCH_ID);          // 13   记账网点号     30
-            taTxnFdcPara.setUserId(tia9902002Temp.header.USER_ID);            // 14   记账人员       30
-            taTxnFdcPara.setInitiator(tia9902002Temp.body.INITIATOR);         // 15   发起方         1   1_监管银行
+            taTxnFdcPara.setUserId(tia9902002Temp.header.USER_ID);             // 14   记账人员       30
+            taTxnFdcPara.setInitiator(tia9902002Temp.body.INITIATOR);          // 15   发起方         1   1_监管银行
 
             taTxnFdcPara.setCreatedBy(taTxnFdcPara.getUserId());
 
@@ -258,15 +258,15 @@ public class TaFdcService {
             TaTxnFdc taTxnFdcPara=new TaTxnFdc();
 
             Tia9902011 tia9902011Temp=new Tia9902011() ;
-            taTxnFdcPara.setTxCode(tia9902011Temp.header.TX_CODE);         // 01   交易代码       4   2011
-            taTxnFdcPara.setBankId(tia9902011Temp.body.BANK_ID);          // 02   监管银行代码   2
+            taTxnFdcPara.setTxCode(tia9902011Temp.header.TX_CODE);        // 01   交易代码       4   2011
+            taTxnFdcPara.setBankId(tia9902011Temp.body.SPVSN_BANK_ID);   // 02   监管银行代码   2
             taTxnFdcPara.setCityId(tia9902011Temp.body.CITY_ID);          // 03   城市代码       6
-            taTxnFdcPara.setBizId(tia9902011Temp.header.BIZ_ID);           // 04   交存申请编号   14
-            taTxnFdcPara.setReqSn(tia9902011Temp.header.REQ_SN);           // 05   银行冲正流水   30
-            taTxnFdcPara.setTxDate(tia9902011Temp.body.TX_DATE);        // 06   冲正日期       10  送系统日期即可
-            taTxnFdcPara.setBranchId(tia9902011Temp.body.BRANCH_ID);       // 07   冲正网点       30
-            taTxnFdcPara.setUserId(tia9902011Temp.header.USER_ID);         // 08   冲正人员       30
-            taTxnFdcPara.setInitiator(tia9902011Temp.body.INITIATOR);      // 09   发起方         1   1_监管银行
+            taTxnFdcPara.setBizId(tia9902011Temp.header.BIZ_ID);          // 04   交存申请编号   14
+            taTxnFdcPara.setReqSn(tia9902011Temp.header.REQ_SN);          // 05   银行冲正流水   30
+            taTxnFdcPara.setTxDate(tia9902011Temp.body.TX_DATE);          // 06   冲正日期       10  送系统日期即可
+            taTxnFdcPara.setBranchId(tia9902011Temp.body.BRANCH_ID);      // 07   冲正网点       30
+            taTxnFdcPara.setUserId(tia9902011Temp.header.USER_ID);        // 08   冲正人员       30
+            taTxnFdcPara.setInitiator(tia9902011Temp.body.INITIATOR);     // 09   发起方         1   1_监管银行
 
             taTxnFdcPara.setCreatedBy(taTxnFdcPara.getUserId());
 
@@ -323,12 +323,12 @@ public class TaFdcService {
             Tia9902101 tia9902101Temp=new Tia9902101() ;
             tia9902101Temp.header.CHANNEL_ID=ToolUtil.DEP_CHANNEL_ID_RFM;
             tia9902101Temp.header.TX_CODE=taTxnFdcPara.getTxCode();     // 01   交易代码       4   2101
-            tia9902101Temp.body.BANK_ID=taTxnFdcPara.getBankId();       // 02   监管银行代码   2
+            tia9902101Temp.body.SPVSN_BANK_ID=taTxnFdcPara.getBankId();// 02   监管银行代码   2
             tia9902101Temp.body.CITY_ID=taTxnFdcPara.getCityId();       // 03   城市代码       6
             tia9902101Temp.header.BIZ_ID=taTxnFdcPara.getBizId();       // 04   划拨业务编号   14
             tia9902101Temp.header.PASSWORD=taTxnFdcPara.getPassword();  // 05   划拨密码       32 MD5
             tia9902101Temp.header.REQ_SN=taTxnFdcPara.getReqSn();       // 06   验证流水       30
-            tia9902101Temp.body.TX_DATE=taTxnFdcPara.getTxDate();    // 07   验证日期       10  送系统日期即可
+            tia9902101Temp.body.TX_DATE=taTxnFdcPara.getTxDate();       // 07   验证日期       10  送系统日期即可
             tia9902101Temp.body.BRANCH_ID=taTxnFdcPara.getBranchId();   // 08   验证网点号     30
             tia9902101Temp.header.USER_ID=taTxnFdcPara.getUserId();     // 09   验证柜员号     30
             tia9902101Temp.body.INITIATOR=taTxnFdcPara.getInitiator();  // 10   发起方         1   1_监管银行
@@ -356,12 +356,12 @@ public class TaFdcService {
                   10    预售资金监管平台流水    16
                 */
                 taTxnFdcPara.setReturnCode(toaPara.header.RETURN_CODE);
-                taTxnFdcPara.setAccId(toaPara.body.ACC_ID);
-                taTxnFdcPara.setAccName(toaPara.body.ACC_NAME);
+                taTxnFdcPara.setSpvsnAccId(toaPara.body.SPVSN_ACC_ID);
+                taTxnFdcPara.setSpvsnAccName(toaPara.body.SPVSN_ACC_NAME);
                 taTxnFdcPara.setTxAmt(toaPara.body.TX_AMT);
-                taTxnFdcPara.setRecvBank(toaPara.body.RECV_BANK);
-                taTxnFdcPara.setRecvAccId(toaPara.body.RECV_ACC_ID);
-                taTxnFdcPara.setRecvAccName(toaPara.body.RECV_ACC_NAME);
+                taTxnFdcPara.setGerlBank(toaPara.body.GERL_BANK);
+                taTxnFdcPara.setGerlAccId(toaPara.body.GERL_ACC_ID);
+                taTxnFdcPara.setGerlAccName(toaPara.body.GERL_ACC_NAME);
                 taTxnFdcPara.setProgName(toaPara.body.PROG_NAME);
                 taTxnFdcPara.setCompName(toaPara.body.COMP_NAME);
                 taTxnFdcPara.setFdcSn(toaPara.header.REQ_SN);
@@ -402,12 +402,12 @@ public class TaFdcService {
             Tia9902102 tia9902102Temp=new Tia9902102() ;
             tia9902102Temp.header.CHANNEL_ID=ToolUtil.DEP_CHANNEL_ID_RFM;
             tia9902102Temp.header.TX_CODE=taTxnFdcPara.getTxCode();         // 01   交易代码       4   2102
-            tia9902102Temp.body.BANK_ID= taTxnFdcPara.getBankId();          // 02   监管银行代码   2
+            tia9902102Temp.body.SPVSN_BANK_ID= taTxnFdcPara.getBankId();   // 02   监管银行代码   2
             tia9902102Temp.body.CITY_ID= taTxnFdcPara.getCityId();          // 03   城市代码       6
             tia9902102Temp.header.BIZ_ID=taTxnFdcPara.getBizId();           // 04   划拨业务编号   14
             tia9902102Temp.header.PASSWORD=taTxnFdcPara.getPassword();      // 05   划拨密码       32 MD5
-            tia9902102Temp.body.ACC_ID=taTxnFdcPara.getAccId();              // 06   监管账号       30 划拨验证的输出项
-            tia9902102Temp.body.RECV_ACC_ID=taTxnFdcPara.getRecvAccId();    // 07   收款单位账号   30 划拨验证的输出项
+            tia9902102Temp.body.SPVSN_ACC_ID=taTxnFdcPara.getSpvsnAccId();  // 06   监管账号       30 划拨验证的输出项
+            tia9902102Temp.body.GERL_ACC_ID=taTxnFdcPara.getGerlAccId();    // 07   收款单位账号   30 划拨验证的输出项
             tia9902102Temp.body.TX_AMT=taTxnFdcPara.getTxAmt();              // 08   划拨资金       20 划拨验证的输出项
             tia9902102Temp.body.STL_TYPE=taTxnFdcPara.getStlType();          // 09   结算方式       2 01_ 现金 02_ 转账 03_ 支票
             tia9902102Temp.body.CHECK_ID=taTxnFdcPara.getCheckId();          // 10   支票号码       30
@@ -469,11 +469,11 @@ public class TaFdcService {
             Tia9902111 tia9902111Temp=new Tia9902111() ;
             tia9902111Temp.header.CHANNEL_ID=ToolUtil.DEP_CHANNEL_ID_RFM;
             tia9902111Temp.header.TX_CODE=taTxnFdcPara.getTxCode();         // 01   交易代码       4   2102
-            tia9902111Temp.body.BANK_ID= taTxnFdcPara.getBankId();          // 02   监管银行代码   2
+            tia9902111Temp.body.SPVSN_BANK_ID= taTxnFdcPara.getBankId();   // 02   监管银行代码   2
             tia9902111Temp.body.CITY_ID= taTxnFdcPara.getCityId();          // 03   城市代码       6
             tia9902111Temp.header.BIZ_ID=taTxnFdcPara.getBizId();           // 04   划拨业务编号   14
             tia9902111Temp.header.REQ_SN=taTxnFdcPara.getReqSn();           // 05   银行记账流水号 30
-            tia9902111Temp.body.TX_DATE=taTxnFdcPara.getTxDate();        // 06   记账日期       10  送系统日期即可
+            tia9902111Temp.body.TX_DATE=taTxnFdcPara.getTxDate();           // 06   记账日期       10  送系统日期即可
             tia9902111Temp.body.BRANCH_ID=taTxnFdcPara.getBranchId();       // 07   记账网点号     30
             tia9902111Temp.header.USER_ID=taTxnFdcPara.getUserId();         // 08   柜员号         30
             tia9902111Temp.body.INITIATOR=taTxnFdcPara.getInitiator();      // 09   发起方         1   1_监管银行
@@ -532,12 +532,12 @@ public class TaFdcService {
             Tia9902201 tia9902201Temp=new Tia9902201() ;
             tia9902201Temp.header.CHANNEL_ID=ToolUtil.DEP_CHANNEL_ID_RFM;
             tia9902201Temp.header.TX_CODE=taTxnFdcPara.getTxCode();     // 01   交易代码       4   2201
-            tia9902201Temp.body.BANK_ID=taTxnFdcPara.getBankId();       // 02   监管银行代码   2
+            tia9902201Temp.body.SPVSN_BANK_ID=taTxnFdcPara.getBankId();// 02   监管银行代码   2
             tia9902201Temp.body.CITY_ID=taTxnFdcPara.getCityId();       // 03   城市代码       6
             tia9902201Temp.header.BIZ_ID=taTxnFdcPara.getBizId();       // 04   返还业务编号   14
             tia9902201Temp.header.PASSWORD=taTxnFdcPara.getPassword();  // 05   返还密码       32 MD5
             tia9902201Temp.header.REQ_SN=taTxnFdcPara.getReqSn();       // 06   验证流水       30
-            tia9902201Temp.body.TX_DATE=taTxnFdcPara.getTxDate();    // 07   验证日期       10  送系统日期即可
+            tia9902201Temp.body.TX_DATE=taTxnFdcPara.getTxDate();       // 07   验证日期       10  送系统日期即可
             tia9902201Temp.body.BRANCH_ID=taTxnFdcPara.getBranchId();   // 08   验证网点号     30
             tia9902201Temp.header.USER_ID=taTxnFdcPara.getUserId();     // 09   验证柜员号     30
             tia9902201Temp.body.INITIATOR=taTxnFdcPara.getInitiator();  // 10   发起方         1   1_监管银行
@@ -563,8 +563,8 @@ public class TaFdcService {
                   08    预售资金监管平台流水    16
                 */
                 taTxnFdcPara.setReturnCode(toaPara.header.RETURN_CODE);
-                taTxnFdcPara.setAccId(toaPara.body.ACC_ID);
-                taTxnFdcPara.setAccName(toaPara.body.ACC_NAME);
+                taTxnFdcPara.setSpvsnAccId(toaPara.body.SPVSN_ACC_ID);
+                taTxnFdcPara.setSpvsnAccName(toaPara.body.SPVSN_ACC_NAME);
                 taTxnFdcPara.setTxAmt(toaPara.body.TX_AMT);
                 taTxnFdcPara.setOwnerName(toaPara.body.OWNER_NAME);
                 taTxnFdcPara.setCtficType(toaPara.body.CTFIC_TYPE);
@@ -606,11 +606,11 @@ public class TaFdcService {
             Tia9902202 tia9902202Temp=new Tia9902202() ;
             tia9902202Temp.header.CHANNEL_ID=ToolUtil.DEP_CHANNEL_ID_RFM;
             tia9902202Temp.header.TX_CODE=taTxnFdcPara.getTxCode();         // 01   交易代码       4   2202
-            tia9902202Temp.body.BANK_ID= taTxnFdcPara.getBankId();          // 02   监管银行代码   2
+            tia9902202Temp.body.SPVSN_BANK_ID= taTxnFdcPara.getBankId();          // 02   监管银行代码   2
             tia9902202Temp.body.CITY_ID= taTxnFdcPara.getCityId();          // 03   城市代码       6
             tia9902202Temp.header.BIZ_ID=taTxnFdcPara.getBizId();           // 04   返还业务编号   14
             tia9902202Temp.header.PASSWORD=taTxnFdcPara.getPassword();      // 05   返还密码       32 MD5
-            tia9902202Temp.body.ACC_ID=taTxnFdcPara.getAccId();              // 06   监管账号       30 返还验证的输出项
+            tia9902202Temp.body.SPVSN_ACC_ID=taTxnFdcPara.getSpvsnAccId();              // 06   监管账号       30 返还验证的输出项
             tia9902202Temp.body.TX_AMT=taTxnFdcPara.getTxAmt();              // 07   返还资金       20 返还验证的输出项
             tia9902202Temp.header.REQ_SN=taTxnFdcPara.getReqSn();            // 08   银行记账流水号 30
             tia9902202Temp.body.TX_DATE=taTxnFdcPara.getTxDate();            // 09   记账日期       10  送系统日期即可
@@ -670,7 +670,7 @@ public class TaFdcService {
             Tia9902211 tia9902211Temp=new Tia9902211() ;
             tia9902211Temp.header.CHANNEL_ID=ToolUtil.DEP_CHANNEL_ID_RFM;
             tia9902211Temp.header.TX_CODE=taTxnFdcPara.getTxCode();         // 01   交易代码       4   2202
-            tia9902211Temp.body.BANK_ID= taTxnFdcPara.getBankId();          // 02   监管银行代码   2
+            tia9902211Temp.body.SPVSN_BANK_ID= taTxnFdcPara.getBankId();          // 02   监管银行代码   2
             tia9902211Temp.body.CITY_ID= taTxnFdcPara.getCityId();          // 03   城市代码       6
             tia9902211Temp.header.BIZ_ID=taTxnFdcPara.getBizId();           // 04   返还业务编号   14
             tia9902211Temp.header.REQ_SN=taTxnFdcPara.getReqSn();           // 05  银行冲正流水号  30
@@ -733,7 +733,7 @@ public class TaFdcService {
             Tia9902501 tia9902501Temp=new Tia9902501() ;
             tia9902501Temp.header.CHANNEL_ID=ToolUtil.DEP_CHANNEL_ID_RFM;
             tia9902501Temp.header.TX_CODE=taTxnFdcPara.getTxCode();     // 01   交易代码       4   2501
-            tia9902501Temp.body.BANK_ID=taTxnFdcPara.getBankId();       // 02   监管银行代码   2
+            tia9902501Temp.body.SPVSN_BANK_ID=taTxnFdcPara.getBankId();       // 02   监管银行代码   2
             tia9902501Temp.body.CITY_ID=taTxnFdcPara.getCityId();       // 03   城市代码       6
             tia9902501Temp.header.BIZ_ID=taTxnFdcPara.getBizId();       // 04   业务编号       14
             tia9902501Temp.body.BRANCH_ID=taTxnFdcPara.getBranchId();   // 05   查询网点       30
@@ -757,7 +757,7 @@ public class TaFdcService {
                       05    预售资金监管平台流水	  16
                   */
                 taTxnFdcPara.setReturnCode(toaPara.header.RETURN_CODE);
-                taTxnFdcPara.setActRstl(toaPara.body.ACT_RSTL);
+                taTxnFdcPara.setActRstl(toaPara.body.SPVSN_ACT_RSTL);
                 taTxnFdcPara.setFdcActSn(toaPara.body.FDC_ACT_SN);
                 taTxnFdcPara.setFdcBankActSn(toaPara.body.FDC_BANK_ACT_SN);
                 taTxnFdcPara.setFdcSn(toaPara.header.REQ_SN);

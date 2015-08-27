@@ -44,8 +44,8 @@ public class TaSbsService {
             Tia900010002 tia900010002Temp=new Tia900010002();
             TaTxnSbs taTxnSbsPara=new TaTxnSbs();
             taTxnSbsPara.setTxCode(EnuTaSbsTxCode.TRADE_0002.getCode());
-            taTxnSbsPara.setAccId(taTxnFdcPara.getAccId().trim());         // 付款账号
-            taTxnSbsPara.setRecvAccId(taTxnFdcPara.getRecvAccId().trim()); // 收款账号
+            taTxnSbsPara.setSpvsnAccId(taTxnFdcPara.getSpvsnAccId().trim());         // 付款账号
+            taTxnSbsPara.setGerlAccId(taTxnFdcPara.getGerlAccId().trim()); // 收款账号
             taTxnSbsPara.setTxAmt(taTxnFdcPara.getTxAmt());                // 交易金额
             taTxnSbsPara.setReqSn(taTxnFdcPara.getReqSn().substring(8,26));// 外围系统流水
             taTxnSbsPara.setTxDate(taTxnFdcPara.getTxDate());              // 交易日期
@@ -54,8 +54,8 @@ public class TaSbsService {
 
             tia900010002Temp.header.CHANNEL_ID=ToolUtil.DEP_CHANNEL_ID_SBS;
             // 划拨是从监管户到一般账户
-            tia900010002Temp.body.ACC_ID=taTxnSbsPara.getAccId();
-            tia900010002Temp.body.RECV_ACC_ID=taTxnSbsPara.getRecvAccId();
+            tia900010002Temp.body.SPVSN_ACC_ID=taTxnSbsPara.getSpvsnAccId();
+            tia900010002Temp.body.GERL_ACC_ID=taTxnSbsPara.getGerlAccId();
 
             tia900010002Temp.body.TX_AMT=taTxnSbsPara.getTxAmt();
             tia900010002Temp.body.TX_DATE=taTxnSbsPara.getTxDate();
@@ -175,9 +175,9 @@ public class TaSbsService {
         for(Toa900012602.Body.BodyDetail bdUnit:bodyDetailListPara){
             TaRsAccDtl taRsAccDtlTemp=new TaRsAccDtl();
             taRsAccDtlTemp.setReqSn(bdUnit.FBTIDX);
-            taRsAccDtlTemp.setAccId(bdUnit.ACTNUM);
+            taRsAccDtlTemp.setSpvsnAccId(bdUnit.ACTNUM);
             taRsAccDtlTemp.setTxAmt(bdUnit.TXNAMT);
-            taRsAccDtlTemp.setRecvAccId(bdUnit.BENACT);
+            taRsAccDtlTemp.setGerlAccId(bdUnit.BENACT);
             taRsAccDtlTemp.setTxDate(bdUnit.ERYTIM);
             taRsAccDtlListTemp.add(taRsAccDtlTemp);
         }
@@ -220,7 +220,7 @@ public class TaSbsService {
                 }
                 for(int j=i*pageSize;j<loopCount;j++){
                     bodyDetail = new Tia900012701.BodyDetail();
-                    bodyDetail.setACTNM(taRsAccList.get(j).getAccId());
+                    bodyDetail.setACTNM(taRsAccList.get(j).getSpvsnAccId());
                     details.add(bodyDetail);
                 }
 

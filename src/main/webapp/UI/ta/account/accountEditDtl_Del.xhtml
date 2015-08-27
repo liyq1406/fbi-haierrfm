@@ -50,14 +50,14 @@
                             <h:inputText id="accType"
                                          readonly="true"
                                          style="background-color:gainsboro;"
-                                         value="#{ptenudetailAction.taAccTypeMap.get(taAccAction.taRsAcc.accType)}">
+                                         value="#{ptenudetailAction.taAccTypeMap.get(taAccAction.taRsAcc.spvsnAccType)}">
                             </h:inputText>
 
                             <h:outputLabel value="*【账号】:" for="accId"/>
                             <h:inputText autocomplete="off" id="accId"
                                          readonly="true"
                                          style="background-color:gainsboro;"
-                                         value="#{taAccAction.taRsAcc.accId}">
+                                         value="#{taAccAction.taRsAcc.spvsnAccId}">
                             </h:inputText>
 
                             <h:outputLabel value="*【申请编号】:" for="originId"/>
@@ -70,7 +70,7 @@
                             <h:inputText id="accName"
                                          readonly="true"
                                          style="background-color:gainsboro;"
-                                         value="#{taAccAction.taRsAcc.accName}"/>
+                                         value="#{taAccAction.taRsAcc.spvsnAccName}"/>
 
                             <h:outputLabel value="*【监管状态】:" for="statusFlag"/>
                             <h:inputText id="statusFlag"

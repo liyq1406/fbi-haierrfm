@@ -41,14 +41,14 @@
             <property name="ignoreQualifiersAtRuntime" value="true" />
             <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
         </table>
-        <table tableName="TA_RS_CHECK">
+        <!--<table tableName="TA_RS_CHECK">
             <property name="ignoreQualifiersAtRuntime" value="true" />
             <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
         </table>
         <table tableName="TA_RS_SEND_LOG">
             <property name="ignoreQualifiersAtRuntime" value="true"/>
             <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
-        </table>
+        </table>-->
         <table tableName="TA_TXN_SBS">
             <property name="ignoreQualifiersAtRuntime" value="true" />
             <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>

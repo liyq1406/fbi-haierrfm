@@ -98,14 +98,14 @@ public class TaRefundAction {
     /*验证后立即返还记账用*/
     public void onBtnActClick() {
         try {
-            if(StringUtils.isEmpty(taTxnFdcValiSendAndRecv.getRecvAccId())){
+            if(StringUtils.isEmpty(taTxnFdcValiSendAndRecv.getGerlAccId())){
                 MessageUtil.addError(RfmMessage.getProperty("ReturnVerification.E001"));
                 return;
             }
 
             if(taTxnFdcValiSendAndRecv.getReturnCode() == null ||
                     !taTxnFdcValiSendAndRecv.getReturnCode().equals("0000") ||
-                    StringUtils.isEmpty(taTxnFdcValiSendAndRecv.getAccId())) {
+                    StringUtils.isEmpty(taTxnFdcValiSendAndRecv.getSpvsnAccId())) {
                 MessageUtil.addError(RfmMessage.getProperty("ReturnVerification.E002"));
                 return;
             }
@@ -216,9 +216,9 @@ public class TaRefundAction {
                 taRsAccDtlTemp = taRsAccDtlList.get(0);
                 // 与返还记账：收款账号和付款账号关系正好颠倒
                 taRsAccDtlTemp.setTxCode(EnuTaFdcTxCode.TRADE_2211.getCode());
-                String accId = taRsAccDtlTemp.getAccId();
-                taRsAccDtlTemp.setAccId(taRsAccDtlTemp.getRecvAccId());
-                taRsAccDtlTemp.setRecvAccId(accId);
+                String accId = taRsAccDtlTemp.getSpvsnAccId();
+                taRsAccDtlTemp.setSpvsnAccId(taRsAccDtlTemp.getGerlAccId());
+                taRsAccDtlTemp.setGerlAccId(accId);
                 taRsAccDtlTemp.setActFlag(EnuActFlag.ACT_UNKNOWN.getCode());
                 taRsAccDtlTemp.setReqSn(ToolUtil.getStrAppReqSn_Back());
 

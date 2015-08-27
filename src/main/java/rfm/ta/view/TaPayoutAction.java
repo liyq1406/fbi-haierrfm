@@ -106,7 +106,7 @@ public class TaPayoutAction {
         try {
             if(taTxnFdcValiSendAndRecv.getReturnCode() == null ||
                     !taTxnFdcValiSendAndRecv.getReturnCode().equals("0000") ||
-                    StringUtils.isEmpty(taTxnFdcValiSendAndRecv.getAccId())) {
+                    StringUtils.isEmpty(taTxnFdcValiSendAndRecv.getSpvsnAccId())) {
                 MessageUtil.addError(RfmMessage.getProperty("TransferVerification.E004"));
                 return;
             }
@@ -215,9 +215,9 @@ public class TaPayoutAction {
                 taRsAccDtlTemp = taRsAccDtlList.get(0);
                 // 与划拨记账：收款账号和付款账号关系正好颠倒
                 taRsAccDtlTemp.setTxCode(EnuTaFdcTxCode.TRADE_2111.getCode());
-                String accId = taRsAccDtlTemp.getAccId();
-                taRsAccDtlTemp.setAccId(taRsAccDtlTemp.getRecvAccId());
-                taRsAccDtlTemp.setRecvAccId(accId);
+                String accId = taRsAccDtlTemp.getSpvsnAccId();
+                taRsAccDtlTemp.setSpvsnAccId(taRsAccDtlTemp.getGerlAccId());
+                taRsAccDtlTemp.setGerlAccId(accId);
                 taRsAccDtlTemp.setActFlag(EnuActFlag.ACT_UNKNOWN.getCode());
                 taRsAccDtlTemp.setReqSn(ToolUtil.getStrAppReqSn_Back());
 

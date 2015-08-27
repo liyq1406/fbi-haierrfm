@@ -37,9 +37,9 @@ public class Toa9902001 extends TOA implements Serializable {
           05    监管专户户名            150
           06    预售资金监管平台流水    16
         */
-        public String ACC_TYPE;           // 帐户类别       1  0：预售监管户
+        public String SPVSN_ACC_TYPE;   // 帐户类别       1  0：预售监管户
         public String TX_AMT;             // 交存金额	      20  以分为单位
-        public String ACC_ID;             // 监管专户账号   30
-        public String ACC_NAME;           // 监管专户户名   150
+        public String SPVSN_ACC_ID;      // 监管专户账号   30
+        public String SPVSN_ACC_NAME;    // 监管专户户名   150
     }
 }

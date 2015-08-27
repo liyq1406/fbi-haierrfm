@@ -43,11 +43,11 @@ public class TaAccDetlService {
         if (taRsAccDtlPara.getTxCode() !=null && !StringUtils.isEmpty(taRsAccDtlPara.getTxCode().trim())) {
             criteria.andTxCodeEqualTo(taRsAccDtlPara.getTxCode());
         }
-        if (taRsAccDtlPara.getAccName() !=null && !StringUtils.isEmpty(taRsAccDtlPara.getAccName().trim())) {
-            criteria.andAccNameLike("%" + taRsAccDtlPara.getAccName() + "%");
+        if (taRsAccDtlPara.getSpvsnAccName() !=null && !StringUtils.isEmpty(taRsAccDtlPara.getSpvsnAccName().trim())) {
+            criteria.andSpvsnAccNameLike("%" + taRsAccDtlPara.getSpvsnAccName() + "%");
         }
-        if (taRsAccDtlPara.getAccId() != null && !StringUtils.isEmpty(taRsAccDtlPara.getAccId().trim())) {
-            criteria.andAccIdEqualTo(taRsAccDtlPara.getAccId());
+        if (taRsAccDtlPara.getSpvsnAccId() != null && !StringUtils.isEmpty(taRsAccDtlPara.getSpvsnAccId().trim())) {
+            criteria.andSpvsnAccIdEqualTo(taRsAccDtlPara.getSpvsnAccId());
         }
         if (taRsAccDtlPara.getTxDate()!= null && !StringUtils.isEmpty(taRsAccDtlPara.getTxDate().trim())) {
             criteria.andTxDateEqualTo(taRsAccDtlPara.getTxDate());
@@ -146,16 +146,16 @@ public class TaAccDetlService {
             criteria.andReqSnEqualTo(taRsAccDtlPara.getReqSn().trim());
         }
 
-        if (ToolUtil.getStrIgnoreNull(taRsAccDtlPara.getAccId()).trim().length()!=0) {
-            criteria.andAccIdEqualTo(taRsAccDtlPara.getAccId().trim());
+        if (ToolUtil.getStrIgnoreNull(taRsAccDtlPara.getSpvsnAccId()).trim().length()!=0) {
+            criteria.andSpvsnAccIdEqualTo(taRsAccDtlPara.getSpvsnAccId().trim());
         }
 
         if (ToolUtil.getStrIgnoreNull(taRsAccDtlPara.getTxAmt()).trim().length()!=0) {
             criteria.andTxAmtEqualTo(taRsAccDtlPara.getTxAmt());
         }
 
-        if (ToolUtil.getStrIgnoreNull(taRsAccDtlPara.getRecvAccId()).trim().length()!=0) {
-            criteria.andRecvAccIdEqualTo(taRsAccDtlPara.getRecvAccId());
+        if (ToolUtil.getStrIgnoreNull(taRsAccDtlPara.getGerlAccId()).trim().length()!=0) {
+            criteria.andGerlAccIdEqualTo(taRsAccDtlPara.getGerlAccId());
         }
 
         return taRsAccDtlMapper.deleteByExample(example);

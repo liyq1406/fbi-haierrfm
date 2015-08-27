@@ -75,7 +75,7 @@ public class TaDayEndReconciAction implements Serializable {
                 taRsAccDtl.setTxAmt(df.format(Double.valueOf(taRsAccDtl.getTxAmt())));
             }
             strLocalTotalAmt = ToolUtil.getMoneyString(total);
-            System.out.println("======>" + taRsAccDtlLocalList.get(0).getAccId());
+            System.out.println("======>" + taRsAccDtlLocalList.get(0).getSpvsnAccId());
         }
     }
 
@@ -151,7 +151,7 @@ public class TaDayEndReconciAction implements Serializable {
                         line.append(StringUtils.rightPad(taRsAccDtlUnit.getTxAmt(), 20, ' '));
                         line.append("|");
                         // 监管账号(30位)|
-                        line.append(StringUtils.rightPad(taRsAccDtlUnit.getAccId(), 30, ' '));
+                        line.append(StringUtils.rightPad(taRsAccDtlUnit.getSpvsnAccId(), 30, ' '));
                         line.append("|");
                         // 预售资金监管平台流水(16位)|
                         line.append(StringUtils.rightPad(taRsAccDtlUnit.getFdcSn(), 16, ' '));
@@ -241,8 +241,8 @@ public class TaDayEndReconciAction implements Serializable {
             // 遍历List2
             for(TaRsAccDtl taRsAccDtl2:taRsAccDtlSbsListPara){
                 if(taRsAccDtl1.getReqSn().substring(8,26).equals(taRsAccDtl2.getReqSn())
-                        &&taRsAccDtl1.getAccId().equals(taRsAccDtl2.getAccId())
-                        &&taRsAccDtl1.getRecvAccId().equals(taRsAccDtl2.getRecvAccId())
+                        &&taRsAccDtl1.getSpvsnAccId().equals(taRsAccDtl2.getSpvsnAccId())
+                        &&taRsAccDtl1.getGerlAccId().equals(taRsAccDtl2.getGerlAccId())
                         &&taRsAccDtl1.getTxAmt().equals(taRsAccDtl2.getTxAmt())){
                     isExist = true;
                     taRsAccDtlList2Repeat.add(taRsAccDtl2);

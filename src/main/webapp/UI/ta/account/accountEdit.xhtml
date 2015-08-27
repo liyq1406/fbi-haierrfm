@@ -47,15 +47,15 @@
                         <h:panelGrid columns="6" cellspacing="3" style="width:90%"
                                      columnClasses="col-95,col-5,col-95,col-5">
                             <h:outputLabel value="*【账户类别】:" for="accType"/>
-                            <h:selectOneMenu id="accType" value="#{taAccAction.taRsAcc.accType}">
+                            <h:selectOneMenu id="accType" value="#{taAccAction.taRsAcc.spvsnAccType}">
                                 <f:selectItems value="#{ptenudetailAction.taAccTypeList}"/>
                             </h:selectOneMenu>
                             <h:outputLabel value="*【账号】:" for="accId"/>
                             <h:inputText autocomplete="off" id="accId"
-                                         value="#{taAccAction.taRsAcc.accId}">
+                                         value="#{taAccAction.taRsAcc.spvsnAccId}">
                             </h:inputText>
                             <h:outputLabel value="*【名称】:" for="accName"/>
-                            <h:inputText id="accName" value="#{taAccAction.taRsAcc.accName}"/>
+                            <h:inputText id="accName" value="#{taAccAction.taRsAcc.spvsnAccName}"/>
                         </h:panelGrid>
                         <p:commandButton update="msgs,pdt" style="width: 80px"
                                          action="#{taAccAction.onBtnQueryClick}" id="btnQuery" value="查询">
@@ -104,15 +104,15 @@
                     </p:column>
 
                     <p:column headerText="账户类别" style="width:110px;text-align:left">
-                        <h:outputText value="#{ptenudetailAction.taAccTypeMap.get(record.accType)}"/>
+                        <h:outputText value="#{ptenudetailAction.taAccTypeMap.get(record.spvsnAccType)}"/>
                     </p:column>
 
                     <p:column headerText="账号" style="width:200px;text-align:center">
-                        <h:outputText value="#{record.accId}" style="text-align: center;"/>
+                        <h:outputText value="#{record.spvsnAccId}" style="text-align: center;"/>
                     </p:column>
 
                     <p:column headerText="名称" style="width:260px;text-align:center">
-                        <h:outputText value="#{record.accName}" style="text-align: right"/>
+                        <h:outputText value="#{record.spvsnAccName}" style="text-align: right"/>
                     </p:column>
 
                     <p:column headerText="预售人名称" style="width:260px;text-align:center">

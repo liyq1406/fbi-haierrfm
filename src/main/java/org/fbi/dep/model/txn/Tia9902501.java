@@ -38,7 +38,7 @@ public class Tia9902501 extends TIA implements Serializable {
           05	查询网点	    30
           06	查询人员	    30
           07	发起方	        1 1_监管银行*/
-        public String BANK_ID;            // 监管银行代码	  2
+        public String SPVSN_BANK_ID;     // 监管银行代码	  2
         public String CITY_ID;            // 城市代码	      6
         public String BRANCH_ID;          // 网点号         30
         public String INITIATOR;          // 发起方         1   1_监管银行

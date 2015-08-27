@@ -66,7 +66,10 @@ public class TaAccAction {
 
     /*画面查询用*/
     public void onBtnQueryClick() {
-        taRsAccList = taAccService.selectedRecordsByCondition(taRsAcc.getAccType(), taRsAcc.getAccId(), taRsAcc.getAccName());
+        taRsAccList = taAccService.selectedRecordsByCondition(
+                taRsAcc.getSpvsnAccType(),
+                taRsAcc.getSpvsnAccId(),
+                taRsAcc.getSpvsnAccName());
     }
 
     public String reset() {
@@ -80,7 +83,7 @@ public class TaAccAction {
     /*登记画面用*/
     public String onAdd() {
         try {
-            if (!confirmAccountNo.equalsIgnoreCase(taRsAcc.getAccId())) {
+            if (!confirmAccountNo.equalsIgnoreCase(taRsAcc.getSpvsnAccId())) {
                 MessageUtil.addError(RfmMessage.getProperty("AccountRegistration.E001"));
                 return null;
             }

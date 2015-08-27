@@ -63,7 +63,7 @@ public class DepMsgListener implements MessageListener {
                   09	发起方	        1	1_监管银行*/
                 Tia9902001 tia9902001=(Tia9902001)tiaTmp;
                 tia9902001.header.CHANNEL_ID= ToolUtil.DEP_CHANNEL_ID_RFM;
-                tia9902001.body.BANK_ID= EnuTaBankId.BANK_HAIER.getCode();        // 02   监管银行代码   2
+                tia9902001.body.SPVSN_BANK_ID= EnuTaBankId.BANK_HAIER.getCode();        // 02   监管银行代码   2
                 tia9902001.body.CITY_ID= EnuTaCityId.CITY_TAIAN.getCode();        // 03   城市代码       6
                 tia9902001.body.TX_DATE=ToolUtil.getStrLastUpdDate();              // 06   验证日期       10  送系统日期即可
                 tia9902001.body.INITIATOR=EnuTaInitiatorId.INITIATOR.getCode();  // 09   发起方         1   1_监管银行
@@ -84,8 +84,8 @@ public class DepMsgListener implements MessageListener {
             Tia900010002 tia900010002Temp =(Tia900010002)tiaPara ;
             TaRsAccDtl taTxnFdcTemp=new TaRsAccDtl();
             taTxnFdcTemp.setTxCode(EnuTaSbsTxCode.TRADE_0002.getCode());
-            taTxnFdcTemp.setAccId(tia900010002Temp.body.ACC_ID);   // 付款账号
-            taTxnFdcTemp.setRecvAccId(tia900010002Temp.body.RECV_ACC_ID);   // 收款账号
+            taTxnFdcTemp.setSpvsnAccId(tia900010002Temp.body.SPVSN_ACC_ID);   // 付款账号
+            taTxnFdcTemp.setGerlAccId(tia900010002Temp.body.GERL_ACC_ID);   // 收款账号
             taTxnFdcTemp.setTxAmt(tia900010002Temp.body.TX_AMT);   // 交易金额
             taTxnFdcTemp.setReqSn(tia900010002Temp.header.REQ_SN); // 外围系统流水
             taTxnFdcTemp.setTxDate(ToolUtil.getNow("yyyyMMdd"));    // 交易日期

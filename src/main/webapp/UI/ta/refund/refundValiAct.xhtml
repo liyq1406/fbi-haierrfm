@@ -121,7 +121,7 @@
                             <h:outputLabel value="【验证日期】:" for="rtnTradeDate"/>
                             <h:inputText id="rtnTradeDate" readonly="true"
                                          style="background-color:gainsboro"
-                                         value="#{taRefundAction.taTxnFdcValiSendAndRecv.tradeDate}">
+                                         value="#{taRefundAction.taTxnFdcValiSendAndRecv.txDate}">
                             </h:inputText>
                             <h:outputLabel value="【验证网点】:" for="rtnBranchIdVali"/>
                             <h:inputText id="rtnBranchIdVali" readonly="true"
@@ -150,12 +150,12 @@
                             <h:outputLabel value="【监管账号】:" for="rtnAccIdVali"/>
                             <h:inputText  id="rtnAccIdVali" readonly="true"
                                           style="background-color:gainsboro"
-                                          value="#{taRefundAction.taTxnFdcValiSendAndRecv.accId}">
+                                          value="#{taRefundAction.taTxnFdcValiSendAndRecv.spvsnAccId}">
                             </h:inputText>
                             <h:outputLabel value="【监管账户户名】:" for="rtnAccNameVali"/>
                             <h:inputText  id="rtnAccNameVali" readonly="true"
                                           style="background-color:gainsboro"
-                                          value="#{taRefundAction.taTxnFdcValiSendAndRecv.accName}">
+                                          value="#{taRefundAction.taTxnFdcValiSendAndRecv.spvsnAccName}">
                             </h:inputText>
                             <h:outputLabel value="【返还金额】:" for="rtnTxAmt"/>
                             <h:inputText  id="rtnTxAmt" readonly="true"
@@ -197,7 +197,7 @@
                             <h:outputLabel value="【返还账号】:" for="recvAccId"/>
                             <h:inputText autocomplete="off" id="recvAccId"
 
-                                         value="#{taRefundAction.taTxnFdcValiSendAndRecv.recvAccId}">
+                                         value="#{taRefundAction.taTxnFdcValiSendAndRecv.gerlAccId}">
                             </h:inputText>
                         </h:panelGrid>
                         <p:commandButton update="msgs,actRecv" style="width: 80px"
