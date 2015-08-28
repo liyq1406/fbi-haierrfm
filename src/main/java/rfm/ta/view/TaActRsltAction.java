@@ -2,7 +2,9 @@ package rfm.ta.view;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import rfm.ta.common.enums.EnuActRslt;
 import rfm.ta.common.enums.EnuTaFdcTxCode;
+import rfm.ta.common.enums.EnuTaTxnRtnCode;
 import rfm.ta.repository.model.TaTxnFdc;
 import rfm.ta.service.biz.his.TaTxnFdcService;
 import rfm.ta.service.dep.TaFdcService;
@@ -31,6 +33,8 @@ public class TaActRsltAction {
 
     private TaTxnFdc taTxnFdcValiSend;
     private TaTxnFdc taTxnFdcValiSendAndRecv;
+    private EnuActRslt enuActRslt = EnuActRslt.SUCCESS;
+    private EnuTaTxnRtnCode enuTaTxnRtnCode = EnuTaTxnRtnCode.TXN_PROCESSED;
 
     @PostConstruct
     public void init() {
@@ -45,6 +49,22 @@ public class TaActRsltAction {
         taFdcService.sendAndRecvRealTimeTxn9902501(taTxnFdcValiSend);
         /*验证后查询*/
         taTxnFdcValiSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcValiSend.getPkId());
+    }
+
+    public EnuTaTxnRtnCode getEnuTaTxnRtnCode() {
+        return enuTaTxnRtnCode;
+    }
+
+    public void setEnuTaTxnRtnCode(EnuTaTxnRtnCode enuTaTxnRtnCode) {
+        this.enuTaTxnRtnCode = enuTaTxnRtnCode;
+    }
+
+    public EnuActRslt getEnuActRslt() {
+        return enuActRslt;
+    }
+
+    public void setEnuActRslt(EnuActRslt enuActRslt) {
+        this.enuActRslt = enuActRslt;
     }
 
     public TaTxnFdcService getTaTxnFdcService() {

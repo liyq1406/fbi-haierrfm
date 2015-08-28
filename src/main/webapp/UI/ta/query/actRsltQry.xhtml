@@ -128,12 +128,12 @@
                             <h:outputLabel value="*【结果】:" for="rtnReturnCodeVali"/>
                             <h:inputText id="rtnReturnCodeVali" readonly="true"
                                          style="background-color:gainsboro"
-                                         value="#{taActRsltAction.taTxnFdcValiSendAndRecv.returnCode}">
+                                         value="#{taActRsltAction.enuTaTxnRtnCode.valueOfAlias(taActRsltAction.taTxnFdcValiSendAndRecv.returnCode).title}">
                             </h:inputText>
                             <h:outputLabel value="*【记账结果】:" for="rtnActRstl"/>
                             <h:inputText  id="rtnActRstl" readonly="true"
                                           style="background-color:gainsboro"
-                                          value="#{taActRsltAction.taTxnFdcValiSendAndRecv.actRstl}">
+                                          value="#{taActRsltAction.enuActRslt.valueOfAlias(taActRsltAction.taTxnFdcValiSendAndRecv.actRstl).title}">
                             </h:inputText>
                             <h:outputLabel value="*【描述】:" for="rtnReturnMsgVali"/>
                             <h:inputText id="rtnReturnMsgVali" readonly="true"
