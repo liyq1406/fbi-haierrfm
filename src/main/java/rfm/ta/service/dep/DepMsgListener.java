@@ -82,11 +82,12 @@ public class DepMsgListener implements MessageListener {
                 taRsAccDtlTempQry.setTxCode(tia900010002Temp.header.TX_CODE);          // 交易号
                 List<TaRsAccDtl> taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtlTempQry);
                 if(taRsAccDtlList.size() == 1){
-                    String actFlag = taRsAccDtlList.get(0).getActFlag();
-                    if(actFlag.equals(EnuActFlag.ACT_SUCCESS.getCode())) {
+                    TaRsAccDtl taRsAccDtlValiExists = taRsAccDtlList.get(0);
+                    if(taRsAccDtlValiExists.getActFlag().equals(EnuActFlag.ACT_SUCCESS.getCode())) {
                         Toa900010002 toa900010002 = new Toa900010002();
                         toa900010002.header.RETURN_CODE = "E001";
                         toa900010002.header.RETURN_MSG = RfmMessage.getProperty("Payment.E001");
+                        toa900010002.header.REQ_SN=taRsAccDtlValiExists.getReqSn();
                         jmsRfmOutTemplate.send(new ObjectMessageCreator(toa900010002, correlationID, propertyMap));
                         return;
                     }else{
@@ -131,11 +132,12 @@ public class DepMsgListener implements MessageListener {
                 taRsAccDtlTempQry.setTxCode(tia900010002Temp.header.TX_CODE);          // 交易号
                 List<TaRsAccDtl> taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtlTempQry);
                 if(taRsAccDtlList.size() == 1){
-                    String actFlag = taRsAccDtlList.get(0).getActFlag();
-                    if(actFlag.equals(EnuActFlag.ACT_SUCCESS.getCode())) { // 已经冲正成功的处理
+                    TaRsAccDtl taRsAccDtlValiExists = taRsAccDtlList.get(0);
+                    if(taRsAccDtlValiExists.getActFlag().equals(EnuActFlag.ACT_SUCCESS.getCode())) { // 已经冲正成功的处理
                         Toa900010002 toa900010002 = new Toa900010002();
                         toa900010002.header.RETURN_CODE = "E001";
                         toa900010002.header.RETURN_MSG = RfmMessage.getProperty("Payment.E001");
+                        toa900010002.header.REQ_SN=taRsAccDtlValiExists.getReqSn();
                         jmsRfmOutTemplate.send(new ObjectMessageCreator(toa900010002, correlationID, propertyMap));
                         return;
                     }else{ // 已经冲正但是存在不明原因的失败的处理
@@ -162,6 +164,7 @@ public class DepMsgListener implements MessageListener {
                         Toa900010002 toa900010002 = new Toa900010002();
                         toa900010002.header.RETURN_CODE = "E002";
                         toa900010002.header.RETURN_MSG = RfmMessage.getProperty("Payment.E002");
+                        toa900010002.header.REQ_SN=ToolUtil.getStrAppReqSn_Back();
                         jmsRfmOutTemplate.send(new ObjectMessageCreator(toa900010002, correlationID, propertyMap));
                         return;
                     }
