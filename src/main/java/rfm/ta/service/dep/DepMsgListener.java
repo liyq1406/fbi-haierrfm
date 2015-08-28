@@ -96,7 +96,7 @@ public class DepMsgListener implements MessageListener {
                     taRsAccDtlTemp.setTxCode(tia900010002Temp.header.TX_CODE);                // 交易代码
                     taRsAccDtlTemp.setSpvsnBankId(EnuTaBankId.BANK_HAIER.getCode());          // 监管银行
                     taRsAccDtlTemp.setCityId(EnuTaCityId.CITY_TAIAN.getCode());               // 城市代码
-
+                    taRsAccDtlTemp.setBizId(tia900010002Temp.header.BIZ_ID);                  // 交存申请编号
                     taRsAccDtlTemp.setTxAmt(tia900010002Temp.body.TX_AMT);                    // 交易金额
                     taRsAccDtlTemp.setSpvsnAccId(tia900010002Temp.body.SPVSN_ACC_ID);        // 监管账号
                     taRsAccDtlTemp.setGerlAccId(tia900010002Temp.body.GERL_ACC_ID);          // 一般账号
@@ -132,42 +132,39 @@ public class DepMsgListener implements MessageListener {
                 List<TaRsAccDtl> taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtlTempQry);
                 if(taRsAccDtlList.size() == 1){
                     String actFlag = taRsAccDtlList.get(0).getActFlag();
-                    if(actFlag.equals(EnuActFlag.ACT_SUCCESS.getCode())) {
+                    if(actFlag.equals(EnuActFlag.ACT_SUCCESS.getCode())) { // 已经冲正成功的处理
                         Toa900010002 toa900010002 = new Toa900010002();
                         toa900010002.header.RETURN_CODE = "E001";
                         toa900010002.header.RETURN_MSG = RfmMessage.getProperty("Payment.E001");
                         jmsRfmOutTemplate.send(new ObjectMessageCreator(toa900010002, correlationID, propertyMap));
                         return;
-                    }else{
+                    }else{ // 已经冲正但是存在不明原因的失败的处理
                         taRsAccDtlTemp=taRsAccDtlList.get(0);
                     }
-                } else {
-                    taRsAccDtlTemp.setTxCode(tia900010002Temp.header.TX_CODE);                // 交易代码
-                    taRsAccDtlTemp.setSpvsnBankId(EnuTaBankId.BANK_HAIER.getCode());          // 监管银行
-                    taRsAccDtlTemp.setCityId(EnuTaCityId.CITY_TAIAN.getCode());               // 城市代码
+                } else { // 未进行过冲正的处理
+                    taRsAccDtlTemp = new TaRsAccDtl();
+                    taRsAccDtlTemp.setBizId(tia900010002Temp.header.BIZ_ID);
+                    taRsAccDtlTemp.setTxCode(EnuTaFdcTxCode.TRADE_2002.getCode());
+                    taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtlTemp);
+                    if(taRsAccDtlList.size() == 1){ // 存在交存的处理
+                        taRsAccDtlTemp = taRsAccDtlList.get(0);
+                        // 与交存记账：收款账号和付款账号关系正好颠倒
+                        taRsAccDtlTemp.setTxCode(EnuTaFdcTxCode.TRADE_2011.getCode());
+                        String accId = taRsAccDtlTemp.getSpvsnAccId();
+                        taRsAccDtlTemp.setSpvsnAccId(taRsAccDtlTemp.getGerlAccId());
+                        taRsAccDtlTemp.setGerlAccId(accId);
+                        taRsAccDtlTemp.setActFlag(EnuActFlag.ACT_UNKNOWN.getCode());
+                        taRsAccDtlTemp.setReqSn(ToolUtil.getStrAppReqSn_Back());
+                        taRsAccDtlTemp.setReturnCode(EnuTaTxnRtnCode.TXN_PROCESSED.getCode());
 
-                    taRsAccDtlTemp.setTxAmt(tia900010002Temp.body.TX_AMT);                    // 交易金额
-                    taRsAccDtlTemp.setSpvsnAccId(tia900010002Temp.body.SPVSN_ACC_ID);        // 监管账号
-                    taRsAccDtlTemp.setGerlAccId(tia900010002Temp.body.GERL_ACC_ID);          // 一般账号
-                    taRsAccDtlTemp.setStlType(EnuTaStlType.STL_TYPE02.getCode());             // 结算方式
-                    taRsAccDtlTemp.setCheckId("");                                             // 支票号码
-                    String reqsn = tiaTmp.getHeader().REQ_SN;
-                    if(reqsn==null){
-                        taRsAccDtlTemp.setReqSn(ToolUtil.getStrAppReqSn_Back());                // 银行记账流水
-                    }else
-                    if(reqsn.length() > 30) {
-                        reqsn = reqsn.substring(0, 30);
+                        taAccDetlService.insertRecord(taRsAccDtlTemp);
+                    } else { // 不存在交存的处理
+                        Toa900010002 toa900010002 = new Toa900010002();
+                        toa900010002.header.RETURN_CODE = "E002";
+                        toa900010002.header.RETURN_MSG = RfmMessage.getProperty("Payment.E002");
+                        jmsRfmOutTemplate.send(new ObjectMessageCreator(toa900010002, correlationID, propertyMap));
+                        return;
                     }
-                    taRsAccDtlTemp.setReqSn(reqsn);                                             // 银行记账流水
-                    taRsAccDtlTemp.setTxDate(ToolUtil.getStrLastUpdDate());                     // 交易日期
-                    taRsAccDtlTemp.setBranchId(tia900010002Temp.body.BANK_BRANCH_ID);        // 记账网点
-                    taRsAccDtlTemp.setUserId(tia900010002Temp.header.USER_ID);                // 记账人员
-                    taRsAccDtlTemp.setInitiator(EnuTaInitiatorId.INITIATOR.getCode());         // 发起方
-
-                    taRsAccDtlTemp.setDeletedFlag(EnuTaArchivedFlag.ARCHIVED_FLAG0.getCode());// 删除标志
-                    taRsAccDtlTemp.setActFlag(EnuActFlag.ACT_UNKNOWN.getCode());              // 交易状态
-                    taRsAccDtlTemp.setReturnCode(EnuTaTxnRtnCode.TXN_PROCESSED.getCode());
-                    taAccDetlService.insertRecord(taRsAccDtlTemp);
                 }
                 sendAndRecvSBSAndFDC(taRsAccDtlTemp,correlationID,propertyMap);
             }
