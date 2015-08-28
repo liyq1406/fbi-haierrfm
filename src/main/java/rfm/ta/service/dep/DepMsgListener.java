@@ -4,27 +4,21 @@ import common.utils.ToolUtil;
 import org.apache.commons.beanutils.BeanUtils;
 import org.fbi.dep.model.base.TIA;
 import org.fbi.dep.model.base.TOA;
-import org.fbi.dep.model.base.TOABody;
-import org.fbi.dep.model.base.TOAHeader;
 import org.fbi.dep.model.txn.Tia900010002;
 import org.fbi.dep.model.txn.Tia9902001;
 import org.fbi.dep.model.txn.Toa900010002;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
-import platform.auth.MD5Helper;
 import platform.common.utils.MessageUtil;
 import pub.platform.advance.utils.RfmMessage;
-import pub.platform.system.manage.dao.PtOperBean;
 import rfm.ta.common.enums.*;
 import rfm.ta.repository.model.TaRsAccDtl;
 import rfm.ta.repository.model.TaTxnFdc;
 import rfm.ta.service.biz.acc.TaAccDetlService;
 
-import javax.faces.bean.ManagedProperty;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
@@ -72,20 +66,21 @@ public class DepMsgListener implements MessageListener {
                   09	发起方	        1	1_监管银行*/
                 Tia9902001 tia9902001=(Tia9902001)tiaTmp;
                 tia9902001.header.CHANNEL_ID= ToolUtil.DEP_CHANNEL_ID_RFM;
-                tia9902001.body.SPVSN_BANK_ID= EnuTaBankId.BANK_HAIER.getCode();        // 02   监管银行代码   2
+                tia9902001.body.SPVSN_BANK_ID= EnuTaBankId.BANK_HAIER.getCode(); // 02   监管银行代码   2
                 tia9902001.body.CITY_ID= EnuTaCityId.CITY_TAIAN.getCode();        // 03   城市代码       6
-                tia9902001.body.TX_DATE=ToolUtil.getStrLastUpdDate();              // 06   验证日期       10  送系统日期即可
-                tia9902001.body.INITIATOR=EnuTaInitiatorId.INITIATOR.getCode();  // 09   发起方         1   1_监管银行
+                tia9902001.body.TX_DATE=ToolUtil.getStrLastUpdDate();               // 06   验证日期       10  送系统日期即可
+                tia9902001.body.INITIATOR=EnuTaInitiatorId.INITIATOR.getCode();   // 09   发起方         1   1_监管银行
                 toaFdc=taFdcService.sendAndRecvRealTimeTxn9902001(tia9902001);
                 jmsRfmOutTemplate.send(new ObjectMessageCreator(toaFdc, correlationID, propertyMap));
-            }else{// 记账
+            }else if(EnuTaFdcTxCode.TRADE_2002.getCode().equals(txnCode)){// 记账
                 TaRsAccDtl taRsAccDtlTemp = new TaRsAccDtl();
+                Tia900010002 tia900010002Temp =(Tia900010002)tiaTmp;
 
                 // 验证重复记账
-                TaRsAccDtl taRsAccDtl = new TaRsAccDtl();
-                taRsAccDtl.setBizId(tiaTmp.getHeader().BIZ_ID);
-                taRsAccDtl.setTxCode(EnuTaFdcTxCode.TRADE_2002.getCode());
-                List<TaRsAccDtl> taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtl);
+                TaRsAccDtl taRsAccDtlTempQry = new TaRsAccDtl();
+                taRsAccDtlTempQry.setBizId(tia900010002Temp.header.BIZ_ID);            // 业务编号
+                taRsAccDtlTempQry.setTxCode(tia900010002Temp.header.TX_CODE);          // 交易号
+                List<TaRsAccDtl> taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtlTempQry);
                 if(taRsAccDtlList.size() == 1){
                     String actFlag = taRsAccDtlList.get(0).getActFlag();
                     if(actFlag.equals(EnuActFlag.ACT_SUCCESS.getCode())) {
@@ -94,30 +89,90 @@ public class DepMsgListener implements MessageListener {
                         toa900010002.header.RETURN_MSG = RfmMessage.getProperty("Payment.E001");
                         jmsRfmOutTemplate.send(new ObjectMessageCreator(toa900010002, correlationID, propertyMap));
                         return;
+                    }else{
+                        taRsAccDtlTemp=taRsAccDtlList.get(0);
                     }
                 } else {
-                    Tia900010002 tia900010002Temp =(Tia900010002)tiaTmp;
-                    taRsAccDtlTemp.setTxCode(tia900010002Temp.header.TX_CODE);
-                    taRsAccDtlTemp.setSpvsnAccId(tia900010002Temp.body.SPVSN_ACC_ID);   // 付款账号
-                    taRsAccDtlTemp.setGerlAccId(tia900010002Temp.body.GERL_ACC_ID);   // 收款账号
-                    taRsAccDtlTemp.setTxAmt(tia900010002Temp.body.TX_AMT);   // 交易金额
+                    taRsAccDtlTemp.setTxCode(tia900010002Temp.header.TX_CODE);                // 交易代码
+                    taRsAccDtlTemp.setSpvsnBankId(EnuTaBankId.BANK_HAIER.getCode());          // 监管银行
+                    taRsAccDtlTemp.setCityId(EnuTaCityId.CITY_TAIAN.getCode());               // 城市代码
+
+                    taRsAccDtlTemp.setTxAmt(tia900010002Temp.body.TX_AMT);                    // 交易金额
+                    taRsAccDtlTemp.setSpvsnAccId(tia900010002Temp.body.SPVSN_ACC_ID);        // 监管账号
+                    taRsAccDtlTemp.setGerlAccId(tia900010002Temp.body.GERL_ACC_ID);          // 一般账号
+                    taRsAccDtlTemp.setStlType(EnuTaStlType.STL_TYPE02.getCode());             // 结算方式
+                    taRsAccDtlTemp.setCheckId("");                                             // 支票号码
                     String reqsn = tiaTmp.getHeader().REQ_SN;
+                    if(reqsn==null){
+                        taRsAccDtlTemp.setReqSn(ToolUtil.getStrAppReqSn_Back());                // 银行记账流水
+                    }else
                     if(reqsn.length() > 30) {
                         reqsn = reqsn.substring(0, 30);
                     }
-                    taRsAccDtlTemp.setReqSn(reqsn); // 外围系统流水
-                    taRsAccDtlTemp.setTxDate(ToolUtil.getStrLastUpdDate());    // 交易日期
-                    taRsAccDtlTemp.setUserId(tia900010002Temp.header.USER_ID);// 柜员号
+                    taRsAccDtlTemp.setReqSn(reqsn);                                             // 银行记账流水
+                    taRsAccDtlTemp.setTxDate(ToolUtil.getStrLastUpdDate());                     // 交易日期
+                    taRsAccDtlTemp.setBranchId(tia900010002Temp.body.BANK_BRANCH_ID);        // 记账网点
+                    taRsAccDtlTemp.setUserId(tia900010002Temp.header.USER_ID);                // 记账人员
+                    taRsAccDtlTemp.setInitiator(EnuTaInitiatorId.INITIATOR.getCode());         // 发起方
 
-                    taRsAccDtlTemp.setDeletedFlag(EnuTaArchivedFlag.ARCHIVED_FLAG0.getCode());
-                    taRsAccDtlTemp.setActFlag(EnuActFlag.ACT_UNKNOWN.getCode());
-                    taRsAccDtlTemp.setUserId(tia900010002Temp.header.USER_ID);
+                    taRsAccDtlTemp.setDeletedFlag(EnuTaArchivedFlag.ARCHIVED_FLAG0.getCode());// 删除标志
+                    taRsAccDtlTemp.setActFlag(EnuActFlag.ACT_UNKNOWN.getCode());              // 交易状态
+                    taRsAccDtlTemp.setReturnCode(EnuTaTxnRtnCode.TXN_PROCESSED.getCode());
+                    taAccDetlService.insertRecord(taRsAccDtlTemp);
+                }
+                sendAndRecvSBSAndFDC(taRsAccDtlTemp,correlationID,propertyMap);
+            }else if(EnuTaFdcTxCode.TRADE_2011.getCode().equals(txnCode)){// 冲正
+                TaRsAccDtl taRsAccDtlTemp = new TaRsAccDtl();
+                Tia900010002 tia900010002Temp =(Tia900010002)tiaTmp;
+
+                // 验证重复记账
+                TaRsAccDtl taRsAccDtlTempQry = new TaRsAccDtl();
+                taRsAccDtlTempQry.setBizId(tia900010002Temp.header.BIZ_ID);            // 业务编号
+                taRsAccDtlTempQry.setTxCode(tia900010002Temp.header.TX_CODE);          // 交易号
+                List<TaRsAccDtl> taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtlTempQry);
+                if(taRsAccDtlList.size() == 1){
+                    String actFlag = taRsAccDtlList.get(0).getActFlag();
+                    if(actFlag.equals(EnuActFlag.ACT_SUCCESS.getCode())) {
+                        Toa900010002 toa900010002 = new Toa900010002();
+                        toa900010002.header.RETURN_CODE = "E001";
+                        toa900010002.header.RETURN_MSG = RfmMessage.getProperty("Payment.E001");
+                        jmsRfmOutTemplate.send(new ObjectMessageCreator(toa900010002, correlationID, propertyMap));
+                        return;
+                    }else{
+                        taRsAccDtlTemp=taRsAccDtlList.get(0);
+                    }
+                } else {
+                    taRsAccDtlTemp.setTxCode(tia900010002Temp.header.TX_CODE);                // 交易代码
+                    taRsAccDtlTemp.setSpvsnBankId(EnuTaBankId.BANK_HAIER.getCode());          // 监管银行
+                    taRsAccDtlTemp.setCityId(EnuTaCityId.CITY_TAIAN.getCode());               // 城市代码
+
+                    taRsAccDtlTemp.setTxAmt(tia900010002Temp.body.TX_AMT);                    // 交易金额
+                    taRsAccDtlTemp.setSpvsnAccId(tia900010002Temp.body.SPVSN_ACC_ID);        // 监管账号
+                    taRsAccDtlTemp.setGerlAccId(tia900010002Temp.body.GERL_ACC_ID);          // 一般账号
+                    taRsAccDtlTemp.setStlType(EnuTaStlType.STL_TYPE02.getCode());             // 结算方式
+                    taRsAccDtlTemp.setCheckId("");                                             // 支票号码
+                    String reqsn = tiaTmp.getHeader().REQ_SN;
+                    if(reqsn==null){
+                        taRsAccDtlTemp.setReqSn(ToolUtil.getStrAppReqSn_Back());                // 银行记账流水
+                    }else
+                    if(reqsn.length() > 30) {
+                        reqsn = reqsn.substring(0, 30);
+                    }
+                    taRsAccDtlTemp.setReqSn(reqsn);                                             // 银行记账流水
+                    taRsAccDtlTemp.setTxDate(ToolUtil.getStrLastUpdDate());                     // 交易日期
+                    taRsAccDtlTemp.setBranchId(tia900010002Temp.body.BANK_BRANCH_ID);        // 记账网点
+                    taRsAccDtlTemp.setUserId(tia900010002Temp.header.USER_ID);                // 记账人员
+                    taRsAccDtlTemp.setInitiator(EnuTaInitiatorId.INITIATOR.getCode());         // 发起方
+
+                    taRsAccDtlTemp.setDeletedFlag(EnuTaArchivedFlag.ARCHIVED_FLAG0.getCode());// 删除标志
+                    taRsAccDtlTemp.setActFlag(EnuActFlag.ACT_UNKNOWN.getCode());              // 交易状态
+                    taRsAccDtlTemp.setReturnCode(EnuTaTxnRtnCode.TXN_PROCESSED.getCode());
                     taAccDetlService.insertRecord(taRsAccDtlTemp);
                 }
                 sendAndRecvSBSAndFDC(taRsAccDtlTemp,correlationID,propertyMap);
             }
         } catch (Exception e) {
-            logger.error("[fip]消息处理异常!", e);
+            logger.error("[DEP]消息处理异常!", e);
         }
     }
 
@@ -136,10 +191,22 @@ public class DepMsgListener implements MessageListener {
                     BeanUtils.copyProperties(taTxnFdcTemp, taRsAccDtlPara);
                     if(taTxnFdcTemp.getTxCode().contains(EnuTaFdcTxCode.TRADE_2002.getCode())){
                         toaFdc=taFdcService.sendAndRecvRealTimeTxn9902002(taTxnFdcTemp);
-                        jmsRfmOutTemplate.send(new ObjectMessageCreator(toaFdc, correlationID, propertyMap));
+                        Toa900010002 toa900010002=new Toa900010002();
+                        toa900010002.header.RETURN_CODE=toaFdc.getHeader().RETURN_CODE;
+                        if(!EnuTaTxnRtnCode.TXN_PROCESSED.getCode().equals(toa900010002.header.RETURN_CODE)) {
+                            toa900010002.header.RETURN_MSG = toaFdc.getHeader().RETURN_MSG;
+                        }
+                        toa900010002.header.REQ_SN=toaFdc.getHeader().REQ_SN;
+                        jmsRfmOutTemplate.send(new ObjectMessageCreator(toa900010002, correlationID, propertyMap));
                     }else if(taTxnFdcTemp.getTxCode().contains(EnuTaFdcTxCode.TRADE_2011.getCode())){
                         toaFdc=taFdcService.sendAndRecvRealTimeTxn9902011(taTxnFdcTemp);
-                        jmsRfmOutTemplate.send(new ObjectMessageCreator(toaFdc, correlationID, propertyMap));
+                        Toa900010002 toa900010002=new Toa900010002();
+                        toa900010002.header.RETURN_CODE=toaFdc.getHeader().RETURN_CODE;
+                        if(!EnuTaTxnRtnCode.TXN_PROCESSED.getCode().equals(toa900010002.header.RETURN_CODE)) {
+                            toa900010002.header.RETURN_MSG = toaFdc.getHeader().RETURN_MSG;
+                        }
+                        toa900010002.header.REQ_SN=toaFdc.getHeader().REQ_SN;
+                        jmsRfmOutTemplate.send(new ObjectMessageCreator(toa900010002, correlationID, propertyMap));
                     }
                 } else { // SBS记账失败的处理
                     logger.error("返还异常:返回码（" + toaSbs.getHeader().RETURN_CODE + ");返回信息（" + toaSbs.getHeader().RETURN_MSG + ")");

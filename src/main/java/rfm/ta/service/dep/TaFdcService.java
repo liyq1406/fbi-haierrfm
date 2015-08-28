@@ -198,6 +198,7 @@ public class TaFdcService {
     public TOA sendAndRecvRealTimeTxn9902002(TaTxnFdc taTxnFdcPara) {
         try {
             Tia9902002 tia9902002Temp=new Tia9902002() ;
+            tia9902002Temp.header.CHANNEL_ID=ToolUtil.DEP_CHANNEL_ID_RFM;
             tia9902002Temp.header.TX_CODE=taTxnFdcPara.getTxCode();              // 01   交易代码       4   2002
             tia9902002Temp.body.SPVSN_BANK_ID = taTxnFdcPara.getSpvsnBankId();         // 02   监管银行代码   2
             tia9902002Temp.body.CITY_ID = taTxnFdcPara.getCityId();                // 03   城市代码       6
@@ -255,6 +256,7 @@ public class TaFdcService {
     public TOA sendAndRecvRealTimeTxn9902011(TaTxnFdc taTxnFdcPara) {
         try {
             Tia9902011 tia9902011Temp=new Tia9902011() ;
+            tia9902011Temp.header.CHANNEL_ID=ToolUtil.DEP_CHANNEL_ID_RFM;
             tia9902011Temp.header.TX_CODE = taTxnFdcPara.getTxCode();        // 01   交易代码       4   2011
             tia9902011Temp.body.SPVSN_BANK_ID = taTxnFdcPara.getSpvsnBankId();   // 02   监管银行代码   2
             tia9902011Temp.body.CITY_ID = taTxnFdcPara.getCityId();          // 03   城市代码       6
@@ -309,6 +311,7 @@ public class TaFdcService {
     public void sendAndRecvRealTimeTxn9902101(TaTxnFdc taTxnFdcPara) {
         try {
             taTxnFdcPara.setSpvsnBankId(EnuTaBankId.BANK_HAIER.getCode());
+            taTxnFdcPara.setPassword(MD5Helper.getMD5String(taTxnFdcPara.getPassword()));
             taTxnFdcPara.setCityId(EnuTaCityId.CITY_TAIAN.getCode());
             taTxnFdcPara.setReqSn(ToolUtil.getStrAppReqSn_Back());
             taTxnFdcPara.setTxDate(ToolUtil.getStrLastUpdDate());

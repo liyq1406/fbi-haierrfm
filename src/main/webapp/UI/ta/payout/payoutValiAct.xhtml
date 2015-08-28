@@ -68,6 +68,11 @@
                                          required="true" requiredMessage="必须输入划拨申请编号！"
                                          value="#{taPayoutAction.taTxnFdcValiSend.bizId}">
                             </h:inputText>
+                            <h:outputLabel value="*【划拨密码】:" for="password"/>
+                            <h:inputText autocomplete="off" id="password"
+                                         required="true" requiredMessage="必须输入划拨密码！"
+                                         value="#{taPayoutAction.taTxnFdcValiSend.password}">
+                            </h:inputText>
                         </h:panelGrid>
                         <p:commandButton update="msgs,valiRecv" style="width: 80px"
                                          action="#{taPayoutAction.onBtnValiClick()}"

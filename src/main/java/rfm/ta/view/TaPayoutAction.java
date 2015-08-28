@@ -92,7 +92,6 @@ public class TaPayoutAction {
     public void onBtnValiClick() {
         // 发送验证信息
         taTxnFdcValiSend.setTxCode(EnuTaFdcTxCode.TRADE_2101.getCode());
-        taTxnFdcValiSend.setPassword(MD5Helper.getMD5String(ToolUtil.TAFDC_MD5_KEY));
         taFdcService.sendAndRecvRealTimeTxn9902101(taTxnFdcValiSend);
         /*验证后查询*/
         taTxnFdcValiSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcValiSend.getPkId());
