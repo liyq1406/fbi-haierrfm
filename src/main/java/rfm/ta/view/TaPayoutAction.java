@@ -38,7 +38,6 @@ import java.util.Map;
 @ViewScoped
 public class TaPayoutAction {
     private static final Logger logger = LoggerFactory.getLogger(TaPayoutAction.class);
-    public static String EXEC_TYPE = PropertyManager.getProperty("execType");
 
     @ManagedProperty(value = "#{taTxnFdcService}")
     private TaTxnFdcService taTxnFdcService;
@@ -52,6 +51,8 @@ public class TaPayoutAction {
     @ManagedProperty(value = "#{taSbsService}")
     private TaSbsService taSbsService;
 
+    private String isDebugExec;
+
     // 记账成功标志
     private List<SelectItem> actFlagList;
     private Map<String, String> actFlagMap;
@@ -64,8 +65,6 @@ public class TaPayoutAction {
     private TaTxnFdc taTxnFdcActSendAndRecv;
     private TaTxnFdc taTxnFdcCanclSend;
     private TaTxnFdc taTxnFdcCanclSendAndRecv;
-
-    private String strVisableByExecType;
 
     @PostConstruct
     public void init() {
@@ -81,11 +80,6 @@ public class TaPayoutAction {
         taTxnFdcActSendAndRecv=new TaTxnFdc();
         taTxnFdcCanclSend=new TaTxnFdc();
         taTxnFdcCanclSendAndRecv=new TaTxnFdc();
-        if(EnuExecType.EXEC_TYPE_DEBUG.getCode().equals(EXEC_TYPE)){
-            strVisableByExecType="true";
-        }else{
-            strVisableByExecType="false";
-        }
     }
 
     /*划拨验证用*/
@@ -358,15 +352,15 @@ public class TaPayoutAction {
         this.taTxnFdcCanclSendAndRecv = taTxnFdcCanclSendAndRecv;
     }
 
-    public String getStrVisableByExecType() {
-        return strVisableByExecType;
-    }
-
     public TaFdcService getTaFdcService() {
         return taFdcService;
     }
 
     public void setTaFdcService(TaFdcService taFdcService) {
         this.taFdcService = taFdcService;
+    }
+
+    public String getIsDebugExec() {
+        return isDebugExec=PropertyManager.getProperty("execType");
     }
 }

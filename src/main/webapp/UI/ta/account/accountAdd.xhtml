@@ -93,6 +93,8 @@
                              dynamic="true" selectionMode="single"
                              value="#{taAccAction.taRsAccList}" var="record"
                              rowKey="#{record.pkId}"
+                             resizableColumns="true"
+                             scrollable="true"
                              paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                              paginator="true" rows="15" paginatorPosition="bottom"
                              rowsPerPageTemplate="100,50,30,15,5"

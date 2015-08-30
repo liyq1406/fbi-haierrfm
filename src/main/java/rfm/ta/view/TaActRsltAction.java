@@ -2,6 +2,7 @@ package rfm.ta.view;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pub.platform.advance.utils.PropertyManager;
 import rfm.ta.common.enums.EnuActRslt;
 import rfm.ta.common.enums.EnuTaFdcTxCode;
 import rfm.ta.common.enums.EnuTaTxnRtnCode;
@@ -35,6 +36,8 @@ public class TaActRsltAction {
     private TaTxnFdc taTxnFdcValiSendAndRecv;
     private EnuActRslt enuActRslt = EnuActRslt.SUCCESS;
     private EnuTaTxnRtnCode enuTaTxnRtnCode = EnuTaTxnRtnCode.TXN_PROCESSED;
+
+    private String isDebugExec;
 
     @PostConstruct
     public void init() {
@@ -97,5 +100,9 @@ public class TaActRsltAction {
 
     public void setTaFdcService(TaFdcService taFdcService) {
         this.taFdcService = taFdcService;
+    }
+
+    public String getIsDebugExec() {
+        return isDebugExec= PropertyManager.getProperty("execType");
     }
 }

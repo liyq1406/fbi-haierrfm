@@ -37,7 +37,6 @@ import java.util.Map;
 @ViewScoped
 public class TaRefundAction {
     private static final Logger logger = LoggerFactory.getLogger(TaRefundAction.class);
-    public static String EXEC_TYPE = PropertyManager.getProperty("execType");
     @ManagedProperty(value = "#{taTxnFdcService}")
     private TaTxnFdcService taTxnFdcService;
 
@@ -63,7 +62,7 @@ public class TaRefundAction {
     private TaTxnFdc taTxnFdcCanclSend;
     private TaTxnFdc taTxnFdcCanclSendAndRecv;
 
-    private String strVisableByExecType;
+    private String isDebugExec;
 
     @PostConstruct
     public void init() {
@@ -79,11 +78,6 @@ public class TaRefundAction {
         taTxnFdcActSendAndRecv=new TaTxnFdc();
         taTxnFdcCanclSend=new TaTxnFdc();
         taTxnFdcCanclSendAndRecv=new TaTxnFdc();
-        if(EnuExecType.EXEC_TYPE_DEBUG.getCode().equals(EXEC_TYPE)){
-            strVisableByExecType="true";
-        }else{
-            strVisableByExecType="false";
-        }
     }
 
     /*返还验证用*/
@@ -359,8 +353,8 @@ public class TaRefundAction {
         this.taTxnFdcCanclSendAndRecv = taTxnFdcCanclSendAndRecv;
     }
 
-    public String getStrVisableByExecType() {
-        return strVisableByExecType;
+    public String getIsDebugExec() {
+        return isDebugExec=PropertyManager.getProperty("execType");
     }
 
     public TaFdcService getTaFdcService() {

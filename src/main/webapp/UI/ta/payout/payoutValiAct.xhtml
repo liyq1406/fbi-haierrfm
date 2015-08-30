@@ -92,7 +92,7 @@
                     <h:panelGrid>
                         <h:panelGrid columns="6" cellspacing="3"
                                      columnClasses="col-label1,col-input1,col-label2,col-input2,col-label3,col-input3"
-                                rendered="#{taPayoutAction.strVisableByExecType}">
+                                rendered="#{taPayoutAction.isDebugExec}">
                             <h:outputLabel value="【交易代码】:" for="rtnTxCodeVali"/>
                             <h:inputText id="rtnTxCodeVali" readonly="true"
                                          style="background-color:gainsboro"
@@ -101,7 +101,7 @@
                             <h:outputLabel value="【监管银行代码】:" for="rtnBankIdVali"/>
                             <h:inputText id="rtnBankIdVali" readonly="true"
                                          style="background-color:gainsboro"
-                                         value="#{taPayoutAction.taTxnFdcValiSendAndRecv.bankId}">
+                                         value="#{taPayoutAction.taTxnFdcValiSendAndRecv.spvsnBankId}">
                             </h:inputText>
                             <h:outputLabel value="【城市代码】:" for="rtnCityId"/>
                             <h:inputText id="rtnCityId" readonly="true"
@@ -144,7 +144,7 @@
                                          value="#{taPayoutAction.taTxnFdcValiSendAndRecv.initiator}">
                             </h:inputText>
                         </h:panelGrid>
-                        <p:separator rendered="#{taPayoutAction.strVisableByExecType}"></p:separator>
+                        <p:separator rendered="#{taPayoutAction.isDebugExec}"></p:separator>
                         <h:panelGrid columns="6" cellspacing="3" style="width:100%"
                                      columnClasses="col-label1,col-input1,col-label2,col-input2,col-label3,col-input3">
                             <h:outputLabel value="【结果】:" for="rtnReturnCodeVali"/>
