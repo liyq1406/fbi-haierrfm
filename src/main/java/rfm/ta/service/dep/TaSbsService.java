@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import rfm.ta.common.enums.EnuTaFdcTxCode;
 import rfm.ta.common.enums.EnuTaSbsTxCode;
+import rfm.ta.common.enums.EnuTaTxnRtnCode;
 import rfm.ta.repository.model.TaRsAcc;
 import rfm.ta.repository.model.TaRsAccDtl;
 import rfm.ta.repository.model.TaTxnFdc;
@@ -139,7 +140,7 @@ public class TaSbsService {
             Toa900012602 toa900012602Temp = (Toa900012602) depMsgSendAndRecv.recvDepMessage(strMsgid);
 
             if (toa900012602Temp != null && toa900012602Temp.body != null) {
-                if ("0000".equals(toa900012602Temp.header.RETURN_CODE)) {
+                if (EnuTaTxnRtnCode.TXN_PROCESSED.getCode().equals(toa900012602Temp.header.RETURN_CODE)) {
                     // 填充首次数据
                     taRsAccDtlListTemp.addAll(fromBodyDetailsToTaRsAccDtls(toa900012602Temp.body.DETAILS));
                     String totcnt = toa900012602Temp.body.TOTCNT;
@@ -155,7 +156,7 @@ public class TaSbsService {
                             tia900012602Temp.body.BEGNUM= j * Integer.parseInt(curcnt) + 1 + "";
                             strMsgid= depMsgSendAndRecv.sendDepMessage(tia900012602Temp);
                             toa900012602Temp = (Toa900012602) depMsgSendAndRecv.recvDepMessage(strMsgid);
-                            if ("0000".equals(toa900012602Temp.header.RETURN_CODE)) {
+                            if (EnuTaTxnRtnCode.TXN_PROCESSED.getCode().equals(toa900012602Temp.header.RETURN_CODE)) {
                                 taRsAccDtlListTemp.addAll(fromBodyDetailsToTaRsAccDtls(toa900012602Temp.body.DETAILS));
                                 curcnt = toa900012602Temp.body.CURCNT;
                             }

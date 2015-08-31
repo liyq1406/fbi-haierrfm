@@ -99,7 +99,7 @@ public class TaPayoutAction {
     public void onBtnActClick() {
         try {
             if(taTxnFdcValiSendAndRecv.getReturnCode() == null ||
-                    !taTxnFdcValiSendAndRecv.getReturnCode().equals("0000") ||
+                    !EnuTaTxnRtnCode.TXN_PROCESSED.getCode().equals(taTxnFdcValiSendAndRecv.getReturnCode())||
                     StringUtils.isEmpty(taTxnFdcValiSendAndRecv.getSpvsnAccId())) {
                 MessageUtil.addError(RfmMessage.getProperty("TransferVerification.E004"));
                 return;
@@ -125,6 +125,8 @@ public class TaPayoutAction {
             taRsAccDtlTemp.setTxCode(EnuTaFdcTxCode.TRADE_2102.getCode());
             taRsAccDtlTemp.setDeletedFlag(EnuTaArchivedFlag.ARCHIVED_FLAG0.getCode());
             taRsAccDtlTemp.setActFlag(EnuActFlag.ACT_UNKNOWN.getCode());
+            taRsAccDtlTemp.setStlType(EnuTaStlType.STL_TYPE02.getCode());             // 结算方式
+            taRsAccDtlTemp.setCheckId("");                                             // 支票号码
 
             taRsAccDtlTemp.setReqSn(ToolUtil.getStrAppReqSn_Back());
             taRsAccDtlTemp.setTxDate(ToolUtil.getStrLastUpdDate());
@@ -150,7 +152,7 @@ public class TaPayoutAction {
             // 往SBS发送记账信息
             TOA toaSbs=taSbsService.sendAndRecvRealTimeTxn900010002(taRsAccDtlPara);
             if(toaSbs !=null) {
-                if(("0000").equals(toaSbs.getHeader().RETURN_CODE)){ // SBS记账成功的处理
+                if((EnuTaTxnRtnCode.TXN_PROCESSED.getCode()).equals(toaSbs.getHeader().RETURN_CODE)){ // SBS记账成功的处理
                     taRsAccDtlPara.setActFlag(EnuActFlag.ACT_SUCCESS.getCode());
                     taAccDetlService.updateRecord(taRsAccDtlPara);
 

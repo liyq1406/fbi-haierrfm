@@ -212,8 +212,8 @@
                     </h:panelGrid>
                 </p:panel>
                 <p:panel id="actRecv" header="【返还记账】返回">
-                    <h:panelGrid columns="4" cellspacing="3"
-                                 columnClasses="col-label1,col-input1,col-label2,col-input2">
+                    <h:panelGrid columns="6" cellspacing="3"
+                                 columnClasses="col-label1,col-input1,col-label2,col-input2,col-label3,col-input3">
                         <h:outputLabel value="【结果】:" for="rtnReturnCodeAct"/>
                         <h:inputText id="rtnReturnCodeAct" readonly="true"
                                      style="background-color:gainsboro"
@@ -223,6 +223,11 @@
                         <h:inputText id="rtnFdcSnAct" readonly="true"
                                      style="background-color:gainsboro"
                                      value="#{taRefundAction.taTxnFdcActSendAndRecv.fdcSn}">
+                        </h:inputText>
+                        <h:outputLabel value="【返回描述】:" for="returnMsgAct"/>
+                        <h:inputText id="returnMsgAct" readonly="true"
+                                     style="background-color:gainsboro"
+                                     value="#{taRefundAction.taTxnFdcActSendAndRecv.returnMsg}">
                         </h:inputText>
                     </h:panelGrid>
                 </p:panel>

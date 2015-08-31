@@ -9,21 +9,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import platform.auth.MD5Helper;
 import rfm.ta.common.enums.*;
 import rfm.ta.repository.model.TaRsAcc;
 import rfm.ta.repository.model.TaTxnFdc;
-import rfm.ta.repository.model.TaTxnSbs;
 import rfm.ta.service.biz.acc.TaAccService;
 import rfm.ta.service.biz.his.TaTxnFdcService;
-import rfm.ta.service.biz.his.TaTxnSbsService;
 
 /**发送SBS记账交易
  * Created by Thinkpad on 2015/8/18.
  */
 @Service
-public class TaFdcService {
-    private static final Logger logger = LoggerFactory.getLogger(TaFdcService.class);
+public class TaFdcNotRecvRtnService {
+    private static final Logger logger = LoggerFactory.getLogger(TaFdcNotRecvRtnService.class);
 
     @Autowired
     private TaAccService taAccService;

@@ -1,11 +1,14 @@
 package rfm.ta.view.acc;
 
+import org.fbi.dep.model.base.TOA;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import platform.common.utils.MessageUtil;
 import platform.service.PtenudetailService;
 import pub.platform.advance.utils.RfmMessage;
 import rfm.qd.service.RsSysctlService;
+import rfm.ta.common.enums.EnuActRslt;
+import rfm.ta.common.enums.EnuTaTxnRtnCode;
 import rfm.ta.repository.model.TaRsAcc;
 import rfm.ta.service.biz.acc.TaAccService;
 import rfm.ta.service.dep.TaFdcService;
@@ -143,9 +146,18 @@ public class TaAccAction {
     /*启用*/
     public void onClick_Enable(TaRsAcc taRsAccPara){
         try {
-            taFdcService.sendAndRecvRealTimeTxn9901001(taRsAccPara);
-            MessageUtil.addInfo(RfmMessage.getProperty("AccountOpening.I001"));
-            confirmAccountNo = "";
+            TOA toaTa = taFdcService.sendAndRecvRealTimeTxn9901001(taRsAccPara);
+            if(toaTa !=null) {
+                if ((EnuTaTxnRtnCode.TXN_PROCESSED.getCode()).equals(toaTa.getHeader().RETURN_CODE)) { // SBS记账成功的处理
+                    MessageUtil.addInfo(RfmMessage.getProperty("AccountOpening.I001"));
+                    confirmAccountNo = "";
+                    return;
+                }else{
+                    MessageUtil.addError(toaTa.getHeader().RETURN_MSG);
+                }
+            }else{
+                MessageUtil.addInfo("启用监管失败!");
+            }
         } catch (Exception e) {
             logger.error("启用监管失败，", e);
             MessageUtil.addError(taRsAccPara.getReturnMsg()+e.getMessage());
@@ -154,9 +166,17 @@ public class TaAccAction {
     /*撤销*/
     public void onClick_Unable(TaRsAcc taRsAccPara){
         try {
-            taFdcService.sendAndRecvRealTimeTxn9901002(taRsAccPara);
-            MessageUtil.addInfo(RfmMessage.getProperty("AccountCancel.I001"));
-            confirmAccountNo = "";
+            TOA toaTa = taFdcService.sendAndRecvRealTimeTxn9901002(taRsAccPara);
+            if(toaTa !=null) {
+                if ((EnuTaTxnRtnCode.TXN_PROCESSED.getCode()).equals(toaTa.getHeader().RETURN_CODE)) { // SBS记账成功的处理
+                    MessageUtil.addInfo(RfmMessage.getProperty("AccountCancel.I001"));
+                    return;
+                }else{
+                    MessageUtil.addError(toaTa.getHeader().RETURN_MSG);
+                }
+            }else{
+                MessageUtil.addInfo("解除监管失败!");
+            }
         } catch (Exception e) {
             logger.error("解除监管失败，", e);
             MessageUtil.addError(taRsAccPara.getReturnMsg()+e.getMessage());

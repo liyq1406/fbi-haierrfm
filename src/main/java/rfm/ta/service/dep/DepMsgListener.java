@@ -182,7 +182,7 @@ public class DepMsgListener implements MessageListener {
             // 往SBS发送记账信息            ;
             TOA toaSbs=taSbsService.sendAndRecvRealTimeTxn900010002(taRsAccDtlPara);
             if(toaSbs!=null) {
-                if(("0000").equals(toaSbs.getHeader().RETURN_CODE)){ // SBS记账成功的处理
+                if((EnuTaTxnRtnCode.TXN_PROCESSED.getCode()).equals(toaSbs.getHeader().RETURN_CODE)){ // SBS记账成功的处理
                     taRsAccDtlPara.setActFlag(EnuActFlag.ACT_SUCCESS.getCode());
                     taAccDetlService.updateRecord(taRsAccDtlPara);
                     TOA toaFdc;

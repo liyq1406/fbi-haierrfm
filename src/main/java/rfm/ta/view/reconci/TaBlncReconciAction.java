@@ -9,6 +9,7 @@ import platform.common.utils.MessageUtil;
 import pub.platform.advance.utils.RfmMessage;
 import rfm.ta.common.enums.EnuTaBankId;
 import rfm.ta.common.enums.EnuTaCityId;
+import rfm.ta.common.enums.EnuTaTxnRtnCode;
 import rfm.ta.repository.model.TaRsAcc;
 import rfm.ta.service.biz.acc.TaAccService;
 import rfm.ta.service.dep.TaSbsService;
@@ -64,7 +65,7 @@ public class TaBlncReconciAction {
             if(toaSbs !=null && toaSbs.size() > 0) {
                 // 遍历是否存在查询失败
                 for(Toa900012701 toa900012701:toaSbs) {
-                    if (!"0000".equals(toa900012701.header.RETURN_CODE)) {
+                    if (!EnuTaTxnRtnCode.TXN_PROCESSED.getCode().equals(toa900012701.header.RETURN_CODE)) {
                         MessageUtil.addError(toa900012701.header.RETURN_MSG);
                         return;
                     }
