@@ -123,8 +123,8 @@ public class DepMsgListener implements MessageListener {
                 }
                 sendAndRecvSBSAndFDC(taRsAccDtlTemp,correlationID,propertyMap);
             }else if(EnuTaFdcTxCode.TRADE_2011.getCode().equals(txnCode)){// 冲正
-                TaRsAccDtl taRsAccDtlTemp = new TaRsAccDtl();
                 Tia900010002 tia900010002Temp =(Tia900010002)tiaTmp;
+                TaRsAccDtl taRsAccDtlTemp = new TaRsAccDtl();
 
                 // 验证重复记账
                 TaRsAccDtl taRsAccDtlTempQry = new TaRsAccDtl();
