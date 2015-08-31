@@ -103,6 +103,6 @@ public class TaActRsltAction {
     }
 
     public String getIsDebugExec() {
-        return isDebugExec= PropertyManager.getProperty("execType");
+        return isDebugExec= PropertyManager.getProperty("isDebugExec");
     }
 }

@@ -86,6 +86,7 @@ public class TaPayoutAction {
     public void onBtnValiClick() {
         // 发送验证信息
         taTxnFdcValiSend.setTxCode(EnuTaFdcTxCode.TRADE_2101.getCode());
+        taTxnFdcValiSend.setPassword(MD5Helper.getMD5String(taTxnFdcValiSend.getPassword()));
         taFdcService.sendAndRecvRealTimeTxn9902101(taTxnFdcValiSend);
         /*验证后查询*/
         taTxnFdcValiSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcValiSend.getPkId());
@@ -124,7 +125,7 @@ public class TaPayoutAction {
             taRsAccDtlTemp.setTxCode(EnuTaFdcTxCode.TRADE_2102.getCode());
             taRsAccDtlTemp.setDeletedFlag(EnuTaArchivedFlag.ARCHIVED_FLAG0.getCode());
             taRsAccDtlTemp.setActFlag(EnuActFlag.ACT_UNKNOWN.getCode());
-            taRsAccDtlTemp.setPassword(MD5Helper.getMD5String(ToolUtil.TAFDC_MD5_KEY));
+
             taRsAccDtlTemp.setReqSn(ToolUtil.getStrAppReqSn_Back());
             taRsAccDtlTemp.setTxDate(ToolUtil.getStrLastUpdDate());
             PtOperBean ptOperBeanTemp=ToolUtil.getOperatorManager().getOperator();
@@ -361,6 +362,6 @@ public class TaPayoutAction {
     }
 
     public String getIsDebugExec() {
-        return isDebugExec=PropertyManager.getProperty("execType");
+        return isDebugExec=PropertyManager.getProperty("isDebugExec");
     }
 }

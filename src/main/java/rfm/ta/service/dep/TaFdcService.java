@@ -311,13 +311,11 @@ public class TaFdcService {
     public void sendAndRecvRealTimeTxn9902101(TaTxnFdc taTxnFdcPara) {
         try {
             taTxnFdcPara.setSpvsnBankId(EnuTaBankId.BANK_HAIER.getCode());
-            taTxnFdcPara.setPassword(MD5Helper.getMD5String(taTxnFdcPara.getPassword()));
             taTxnFdcPara.setCityId(EnuTaCityId.CITY_TAIAN.getCode());
             taTxnFdcPara.setReqSn(ToolUtil.getStrAppReqSn_Back());
             taTxnFdcPara.setTxDate(ToolUtil.getStrLastUpdDate());
             taTxnFdcPara.setBranchId(ToolUtil.getOperatorManager().getOperator().getDeptid());
             taTxnFdcPara.setUserId(ToolUtil.getOperatorManager().getOperatorId());
-            taTxnFdcPara.setInitiator(EnuTaInitiatorId.INITIATOR.getCode());
             taTxnFdcPara.setInitiator(EnuTaInitiatorId.INITIATOR.getCode());
 
             Tia9902101 tia9902101Temp=new Tia9902101() ;
@@ -392,7 +390,6 @@ public class TaFdcService {
         try {
             taTxnFdcPara.setSpvsnBankId(EnuTaBankId.BANK_HAIER.getCode());
             taTxnFdcPara.setCityId(EnuTaCityId.CITY_TAIAN.getCode());
-            taTxnFdcPara.setPassword(MD5Helper.getMD5String(ToolUtil.TAFDC_MD5_KEY));
             taTxnFdcPara.setReqSn(ToolUtil.getStrAppReqSn_Back());
             taTxnFdcPara.setTxDate(ToolUtil.getStrLastUpdDate());
             taTxnFdcPara.setBranchId(ToolUtil.getOperatorManager().getOperator().getDeptid());
@@ -522,7 +519,6 @@ public class TaFdcService {
         try {
             taTxnFdcPara.setSpvsnBankId(EnuTaBankId.BANK_HAIER.getCode());
             taTxnFdcPara.setCityId(EnuTaCityId.CITY_TAIAN.getCode());
-            taTxnFdcPara.setPassword(MD5Helper.getMD5String(ToolUtil.TAFDC_MD5_KEY));
             taTxnFdcPara.setReqSn(ToolUtil.getStrAppReqSn_Back());
             taTxnFdcPara.setTxDate(ToolUtil.getStrLastUpdDate());
             taTxnFdcPara.setBranchId(ToolUtil.getOperatorManager().getOperator().getDeptid());
@@ -723,7 +719,6 @@ public class TaFdcService {
         try {
             taTxnFdcPara.setSpvsnBankId(EnuTaBankId.BANK_HAIER.getCode());
             taTxnFdcPara.setCityId(EnuTaCityId.CITY_TAIAN.getCode());
-            taTxnFdcPara.setPassword(MD5Helper.getMD5String(ToolUtil.TAFDC_MD5_KEY));
             taTxnFdcPara.setReqSn(ToolUtil.getStrAppReqSn_Back());
             taTxnFdcPara.setTxDate(ToolUtil.getStrLastUpdDate());
             taTxnFdcPara.setBranchId(ToolUtil.getOperatorManager().getOperator().getDeptid());

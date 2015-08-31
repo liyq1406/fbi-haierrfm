@@ -24,7 +24,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ToolUtil {
-    public static String TAFDC_MD5_KEY = "Haier_TAFDC_Payout";
     public static String DEP_CHANNEL_ID_RFM = "990";
     public static String DEP_CHANNEL_ID_SBS = "900";
     public static String DEP_APPID = PropertyManager.getProperty("app_id");
