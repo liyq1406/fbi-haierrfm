@@ -40,14 +40,14 @@
 
     <ui:define name="content">
         <div style="margin:5px;" id="top">
-            <p:growl id="msgs" showDetail="true"/>
+            <p:growl id="msgs" showDetail="false"/>
             <h:form id="actqueryForm">
                 <p:panel id="input" header="【解除监管】发送">
                     <h:panelGrid columns="2" cellspacing="3" style="width:100%">
-                        <h:panelGrid columns="6" cellspacing="3"
+                        <h:panelGrid columns="4" cellspacing="3"
                                      columnClasses="col-95,col-5,col-95,col-5">
-                            <h:outputLabel value="*【终止证明编号】:" for="originId"/>
-                            <h:inputText id="originId" required="true"
+                            <h:outputLabel value="*【申请编号】:" for="originId"/>
+                            <h:inputText id="originId" required="true" maxlength="14"
                                          requiredMessage="必须输入申请编号！"
                                          value="#{taAccAction.taRsAcc.bizId}"/>
 
@@ -55,10 +55,8 @@
                             <h:inputText autocomplete="off" id="accId"
                                          value="#{taAccAction.taRsAcc.spvsnAccId}">
                             </h:inputText>
-                            <h:outputLabel value="*【名称】:" for="accName"/>
-                            <h:inputText id="accName" value="#{taAccAction.taRsAcc.spvsnAccName}"/>
                         </h:panelGrid>
-                        <h:panelGrid >
+                        <h:panelGrid columns="2" >
                             <p:commandButton id="saveBtn" ajax="true" value="解除监管"
                                              action="#{taAccAction.onClick_Unable()}"
                                              style="margin-left:15px;width:120px"
@@ -78,8 +76,8 @@
                     </f:facet>
                 </p:ajaxStatus>
                 <p:panel id="accRecv"  header="【解除监管】返回">
-                    <h:panelGrid columns="6" cellspacing="3"
-                                 columnClasses="col-label1,col-input1,col-label2,col-input2,col-label3,col-input3">
+                    <h:panelGrid columns="4" cellspacing="3"
+                                 columnClasses="col-label1,col-input1,col-label2,col-input2">
                         <h:outputLabel value="【结果】:" for="rtnReturnCodeAct"/>
                         <h:inputText id="rtnReturnCodeAct" readonly="true"
                                      style="background-color:gainsboro"

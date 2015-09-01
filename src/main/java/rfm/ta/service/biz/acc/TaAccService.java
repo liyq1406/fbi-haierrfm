@@ -56,6 +56,21 @@ public class TaAccService {
     }
 
     /**
+     * 查询
+     * @param taRsAccPara
+     * @return
+     */
+    public List<TaRsAcc> selectRecords(TaRsAcc taRsAccPara) {
+        TaRsAccExample example = new TaRsAccExample();
+        TaRsAccExample.Criteria rsActCrit = example.createCriteria();
+        rsActCrit.andDeletedFlagEqualTo("0");
+        if (ToolUtil.getStrIgnoreNull(taRsAccPara.getSpvsnAccId()).trim().length()!=0) {
+            rsActCrit.andSpvsnAccIdEqualTo(taRsAccPara.getSpvsnAccId().trim());
+        }
+        return accountMapper.selectByExample(example);
+    }
+
+    /**
      * 是否并发更新冲突
      *
      * @param

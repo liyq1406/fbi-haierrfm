@@ -65,14 +65,15 @@
                                      columnClasses="col-label1,col-input1">
                             <h:outputLabel value="*【划拨申请编号】:" for="bizId"/>
                             <h:inputText autocomplete="off" id="bizId"
+                                         maxlength="14"
                                          required="true" requiredMessage="必须输入划拨申请编号！"
                                          value="#{taPayoutAction.taTxnFdcValiSend.bizId}">
                             </h:inputText>
                             <h:outputLabel value="*【划拨密码】:" for="password"/>
-                            <h:inputText autocomplete="off" id="password"
+                            <p:password autocomplete="off" id="password"
                                          required="true" requiredMessage="必须输入划拨密码！"
                                          value="#{taPayoutAction.taTxnFdcValiSend.password}">
-                            </h:inputText>
+                            </p:password>
                         </h:panelGrid>
                         <p:commandButton update="msgs,valiRecv" style="width: 80px"
                                          action="#{taPayoutAction.onBtnValiClick()}"

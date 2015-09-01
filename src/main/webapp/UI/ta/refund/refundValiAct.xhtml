@@ -65,14 +65,15 @@
                                      columnClasses="col-label1,col-input1">
                             <h:outputLabel value="*【返还申请编号】:" for="bizId"/>
                             <h:inputText autocomplete="off" id="bizId"
+                                         maxlength="14"
                                          required="true" requiredMessage="必须输入返还申请编号！"
                                          value="#{taRefundAction.taTxnFdcValiSend.bizId}">
                             </h:inputText>
                             <h:outputLabel value="*【返还密码】:" for="password"/>
-                            <h:inputText autocomplete="off" id="password"
+                            <p:password autocomplete="off" id="password"
                                          required="true" requiredMessage="必须输入划拨密码！"
                                          value="#{taRefundAction.taTxnFdcValiSend.password}">
-                            </h:inputText>
+                            </p:password>
                         </h:panelGrid>
                         <p:commandButton update="msgs,valiRecv" style="width: 80px"
                                          action="#{taRefundAction.onBtnValiClick()}"
