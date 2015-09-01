@@ -44,27 +44,14 @@ public class TaAccAction {
     private TaFdcService taFdcService;
 
     private List<TaRsAcc> taRsAccList;
-    private String confirmAccountNo;
 
     private TaRsAcc taRsAcc;
+    private TaRsAcc taRsAccRecv;
 
     @PostConstruct
     public void init() {
-        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-        String strActionTypeTemp = params.get("actionType");
-        String strPkidTemp = params.get("pkid");
-        // 一下这样写对于初始化后是否即可查询没有用，因为菜单调用传不过参数来，如果平台换了，是可以起作用的。
-        if (strActionTypeTemp != null) {
-            taRsAcc = taAccService.qryRecord(strPkidTemp);
-            if("Qry".equals(strActionTypeTemp)) {
-
-            }else{
-                taRsAccList = taAccService.qryAllRecords();
-            }
-        }else{
-            taRsAcc=new TaRsAcc();
-            //taRsAccList = taAccService.qryAllRecords();
-        }
+        taRsAcc=new TaRsAcc();
+        taRsAccRecv=new TaRsAcc();
     }
 
     /*画面查询用*/
@@ -75,83 +62,25 @@ public class TaAccAction {
                 taRsAcc.getSpvsnAccName());
     }
 
-    public String reset() {
-        this.taRsAcc = new TaRsAcc();
-        if (!taRsAccList.isEmpty()) {
-            taRsAccList.clear();
-        }
-        return null;
-    }
-
-    /*登记画面用*/
-    public void onAdd() {
+    /*启用*/
+    public void onClick_Enable(){
         try {
-            if (!confirmAccountNo.equalsIgnoreCase(taRsAcc.getSpvsnAccId())) {
-                MessageUtil.addError(RfmMessage.getProperty("AccountRegistration.E001"));
+            String strRtn=taAccService.isExistInDb(taRsAcc);
+            if(strRtn!=null){
+                MessageUtil.addError(strRtn);
                 return;
             }
-            // 初始帐户余额均为可用
-            taAccService.insertRecord(taRsAcc);
 
-            taRsAccList = taAccService.selectedRecordsByCondition(
-                    taRsAcc.getSpvsnAccType(),
-                    taRsAcc.getSpvsnAccId(),
-                    taRsAcc.getSpvsnAccName());
-            confirmAccountNo = "";
-            MessageUtil.addInfo(RfmMessage.getProperty("AccountRegistration.I001"));
-        } catch (Exception e) {
-            logger.error("新增数据失败，", e);
-            MessageUtil.addError(e.getMessage());
-        }
-    }
-
-    /*管理明细画面用*/
-    public String onUpd(){
-        try {
-            taAccService.updateRecord(taRsAcc);
-        } catch (Exception e) {
-            logger.error("修改数据失败，", e);
-            MessageUtil.addError(e.getMessage());
-            return null;
-        }
-        MessageUtil.addInfo(RfmMessage.getProperty("AccountManagement.I001"));
-        confirmAccountNo = "";
-        return null;
-    }
-    public String onDel(){
-        try {
-            taAccService.deleteRecord(taRsAcc);
-        } catch (Exception e) {
-            logger.error("删除数据失败，", e);
-            MessageUtil.addError(e.getMessage());
-            return null;
-        }
-        MessageUtil.addInfo(RfmMessage.getProperty("AccountManagement.I002"));
-        return null;
-    }
-
-    public String onClick_ListToDetail(String strActionTypePara,String strPkidPara) {
-        if("Upd".equals(strActionTypePara)) {
-            return "accountEditDtl_Upd.xhtml?faces-redirect=true&actionType=" + strActionTypePara + "&amp;pkid=" + strPkidPara;
-        }else if("Del".equals(strActionTypePara)) {
-            return "accountEditDtl_Del.xhtml?faces-redirect=true&actionType=" + strActionTypePara + "&amp;pkid=" + strPkidPara;
-        }else {
-            return null;
-        }
-    }
-    public String onClick_DetailToList(String strPkidPara) {
-        return "accountEdit.xhtml?faces-redirect=true&pkid=" +strPkidPara;
-    }
-
-    /*启用*/
-    public void onClick_Enable(TaRsAcc taRsAccPara){
-        try {
-            TOA toaTa = taFdcService.sendAndRecvRealTimeTxn9901001(taRsAccPara);
+            TOA toaTa = taFdcService.sendAndRecvRealTimeTxn9901001(taRsAcc);
             if(toaTa !=null) {
-                if ((EnuTaTxnRtnCode.TXN_PROCESSED.getCode()).equals(toaTa.getHeader().RETURN_CODE)) { // SBS记账成功的处理
+                if ((EnuTaTxnRtnCode.TXN_PROCESSED.getCode()).equals(toaTa.getHeader().RETURN_CODE)) { // TA成功的处理
+                    // 初始帐户余额均为可用
+                    taAccService.insertRecord(taRsAcc);
+
+                    taRsAccRecv.setReturnCode(toaTa.getHeader().RETURN_CODE);
+                    taRsAccRecv.setFdcSn(toaTa.getHeader().BIZ_ID);
+                    taRsAccRecv.setReturnMsg(toaTa.getHeader().RETURN_MSG);
                     MessageUtil.addInfo(RfmMessage.getProperty("AccountOpening.I001"));
-                    confirmAccountNo = "";
-                    return;
                 }else{
                     MessageUtil.addError(toaTa.getHeader().RETURN_MSG);
                 }
@@ -160,26 +89,37 @@ public class TaAccAction {
             }
         } catch (Exception e) {
             logger.error("启用监管失败，", e);
-            MessageUtil.addError(taRsAccPara.getReturnMsg()+e.getMessage());
+            MessageUtil.addError(taRsAccRecv.getReturnMsg()+e.getMessage());
         }
     }
     /*撤销*/
-    public void onClick_Unable(TaRsAcc taRsAccPara){
+    public void onClick_Unable(){
         try {
-            TOA toaTa = taFdcService.sendAndRecvRealTimeTxn9901002(taRsAccPara);
+            String strRtn=taAccService.isExistInDb(taRsAcc);
+            if(strRtn!=null){
+                MessageUtil.addError(strRtn);
+                return;
+            }
+
+            TOA toaTa = taFdcService.sendAndRecvRealTimeTxn9901002(taRsAcc);
             if(toaTa !=null) {
-                if ((EnuTaTxnRtnCode.TXN_PROCESSED.getCode()).equals(toaTa.getHeader().RETURN_CODE)) { // SBS记账成功的处理
+                if ((EnuTaTxnRtnCode.TXN_PROCESSED.getCode()).equals(toaTa.getHeader().RETURN_CODE)) { // TA成功的处理
+                    // 初始帐户余额均为可用
+                    taAccService.insertRecord(taRsAcc);
+
+                    taRsAccRecv.setReturnCode(toaTa.getHeader().RETURN_CODE);
+                    taRsAccRecv.setFdcSn(toaTa.getHeader().BIZ_ID);
+                    taRsAccRecv.setReturnMsg(toaTa.getHeader().RETURN_MSG);
                     MessageUtil.addInfo(RfmMessage.getProperty("AccountCancel.I001"));
-                    return;
                 }else{
                     MessageUtil.addError(toaTa.getHeader().RETURN_MSG);
                 }
             }else{
-                MessageUtil.addInfo("解除监管失败!");
+                MessageUtil.addInfo("启用监管失败!");
             }
         } catch (Exception e) {
             logger.error("解除监管失败，", e);
-            MessageUtil.addError(taRsAccPara.getReturnMsg()+e.getMessage());
+            MessageUtil.addError(taRsAccRecv.getReturnMsg()+e.getMessage());
         }
     }
 
@@ -199,14 +139,6 @@ public class TaAccAction {
 
     public void setTaFdcService(TaFdcService taFdcService) {
         this.taFdcService = taFdcService;
-    }
-
-    public String getConfirmAccountNo() {
-        return confirmAccountNo;
-    }
-
-    public void setConfirmAccountNo(String confirmAccountNo) {
-        this.confirmAccountNo = confirmAccountNo;
     }
 
     public List<TaRsAcc> getTaRsAccList() {
@@ -231,6 +163,14 @@ public class TaAccAction {
 
     public void setPtenudetailService(PtenudetailService ptenudetailService) {
         this.ptenudetailService = ptenudetailService;
+    }
+
+    public TaRsAcc getTaRsAccRecv() {
+        return taRsAccRecv;
+    }
+
+    public void setTaRsAccRecv(TaRsAcc taRsAccRecv) {
+        this.taRsAccRecv = taRsAccRecv;
     }
 
     public RsSysctlService getRsSysctlService() {

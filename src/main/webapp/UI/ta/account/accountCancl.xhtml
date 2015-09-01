@@ -42,14 +42,15 @@
         <div style="margin:5px;" id="top">
             <p:growl id="msgs" showDetail="true"/>
             <h:form id="actqueryForm">
-                <p:panel id="query" header="【监管账户信息】查询">
+                <p:panel id="input" header="【解除监管】发送">
                     <h:panelGrid columns="2" cellspacing="3" style="width:100%">
-                        <h:panelGrid columns="6" cellspacing="3" style="width:90%"
+                        <h:panelGrid columns="6" cellspacing="3"
                                      columnClasses="col-95,col-5,col-95,col-5">
-                            <h:outputLabel value="*【账户类别】:" for="accType"/>
-                            <h:selectOneMenu id="accType" value="#{taAccAction.taRsAcc.spvsnAccType}">
-                                <f:selectItems value="#{ptenudetailAction.taAccTypeList}"/>
-                            </h:selectOneMenu>
+                            <h:outputLabel value="*【终止证明编号】:" for="originId"/>
+                            <h:inputText id="originId" required="true"
+                                         requiredMessage="必须输入申请编号！"
+                                         value="#{taAccAction.taRsAcc.bizId}"/>
+
                             <h:outputLabel value="*【账号】:" for="accId"/>
                             <h:inputText autocomplete="off" id="accId"
                                          value="#{taAccAction.taRsAcc.spvsnAccId}">
@@ -57,9 +58,15 @@
                             <h:outputLabel value="*【名称】:" for="accName"/>
                             <h:inputText id="accName" value="#{taAccAction.taRsAcc.spvsnAccName}"/>
                         </h:panelGrid>
-                        <p:commandButton update="msgs,pdt" style="width: 80px"
-                                         action="#{taAccAction.onBtnQueryClick}" id="btnQuery" value="查询">
-                        </p:commandButton>
+                        <h:panelGrid >
+                            <p:commandButton id="saveBtn" ajax="true" value="建立监管"
+                                             action="#{taAccAction.onClick_Unable()}"
+                                             style="margin-left:15px;width:120px"
+                                             update="input,accRecv,msgs">
+                            </p:commandButton>
+                            <p:commandButton type="reset" id="resetBtn" value="重置"
+                                             style="width:90px;margin-left:15px" update="input"/>
+                        </h:panelGrid>
                     </h:panelGrid>
                 </p:panel>
                 <p:ajaxStatus style="width:16px;height:16px;">
@@ -70,61 +77,26 @@
                         <h:outputText value=""/>
                     </f:facet>
                 </p:ajaxStatus>
-
-                <p:dataTable id="pdt" style="width:100%;"
-                             dynamic="true"
-                             value="#{taAccAction.taRsAccList}"
-                             selectionMode="single"
-                             var="record"
-                             rowKey="#{record.pkId}"
-                             resizableColumns="true"
-                             scrollable="true"
-                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                             paginator="true" rows="15" paginatorPosition="bottom"
-                             rowsPerPageTemplate="100,50,30,15,5"
-                             emptyMessage="数据记录为空...">
-
-                    <p:column headerText="操作" style="width:60px;text-align:center">
-                        <p:commandLink  value="撤销" immediate="true" ajax="false"
-                                        action="#{taAccAction.onClick_Unable(record)}"
-                                        rendered="#{record.statusFlag eq '1'?'true':'false'}"
-                                        style="color: blue">
-                        </p:commandLink>
-                    </p:column>
-
-                    <p:column headerText="监管状态" style="width:100px;text-align:center">
-                        <h:outputText value="#{ptenudetailAction.taAccStatusMap.get(record.statusFlag)}"/>
-                    </p:column>
-
-                    <p:column headerText="监管申请编号" style="width:160px;text-align:center">
-                        <h:outputText value="#{record.bizId}" style="text-align: center;"/>
-                    </p:column>
-
-                    <p:column headerText="账户类别" style="width:110px;text-align:left">
-                        <h:outputText value="#{ptenudetailAction.taAccTypeMap.get(record.spvsnAccType)}"/>
-                    </p:column>
-
-                    <p:column headerText="账号" style="width:200px;text-align:center">
-                        <h:outputText value="#{record.spvsnAccId}" style="text-align: center;"/>
-                    </p:column>
-
-                    <p:column headerText="名称" style="width:260px;text-align:center">
-                        <h:outputText value="#{record.spvsnAccName}" style="text-align: right"/>
-                    </p:column>
-
-                    <p:column headerText="预售人名称" style="width:260px;text-align:center">
-                        <h:outputText value="#{record.preSalePerName}" style="text-align: right"/>
-                    </p:column>
-
-                    <p:column headerText="预售项目名称" style="width:260px;text-align:center">
-                        <h:outputText value="#{record.preSaleProName}" style="text-align: right"/>
-                    </p:column>
-
-                    <p:column headerText="预售项目地址" style="width:260px;text-align:center">
-                        <h:outputText value="#{record.preSaleProAddr}" style="text-align: right"/>
-                    </p:column>
-
-                </p:dataTable>
+                <p:panel id="accRecv"  header="【解除监管】返回">
+                    <h:panelGrid columns="6" cellspacing="3"
+                                 columnClasses="col-label1,col-input1,col-label2,col-input2,col-label3,col-input3">
+                        <h:outputLabel value="【结果】:" for="rtnReturnCodeAct"/>
+                        <h:inputText id="rtnReturnCodeAct" readonly="true"
+                                     style="background-color:gainsboro"
+                                     value="#{taAccAction.taRsAccRecv.returnCode}">
+                        </h:inputText>
+                        <h:outputLabel value="【预售监管平台流水】:" for="rtnFdcSnAct"/>
+                        <h:inputText id="rtnFdcSnAct" readonly="true"
+                                     style="background-color:gainsboro"
+                                     value="#{taAccAction.taRsAccRecv.fdcSn}">
+                        </h:inputText>
+                        <h:outputLabel value="【返回描述】:" for="returnMsgAct"/>
+                        <h:inputText id="returnMsgAct" readonly="true"
+                                     style="background-color:gainsboro"
+                                     value="#{taAccAction.taRsAccRecv.returnMsg}">
+                        </h:inputText>
+                    </h:panelGrid>
+                </p:panel>
             </h:form>
         </div>
     </ui:define>
