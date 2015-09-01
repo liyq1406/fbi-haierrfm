@@ -42,9 +42,7 @@ public class TaSbsService {
     @Transactional
     public TOA sendAndRecvRealTimeTxn900010002(TaRsAccDtl taTxnFdcPara) {
         try {
-            Tia900010002 tia900010002Temp=new Tia900010002();
             TaTxnSbs taTxnSbsPara=new TaTxnSbs();
-            taTxnSbsPara.setTxCode(EnuTaSbsTxCode.TRADE_0002.getCode());
             taTxnSbsPara.setSpvsnAccId(taTxnFdcPara.getSpvsnAccId().trim());// 付款账号
             taTxnSbsPara.setGerlAccId(taTxnFdcPara.getGerlAccId().trim()); // 收款账号
             taTxnSbsPara.setTxAmt(taTxnFdcPara.getTxAmt());                // 交易金额
@@ -52,20 +50,31 @@ public class TaSbsService {
             taTxnSbsPara.setTxDate(taTxnFdcPara.getTxDate());              // 交易日期
             taTxnSbsPara.setTxTime(ToolUtil.getNow("HH:mm:ss"));         // 交易时间
             taTxnSbsPara.setUserId(taTxnFdcPara.getUserId());              // 柜员号
+            taTxnSbsService.insertRecord(taTxnSbsPara);
 
+            Tia900010002 tia900010002Temp=new Tia900010002();
             tia900010002Temp.header.CHANNEL_ID=ToolUtil.DEP_CHANNEL_ID_SBS;
-            // 划拨是从监管户到一般账户
-            tia900010002Temp.body.SPVSN_ACC_ID=taTxnSbsPara.getSpvsnAccId();
-            tia900010002Temp.body.GERL_ACC_ID=taTxnSbsPara.getGerlAccId();
+
+            if( EnuTaFdcTxCode.TRADE_2002.getCode().equals(taTxnSbsPara.getTxCode())||
+                EnuTaFdcTxCode.TRADE_2111.getCode().equals(taTxnSbsPara.getTxCode())||
+                EnuTaFdcTxCode.TRADE_2211.getCode().equals(taTxnSbsPara.getTxCode())) {
+                // 从一般账户到监管户(交存记账，划拨冲正，返还冲正）
+                tia900010002Temp.body.OUT_ACC_ID = taTxnSbsPara.getGerlAccId();
+                tia900010002Temp.body.IN_ACC_ID = taTxnSbsPara.getSpvsnAccId();
+            }else if(EnuTaFdcTxCode.TRADE_2011.getCode().equals(taTxnSbsPara.getTxCode())||
+                      EnuTaFdcTxCode.TRADE_2102.getCode().equals(taTxnSbsPara.getTxCode())||
+                      EnuTaFdcTxCode.TRADE_2202.getCode().equals(taTxnSbsPara.getTxCode())) {
+                // 从监管户到一般账户 (交存冲正，划拨记账，返还记账）
+                tia900010002Temp.body.OUT_ACC_ID = taTxnSbsPara.getSpvsnAccId();
+                tia900010002Temp.body.IN_ACC_ID = taTxnSbsPara.getGerlAccId();
+            }
 
             tia900010002Temp.body.TX_AMT=taTxnSbsPara.getTxAmt();
             tia900010002Temp.body.TX_DATE=taTxnSbsPara.getTxDate();
             tia900010002Temp.body.TX_TIME=taTxnSbsPara.getTxTime();
             tia900010002Temp.header.REQ_SN=taTxnSbsPara.getReqSn();
             tia900010002Temp.header.USER_ID=taTxnSbsPara.getUserId();
-            tia900010002Temp.header.TX_CODE=taTxnSbsPara.getTxCode();
-
-            taTxnSbsService.insertRecord(taTxnSbsPara);
+            tia900010002Temp.header.TX_CODE=EnuTaSbsTxCode.TRADE_0002.getCode();
 
             //通过MQ发送信息到DEP
             String strMsgid= depMsgSendAndRecv.sendDepMessage(tia900010002Temp);

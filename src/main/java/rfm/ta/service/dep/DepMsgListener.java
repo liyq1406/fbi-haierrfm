@@ -99,8 +99,8 @@ public class DepMsgListener implements MessageListener {
                     taRsAccDtlTemp.setCityId(EnuTaCityId.CITY_TAIAN.getCode());               // 城市代码
                     taRsAccDtlTemp.setBizId(tia900010002Temp.header.BIZ_ID);                  // 交存申请编号
                     taRsAccDtlTemp.setTxAmt(tia900010002Temp.body.TX_AMT);                    // 交易金额
-                    taRsAccDtlTemp.setSpvsnAccId(tia900010002Temp.body.SPVSN_ACC_ID);        // 监管账号
-                    taRsAccDtlTemp.setGerlAccId(tia900010002Temp.body.GERL_ACC_ID);          // 一般账号
+                    taRsAccDtlTemp.setSpvsnAccId(tia900010002Temp.body.OUT_ACC_ID);        // 监管账号
+                    taRsAccDtlTemp.setGerlAccId(tia900010002Temp.body.IN_ACC_ID);          // 一般账号
                     taRsAccDtlTemp.setStlType(EnuTaStlType.STL_TYPE02.getCode());             // 结算方式
                     taRsAccDtlTemp.setCheckId("");                                             // 支票号码
                     String reqsn = tiaTmp.getHeader().REQ_SN;

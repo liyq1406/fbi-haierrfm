@@ -38,10 +38,10 @@ public class Tia900010002 extends TIA implements Serializable {
           04	交易时间
           05    收款账号
           06	交易金额*/
-        public String SPVSN_ACC_ID;   // 付款账号
+        public String OUT_ACC_ID;    // 付款账号
         public String TX_DATE;         // 交易日期
         public String TX_TIME;         // 交易时间
-        public String GERL_ACC_ID;    // 收款账号
+        public String IN_ACC_ID;       // 收款账号
         public String TX_AMT;          // 交易金额
         public String BANK_BRANCH_ID; // 交易金额
     }

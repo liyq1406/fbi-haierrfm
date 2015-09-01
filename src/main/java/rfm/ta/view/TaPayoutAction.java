@@ -146,44 +146,6 @@ public class TaPayoutAction {
         }
     }
 
-    /*验证后立即划拨记账用*/
-    public Boolean sendAndRecvSBSAndFDC(TaRsAccDtl taRsAccDtlPara) {
-        try {
-            // 往SBS发送记账信息
-            TOA toaSbs=taSbsService.sendAndRecvRealTimeTxn900010002(taRsAccDtlPara);
-            if(toaSbs !=null) {
-                if((EnuTaTxnRtnCode.TXN_PROCESSED.getCode()).equals(toaSbs.getHeader().RETURN_CODE)){ // SBS记账成功的处理
-                    taRsAccDtlPara.setActFlag(EnuActFlag.ACT_SUCCESS.getCode());
-                    taAccDetlService.updateRecord(taRsAccDtlPara);
-
-                    // 往泰安房地产中心发送记账信息
-                    TaTxnFdc taTxnFdcTemp=new TaTxnFdc();
-                    BeanUtils.copyProperties(taTxnFdcTemp, taRsAccDtlPara);
-                    if(EnuTaFdcTxCode.TRADE_2102.getCode().equals(taTxnFdcTemp.getTxCode())){ // 划拨记账
-                        taFdcService.sendAndRecvRealTimeTxn9902102(taTxnFdcTemp);
-                        /*记账后查询*/
-                        taTxnFdcActSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcTemp.getPkId());
-                    }else if(EnuTaFdcTxCode.TRADE_2111.getCode().equals(taTxnFdcTemp.getTxCode())){ // 划拨冲正
-                        taFdcService.sendAndRecvRealTimeTxn9902111(taTxnFdcTemp);
-                        /*记账后查询*/
-                        taTxnFdcCanclSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcTemp.getPkId());
-                    }
-
-                    MessageUtil.addInfo(toaSbs.getHeader().RETURN_MSG);
-                } else { // SBS记账失败的处理
-                    taAccDetlService.deleteRecord(taRsAccDtl.getPkId());
-                    MessageUtil.addInfo(toaSbs.getHeader().RETURN_MSG);
-                    return false;
-                }
-            }
-            return true;
-        }catch (Exception e){
-            logger.error("验证后立即划拨记账用，", e);
-            MessageUtil.addError(e.getMessage());
-            return false;
-        }
-    }
-
     /*划拨冲正用*/
     public void onBtnCanclClick() {
         try {
@@ -246,6 +208,44 @@ public class TaPayoutAction {
         } catch (Exception e) {
             logger.error("记账，", e);
             MessageUtil.addError(e.getMessage());
+        }
+    }
+
+    /*验证后立即划拨记账用*/
+    public Boolean sendAndRecvSBSAndFDC(TaRsAccDtl taRsAccDtlPara) {
+        try {
+            // 往SBS发送记账信息
+            TOA toaSbs=taSbsService.sendAndRecvRealTimeTxn900010002(taRsAccDtlPara);
+            if(toaSbs !=null) {
+                if((EnuTaTxnRtnCode.TXN_PROCESSED.getCode()).equals(toaSbs.getHeader().RETURN_CODE)){ // SBS记账成功的处理
+                    taRsAccDtlPara.setActFlag(EnuActFlag.ACT_SUCCESS.getCode());
+                    taAccDetlService.updateRecord(taRsAccDtlPara);
+
+                    // 往泰安房地产中心发送记账信息
+                    TaTxnFdc taTxnFdcTemp=new TaTxnFdc();
+                    BeanUtils.copyProperties(taTxnFdcTemp, taRsAccDtlPara);
+                    if(EnuTaFdcTxCode.TRADE_2102.getCode().equals(taTxnFdcTemp.getTxCode())){ // 划拨记账
+                        taFdcService.sendAndRecvRealTimeTxn9902102(taTxnFdcTemp);
+                        /*记账后查询*/
+                        taTxnFdcActSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcTemp.getPkId());
+                    }else if(EnuTaFdcTxCode.TRADE_2111.getCode().equals(taTxnFdcTemp.getTxCode())){ // 划拨冲正
+                        taFdcService.sendAndRecvRealTimeTxn9902111(taTxnFdcTemp);
+                        /*记账后查询*/
+                        taTxnFdcCanclSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcTemp.getPkId());
+                    }
+
+                    MessageUtil.addInfo(toaSbs.getHeader().RETURN_MSG);
+                } else { // SBS记账失败的处理
+                    taAccDetlService.deleteRecord(taRsAccDtl.getPkId());
+                    MessageUtil.addInfo(toaSbs.getHeader().RETURN_MSG);
+                    return false;
+                }
+            }
+            return true;
+        }catch (Exception e){
+            logger.error("验证后立即划拨记账用，", e);
+            MessageUtil.addError(e.getMessage());
+            return false;
         }
     }
 

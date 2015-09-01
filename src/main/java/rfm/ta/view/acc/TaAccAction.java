@@ -1,7 +1,6 @@
 package rfm.ta.view.acc;
 
 import org.fbi.dep.model.base.TOA;
-import org.fbi.dep.model.txn.Toa9901001;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import platform.common.utils.MessageUtil;
@@ -9,7 +8,6 @@ import platform.service.PtenudetailService;
 import pub.platform.advance.utils.RfmMessage;
 import rfm.qd.service.RsSysctlService;
 import rfm.ta.common.enums.EnuActRslt;
-import rfm.ta.common.enums.EnuTaAccStatus;
 import rfm.ta.common.enums.EnuTaTxnRtnCode;
 import rfm.ta.repository.model.TaRsAcc;
 import rfm.ta.service.biz.acc.TaAccService;
