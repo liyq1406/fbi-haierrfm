@@ -1,6 +1,7 @@
 package rfm.ta.view.reconci;
 
 import common.utils.ToolUtil;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fbi.dep.model.txn.Toa900012601;
 import org.fbi.dep.model.txn.Toa900012602;
@@ -219,7 +220,13 @@ public class TaDayEndReconciAction implements Serializable {
             MessageUtil.addError("日间对账发送失败！");
         } finally {
             if(file != null && file.exists()) {
-                file.delete();
+                try {
+                    String filePath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/backup/reconci");
+                    File destDir = ToolUtil.createFile(filePath, file.getName());
+                    FileUtils.copyFile(file, destDir);
+                    file.delete();
+                } catch (Exception e) {
+                }
             }
         }
     }

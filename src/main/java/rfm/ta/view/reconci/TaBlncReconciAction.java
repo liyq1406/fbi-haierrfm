@@ -1,6 +1,7 @@
 package rfm.ta.view.reconci;
 
 import common.utils.ToolUtil;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fbi.dep.model.txn.Toa900012701;
 import org.slf4j.Logger;
@@ -120,7 +121,13 @@ public class TaBlncReconciAction {
             MessageUtil.addError(e.getMessage());
         } finally {
             if(file != null && file.exists()){
-                file.delete();
+                try {
+                    String filePath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/backup/reconci");
+                    File destDir = ToolUtil.createFile(filePath, file.getName());
+                    FileUtils.copyFile(file, destDir);
+                    file.delete();
+                } catch (Exception e) {
+                }
             }
         }
     }
