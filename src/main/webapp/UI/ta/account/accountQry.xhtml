@@ -84,23 +84,6 @@
                              rowsPerPageTemplate="100,50,30,15,5"
                              emptyMessage="数据记录为空...">
 
-                    <p:column headerText="操作" style="width:60px;text-align:center">
-                        <p:commandLink  value="启用" immediate="true" ajax="false"
-                                        action="#{taAccAction.onClick_Enable()}"
-                                        rendered="#{record.statusFlag eq '1'?'false':'true'}"
-                                        style="color: blue">
-                        </p:commandLink>
-                        <p:commandLink  value="撤销" immediate="true" ajax="false"
-                                        action="#{taAccAction.onClick_Unable()}"
-                                        rendered="#{record.statusFlag eq '1'?'true':'false'}"
-                                        style="color: blue">
-                        </p:commandLink>
-                    </p:column>
-
-                    <p:column headerText="建立与解除" style="width:100px;text-align:center">
-                        <h:outputText value="#{record.txCode eq '1002'? '建立':'解除'}" />
-                    </p:column>
-
                     <p:column headerText="监管状态" style="width:100px;text-align:center">
                         <h:outputText value="#{ptenudetailAction.taAccStatusMap.get(record.statusFlag)}"/>
                     </p:column>

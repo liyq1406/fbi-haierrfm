@@ -74,11 +74,9 @@ public class TaAccAction {
             TOA toaTa = taFdcService.sendAndRecvRealTimeTxn9901001(taRsAcc);
             if(toaTa !=null) {
                 if ((EnuTaTxnRtnCode.TXN_PROCESSED.getCode()).equals(toaTa.getHeader().RETURN_CODE)) { // TA成功的处理
-                    // 初始帐户余额均为可用
-                    taAccService.insertRecord(taRsAcc);
-
                     taRsAccRecv.setReturnCode(toaTa.getHeader().RETURN_CODE);
-                    taRsAccRecv.setFdcSn(toaTa.getHeader().BIZ_ID);
+                    taRsAccRecv.setFdcSn(toaTa.getHeader().REQ_SN);
+                    taRsAccRecv.setPreSalePerName(toaTa.getHeader().REQ_SN);
                     taRsAccRecv.setReturnMsg(toaTa.getHeader().RETURN_MSG);
                     MessageUtil.addInfo(RfmMessage.getProperty("AccountOpening.I001"));
                 }else{

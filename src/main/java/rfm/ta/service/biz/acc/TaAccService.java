@@ -56,23 +56,6 @@ public class TaAccService {
     }
 
     /**
-     * 更新时判断申请编号、名称是否已存在
-     * @param taRsAcc
-     * @return
-     */
-    private String isExistInDbUpdate(TaRsAcc taRsAcc) {
-        List<TaRsAcc> taRsAccList = taCommonMapper.selectTaRsAccUpdate(taRsAcc);
-        for(TaRsAcc taRsAcc1 : taRsAccList) {
-            if(taRsAcc1.getBizId().equals(taRsAcc.getBizId())) {
-                return RfmMessage.getProperty("AccountManagement.E001");
-            } else if(taRsAcc1.getSpvsnAccName().equals(taRsAcc.getSpvsnAccName())) {
-                return RfmMessage.getProperty("AccountManagement.E002");
-            }
-        }
-        return null;
-    }
-
-    /**
      * 是否并发更新冲突
      *
      * @param
@@ -137,31 +120,21 @@ public class TaAccService {
      * @param account
      */
     public void insertRecord(TaRsAcc account) {
-        String result = isExistInDb(account);
-        if (result != null) {
-            throw new RuntimeException(result);
-        } else {
-            account.setCreatedTime(ToolUtil.getStrLastUpdTime());
-            account.setRecVersion(0);
-            accountMapper.insertSelective(account);
-        }
+        account.setCreatedTime(ToolUtil.getStrLastUpdTime());
+        account.setRecVersion(0);
+        accountMapper.insertSelective(account);
     }
 
     /**
      * 通过主键更新
      */
     public int updateRecord(TaRsAcc account) {
-        String result = isExistInDbUpdate(account);
-        if (result != null) {
-            throw new RuntimeException(result);
+        if (isModifiable(account)) {
+            account.setLastUpdTime(ToolUtil.getStrLastUpdTime());
+            account.setRecVersion(account.getRecVersion() + 1);
+            return accountMapper.updateByPrimaryKeySelective(account);
         } else {
-            if (isModifiable(account)) {
-                account.setLastUpdTime(ToolUtil.getStrLastUpdTime());
-                account.setRecVersion(account.getRecVersion() + 1);
-                return accountMapper.updateByPrimaryKeySelective(account);
-            } else {
-                throw new RuntimeException("账户并发更新冲突！ActPkid=" + account.getPkId());
-            }
+            throw new RuntimeException("账户并发更新冲突！ActPkid=" + account.getPkId());
         }
     }
 

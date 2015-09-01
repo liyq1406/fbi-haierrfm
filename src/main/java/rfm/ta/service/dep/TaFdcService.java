@@ -62,11 +62,12 @@ public class TaFdcService {
             String strMsgid= depMsgSendAndRecv.sendDepMessage(tia9901001Temp);
             Toa9901001 toaPara=(Toa9901001) depMsgSendAndRecv.recvDepMessage(strMsgid);
             if(EnuTaTxnRtnCode.TXN_PROCESSED.getCode().equals(toaPara.header.RETURN_CODE)){
+                taRsAccPara.setFdcSn(toaPara.header.REQ_SN);
                 taRsAccPara.setPreSalePerName(toaPara.body.PRE_SALE_PER_NAME);
                 taRsAccPara.setPreSaleProAddr(toaPara.body.PRE_SALE_PRO_ADDR);
                 taRsAccPara.setPreSaleProName(toaPara.body.PRE_SALE_PRO_NAME);
                 taRsAccPara.setStatusFlag(EnuTaAccStatus.ACC_SUPV.getCode());
-                taAccService.updateRecord(taRsAccPara);
+                taAccService.insertRecord(taRsAccPara);
             }else{
                  /*01	返回结果	    4
                   02	错误原因描述	60

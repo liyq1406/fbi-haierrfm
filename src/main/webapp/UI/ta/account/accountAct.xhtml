@@ -110,10 +110,25 @@
                                      style="background-color:gainsboro"
                                      value="#{taAccAction.taRsAccRecv.returnCode}">
                         </h:inputText>
-                        <h:outputLabel value="【预售监管平台流水】:" for="rtnFdcSnAct"/>
-                        <h:inputText id="rtnFdcSnAct" readonly="true"
+                        <h:outputLabel value="【预售监管平台流水】:" for="rtnFdcSn"/>
+                        <h:inputText id="rtnFdcSn" readonly="true"
                                      style="background-color:gainsboro"
                                      value="#{taAccAction.taRsAccRecv.fdcSn}">
+                        </h:inputText>
+                        <h:outputLabel value="【预售人名称】:" for="rtnPreSalePerName"/>
+                        <h:inputText id="rtnPreSalePerName" readonly="true"
+                                     style="background-color:gainsboro"
+                                     value="#{taAccAction.taRsAccRecv.preSalePerName}">
+                        </h:inputText>
+                        <h:outputLabel value="【预售项目地址】:" for="rtnPreSaleProAddr"/>
+                        <h:inputText id="rtnPreSaleProAddr" readonly="true"
+                                     style="background-color:gainsboro"
+                                     value="#{taAccAction.taRsAccRecv.preSaleProAddr}">
+                        </h:inputText>
+                        <h:outputLabel value="【预售项目名称】:" for="rtnPreSaleProName"/>
+                        <h:inputText id="rtnPreSaleProName" readonly="true"
+                                     style="background-color:gainsboro"
+                                     value="#{taAccAction.taRsAccRecv.preSaleProName}">
                         </h:inputText>
                         <h:outputLabel value="【返回描述】:" for="returnMsgAct"/>
                         <h:inputText id="returnMsgAct" readonly="true"
