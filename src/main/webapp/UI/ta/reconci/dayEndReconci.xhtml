@@ -48,7 +48,10 @@
                             <p:menuitem type="push" value="获取sbs数据" icon="ui-icon ui-icon-plus"
                                         action="#{taDayEndReconciAction.onQrySbsData}" update="sbspdt,:form:msgs"
                                         ajax="true"/>
-                            <p:menuitem type="push" value="日终对账数据发送" icon="ui-icon ui-icon-copy"
+                            <p:menuitem type="push" value="内部对账" icon="ui-icon ui-icon-copy"
+                                        action="#{taDayEndReconciAction.reconci}" update="pdt,sbspdt,:form:msgs"
+                                        ajax="true"/>
+                            <p:menuitem type="push" value="数据发送" icon="ui-icon ui-icon-copy"
                                         action="#{taDayEndReconciAction.onBlnc}" update="pdt,sbspdt,:form:msgs"
                                         ajax="true"/>
                         </p:menubar>

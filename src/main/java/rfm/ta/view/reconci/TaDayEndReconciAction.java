@@ -49,6 +49,7 @@ public class TaDayEndReconciAction implements Serializable {
     // 账务交易明细
     private List<TaRsAccDtl> taRsAccDtlLocalList;
     private List<TaRsAccDtl> taRsAccDtlSbsList;
+    private List<TaRsAccDtl> taRsAccDtlReconci;
 
     private String strLocalTotalCounts;
     private String strLocalTotalAmt;
@@ -59,6 +60,7 @@ public class TaDayEndReconciAction implements Serializable {
 
     @PostConstruct
     public void init(){
+        taRsAccDtlReconci = new ArrayList<TaRsAccDtl>();
         txCodeMap = getTxCodeMapByEnum();
         strLocalTotalCounts="0";
         strLocalTotalAmt="0";
@@ -70,6 +72,7 @@ public class TaDayEndReconciAction implements Serializable {
         taRsAccDtlLocalList = taAccDetlService.selectedRecords(taRsAccDtlPara);
         strLocalTotalCounts=String.valueOf(taRsAccDtlLocalList.size());
         if(taRsAccDtlLocalList.size()>0) {
+            taRsAccDtlReconci.addAll(taRsAccDtlLocalList);
             Double total = 0d;
             for(TaRsAccDtl taRsAccDtl:taRsAccDtlLocalList){
                 total += Double.valueOf(taRsAccDtl.getTxAmt());
@@ -200,20 +203,16 @@ public class TaDayEndReconciAction implements Serializable {
     public void onBlnc() {
         File file = null;
         try {
-            List<TaRsAccDtl> taRsAccDtls = new ArrayList<TaRsAccDtl>();
-            taRsAccDtls.addAll(taRsAccDtlLocalList);
-            if(reconci(taRsAccDtlLocalList,taRsAccDtlSbsList)) {
-                String fileName = "PF"+ EnuTaBankId.BANK_HAIER.getCode()+
-                        EnuTaCityId.CITY_TAIAN.getCode()+
-                        ToolUtil.getNow("yyyyMMdd")+".dat";
-                file = createFile(taRsAccDtls, fileName);
-                if(file != null){
-                    boolean result = ToolUtil.uploadFile(fileName, file);
-                    if(result){
-                        MessageUtil.addInfo(RfmMessage.getProperty("DayEndReconciliation.I002"));
-                    } else{
-                        MessageUtil.addError(RfmMessage.getProperty("DayEndReconciliation.E001"));
-                    }
+            String fileName = "PF"+ EnuTaBankId.BANK_HAIER.getCode()+
+                    EnuTaCityId.CITY_TAIAN.getCode()+
+                    ToolUtil.getNow("yyyyMMdd")+".dat";
+            file = createFile(taRsAccDtlReconci, fileName);
+            if(file != null){
+                boolean result = ToolUtil.uploadFile(fileName, file);
+                if(result){
+                    MessageUtil.addInfo(RfmMessage.getProperty("DayEndReconciliation.I002"));
+                } else{
+                    MessageUtil.addError(RfmMessage.getProperty("DayEndReconciliation.E001"));
                 }
             }
         } catch (Exception e) {
@@ -233,10 +232,10 @@ public class TaDayEndReconciAction implements Serializable {
 
     /**
      * 比较两个List
-     * @param taRsAccDtlLocalListPara
-     * @param taRsAccDtlSbsListPara
      */
-    private Boolean reconci(List<TaRsAccDtl> taRsAccDtlLocalListPara, List<TaRsAccDtl> taRsAccDtlSbsListPara){
+    public void reconci(){
+        List<TaRsAccDtl> taRsAccDtlLocalListPara = taRsAccDtlLocalList;
+        List<TaRsAccDtl> taRsAccDtlSbsListPara = taRsAccDtlSbsList;
         // List1重复项
         List<TaRsAccDtl> taRsAccDtlList1Repeat = new ArrayList<TaRsAccDtl>();
         // List2重复项
@@ -262,12 +261,6 @@ public class TaDayEndReconciAction implements Serializable {
 
         taRsAccDtlLocalListPara.removeAll(taRsAccDtlList1Repeat);
         taRsAccDtlSbsListPara.removeAll(taRsAccDtlList2Repeat);
-
-        if(taRsAccDtlLocalListPara.size() == 0 && taRsAccDtlSbsListPara.size() == 0){
-            return true;
-        }
-
-        return false;
     }
 
     /**
@@ -284,6 +277,14 @@ public class TaDayEndReconciAction implements Serializable {
     }
 
     //= = = = = = = = = = = = get set = = = = = = = = = = = =
+    public List<TaRsAccDtl> getTaRsAccDtlReconci() {
+        return taRsAccDtlReconci;
+    }
+
+    public void setTaRsAccDtlReconci(List<TaRsAccDtl> taRsAccDtlReconci) {
+        this.taRsAccDtlReconci = taRsAccDtlReconci;
+    }
+
     public Map<String, String> getTxCodeMap() {
         return txCodeMap;
     }
