@@ -208,7 +208,7 @@ public class TaDayEndReconciAction implements Serializable {
                         ToolUtil.getNow("yyyyMMdd")+".dat";
                 file = createFile(taRsAccDtls, fileName);
                 if(file != null){
-                    boolean result = ToolUtil.uploadFile("rfmtest", fileName, file);
+                    boolean result = ToolUtil.uploadFile(fileName, file);
                     if(result){
                         MessageUtil.addInfo(RfmMessage.getProperty("DayEndReconciliation.I002"));
                     } else{

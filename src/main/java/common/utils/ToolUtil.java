@@ -428,13 +428,13 @@ public class ToolUtil {
 
     /**
      * ftp发送到房产中心
-     * @param targetPath ftp服务器目标路径
      * @param filename
      * @param file
      * @return
      */
-    public static boolean uploadFile(String targetPath, String filename,File file) {
+    public static boolean uploadFile(String filename,File file) {
         String fcurl = PropertyManager.getProperty("tarfmfdc_fcurl");
+        String targetPath = PropertyManager.getProperty("tarfmfdc_fcpath");
         String fcusername = PropertyManager.getProperty("tarfmfdc_fcusername");
         String fcpasswd = PropertyManager.getProperty("tarfmfdc_fcpasswd");
         String encoding = PropertyManager.getProperty("tarfmfdc_fileEncoding");

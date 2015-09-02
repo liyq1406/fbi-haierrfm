@@ -109,7 +109,7 @@ public class TaBlncReconciAction {
                     ToolUtil.getStrToday() +".dat";
             file = createFile(fileName);
             if(file != null){
-                boolean result = ToolUtil.uploadFile("rfmtest", fileName, file);
+                boolean result = ToolUtil.uploadFile(fileName, file);
                 if(result){
                     MessageUtil.addInfo(RfmMessage.getProperty("BalanceReconciliation.I002"));
                 } else{
