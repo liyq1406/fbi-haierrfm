@@ -36,11 +36,16 @@
             <property name="ignoreQualifiersAtRuntime" value="true" />
             <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
         </table>
+
         <!--<table tableName="TA_RS_ACC">
             <property name="ignoreQualifiersAtRuntime" value="true" />
             <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
         </table>
         <table tableName="TA_RS_ACC_DTL">
+            <property name="ignoreQualifiersAtRuntime" value="true" />
+            <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
+        </table>
+        <table tableName="TA_TXN_FDC_NOTRECV_RTN">
             <property name="ignoreQualifiersAtRuntime" value="true" />
             <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
         </table>
