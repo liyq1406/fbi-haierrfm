@@ -3,6 +3,8 @@ package common.utils;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pub.platform.advance.utils.PropertyManager;
 import pub.platform.form.config.SystemAttributeNames;
 import pub.platform.security.OperatorManager;
@@ -24,6 +26,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ToolUtil {
+
+    private static final Logger logger = LoggerFactory.getLogger(ToolUtil.class);
     public static String DEP_CHANNEL_ID_RFM = "990";
     public static String DEP_CHANNEL_ID_SBS = "900";
     public static String DEP_APPID = PropertyManager.getProperty("app_id");
@@ -440,6 +444,7 @@ public class ToolUtil {
         String encoding = PropertyManager.getProperty("tarfmfdc_fileEncoding");
         FTPClient ftpClient = new FTPClient();
         boolean result = false;
+        FileInputStream input = null;
         try {
             int reply;
             ftpClient.connect(fcurl);
@@ -458,7 +463,6 @@ public class ToolUtil {
             ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
             ftpClient.setBufferSize(3072);
             ftpClient.setControlEncoding("UTF-8");
-            FileInputStream input = null;
             if (change) {
                 input= new FileInputStream(file);
                 result = ftpClient.storeFile(new String(filename.getBytes(encoding),"iso-8859-1"), input);
@@ -468,16 +472,19 @@ public class ToolUtil {
                     //logger.error("ftp发送房产中心成功!"+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
                 }
             }
-            input.close();
-            ftpClient.logout();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            if (ftpClient.isConnected()) {
-                try {
-                    ftpClient.disconnect();
-                } catch (IOException ioe) {
+            try {
+                if( input!=null){
+                    input.close();
                 }
+                ftpClient.logout();
+                if (ftpClient.isConnected()) {
+                    ftpClient.disconnect();
+                }
+            }
+            catch (IOException ioe) {
             }
         }
         return result;
