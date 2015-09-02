@@ -137,10 +137,10 @@ public class TaDayEndReconciAction implements Serializable {
                     // 明细信息
                     for(TaRsAccDtl taRsAccDtlUnit:taRsAccDtlListPara){
                         // 交易代码(4位)|
-                        line.append(StringUtils.rightPad(taRsAccDtlUnit.getTxCode(), 4, ' '));
+                        line.append(StringUtils.rightPad(ToolUtil.getStrIgnoreNull(taRsAccDtlUnit.getTxCode()), 4, ' '));
                         line.append("|");
                         // 业务编号(14位，包括交存申请编号、划拨业务编号、返还业务编号)|
-                        line.append(StringUtils.rightPad(taRsAccDtlUnit.getBizId(), 14, ' '));
+                        line.append(StringUtils.rightPad(ToolUtil.getStrIgnoreNull(taRsAccDtlUnit.getBizId()), 14, ' '));
                         line.append("|");
                         txCode = taRsAccDtlUnit.getTxCode().substring(0,2);
                         if(txCode.equals("20")) {
@@ -152,25 +152,25 @@ public class TaDayEndReconciAction implements Serializable {
                         }
                         line.append("|");
                         // 交易金额(20位)|
-                        line.append(StringUtils.rightPad(taRsAccDtlUnit.getTxAmt(), 20, ' '));
+                        line.append(StringUtils.rightPad(ToolUtil.getStrIgnoreNull(taRsAccDtlUnit.getTxAmt()), 20, ' '));
                         line.append("|");
                         // 监管账号(30位)|
-                        line.append(StringUtils.rightPad(taRsAccDtlUnit.getSpvsnAccId(), 30, ' '));
+                        line.append(StringUtils.rightPad(ToolUtil.getStrIgnoreNull(taRsAccDtlUnit.getSpvsnAccId()), 30, ' '));
                         line.append("|");
                         // 预售资金监管平台流水(16位)|
-                        line.append(StringUtils.rightPad(taRsAccDtlUnit.getFdcSn(), 16, ' '));
+                        line.append(StringUtils.rightPad(ToolUtil.getStrIgnoreNull(taRsAccDtlUnit.getFdcSn()), 16, ' '));
                         line.append("|");
                         // 监管银行记账流水(30位)|
-                        line.append(StringUtils.rightPad(taRsAccDtlUnit.getFdcBankActSn(), 30, ' '));
+                        line.append(StringUtils.rightPad(ToolUtil.getStrIgnoreNull(taRsAccDtlUnit.getFdcBankActSn()), 30, ' '));
                         line.append("|");
                         // 监管银行记账网点(30位)|
-                        line.append(StringUtils.rightPad(taRsAccDtlUnit.getSpvsnBankId(), 30, ' '));
+                        line.append(StringUtils.rightPad(ToolUtil.getStrIgnoreNull(taRsAccDtlUnit.getSpvsnBankId()), 30, ' '));
                         line.append("|");
                         // 监管银行记账人员(30位)|
-                        line.append(StringUtils.rightPad(taRsAccDtlUnit.getUserId(), 30, ' '));
+                        line.append(StringUtils.rightPad(ToolUtil.getStrIgnoreNull(taRsAccDtlUnit.getUserId()), 30, ' '));
                         line.append("|");
                         // 记账日期(10位，YYYY-MM-DD)|
-                        line.append(StringUtils.rightPad(taRsAccDtlUnit.getTxDate(), 10, ' '));
+                        line.append(StringUtils.rightPad(ToolUtil.getStrIgnoreNull(taRsAccDtlUnit.getTxDate()), 10, ' '));
                         line.append("|");
                         line.append(newLineCh);
                     }
