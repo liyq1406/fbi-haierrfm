@@ -43,6 +43,7 @@ public class TaSbsService {
     public TOA sendAndRecvRealTimeTxn900010002(TaRsAccDtl taTxnFdcPara) {
         try {
             TaTxnSbs taTxnSbsPara=new TaTxnSbs();
+            taTxnSbsPara.setTxCode(taTxnFdcPara.getTxCode());
             taTxnSbsPara.setSpvsnAccId(taTxnFdcPara.getSpvsnAccId().trim());// 付款账号
             taTxnSbsPara.setGerlAccId(taTxnFdcPara.getGerlAccId().trim()); // 收款账号
             taTxnSbsPara.setTxAmt(taTxnFdcPara.getTxAmt());                // 交易金额

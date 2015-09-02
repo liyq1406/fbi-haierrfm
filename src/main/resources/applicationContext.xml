@@ -95,7 +95,7 @@
     </bean>
 
     <!--自动侦听，发送处理 -->
-    <bean id="jmsRfmOutTemplate" class="org.springframework.jms.core.JmsTemplate">
+     <bean id="jmsRfmOutTemplate" class="org.springframework.jms.core.JmsTemplate">
         <property name="connectionFactory" ref="jmsConnectionFactory"/>
         <property name="defaultDestinationName" value="${queue.rfm.out}"/>
         <property name="timeToLive" value="${jms.timeToLive}"/>
