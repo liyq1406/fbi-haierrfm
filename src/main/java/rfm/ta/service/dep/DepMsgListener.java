@@ -126,14 +126,13 @@ public class DepMsgListener implements MessageListener {
                 sendAndRecvSBSAndFDC(taRsAccDtlTemp,correlationID,propertyMap);
             }else if(EnuTaFdcTxCode.TRADE_2011.getCode().equals(txnCode)){// 冲正
                 Tia900010002 tia900010002Temp =(Tia900010002)tiaTmp;
-                TaRsAccDtl taRsAccDtlTemp = new TaRsAccDtl();
 
-                // 验证重复记账
-                TaRsAccDtl taRsAccDtlTempQry = new TaRsAccDtl();
-                taRsAccDtlTempQry.setBizId(tia900010002Temp.header.BIZ_ID);            // 业务编号
-                taRsAccDtlTempQry.setTxCode(tia900010002Temp.header.TX_CODE);          // 交易号
-                taRsAccDtlTempQry.setCanclFlag(EnuActCanclFlag.ACT_CANCL0.getCode());  // 未冲正
-                List<TaRsAccDtl> taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtlTempQry);
+                // 验证重复冲正
+                TaRsAccDtl taRsAccDtlQry = new TaRsAccDtl();
+                taRsAccDtlQry.setBizId(tia900010002Temp.header.BIZ_ID);            // 业务编号
+                taRsAccDtlQry.setTxCode(tia900010002Temp.header.TX_CODE);          // 交易号
+                taRsAccDtlQry.setCanclFlag(EnuActCanclFlag.ACT_CANCL1.getCode());  // 已冲正
+                List<TaRsAccDtl> taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtlQry);
                 if(taRsAccDtlList.size() == 1){
                     TaRsAccDtl taRsAccDtlValiExists = taRsAccDtlList.get(0);
                     if(taRsAccDtlValiExists.getActFlag().equals(EnuActFlag.ACT_SUCCESS.getCode())) { // 已经冲正成功的处理
@@ -142,12 +141,12 @@ public class DepMsgListener implements MessageListener {
                         toa900010002.header.RETURN_MSG = RfmMessage.getProperty("Payment.E001");
                         toa900010002.header.REQ_SN=taRsAccDtlValiExists.getReqSn();
                         jmsRfmOutTemplate.send(new ObjectMessageCreator(toa900010002, correlationID, propertyMap));
-                        return;
                     }else{ // 已经冲正但是存在不明原因的失败的处理
-                        taRsAccDtlTemp=taRsAccDtlList.get(0);
+                        TaRsAccDtl taRsAccDtlTemp=taRsAccDtlList.get(0);
+                        sendAndRecvSBSAndFDC(taRsAccDtlTemp,correlationID,propertyMap);
                     }
                 } else { // 未进行过冲正的处理
-                    taRsAccDtlTemp = new TaRsAccDtl();
+                    TaRsAccDtl taRsAccDtlTemp = new TaRsAccDtl();
                     taRsAccDtlTemp.setBizId(tia900010002Temp.header.BIZ_ID);
                     taRsAccDtlTemp.setTxCode(EnuTaFdcTxCode.TRADE_2002.getCode());
                     taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtlTemp);
@@ -165,16 +164,15 @@ public class DepMsgListener implements MessageListener {
                         taRsAccDtlTemp.setReturnCode(EnuTaTxnRtnCode.TXN_PROCESSED.getCode());
                         taRsAccDtlTemp.setCanclFlag(EnuActCanclFlag.ACT_CANCL1.getCode());
                         taAccDetlService.insertRecord(taRsAccDtlTemp);
+                        sendAndRecvSBSAndFDC(taRsAccDtlTemp,correlationID,propertyMap);
                     } else { // 不存在交存的处理
                         Toa900010002 toa900010002 = new Toa900010002();
                         toa900010002.header.RETURN_CODE = "E002";
                         toa900010002.header.RETURN_MSG = RfmMessage.getProperty("Payment.E002");
                         toa900010002.header.REQ_SN=ToolUtil.getStrAppReqSn_Back();
                         jmsRfmOutTemplate.send(new ObjectMessageCreator(toa900010002, correlationID, propertyMap));
-                        return;
                     }
                 }
-                sendAndRecvSBSAndFDC(taRsAccDtlTemp,correlationID,propertyMap);
             }
         } catch (Exception e) {
             logger.error("[DEP]消息处理异常!", e);

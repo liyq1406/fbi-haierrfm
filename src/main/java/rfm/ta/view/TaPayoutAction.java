@@ -105,10 +105,11 @@ public class TaPayoutAction {
                 return;
             }
             // 验证重复记账
-            TaRsAccDtl taRsAccDtl = new TaRsAccDtl();
-            taRsAccDtl.setBizId(taTxnFdcValiSendAndRecv.getBizId());
-            taRsAccDtl.setTxCode(EnuTaFdcTxCode.TRADE_2102.getCode());
-            List<TaRsAccDtl> taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtl);
+            TaRsAccDtl taRsAccDtlTempQry = new TaRsAccDtl();
+            taRsAccDtlTempQry.setBizId(taTxnFdcValiSendAndRecv.getBizId());
+            taRsAccDtlTempQry.setTxCode(EnuTaFdcTxCode.TRADE_2102.getCode());
+            taRsAccDtlTempQry.setCanclFlag(EnuActCanclFlag.ACT_CANCL0.getCode());  // 未冲正
+            List<TaRsAccDtl> taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtlTempQry);
             if(taRsAccDtlList.size() == 1){
                 String actFlag = taRsAccDtlList.get(0).getActFlag();
                 if(actFlag.equals(EnuActFlag.ACT_SUCCESS.getCode())){
@@ -133,8 +134,8 @@ public class TaPayoutAction {
             PtOperBean ptOperBeanTemp=ToolUtil.getOperatorManager().getOperator();
             taRsAccDtlTemp.setBranchId(ptOperBeanTemp.getDeptid());
             taRsAccDtlTemp.setUserId(ptOperBeanTemp.getOperid());
-
-            taRsAccDtl.setCreatedBy(taRsAccDtlTemp.getUserId());
+            taRsAccDtlTemp.setCanclFlag(EnuActCanclFlag.ACT_CANCL0.getCode());
+            taRsAccDtlTemp.setCreatedBy(taRsAccDtlTemp.getUserId());
 
             taAccDetlService.insertRecord(taRsAccDtlTemp);
 
@@ -150,10 +151,11 @@ public class TaPayoutAction {
     public void onBtnCanclClick() {
         try {
             // 验证重复冲正
-            TaRsAccDtl taRsAccDtlTemp = new TaRsAccDtl();
-            taRsAccDtlTemp.setBizId(taTxnFdcCanclSend.getBizId());
-            taRsAccDtlTemp.setTxCode(EnuTaFdcTxCode.TRADE_2111.getCode());
-            List<TaRsAccDtl> taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtlTemp);
+            TaRsAccDtl taRsAccDtl2111Qry = new TaRsAccDtl();
+            taRsAccDtl2111Qry.setBizId(taTxnFdcCanclSend.getBizId());
+            taRsAccDtl2111Qry.setTxCode(EnuTaFdcTxCode.TRADE_2111.getCode());
+            taRsAccDtl2111Qry.setCanclFlag(EnuActCanclFlag.ACT_CANCL1.getCode());  // 已冲正
+            List<TaRsAccDtl> taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtl2111Qry);
             if(taRsAccDtlList.size() == 1){
                 String actFlag = taRsAccDtlList.get(0).getActFlag();
                 if(actFlag.equals(EnuActFlag.ACT_SUCCESS.getCode())){
@@ -165,26 +167,31 @@ public class TaPayoutAction {
             }
 
             // 本地存取（对账用）
-            taRsAccDtlTemp = new TaRsAccDtl();
-            taRsAccDtlTemp.setBizId(taTxnFdcCanclSend.getBizId());
-            taRsAccDtlTemp.setTxCode(EnuTaFdcTxCode.TRADE_2102.getCode());
-            taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtlTemp);
+            TaRsAccDtl taRsAccDtl2102Qry = new TaRsAccDtl();
+            taRsAccDtl2102Qry.setBizId(taTxnFdcCanclSend.getBizId());
+            taRsAccDtl2102Qry.setTxCode(EnuTaFdcTxCode.TRADE_2102.getCode());
+            taRsAccDtl2102Qry.setCanclFlag(EnuActCanclFlag.ACT_CANCL0.getCode());  // 未冲正
+            taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtl2102Qry);
             if(taRsAccDtlList.size() == 1){
-                taRsAccDtlTemp = taRsAccDtlList.get(0);
+                TaRsAccDtl taRsAccDtlTemp = taRsAccDtlList.get(0);
+
+                // 交存记账的冲正标志
+                TaRsAccDtl taRsAccDtl2102Temp = (TaRsAccDtl)BeanUtils.cloneBean(taRsAccDtlTemp);
+                taRsAccDtl2102Temp.setCanclFlag(EnuActCanclFlag.ACT_CANCL1.getCode());
+                taAccDetlService.updateRecord(taRsAccDtl2102Temp);
+
                 // 与划拨记账：收款账号和付款账号关系正好颠倒
                 taRsAccDtlTemp.setTxCode(EnuTaFdcTxCode.TRADE_2111.getCode());
                 taRsAccDtlTemp.setActFlag(EnuActFlag.ACT_UNKNOWN.getCode());
                 taRsAccDtlTemp.setReqSn(ToolUtil.getStrAppReqSn_Back());
-
+                taRsAccDtlTemp.setCanclFlag(EnuActCanclFlag.ACT_CANCL1.getCode());
                 taAccDetlService.insertRecord(taRsAccDtlTemp);
+                // 往SBS和FDC发送记账信息
+                sendAndRecvSBSAndFDC(taRsAccDtlTemp);
             } else {
                 logger.error(RfmMessage.getProperty("TransferCorrection.E001"));
                 MessageUtil.addError(RfmMessage.getProperty("TransferCorrection.E003"));
-                return;
             }
-
-            // 往SBS和FDC发送记账信息
-            sendAndRecvSBSAndFDC(taRsAccDtlTemp);
         }catch (Exception e){
             logger.error("划拨冲正用，", e);
             MessageUtil.addError(e.getMessage());
