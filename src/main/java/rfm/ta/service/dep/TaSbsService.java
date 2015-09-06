@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import platform.common.utils.MessageUtil;
 import rfm.ta.common.enums.EnuTaFdcTxCode;
 import rfm.ta.common.enums.EnuTaSbsTxCode;
 import rfm.ta.common.enums.EnuTaTxnRtnCode;
@@ -172,6 +173,8 @@ public class TaSbsService {
                             }
                         }
                     }
+                } else {
+                    MessageUtil.addError(toa900012602Temp.header.RETURN_MSG);
                 }
             }
             return taRsAccDtlListTemp;
