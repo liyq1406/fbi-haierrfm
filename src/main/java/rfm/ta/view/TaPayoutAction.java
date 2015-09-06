@@ -173,8 +173,6 @@ public class TaPayoutAction {
                 taRsAccDtlTemp = taRsAccDtlList.get(0);
                 // 与划拨记账：收款账号和付款账号关系正好颠倒
                 taRsAccDtlTemp.setTxCode(EnuTaFdcTxCode.TRADE_2111.getCode());
-                taRsAccDtlTemp.setSpvsnAccId(taRsAccDtlTemp.getSpvsnAccId());
-                taRsAccDtlTemp.setGerlAccId(taRsAccDtlTemp.getGerlAccId());
                 taRsAccDtlTemp.setActFlag(EnuActFlag.ACT_UNKNOWN.getCode());
                 taRsAccDtlTemp.setReqSn(ToolUtil.getStrAppReqSn_Back());
 

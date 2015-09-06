@@ -8,7 +8,6 @@ import platform.common.utils.MessageUtil;
 import platform.service.PtenudetailService;
 import pub.platform.advance.utils.RfmMessage;
 import rfm.qd.service.RsSysctlService;
-import rfm.ta.common.enums.EnuActRslt;
 import rfm.ta.common.enums.EnuTaAccStatus;
 import rfm.ta.common.enums.EnuTaTxnRtnCode;
 import rfm.ta.repository.model.TaRsAcc;
@@ -19,9 +18,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.

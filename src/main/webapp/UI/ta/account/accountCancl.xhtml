@@ -51,8 +51,9 @@
                                          requiredMessage="必须输入申请编号！"
                                          value="#{taAccAction.taRsAcc.bizId}"/>
 
-                            <h:outputLabel value="*【账号】:" for="accId"/>
-                            <h:inputText autocomplete="off" id="accId"
+                            <h:outputLabel value="*【专户账号】:" for="accId"/>
+                            <h:inputText id="accId" required="true"
+                                         requiredMessage="必须输入专户账号！"
                                          value="#{taAccAction.taRsAcc.spvsnAccId}">
                             </h:inputText>
                         </h:panelGrid>

@@ -44,18 +44,18 @@
             <h:form id="actqueryForm">
                 <p:panel id="query" header="【监管账户信息】查询">
                     <h:panelGrid columns="2" cellspacing="3" style="width:100%">
-                        <h:panelGrid columns="4" cellspacing="3" style="width:90%"
+                        <h:panelGrid columns="6" cellspacing="3" style="width:90%"
                                      columnClasses="col-95,col-5,col-95,col-5">
 
-                            <h:outputLabel value="*【账户类别】:" for="accType"/>
+                            <h:outputLabel value="【账户类别】:" for="accType"/>
                             <h:selectOneMenu id="accType" value="#{taAccAction.taRsAcc.spvsnAccType}">
                                 <f:selectItems value="#{ptenudetailAction.taAccTypeList}"/>
                             </h:selectOneMenu>
-                            <h:outputLabel value="*【账号】:" for="accId"/>
+                            <h:outputLabel value="【账号】:" for="accId"/>
                             <h:inputText autocomplete="off" id="accId"
                                          value="#{taAccAction.taRsAcc.spvsnAccId}">
                             </h:inputText>
-                            <h:outputLabel value="*【名称】:" for="accName"/>
+                            <h:outputLabel value="【名称】:" for="accName"/>
                             <h:inputText id="accName" value="#{taAccAction.taRsAcc.spvsnAccName}"/>
                         </h:panelGrid>
                         <p:commandButton update="msgs,pdt" style="width: 80px"

@@ -32,29 +32,12 @@
         </javaClientGenerator>
 
         <!--房地产资金监管银行接口类 -->
-        <table tableName="TA_TXN_FDC_NOTRECV_RTN">
-            <property name="ignoreQualifiersAtRuntime" value="true" />
-            <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
-        </table>
-
-        <!--<table tableName="TA_RS_ACC">
+        <table tableName="TA_RS_ACC">
             <property name="ignoreQualifiersAtRuntime" value="true" />
             <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
         </table>
         <table tableName="TA_RS_ACC_DTL">
             <property name="ignoreQualifiersAtRuntime" value="true" />
-            <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
-        </table>
-        <table tableName="TA_TXN_FDC_NOTRECV_RTN">
-            <property name="ignoreQualifiersAtRuntime" value="true" />
-            <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
-        </table>
-        <table tableName="TA_RS_CHECK">
-            <property name="ignoreQualifiersAtRuntime" value="true" />
-            <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
-        </table>
-        <table tableName="TA_RS_SEND_LOG">
-            <property name="ignoreQualifiersAtRuntime" value="true"/>
             <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
         </table>
         <table tableName="TA_TXN_SBS">
@@ -64,7 +47,7 @@
         <table tableName="TA_TXN_FDC">
             <property name="ignoreQualifiersAtRuntime" value="true" />
             <generatedKey column="pk_id" sqlStatement="select sys_guid() from dual" identity="false"/>
-        </table>-->
+        </table>
     </context>
 
 </generatorConfiguration>

@@ -43,12 +43,6 @@ public class TaAccDetlService {
         if (taRsAccDtlPara.getTxCode() !=null && !StringUtils.isEmpty(taRsAccDtlPara.getTxCode().trim())) {
             criteria.andTxCodeEqualTo(taRsAccDtlPara.getTxCode());
         }
-        if (taRsAccDtlPara.getSpvsnAccName() !=null && !StringUtils.isEmpty(taRsAccDtlPara.getSpvsnAccName().trim())) {
-            criteria.andSpvsnAccNameLike("%" + taRsAccDtlPara.getSpvsnAccName() + "%");
-        }
-        if (taRsAccDtlPara.getSpvsnAccId() != null && !StringUtils.isEmpty(taRsAccDtlPara.getSpvsnAccId().trim())) {
-            criteria.andSpvsnAccIdEqualTo(taRsAccDtlPara.getSpvsnAccId());
-        }
         if (taRsAccDtlPara.getTxDate()!= null && !StringUtils.isEmpty(taRsAccDtlPara.getTxDate().trim())) {
             criteria.andTxDateEqualTo(taRsAccDtlPara.getTxDate());
         }

@@ -152,8 +152,6 @@ public class DepMsgListener implements MessageListener {
                         taRsAccDtlTemp = taRsAccDtlList.get(0);
                         // 与交存记账：收款账号和付款账号关系正好颠倒
                         taRsAccDtlTemp.setTxCode(EnuTaFdcTxCode.TRADE_2011.getCode());
-                        taRsAccDtlTemp.setSpvsnAccId(taRsAccDtlTemp.getSpvsnAccId());
-                        taRsAccDtlTemp.setGerlAccId(taRsAccDtlTemp.getGerlAccId());
                         taRsAccDtlTemp.setActFlag(EnuActFlag.ACT_UNKNOWN.getCode());
                         taRsAccDtlTemp.setReqSn(ToolUtil.getStrAppReqSn_Back());
                         taRsAccDtlTemp.setReturnCode(EnuTaTxnRtnCode.TXN_PROCESSED.getCode());

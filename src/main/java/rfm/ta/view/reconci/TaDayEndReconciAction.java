@@ -79,7 +79,6 @@ public class TaDayEndReconciAction implements Serializable {
                 taRsAccDtl.setTxAmt(df.format(Double.valueOf(taRsAccDtl.getTxAmt())));
             }
             strLocalTotalAmt = ToolUtil.getMoneyString(total);
-            System.out.println("======>" + taRsAccDtlLocalList.get(0).getSpvsnAccId());
         }
     }
 
@@ -200,6 +199,9 @@ public class TaDayEndReconciAction implements Serializable {
         }
     }
 
+    /**
+     * 数据发送
+     */
     public void onBlnc() {
         File file = null;
         try {
@@ -231,7 +233,7 @@ public class TaDayEndReconciAction implements Serializable {
     }
 
     /**
-     * 比较两个List
+     * 内对_本地记账与SBS对账（比较两个List）
      */
     public void reconci(){
         List<TaRsAccDtl> taRsAccDtlLocalListPara = taRsAccDtlLocalList;

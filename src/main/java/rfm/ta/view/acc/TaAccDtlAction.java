@@ -34,11 +34,8 @@ public class TaAccDtlAction implements Serializable {
     @PostConstruct
     public void init(){
         TaRsAccDtl taRsAccDtlPara=new TaRsAccDtl();
-        taRsAccDtlPara.setTxDate(ToolUtil.getNow("yyyyMMdd"));
+        taRsAccDtlPara.setTxDate(ToolUtil.getNow("yyyy-MM-dd"));
         taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtlPara);
-        if(taRsAccDtlList.size()>0) {
-            System.out.println("======>" + taRsAccDtlList.get(0).getSpvsnAccId());
-        }
     }
 
     //= = = = = = = = = = = = get set = = = = = = = = = = = =

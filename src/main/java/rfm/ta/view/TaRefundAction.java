@@ -212,8 +212,6 @@ public class TaRefundAction {
                 taRsAccDtlTemp = taRsAccDtlList.get(0);
                 // 与返还记账：收款账号和付款账号关系正好颠倒
                 taRsAccDtlTemp.setTxCode(EnuTaFdcTxCode.TRADE_2211.getCode());
-                taRsAccDtlTemp.setSpvsnAccId(taRsAccDtlTemp.getSpvsnAccId());
-                taRsAccDtlTemp.setGerlAccId(taRsAccDtlTemp.getGerlAccId());
                 taRsAccDtlTemp.setActFlag(EnuActFlag.ACT_UNKNOWN.getCode());
                 taRsAccDtlTemp.setReqSn(ToolUtil.getStrAppReqSn_Back());
 
