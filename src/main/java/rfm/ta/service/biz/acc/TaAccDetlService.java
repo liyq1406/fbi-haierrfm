@@ -46,6 +46,9 @@ public class TaAccDetlService {
         if (taRsAccDtlPara.getTxDate()!= null && !StringUtils.isEmpty(taRsAccDtlPara.getTxDate().trim())) {
             criteria.andTxDateEqualTo(taRsAccDtlPara.getTxDate());
         }
+        if (taRsAccDtlPara.getCanclFlag()!= null && !StringUtils.isEmpty(taRsAccDtlPara.getCanclFlag().trim())) {
+            criteria.andCanclFlagEqualTo(taRsAccDtlPara.getCanclFlag());
+        }
         criteria.andDeletedFlagEqualTo("0");
         example.setOrderByClause("SPVSN_ACC_NAME");
         return taRsAccDtlMapper.selectByExample(example);

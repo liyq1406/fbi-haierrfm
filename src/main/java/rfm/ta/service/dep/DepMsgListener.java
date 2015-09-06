@@ -80,6 +80,7 @@ public class DepMsgListener implements MessageListener {
                 TaRsAccDtl taRsAccDtlTempQry = new TaRsAccDtl();
                 taRsAccDtlTempQry.setBizId(tia900010002Temp.header.BIZ_ID);            // 业务编号
                 taRsAccDtlTempQry.setTxCode(tia900010002Temp.header.TX_CODE);          // 交易号
+                taRsAccDtlTempQry.setCanclFlag(EnuActCanclFlag.ACT_CANCL0.getCode());  // 未冲正
                 List<TaRsAccDtl> taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtlTempQry);
                 if(taRsAccDtlList.size() == 1){
                     TaRsAccDtl taRsAccDtlValiExists = taRsAccDtlList.get(0);
@@ -119,6 +120,7 @@ public class DepMsgListener implements MessageListener {
                     taRsAccDtlTemp.setDeletedFlag(EnuTaArchivedFlag.ARCHIVED_FLAG0.getCode());// 删除标志
                     taRsAccDtlTemp.setActFlag(EnuActFlag.ACT_UNKNOWN.getCode());              // 交易状态
                     taRsAccDtlTemp.setReturnCode(EnuTaTxnRtnCode.TXN_PROCESSED.getCode());
+                    taRsAccDtlTemp.setCanclFlag(EnuActCanclFlag.ACT_CANCL0.getCode());
                     taAccDetlService.insertRecord(taRsAccDtlTemp);
                 }
                 sendAndRecvSBSAndFDC(taRsAccDtlTemp,correlationID,propertyMap);
@@ -130,6 +132,7 @@ public class DepMsgListener implements MessageListener {
                 TaRsAccDtl taRsAccDtlTempQry = new TaRsAccDtl();
                 taRsAccDtlTempQry.setBizId(tia900010002Temp.header.BIZ_ID);            // 业务编号
                 taRsAccDtlTempQry.setTxCode(tia900010002Temp.header.TX_CODE);          // 交易号
+                taRsAccDtlTempQry.setCanclFlag(EnuActCanclFlag.ACT_CANCL0.getCode());  // 未冲正
                 List<TaRsAccDtl> taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtlTempQry);
                 if(taRsAccDtlList.size() == 1){
                     TaRsAccDtl taRsAccDtlValiExists = taRsAccDtlList.get(0);
@@ -150,12 +153,17 @@ public class DepMsgListener implements MessageListener {
                     taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtlTemp);
                     if(taRsAccDtlList.size() == 1){ // 存在交存的处理
                         taRsAccDtlTemp = taRsAccDtlList.get(0);
+                        // 交存记账的冲正标志
+                        TaRsAccDtl taRsAccDtl2002Temp = (TaRsAccDtl)BeanUtils.cloneBean(taRsAccDtlTemp);
+                        taRsAccDtl2002Temp.setCanclFlag(EnuActCanclFlag.ACT_CANCL1.getCode());
+                        taAccDetlService.updateRecord(taRsAccDtl2002Temp);
+
                         // 与交存记账：收款账号和付款账号关系正好颠倒
                         taRsAccDtlTemp.setTxCode(EnuTaFdcTxCode.TRADE_2011.getCode());
                         taRsAccDtlTemp.setActFlag(EnuActFlag.ACT_UNKNOWN.getCode());
                         taRsAccDtlTemp.setReqSn(ToolUtil.getStrAppReqSn_Back());
                         taRsAccDtlTemp.setReturnCode(EnuTaTxnRtnCode.TXN_PROCESSED.getCode());
-
+                        taRsAccDtlTemp.setCanclFlag(EnuActCanclFlag.ACT_CANCL1.getCode());
                         taAccDetlService.insertRecord(taRsAccDtlTemp);
                     } else { // 不存在交存的处理
                         Toa900010002 toa900010002 = new Toa900010002();

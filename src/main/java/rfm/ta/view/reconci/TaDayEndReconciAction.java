@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import platform.common.utils.MessageUtil;
 import pub.platform.advance.utils.RfmMessage;
+import rfm.ta.common.enums.EnuActCanclFlag;
 import rfm.ta.common.enums.EnuTaBankId;
 import rfm.ta.common.enums.EnuTaCityId;
 import rfm.ta.common.enums.EnuTaFdcTxCode;
@@ -49,7 +50,6 @@ public class TaDayEndReconciAction implements Serializable {
     // 账务交易明细
     private List<TaRsAccDtl> taRsAccDtlLocalList;
     private List<TaRsAccDtl> taRsAccDtlSbsList;
-    private List<TaRsAccDtl> taRsAccDtlReconci;
 
     private String strLocalTotalCounts;
     private String strLocalTotalAmt;
@@ -60,7 +60,6 @@ public class TaDayEndReconciAction implements Serializable {
 
     @PostConstruct
     public void init(){
-        taRsAccDtlReconci = new ArrayList<TaRsAccDtl>();
         txCodeMap = getTxCodeMapByEnum();
         strLocalTotalCounts="0";
         strLocalTotalAmt="0";
@@ -72,7 +71,6 @@ public class TaDayEndReconciAction implements Serializable {
         taRsAccDtlLocalList = taAccDetlService.selectedRecords(taRsAccDtlPara);
         strLocalTotalCounts=String.valueOf(taRsAccDtlLocalList.size());
         if(taRsAccDtlLocalList.size()>0) {
-            taRsAccDtlReconci.addAll(taRsAccDtlLocalList);
             Double total = 0d;
             for(TaRsAccDtl taRsAccDtl:taRsAccDtlLocalList){
                 total += Double.valueOf(taRsAccDtl.getTxAmt());
@@ -82,6 +80,9 @@ public class TaDayEndReconciAction implements Serializable {
         }
     }
 
+    /**
+     * 从SBS取数据
+     */
     public void onQrySbsData() {
         try {
             // 往SBS发送记账信息
@@ -205,6 +206,10 @@ public class TaDayEndReconciAction implements Serializable {
     public void onBlnc() {
         File file = null;
         try {
+            TaRsAccDtl taRsAccDtlPara=new TaRsAccDtl();
+            taRsAccDtlPara.setTxDate(ToolUtil.getNow("yyyy-MM-dd"));
+            taRsAccDtlPara.setCanclFlag(EnuActCanclFlag.ACT_CANCL1.getCode());
+            List<TaRsAccDtl> taRsAccDtlReconci = taAccDetlService.selectedRecords(taRsAccDtlPara);
             String fileName = "PF"+ EnuTaBankId.BANK_HAIER.getCode()+
                     EnuTaCityId.CITY_TAIAN.getCode()+
                     ToolUtil.getNow("yyyyMMdd")+".dat";
@@ -295,14 +300,6 @@ public class TaDayEndReconciAction implements Serializable {
     }
 
     //= = = = = = = = = = = = get set = = = = = = = = = = = =
-    public List<TaRsAccDtl> getTaRsAccDtlReconci() {
-        return taRsAccDtlReconci;
-    }
-
-    public void setTaRsAccDtlReconci(List<TaRsAccDtl> taRsAccDtlReconci) {
-        this.taRsAccDtlReconci = taRsAccDtlReconci;
-    }
-
     public Map<String, String> getTxCodeMap() {
         return txCodeMap;
     }

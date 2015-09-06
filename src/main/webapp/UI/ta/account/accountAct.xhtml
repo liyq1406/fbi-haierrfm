@@ -67,16 +67,16 @@
                                 <f:selectItems value="#{ptenudetailAction.taAccTypeList}"/>
                             </h:selectOneMenu>
 
-                            <h:outputLabel value="*【监管申请编号】:" for="originId"/>
-                            <h:inputText id="originId" required="true" maxlength="14"
-                                         requiredMessage="必须输入申请编号！"
-                                         value="#{taAccAction.taRsAcc.bizId}"/>
-
                             <h:outputLabel value="*【专户账号】:" for="accId"/>
                             <h:inputText autocomplete="off" id="accId" required="true"
                                          requiredMessage="必须输入专户账号！"
                                          value="#{taAccAction.taRsAcc.spvsnAccId}">
                             </h:inputText>
+
+                            <h:outputLabel value="*【申请编号】:" for="originId"/>
+                            <h:inputText id="originId" required="true" maxlength="14"
+                                         requiredMessage="必须输入申请编号！"
+                                         value="#{taAccAction.taRsAcc.bizId}"/>
 
                             <h:outputLabel value="*【专户名称】:" for="accName"/>
                             <h:inputText id="accName" required="true"
