@@ -244,16 +244,32 @@ public class TaDayEndReconciAction implements Serializable {
         // 遍历List1
         for(TaRsAccDtl taRsAccDtl1:taRsAccDtlLocalListPara){
             isExist = false;
-            // 遍历List2
-            for(TaRsAccDtl taRsAccDtl2:taRsAccDtlSbsListPara){
-                if(taRsAccDtl1.getReqSn().substring(8,26).equals(taRsAccDtl2.getReqSn())
-                        &&taRsAccDtl1.getSpvsnAccId().equals(taRsAccDtl2.getSpvsnAccId())
-                        &&taRsAccDtl1.getGerlAccId().equals(taRsAccDtl2.getGerlAccId())
-                        &&taRsAccDtl1.getTxAmt().equals(taRsAccDtl2.getTxAmt())){
-                    isExist = true;
-                    taRsAccDtlList2Repeat.add(taRsAccDtl2);
+            if(taRsAccDtl1.getTxCode().equals(EnuTaFdcTxCode.TRADE_2002.getCode()) ||
+                taRsAccDtl1.getTxCode().equals(EnuTaFdcTxCode.TRADE_2111.getCode()) ||
+                    taRsAccDtl1.getTxCode().equals(EnuTaFdcTxCode.TRADE_2211.getCode())){ // 一般账户→监管账户
+                // 遍历List2
+                for(TaRsAccDtl taRsAccDtl2:taRsAccDtlSbsListPara){
+                    if(taRsAccDtl1.getReqSn().substring(8,26).equals(taRsAccDtl2.getReqSn())
+                            &&taRsAccDtl1.getGerlAccId().equals(taRsAccDtl2.getSpvsnAccId())
+                            &&taRsAccDtl1.getSpvsnAccId().equals(taRsAccDtl2.getGerlAccId())
+                            &&taRsAccDtl1.getTxAmt().equals(taRsAccDtl2.getTxAmt())){
+                        isExist = true;
+                        taRsAccDtlList2Repeat.add(taRsAccDtl2);
+                    }
+                }
+            } else { // 监管账户→一般账户
+                // 遍历List2
+                for(TaRsAccDtl taRsAccDtl2:taRsAccDtlSbsListPara){
+                    if(taRsAccDtl1.getReqSn().substring(8,26).equals(taRsAccDtl2.getReqSn())
+                            &&taRsAccDtl1.getSpvsnAccId().equals(taRsAccDtl2.getSpvsnAccId())
+                            &&taRsAccDtl1.getGerlAccId().equals(taRsAccDtl2.getGerlAccId())
+                            &&taRsAccDtl1.getTxAmt().equals(taRsAccDtl2.getTxAmt())){
+                        isExist = true;
+                        taRsAccDtlList2Repeat.add(taRsAccDtl2);
+                    }
                 }
             }
+
             if(isExist){
                 taRsAccDtlList1Repeat.add(taRsAccDtl1);
             }
