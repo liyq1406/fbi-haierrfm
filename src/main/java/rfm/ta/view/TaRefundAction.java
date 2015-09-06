@@ -167,6 +167,18 @@ public class TaRefundAction {
                         taFdcService.sendAndRecvRealTimeTxn9902211(taTxnFdcTemp);
                         /*记账后查询*/
                         taTxnFdcCanclSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcTemp.getPkId());
+
+                        // 修改返还记账的冲正标志
+                        TaRsAccDtl taRsAccDtl2202Qry = new TaRsAccDtl();
+                        taRsAccDtl2202Qry.setBizId(taTxnFdcCanclSend.getBizId());
+                        taRsAccDtl2202Qry.setTxCode(EnuTaFdcTxCode.TRADE_2202.getCode());
+                        taRsAccDtl2202Qry.setCanclFlag(EnuActCanclFlag.ACT_CANCL0.getCode());  // 未冲正
+                        taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtl2202Qry);
+                        if(taRsAccDtlList.size() == 1) {
+                            TaRsAccDtl taRsAccDtlTemp = taRsAccDtlList.get(0);
+                            taRsAccDtlTemp.setCanclFlag(EnuActCanclFlag.ACT_CANCL1.getCode());
+                            taAccDetlService.updateRecord(taRsAccDtlTemp);
+                        }
                     }
 
                     MessageUtil.addInfo(toaSbs.getHeader().RETURN_MSG);
@@ -188,10 +200,11 @@ public class TaRefundAction {
     public void onBtnCanclClick() {
         try {
             // 验证重复冲正
-            TaRsAccDtl taRsAccDtlTemp = new TaRsAccDtl();
-            taRsAccDtlTemp.setBizId(taTxnFdcCanclSend.getBizId());
-            taRsAccDtlTemp.setTxCode(EnuTaFdcTxCode.TRADE_2211.getCode());
-            List<TaRsAccDtl> taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtlTemp);
+            TaRsAccDtl taRsAccDtl2211Qry = new TaRsAccDtl();
+            taRsAccDtl2211Qry.setBizId(taTxnFdcCanclSend.getBizId());
+            taRsAccDtl2211Qry.setTxCode(EnuTaFdcTxCode.TRADE_2211.getCode());
+            taRsAccDtl2211Qry.setCanclFlag(EnuActCanclFlag.ACT_CANCL0.getCode());
+            List<TaRsAccDtl> taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtl2211Qry);
             if(taRsAccDtlList.size() == 1){
                 String actFlag = taRsAccDtlList.get(0).getActFlag();
                 if(actFlag.equals(EnuActFlag.ACT_SUCCESS.getCode())){
@@ -203,27 +216,27 @@ public class TaRefundAction {
             }
 
             // 本地存取（对账用）
-            taRsAccDtlTemp = new TaRsAccDtl();
-            taRsAccDtlTemp.setBizId(taTxnFdcCanclSend.getBizId());
-            taRsAccDtlTemp.setTxCode(EnuTaFdcTxCode.TRADE_2202.getCode());
-            taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtlTemp);
-            taRsAccDtlTemp = null;
+            TaRsAccDtl taRsAccDtl2202Qry = new TaRsAccDtl();
+            taRsAccDtl2202Qry.setBizId(taTxnFdcCanclSend.getBizId());
+            taRsAccDtl2202Qry.setTxCode(EnuTaFdcTxCode.TRADE_2202.getCode());
+            taRsAccDtl2202Qry.setCanclFlag(EnuActCanclFlag.ACT_CANCL0.getCode());
+            taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtl2202Qry);
             if(taRsAccDtlList.size() == 1){
-                taRsAccDtlTemp = taRsAccDtlList.get(0);
+                TaRsAccDtl taRsAccDtlTemp = taRsAccDtlList.get(0);
                 // 与返还记账：收款账号和付款账号关系正好颠倒
                 taRsAccDtlTemp.setTxCode(EnuTaFdcTxCode.TRADE_2211.getCode());
                 taRsAccDtlTemp.setActFlag(EnuActFlag.ACT_UNKNOWN.getCode());
+                taRsAccDtlTemp.setCanclFlag(EnuActCanclFlag.ACT_CANCL0.getCode());
                 taRsAccDtlTemp.setReqSn(ToolUtil.getStrAppReqSn_Back());
 
                 taAccDetlService.insertRecord(taRsAccDtlTemp);
+                // 往SBS和FDC发送记账信息
+                sendAndRecvSBSAndFDC(taRsAccDtlTemp);
             } else {
                 logger.error(RfmMessage.getProperty("ReturnCorrection.E003"));
                 MessageUtil.addError(RfmMessage.getProperty("ReturnCorrection.E003"));
                 return;
             }
-
-            // 往SBS和FDC发送记账信息
-            sendAndRecvSBSAndFDC(taRsAccDtlTemp);
         }catch (Exception e){
             logger.error("返还冲正用，", e);
             MessageUtil.addError(e.getMessage());
