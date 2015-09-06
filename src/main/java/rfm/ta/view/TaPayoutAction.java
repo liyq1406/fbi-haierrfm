@@ -233,7 +233,7 @@ public class TaPayoutAction {
 
                     MessageUtil.addInfo(toaSbs.getHeader().RETURN_MSG);
                 } else { // SBS记账失败的处理
-                    taAccDetlService.deleteRecord(taRsAccDtl.getPkId());
+                    taAccDetlService.deleteRecord(taRsAccDtlPara.getPkId());
                     MessageUtil.addInfo(toaSbs.getHeader().RETURN_MSG);
                     return false;
                 }
