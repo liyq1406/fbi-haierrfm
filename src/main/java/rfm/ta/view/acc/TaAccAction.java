@@ -105,13 +105,13 @@ public class TaAccAction {
                     return;
                 }
             }
-            taRsAcc = taRsAccListTemp.get(0);
-            TOA toaTa = taFdcService.sendAndRecvRealTimeTxn9901002(taRsAcc);
+
+            TaRsAcc taRsAccTemp=taRsAccListTemp.get(0);
+            taRsAccTemp.setBizId(taRsAcc.getBizId());
+
+            TOA toaTa = taFdcService.sendAndRecvRealTimeTxn9901002(taRsAccTemp);
             if(toaTa !=null) {
                 if ((EnuTaTxnRtnCode.TXN_PROCESSED.getCode()).equals(toaTa.getHeader().RETURN_CODE)) { // TA成功的处理
-                    // 初始帐户余额均为可用
-                    taAccService.insertRecord(taRsAcc);
-
                     taRsAccRecv.setReturnCode(toaTa.getHeader().RETURN_CODE);
                     taRsAccRecv.setFdcSn(toaTa.getHeader().REQ_SN);
                     taRsAccRecv.setReturnMsg(toaTa.getHeader().RETURN_MSG);

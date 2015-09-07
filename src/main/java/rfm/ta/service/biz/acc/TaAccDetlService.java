@@ -50,7 +50,7 @@ public class TaAccDetlService {
             criteria.andCanclFlagEqualTo(taRsAccDtlPara.getCanclFlag());
         }
         criteria.andDeletedFlagEqualTo("0");
-        example.setOrderByClause("SPVSN_ACC_NAME");
+        example.setOrderByClause("CREATED_TIME DESC");
         return taRsAccDtlMapper.selectByExample(example);
     }
 
@@ -73,6 +73,7 @@ public class TaAccDetlService {
         }
 
         criteria.andDeletedFlagEqualTo("0");
+        example.setOrderByClause("CREATED_TIME DESC");
         return taRsAccDtlMapper.selectByExample(example);
     }
 

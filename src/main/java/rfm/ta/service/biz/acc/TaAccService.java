@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import platform.service.PtenudetailService;
 import pub.platform.advance.utils.RfmMessage;
 import rfm.ta.common.enums.EnuTaAccStatus;
 import rfm.ta.common.enums.EnuTaArchivedFlag;
@@ -29,8 +28,6 @@ public class TaAccService {
 
     @Autowired
     private TaRsAccMapper accountMapper;
-    @Autowired
-    private PtenudetailService ptenudetailService;
     @Autowired
     private TaCommonMapper taCommonMapper;
 
@@ -81,23 +78,6 @@ public class TaAccService {
             return false;
         }
         return true;
-    }
-
-    /**
-     * 查询所有未删除监管账户记录
-     *
-     * @return
-     */
-    public List<TaRsAcc> qryAllRecords() {
-        TaRsAccExample example = new TaRsAccExample();
-        example.createCriteria().andDeletedFlagEqualTo("0");
-        return accountMapper.selectByExample(example);
-    }
-
-    public TaRsAcc qryRecord(String pkid){
-        TaRsAccExample example = new TaRsAccExample();
-        example.createCriteria().andDeletedFlagEqualTo("0");
-        return accountMapper.selectByPrimaryKey(pkid);
     }
 
     public List<TaRsAcc> qryAllMonitRecords() {
