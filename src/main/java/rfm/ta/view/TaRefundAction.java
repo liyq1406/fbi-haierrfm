@@ -109,9 +109,9 @@ public class TaRefundAction {
             TaRsAccDtl taRsAccDtl = new TaRsAccDtl();
             taRsAccDtl.setBizId(taTxnFdcValiSendAndRecv.getBizId());
             taRsAccDtl.setTxCode(EnuTaFdcTxCode.TRADE_2202.getCode());
-            List<TaRsAccDtl> taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtl);
-            if(taRsAccDtlList.size() == 1){
-                String actFlag = taRsAccDtlList.get(0).getActFlag();
+            List<TaRsAccDtl> taRsAccDtlListQry = taAccDetlService.selectedRecords(taRsAccDtl);
+            if(taRsAccDtlListQry.size() == 1){
+                String actFlag = taRsAccDtlListQry.get(0).getActFlag();
                 if(actFlag.equals(EnuActFlag.ACT_SUCCESS.getCode())){
                     MessageUtil.addError(RfmMessage.getProperty("ReturnVerification.E003"));
                 } else if(actFlag.equals(EnuActFlag.ACT_UNKNOWN.getCode())){
@@ -168,14 +168,18 @@ public class TaRefundAction {
                         /*记账后查询*/
                         taTxnFdcCanclSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcTemp.getPkId());
 
+                        // 修改交存冲正的冲正标志
+                        taRsAccDtlPara.setCanclFlag(EnuActCanclFlag.ACT_CANCL1.getCode());
+                        taAccDetlService.updateRecord(taRsAccDtlPara);
+
                         // 修改返还记账的冲正标志
                         TaRsAccDtl taRsAccDtl2202Qry = new TaRsAccDtl();
                         taRsAccDtl2202Qry.setBizId(taTxnFdcCanclSend.getBizId());
                         taRsAccDtl2202Qry.setTxCode(EnuTaFdcTxCode.TRADE_2202.getCode());
                         taRsAccDtl2202Qry.setCanclFlag(EnuActCanclFlag.ACT_CANCL0.getCode());  // 未冲正
-                        taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtl2202Qry);
-                        if(taRsAccDtlList.size() == 1) {
-                            TaRsAccDtl taRsAccDtlTemp = taRsAccDtlList.get(0);
+                        List<TaRsAccDtl> taRsAccDtlListQry = taAccDetlService.selectedRecords(taRsAccDtl2202Qry);
+                        if(taRsAccDtlListQry.size() == 1) {
+                            TaRsAccDtl taRsAccDtlTemp = taRsAccDtlListQry.get(0);
                             taRsAccDtlTemp.setCanclFlag(EnuActCanclFlag.ACT_CANCL1.getCode());
                             taAccDetlService.updateRecord(taRsAccDtlTemp);
                         }
@@ -204,9 +208,9 @@ public class TaRefundAction {
             taRsAccDtl2211Qry.setBizId(taTxnFdcCanclSend.getBizId());
             taRsAccDtl2211Qry.setTxCode(EnuTaFdcTxCode.TRADE_2211.getCode());
             taRsAccDtl2211Qry.setCanclFlag(EnuActCanclFlag.ACT_CANCL0.getCode());
-            List<TaRsAccDtl> taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtl2211Qry);
-            if(taRsAccDtlList.size() == 1){
-                String actFlag = taRsAccDtlList.get(0).getActFlag();
+            List<TaRsAccDtl> taRsAccDtlListQry = taAccDetlService.selectedRecords(taRsAccDtl2211Qry);
+            if(taRsAccDtlListQry.size() == 1){
+                String actFlag = taRsAccDtlListQry.get(0).getActFlag();
                 if(actFlag.equals(EnuActFlag.ACT_SUCCESS.getCode())){
                     MessageUtil.addError(RfmMessage.getProperty("ReturnCorrection.E001"));
                 } else if(actFlag.equals(EnuActFlag.ACT_UNKNOWN.getCode())){
@@ -220,9 +224,9 @@ public class TaRefundAction {
             taRsAccDtl2202Qry.setBizId(taTxnFdcCanclSend.getBizId());
             taRsAccDtl2202Qry.setTxCode(EnuTaFdcTxCode.TRADE_2202.getCode());
             taRsAccDtl2202Qry.setCanclFlag(EnuActCanclFlag.ACT_CANCL0.getCode());
-            taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtl2202Qry);
-            if(taRsAccDtlList.size() == 1){
-                TaRsAccDtl taRsAccDtlTemp = taRsAccDtlList.get(0);
+            taRsAccDtlListQry = taAccDetlService.selectedRecords(taRsAccDtl2202Qry);
+            if(taRsAccDtlListQry.size() == 1){
+                TaRsAccDtl taRsAccDtlTemp = taRsAccDtlListQry.get(0);
                 // 与返还记账：收款账号和付款账号关系正好颠倒
                 taRsAccDtlTemp.setTxCode(EnuTaFdcTxCode.TRADE_2211.getCode());
                 taRsAccDtlTemp.setActFlag(EnuActFlag.ACT_UNKNOWN.getCode());
@@ -235,7 +239,6 @@ public class TaRefundAction {
             } else {
                 logger.error(RfmMessage.getProperty("ReturnCorrection.E003"));
                 MessageUtil.addError(RfmMessage.getProperty("ReturnCorrection.E003"));
-                return;
             }
         }catch (Exception e){
             logger.error("返还冲正用，", e);

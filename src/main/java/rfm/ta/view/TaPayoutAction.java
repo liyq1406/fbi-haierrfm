@@ -109,9 +109,9 @@ public class TaPayoutAction {
             taRsAccDtlTempQry.setBizId(taTxnFdcValiSendAndRecv.getBizId());
             taRsAccDtlTempQry.setTxCode(EnuTaFdcTxCode.TRADE_2102.getCode());
             taRsAccDtlTempQry.setCanclFlag(EnuActCanclFlag.ACT_CANCL0.getCode());  // 未冲正
-            List<TaRsAccDtl> taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtlTempQry);
-            if(taRsAccDtlList.size() == 1){
-                String actFlag = taRsAccDtlList.get(0).getActFlag();
+            List<TaRsAccDtl> taRsAccDtlListQry = taAccDetlService.selectedRecords(taRsAccDtlTempQry);
+            if(taRsAccDtlListQry.size() == 1){
+                String actFlag = taRsAccDtlListQry.get(0).getActFlag();
                 if(actFlag.equals(EnuActFlag.ACT_SUCCESS.getCode())){
                     MessageUtil.addError(RfmMessage.getProperty("TransferVerification.E002"));
                 } else if(actFlag.equals(EnuActFlag.ACT_UNKNOWN.getCode())){
@@ -155,9 +155,9 @@ public class TaPayoutAction {
             taRsAccDtl2111Qry.setBizId(taTxnFdcCanclSend.getBizId());
             taRsAccDtl2111Qry.setTxCode(EnuTaFdcTxCode.TRADE_2111.getCode());
             taRsAccDtl2111Qry.setCanclFlag(EnuActCanclFlag.ACT_CANCL0.getCode());  // 已冲正
-            List<TaRsAccDtl> taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtl2111Qry);
-            if(taRsAccDtlList.size() == 1){
-                String actFlag = taRsAccDtlList.get(0).getActFlag();
+            List<TaRsAccDtl> taRsAccDtlListQry = taAccDetlService.selectedRecords(taRsAccDtl2111Qry);
+            if(taRsAccDtlListQry.size() == 1){
+                String actFlag = taRsAccDtlListQry.get(0).getActFlag();
                 if(actFlag.equals(EnuActFlag.ACT_SUCCESS.getCode())){
                     MessageUtil.addError(RfmMessage.getProperty("TransferCorrection.E001"));
                 } else if(actFlag.equals(EnuActFlag.ACT_UNKNOWN.getCode())){
@@ -171,9 +171,9 @@ public class TaPayoutAction {
             taRsAccDtl2102Qry.setBizId(taTxnFdcCanclSend.getBizId());
             taRsAccDtl2102Qry.setTxCode(EnuTaFdcTxCode.TRADE_2102.getCode());
             taRsAccDtl2102Qry.setCanclFlag(EnuActCanclFlag.ACT_CANCL0.getCode());  // 未冲正
-            taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtl2102Qry);
-            if(taRsAccDtlList.size() == 1){
-                TaRsAccDtl taRsAccDtlTemp = taRsAccDtlList.get(0);
+            taRsAccDtlListQry = taAccDetlService.selectedRecords(taRsAccDtl2102Qry);
+            if(taRsAccDtlListQry.size() == 1){
+                TaRsAccDtl taRsAccDtlTemp = taRsAccDtlListQry.get(0);
                 // 与划拨记账：收款账号和付款账号关系正好颠倒
                 taRsAccDtlTemp.setTxCode(EnuTaFdcTxCode.TRADE_2111.getCode());
                 taRsAccDtlTemp.setActFlag(EnuActFlag.ACT_UNKNOWN.getCode());
@@ -232,14 +232,18 @@ public class TaPayoutAction {
                         /*记账后查询*/
                         taTxnFdcCanclSendAndRecv = taTxnFdcService.selectedRecordsByKey(taTxnFdcTemp.getPkId());
 
+                        // 修改交存冲正的冲正标志
+                        taRsAccDtlPara.setCanclFlag(EnuActCanclFlag.ACT_CANCL1.getCode());
+                        taAccDetlService.updateRecord(taRsAccDtlPara);
+
                         // 修改划拨记账的冲正标志
                         TaRsAccDtl taRsAccDtl2102Qry = new TaRsAccDtl();
                         taRsAccDtl2102Qry.setBizId(taTxnFdcCanclSend.getBizId());
                         taRsAccDtl2102Qry.setTxCode(EnuTaFdcTxCode.TRADE_2102.getCode());
                         taRsAccDtl2102Qry.setCanclFlag(EnuActCanclFlag.ACT_CANCL0.getCode());  // 未冲正
-                        taRsAccDtlList = taAccDetlService.selectedRecords(taRsAccDtl2102Qry);
-                        if(taRsAccDtlList.size() == 1) {
-                            TaRsAccDtl taRsAccDtlTemp = taRsAccDtlList.get(0);
+                        List<TaRsAccDtl> taRsAccDtlListQry = taAccDetlService.selectedRecords(taRsAccDtl2102Qry);
+                        if(taRsAccDtlListQry.size() == 1) {
+                            TaRsAccDtl taRsAccDtlTemp = taRsAccDtlListQry.get(0);
                             taRsAccDtlTemp.setCanclFlag(EnuActCanclFlag.ACT_CANCL1.getCode());
                             taAccDetlService.updateRecord(taRsAccDtlTemp);
                         }
