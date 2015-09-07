@@ -87,6 +87,16 @@ public class ToolUtil {
         return bigDecimalPara==null?new BigDecimal(0):bigDecimalPara;
     }
 
+    public static String getFinToYuan(String stFenPara){
+        DecimalFormat df = new DecimalFormat("#.00");
+        return (df.format(Double.valueOf(stFenPara) / 100));
+    }
+
+    public static String getYuanToFin(String strYuanPara){
+        DecimalFormat df = new DecimalFormat("#");
+        return (df.format(Double.valueOf(strYuanPara) * 100));
+    }
+
     public static Boolean Is0Null (BigDecimal bigDecimalPara){
         return bigDecimalPara==null?true:(bigDecimal0.compareTo(bigDecimalPara)==0?true:false);
     }

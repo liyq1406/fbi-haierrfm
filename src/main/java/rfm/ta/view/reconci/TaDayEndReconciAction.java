@@ -152,7 +152,7 @@ public class TaDayEndReconciAction implements Serializable {
                         }
                         line.append("|");
                         // 交易金额(20位)|
-                        line.append(StringUtils.rightPad(ToolUtil.getStrIgnoreNull(taRsAccDtlUnit.getTxAmt()), 20, ' '));
+                        line.append(StringUtils.rightPad(ToolUtil.getYuanToFin(ToolUtil.getStrIgnoreNull(taRsAccDtlUnit.getTxAmt())), 20, ' '));
                         line.append("|");
                         // 监管账号(30位)|
                         line.append(StringUtils.rightPad(ToolUtil.getStrIgnoreNull(taRsAccDtlUnit.getSpvsnAccId()), 30, ' '));
