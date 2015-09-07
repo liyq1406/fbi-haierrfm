@@ -72,16 +72,19 @@
                                 <p:column headerText="序号" style="width:40px">
                                     <h:outputText value="#{row + 1}"/>
                                 </p:column>
-                                <p:column headerText="监管账号" style="width:280px;text-align:center">
+                                <p:column headerText="监管账号" style="width:210px;text-align:center">
                                     <h:outputText value="#{record.spvsnAccId}"/>
                                 </p:column>
-                                <p:column headerText="账户余额" style="width:280px;text-align:center">
-                                    <h:outputText value="#{record.txAmt}" style="float: right">
+                                <p:column headerText="监管账户名" style="width:300px;text-align:center">
+                                    <h:outputText value="#{record.spvsnAccName}"/>
+                                </p:column>
+                                <p:column headerText="账户余额" style="width:200px;text-align:center">
+                                    <h:outputText value="#{taBlncReconciAction.txAmtMap.get(record.spvsnAccId)}" style="float: right">
                                         <f:convertNumber type="number" pattern="#,###,###,###,##0.00"/>
                                     </h:outputText>
                                 </p:column>
                                 <p:column headerText="日期" style="text-align:center">
-                                    <h:outputText value="#{record.txDate}"/>
+                                    <h:outputText value="#{taBlncReconciAction.sysdate}"/>
                                 </p:column>
                             </p:dataTable>
                         </p:panelGrid>

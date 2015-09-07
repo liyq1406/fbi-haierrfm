@@ -25,7 +25,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * （泰）余额对账Action
@@ -44,10 +46,17 @@ public class TaBlncReconciAction {
 
     private List<TaRsAcc> taRsAccList;
 
+    // 账户余额
+    private Map<String, String> txAmtMap;
+
+    // 当前日期
+    private String sysdate = ToolUtil.getStrLastUpdDate();
+
     @PostConstruct
     public void init() {
         // 取得所有监管中的监管账号数据
         taRsAccList = taAccService.qryAllMonitRecords();
+        txAmtMap = new HashMap<String, String>();
     }
 
     /**
@@ -72,21 +81,13 @@ public class TaBlncReconciAction {
                     }
                 }
 
-                String sysdate = ToolUtil.getStrLastUpdDate();
-                taRsAccList = new ArrayList<TaRsAcc>();
-                TaRsAcc taRsAcc = null;
                 for(Toa900012701 toa900012701:toaSbs){
                     for(Toa900012701.BodyDetail bodyDetail:toa900012701.body.DETAILS){
-                        taRsAcc = new TaRsAcc();
-                        taRsAcc.setSpvsnAccId(bodyDetail.ACTNUM);
-                        taRsAcc.setTxAmt(bodyDetail.BOKBAL);
-                        taRsAcc.setTxDate(sysdate);
-                        taRsAccList.add(taRsAcc);
+                        txAmtMap.put(bodyDetail.ACTNUM, bodyDetail.BOKBAL);
                     }
                 }
-                if(taRsAccList.size() > 0) {
-                    MessageUtil.addInfo(RfmMessage.getProperty("BalanceReconciliation.I001"));
-                }
+
+                MessageUtil.addInfo(RfmMessage.getProperty("BalanceReconciliation.I001"));
             }
         }catch (Exception e){
             logger.error("获取sbs数据，", e);
@@ -182,6 +183,22 @@ public class TaBlncReconciAction {
     }
 
     //= = = = = = = = = = = = = = =  get set = = = = = = = = = = = = = = = =
+    public Map<String, String> getTxAmtMap() {
+        return txAmtMap;
+    }
+
+    public void setTxAmtMap(Map<String, String> txAmtMap) {
+        this.txAmtMap = txAmtMap;
+    }
+
+    public String getSysdate() {
+        return sysdate;
+    }
+
+    public void setSysdate(String sysdate) {
+        this.sysdate = sysdate;
+    }
+
     public TaSbsService getTaSbsService() {
         return taSbsService;
     }
