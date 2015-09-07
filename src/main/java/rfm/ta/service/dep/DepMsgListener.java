@@ -131,7 +131,7 @@ public class DepMsgListener implements MessageListener {
                 TaRsAccDtl taRsAccDtlQry = new TaRsAccDtl();
                 taRsAccDtlQry.setBizId(tia900010002Temp.header.BIZ_ID);            // 业务编号
                 taRsAccDtlQry.setTxCode(tia900010002Temp.header.TX_CODE);          // 交易号
-                taRsAccDtlQry.setCanclFlag(EnuActCanclFlag.ACT_CANCL0.getCode());  // 已冲正
+                taRsAccDtlQry.setCanclFlag(EnuActCanclFlag.ACT_CANCL0.getCode());  // 未冲正
                 List<TaRsAccDtl> taRsAccDtlListQry = taAccDetlService.selectedRecords(taRsAccDtlQry);
                 if(taRsAccDtlListQry.size() == 1){
                     TaRsAccDtl taRsAccDtlValiExists = taRsAccDtlListQry.get(0);

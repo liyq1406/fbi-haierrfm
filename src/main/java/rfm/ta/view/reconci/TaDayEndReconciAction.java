@@ -208,7 +208,7 @@ public class TaDayEndReconciAction implements Serializable {
         try {
             TaRsAccDtl taRsAccDtlPara=new TaRsAccDtl();
             taRsAccDtlPara.setTxDate(ToolUtil.getNow("yyyy-MM-dd"));
-            taRsAccDtlPara.setCanclFlag(EnuActCanclFlag.ACT_CANCL1.getCode());
+            taRsAccDtlPara.setCanclFlag(EnuActCanclFlag.ACT_CANCL0.getCode());
             List<TaRsAccDtl> taRsAccDtlReconci = taAccDetlService.selectedRecords(taRsAccDtlPara);
             String fileName = "PF"+ EnuTaBankId.BANK_HAIER.getCode()+
                     EnuTaCityId.CITY_TAIAN.getCode()+
