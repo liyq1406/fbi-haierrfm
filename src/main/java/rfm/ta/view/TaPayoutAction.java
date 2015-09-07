@@ -53,6 +53,9 @@ public class TaPayoutAction {
 
     private String isDebugExec;
 
+    // 冲正标志
+    private EnuActCanclFlag enuActCanclFlag = EnuActCanclFlag.ACT_CANCL0;
+
     // 记账成功标志
     private List<SelectItem> actFlagList;
     private Map<String, String> actFlagMap;
@@ -264,6 +267,14 @@ public class TaPayoutAction {
     }
 
     //= = = = = = = = = = = = = = =  get set = = = = = = = = = = = = = = = =
+    public EnuActCanclFlag getEnuActCanclFlag() {
+        return enuActCanclFlag;
+    }
+
+    public void setEnuActCanclFlag(EnuActCanclFlag enuActCanclFlag) {
+        this.enuActCanclFlag = enuActCanclFlag;
+    }
+
     public TaSbsService getTaSbsService() {
         return taSbsService;
     }

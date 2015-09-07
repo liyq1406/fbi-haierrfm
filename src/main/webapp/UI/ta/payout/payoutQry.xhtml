@@ -142,6 +142,10 @@
                     <p:column headerText="记账成功标志" style="width:120px;text-align:center">
                         <h:outputText value="#{taRefundAction.actFlagMap.get(record.actFlag)}"/>
                     </p:column>
+
+                    <p:column headerText="冲正标志" style="width:160px;text-align:center">
+                        <h:outputText value="#{taPayoutAction.enuActCanclFlag.valueOfAlias(record.canclFlag).title}" style="text-align: right"/>
+                    </p:column>
                 </p:dataTable>
             </h:form>
         </div>
