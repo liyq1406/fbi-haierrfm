@@ -149,6 +149,7 @@ public class DepMsgListener implements MessageListener {
                     TaRsAccDtl taRsAccDtlTemp = new TaRsAccDtl();
                     taRsAccDtlTemp.setBizId(tia900010002Temp.header.BIZ_ID);
                     taRsAccDtlTemp.setTxCode(EnuTaFdcTxCode.TRADE_2002.getCode());
+                    taRsAccDtlTemp.setCanclFlag(EnuActCanclFlag.ACT_CANCL0.getCode());  // 未冲正
                     taRsAccDtlListQry = taAccDetlService.selectedRecords(taRsAccDtlTemp);
                     if(taRsAccDtlListQry.size() == 1){ // 存在交存的处理
                         taRsAccDtlTemp = taRsAccDtlListQry.get(0);
@@ -214,7 +215,7 @@ public class DepMsgListener implements MessageListener {
                         // 修改交存记账的冲正标志
                         TaRsAccDtl taRsAccDtl2002Qry = new TaRsAccDtl();
                         taRsAccDtl2002Qry.setBizId(taTxnFdcTemp.getBizId());
-                        taRsAccDtl2002Qry.setTxCode(EnuTaFdcTxCode.TRADE_2102.getCode());
+                        taRsAccDtl2002Qry.setTxCode(EnuTaFdcTxCode.TRADE_2002.getCode());
                         taRsAccDtl2002Qry.setCanclFlag(EnuActCanclFlag.ACT_CANCL0.getCode());  // 未冲正
                         List<TaRsAccDtl> taRsAccDtlListQry = taAccDetlService.selectedRecords(taRsAccDtl2002Qry);
                         if(taRsAccDtlListQry.size() == 1) {

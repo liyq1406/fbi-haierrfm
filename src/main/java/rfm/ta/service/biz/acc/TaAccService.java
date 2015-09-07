@@ -124,6 +124,7 @@ public class TaAccService {
         if (ToolUtil.getStrIgnoreNull(strAccNamePara).trim().length()!=0) {
             rsActCrit.andSpvsnAccNameLike("%" + strAccNamePara + "%");
         }
+        example.setOrderByClause("CREATED_TIME");
         return accountMapper.selectByExample(example);
     }
 
