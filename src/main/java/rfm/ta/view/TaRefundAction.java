@@ -49,6 +49,9 @@ public class TaRefundAction {
     @ManagedProperty(value = "#{taSbsService}")
     private TaSbsService taSbsService;
 
+    // 冲正标志
+    private EnuActCanclFlag enuActCanclFlag = EnuActCanclFlag.ACT_CANCL0;
+
     // 记账成功标志
     private List<SelectItem> actFlagList;
     private Map<String, String> actFlagMap;
@@ -109,6 +112,7 @@ public class TaRefundAction {
             TaRsAccDtl taRsAccDtl = new TaRsAccDtl();
             taRsAccDtl.setBizId(taTxnFdcValiSendAndRecv.getBizId());
             taRsAccDtl.setTxCode(EnuTaFdcTxCode.TRADE_2202.getCode());
+            taRsAccDtl.setCanclFlag(EnuActCanclFlag.ACT_CANCL0.getCode());  // 未冲正
             List<TaRsAccDtl> taRsAccDtlListQry = taAccDetlService.selectedRecords(taRsAccDtl);
             if(taRsAccDtlListQry.size() == 1){
                 String actFlag = taRsAccDtlListQry.get(0).getActFlag();
@@ -125,6 +129,7 @@ public class TaRefundAction {
             BeanUtils.copyProperties(taRsAccDtlTemp, taTxnFdcValiSendAndRecv);
             taRsAccDtlTemp.setTxCode(EnuTaFdcTxCode.TRADE_2202.getCode());
             taRsAccDtlTemp.setDeletedFlag(EnuTaArchivedFlag.ARCHIVED_FLAG0.getCode());
+            taRsAccDtlTemp.setCanclFlag(EnuActCanclFlag.ACT_CANCL0.getCode());        // 未冲正
             taRsAccDtlTemp.setActFlag(EnuActFlag.ACT_UNKNOWN.getCode());
             taRsAccDtlTemp.setStlType(EnuTaStlType.STL_TYPE02.getCode());             // 结算方式
             taRsAccDtlTemp.setCheckId("");                                             // 支票号码
@@ -264,6 +269,14 @@ public class TaRefundAction {
     }
 
     //= = = = = = = = = = = = = = =  get set = = = = = = = = = = = = = = = =
+    public EnuActCanclFlag getEnuActCanclFlag() {
+        return enuActCanclFlag;
+    }
+
+    public void setEnuActCanclFlag(EnuActCanclFlag enuActCanclFlag) {
+        this.enuActCanclFlag = enuActCanclFlag;
+    }
+
     public TaSbsService getTaSbsService() {
         return taSbsService;
     }
