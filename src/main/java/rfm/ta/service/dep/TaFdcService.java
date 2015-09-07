@@ -166,7 +166,8 @@ public class TaFdcService {
                 */
                 taTxnFdcPara.setReturnCode(toaPara.header.RETURN_CODE);
                 taTxnFdcPara.setSpvsnAccType(toaPara.body.SPVSN_ACC_TYPE);
-                taTxnFdcPara.setTxAmt(ToolUtil.getFinToYuan(toaPara.body.TX_AMT.trim()));
+                toaPara.body.TX_AMT=ToolUtil.getFinToYuan(toaPara.body.TX_AMT.trim());
+                taTxnFdcPara.setTxAmt(toaPara.body.TX_AMT);
                 taTxnFdcPara.setSpvsnAccId(toaPara.body.SPVSN_ACC_ID);
                 taTxnFdcPara.setSpvsnAccName(toaPara.body.SPVSN_ACC_NAME);
                 taTxnFdcPara.setFdcSn(toaPara.header.REQ_SN);
@@ -349,7 +350,8 @@ public class TaFdcService {
                 taTxnFdcPara.setReturnCode(toaPara.header.RETURN_CODE);
                 taTxnFdcPara.setSpvsnAccId(toaPara.body.SPVSN_ACC_ID);
                 taTxnFdcPara.setSpvsnAccName(toaPara.body.SPVSN_ACC_NAME);
-                taTxnFdcPara.setTxAmt(ToolUtil.getFinToYuan(toaPara.body.TX_AMT));
+                toaPara.body.TX_AMT=ToolUtil.getFinToYuan(toaPara.body.TX_AMT.trim());
+                taTxnFdcPara.setTxAmt(toaPara.body.TX_AMT);
                 taTxnFdcPara.setGerlBank(toaPara.body.GERL_BANK);
                 taTxnFdcPara.setGerlAccId(toaPara.body.GERL_ACC_ID);
                 taTxnFdcPara.setGerlAccName(toaPara.body.GERL_ACC_NAME);
@@ -548,7 +550,8 @@ public class TaFdcService {
                 taTxnFdcPara.setReturnCode(toaPara.header.RETURN_CODE);
                 taTxnFdcPara.setSpvsnAccId(toaPara.body.SPVSN_ACC_ID);
                 taTxnFdcPara.setSpvsnAccName(toaPara.body.SPVSN_ACC_NAME);
-                taTxnFdcPara.setTxAmt(ToolUtil.getFinToYuan(toaPara.body.TX_AMT));
+                toaPara.body.TX_AMT=ToolUtil.getFinToYuan(toaPara.body.TX_AMT.trim());
+                taTxnFdcPara.setTxAmt(toaPara.body.TX_AMT);
                 taTxnFdcPara.setOwnerName(toaPara.body.OWNER_NAME);
                 taTxnFdcPara.setCtficType(toaPara.body.CTFIC_TYPE);
                 taTxnFdcPara.setCtficId(toaPara.body.CTFIC_ID);
