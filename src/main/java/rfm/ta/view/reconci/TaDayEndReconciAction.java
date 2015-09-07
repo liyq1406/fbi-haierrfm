@@ -133,7 +133,7 @@ public class TaDayEndReconciAction implements Serializable {
                     if(taRsAccDtlListPara.size()>0) {
                         Double total = 0d;
                         for(TaRsAccDtl taRsAccDtlUnit:taRsAccDtlListPara){
-                            total += Double.valueOf(taRsAccDtlUnit.getTxAmt());
+                            total += Double.valueOf(ToolUtil.getYuanToFin(taRsAccDtlUnit.getTxAmt()));
                             taRsAccDtlUnit.setTxAmt(df.format(Double.valueOf(taRsAccDtlUnit.getTxAmt())));
                         }
                         line.append(StringUtils.rightPad( ToolUtil.getMoneyString(total), 20, ' '));
