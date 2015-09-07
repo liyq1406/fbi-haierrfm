@@ -92,9 +92,8 @@ public class ToolUtil {
         return (df.format(Double.valueOf(stFenPara) / 100));
     }
 
-    public static String getYuanToFin(String strYuanPara){
-        DecimalFormat df = new DecimalFormat("#");
-        return (df.format(Double.valueOf(strYuanPara) * 100));
+    public static Long getYuanToFin(String strYuanPara){
+        return (long)(Double.valueOf(strYuanPara) * 100);
     }
 
     public static Boolean Is0Null (BigDecimal bigDecimalPara){

@@ -131,12 +131,11 @@ public class TaDayEndReconciAction implements Serializable {
                     line.append("|");
                     // 交易总金额(20位)|
                     if(taRsAccDtlListPara.size()>0) {
-                        Double total = 0d;
+                        Long total = 0L;
                         for(TaRsAccDtl taRsAccDtlUnit:taRsAccDtlListPara){
-                            total += Double.valueOf(ToolUtil.getYuanToFin(taRsAccDtlUnit.getTxAmt()));
-                            taRsAccDtlUnit.setTxAmt(taRsAccDtlUnit.getTxAmt());
+                            total += ToolUtil.getYuanToFin(taRsAccDtlUnit.getTxAmt());
                         }
-                        line.append(StringUtils.rightPad( ToolUtil.getMoneyString(total), 20, ' '));
+                        line.append(StringUtils.rightPad(total.toString(), 20, ' '));
                     }else {
                         line.append(StringUtils.rightPad("0", 20, ' '));
                     }
@@ -163,7 +162,7 @@ public class TaDayEndReconciAction implements Serializable {
                         }
                         line.append("|");
                         // 交易金额(20位)|
-                        line.append(StringUtils.rightPad(ToolUtil.getYuanToFin(ToolUtil.getStrIgnoreNull(taRsAccDtlUnit.getTxAmt())), 20, ' '));
+                        line.append(StringUtils.rightPad(ToolUtil.getYuanToFin(ToolUtil.getStrIgnoreNull(taRsAccDtlUnit.getTxAmt())).toString(), 20, ' '));
                         line.append("|");
                         // 监管账号(30位)|
                         line.append(StringUtils.rightPad(ToolUtil.getStrIgnoreNull(taRsAccDtlUnit.getSpvsnAccId()), 30, ' '));
