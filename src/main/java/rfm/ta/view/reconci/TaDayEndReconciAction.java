@@ -126,10 +126,21 @@ public class TaDayEndReconciAction implements Serializable {
                 } else {
                     // 汇总信息
                     // 交易总笔数(6位)|
-                    line.append(StringUtils.rightPad(strLocalTotalCounts, 6, ' '));
+                    Integer intTotalCounts=taRsAccDtlListPara.size();
+                    line.append(StringUtils.rightPad(intTotalCounts.toString(), 6, ' '));
                     line.append("|");
                     // 交易总金额(20位)|
-                    line.append(StringUtils.rightPad(strLocalTotalAmt, 20, ' '));
+                    if(taRsAccDtlListPara.size()>0) {
+                        Double total = 0d;
+                        for(TaRsAccDtl taRsAccDtlUnit:taRsAccDtlListPara){
+                            total += Double.valueOf(taRsAccDtlUnit.getTxAmt());
+                            taRsAccDtlUnit.setTxAmt(df.format(Double.valueOf(taRsAccDtlUnit.getTxAmt())));
+                        }
+                        line.append(StringUtils.rightPad( ToolUtil.getMoneyString(total), 20, ' '));
+                    }else {
+                        line.append(StringUtils.rightPad("0", 20, ' '));
+                    }
+
                     line.append("|");
 
                     line.append(newLineCh);
