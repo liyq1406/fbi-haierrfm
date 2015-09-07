@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import platform.service.PtenudetailService;
 import pub.platform.advance.utils.RfmMessage;
+import rfm.ta.common.enums.EnuTaAccStatus;
 import rfm.ta.common.enums.EnuTaArchivedFlag;
 import rfm.ta.repository.dao.TaRsAccMapper;
 import rfm.ta.repository.dao.com.TaCommonMapper;
@@ -103,7 +104,8 @@ public class TaAccService {
         TaRsAccExample example = new TaRsAccExample();
         example.createCriteria().
                 andDeletedFlagEqualTo("0").
-                andStatusFlagEqualTo(ptenudetailService.getEnuSelectItem("TA_ACC_STATUS", 1).getValue().toString());
+                andStatusFlagEqualTo(EnuTaAccStatus.ACC_SUPV.getCode());
+        example.setOrderByClause("CREATED_TIME DESC");
         return accountMapper.selectByExample(example);
     }
 
@@ -119,12 +121,12 @@ public class TaAccService {
             rsActCrit.andSpvsnAccTypeEqualTo(strAccTypePara);
         }
         if (ToolUtil.getStrIgnoreNull(strAccIdPara).trim().length()!=0) {
-            rsActCrit.andSpvsnAccIdLike("%"+strAccIdPara+"%");
+            rsActCrit.andSpvsnAccIdLike("%" + strAccIdPara + "%");
         }
         if (ToolUtil.getStrIgnoreNull(strAccNamePara).trim().length()!=0) {
             rsActCrit.andSpvsnAccNameLike("%" + strAccNamePara + "%");
         }
-        example.setOrderByClause("CREATED_TIME");
+        example.setOrderByClause("CREATED_TIME DESC");
         return accountMapper.selectByExample(example);
     }
 

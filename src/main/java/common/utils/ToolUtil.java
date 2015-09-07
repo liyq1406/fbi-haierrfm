@@ -88,7 +88,7 @@ public class ToolUtil {
     }
 
     public static String getFinToYuan(String stFenPara){
-        DecimalFormat df = new DecimalFormat("#.00");
+        DecimalFormat df = new DecimalFormat("#0.00");
         return (df.format(Double.valueOf(stFenPara) / 100));
     }
 

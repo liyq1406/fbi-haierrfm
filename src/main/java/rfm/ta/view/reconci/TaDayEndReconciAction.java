@@ -55,7 +55,7 @@ public class TaDayEndReconciAction implements Serializable {
     private String strLocalTotalAmt;
     private String strSbsTotalCounts;
     private String strSbsTotalAmt;
-    private DecimalFormat df = new DecimalFormat("#.00");
+    private DecimalFormat df = new DecimalFormat("#0.00");
     private Map<String, String> txCodeMap;
 
     @PostConstruct
