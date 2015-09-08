@@ -5,6 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import rfm.ta.common.enums.EnuClassifyFlag;
+import rfm.ta.common.enums.EnuTaArchivedFlag;
 import rfm.ta.repository.dao.TaRsCheckMapper;
 import rfm.ta.repository.model.TaRsCheck;
 import rfm.ta.repository.model.TaRsCheckExample;
@@ -21,6 +23,34 @@ public class TaRsCheckService {
 
     @Autowired
     private TaRsCheckMapper taRsCheckMapper;
+
+    /**
+     * 插入或更新对账明细表
+     * @param statusFlag
+     */
+    public void insOrUpdTaRsCheck(String statusFlag) {
+        // 插入或者更新对账记录表
+        List<TaRsCheck> taRsCheckList = selectRecords();
+        if(taRsCheckList == null || taRsCheckList.size() == 0) {
+            Date sysdate = new Date();
+            TaRsCheck taRsCheckTemp = new TaRsCheck();
+            taRsCheckTemp.setCheckDate(ToolUtil.getStrLastUpdDate());                   // 对账日期
+            taRsCheckTemp.setStatusFlag(statusFlag);                                    // 状态标志
+            taRsCheckTemp.setClassifyFlag(EnuClassifyFlag.CLASSIFY_FLAG2.getCode());  // 对账分类
+            taRsCheckTemp.setCheckTime(ToolUtil.getStrLastUpdDate());                   // 勾对时间
+            taRsCheckTemp.setDeletedFlag(EnuTaArchivedFlag.ARCHIVED_FLAG0.getCode()); // 记录删除标志
+            taRsCheckTemp.setCreatedDate(sysdate);                                      // 创建时间
+            taRsCheckTemp.setLastUpdDate(sysdate);                                      // 最近修改时间
+            taRsCheckTemp.setModificationNum(0);                                        // 修改次数
+            insertRecord(taRsCheckTemp);
+        } else {
+            TaRsCheck taRsCheckTemp = taRsCheckList.get(0);
+            taRsCheckTemp.setStatusFlag(statusFlag);                                 // 状态标志
+            taRsCheckTemp.setLastUpdDate(new Date());                                // 最近修改时间
+            taRsCheckTemp.setModificationNum(taRsCheckTemp.getModificationNum()+1);  // 修改次数
+            updateRecord(taRsCheckTemp);
+        }
+    }
 
     /**
      * 查询

@@ -83,6 +83,9 @@ public class TaDayEndReconciAction implements Serializable {
      */
     public boolean onQrySbsData() {
         try {
+            // 更新对账明细表状态（日间对账获取中）
+            taRsCheckService.insOrUpdTaRsCheck(EnuStatusFlag.STATUS_FLAG0.getCode());
+
             // 往SBS发送记账信息
             TaTxnFdc taTxnFdcPara = new TaTxnFdc();
             taTxnFdcPara.setTxDate(ToolUtil.getNow("yyyyMMdd"));
@@ -97,6 +100,9 @@ public class TaDayEndReconciAction implements Serializable {
             taRsAccDtlSbsList = taSbsService.sendAndRecvRealTimeTxn900012602(taTxnFdcPara);
 
             if (taRsAccDtlSbsList != null) {
+                // 更新对账明细表状态（日间对账获取完成）
+                taRsCheckService.insOrUpdTaRsCheck(EnuStatusFlag.STATUS_FLAG1.getCode());
+
                 for(TaRsAccDtl taRsAccDtl : taRsAccDtlSbsList) {
                     taRsAccDtl.setTxAmt(df.format(Double.valueOf(taRsAccDtl.getTxAmt())));
                 }
@@ -216,17 +222,6 @@ public class TaDayEndReconciAction implements Serializable {
     public void onBlnc() {
         File file = null;
         try {
-            List<TaRsCheck> taRsCheckList = taRsCheckService.selectRecords();
-            if(taRsCheckList == null || taRsCheckList.size() == 0) {
-                MessageUtil.addError(RfmMessage.getProperty("DayEndReconciliation.E002"));
-                return;
-            } else {
-                String statusFlag = taRsCheckList.get(0).getStatusFlag();
-                if(!EnuStatusFlag.STATUS_FLAG1.getCode().equals(statusFlag)) {
-                    MessageUtil.addError(RfmMessage.getProperty("DayEndReconciliation.E003"));
-                    return;
-                }
-            }
             TaRsAccDtl taRsAccDtlPara=new TaRsAccDtl();
             taRsAccDtlPara.setTxDate(ToolUtil.getNow("yyyy-MM-dd"));
             taRsAccDtlPara.setCanclFlag(EnuActCanclFlag.ACT_CANCL0.getCode());
@@ -238,6 +233,8 @@ public class TaDayEndReconciAction implements Serializable {
             if(file != null){
                 boolean result = ToolUtil.uploadFile(fileName, file);
                 if(result){
+                    // 更新对账明细表状态（日间对账发送成功）
+                    taRsCheckService.insOrUpdTaRsCheck(EnuStatusFlag.STATUS_FLAG4.getCode());
                     MessageUtil.addInfo(RfmMessage.getProperty("DayEndReconciliation.I002"));
                 } else{
                     MessageUtil.addError(RfmMessage.getProperty("DayEndReconciliation.E001"));
@@ -311,40 +308,13 @@ public class TaDayEndReconciAction implements Serializable {
             taRsAccDtlLocalListPara.removeAll(taRsAccDtlList1Repeat);
             taRsAccDtlSbsListPara.removeAll(taRsAccDtlList2Repeat);
 
-            String statusFlag = EnuStatusFlag.STATUS_FLAG0.getCode(); // 初始
-            String statusName = EnuStatusFlag.STATUS_FLAG0.getTitle();
             if(taRsAccDtlLocalListPara.size() == 0 && taRsAccDtlSbsListPara.size() == 0) {
-                statusFlag = EnuStatusFlag.STATUS_FLAG1.getCode();    // 完成
-                statusName = EnuStatusFlag.STATUS_FLAG1.getTitle();
-            }
-
-            // 插入或者更新对账记录表
-            List<TaRsCheck> taRsCheckList = taRsCheckService.selectRecords();
-            if(taRsCheckList == null || taRsCheckList.size() == 0) {
-                Date sysdate = new Date();
-                TaRsCheck taRsCheckTemp = new TaRsCheck();
-                taRsCheckTemp.setCheckDate(ToolUtil.getStrLastUpdDate());                   // 对账日期
-                taRsCheckTemp.setStatusFlag(statusFlag);                                    // 状态标志
-                taRsCheckTemp.setStatusName(statusName);                                    // 状态标志
-                taRsCheckTemp.setFetchFlag(EnuFetchFlag.FETCH_FLAG2.getCode());           // 取对账明细标记
-                taRsCheckTemp.setClassifyFlag(EnuClassifyFlag.CLASSIFY_FLAG2.getCode());  // 对账分类
-                taRsCheckTemp.setCheckTime(ToolUtil.getStrLastUpdDate());                   // 勾对时间
-                taRsCheckTemp.setDeletedFlag(EnuTaArchivedFlag.ARCHIVED_FLAG0.getCode()); // 记录删除标志
-                taRsCheckTemp.setCreatedDate(sysdate);                                      // 创建时间
-                taRsCheckTemp.setLastUpdDate(sysdate);                                      // 最近修改时间
-                taRsCheckTemp.setModificationNum(0);                                        // 修改次数
-                taRsCheckService.insertRecord(taRsCheckTemp);
-            } else {
-                TaRsCheck taRsCheckTemp = taRsCheckList.get(0);
-                taRsCheckTemp.setStatusFlag(statusFlag);                                 // 状态标志
-                taRsCheckTemp.setStatusName(statusName);                                 // 状态标志
-                taRsCheckTemp.setLastUpdDate(new Date());                                // 最近修改时间
-                taRsCheckTemp.setModificationNum(taRsCheckTemp.getModificationNum()+1);  // 修改次数
-                taRsCheckService.updateRecord(taRsCheckTemp);
-            }
-            if(EnuStatusFlag.STATUS_FLAG1.getCode().equals(statusFlag)) { // 对账成功
+                // 更新对账明细表状态（日间对账平）
+                taRsCheckService.insOrUpdTaRsCheck(EnuStatusFlag.STATUS_FLAG3.getCode());
                 MessageUtil.addInfo(RfmMessage.getProperty("DayEndReconciliation.I003"));
             } else {
+                // 更新对账明细表状态（日间对账不平）
+                taRsCheckService.insOrUpdTaRsCheck(EnuStatusFlag.STATUS_FLAG2.getCode());
                 MessageUtil.addError(RfmMessage.getProperty("DayEndReconciliation.E003"));
             }
         } catch (Exception e) {
