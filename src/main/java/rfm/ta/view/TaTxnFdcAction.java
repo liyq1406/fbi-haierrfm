@@ -2,6 +2,7 @@ package rfm.ta.view;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import rfm.ta.common.enums.EnuTaTxnRtnCode;
 import rfm.ta.repository.model.TaTxnFdc;
 import rfm.ta.service.biz.his.TaTxnFdcService;
 
@@ -28,6 +29,8 @@ public class TaTxnFdcAction {
     private List<TaTxnFdc> taTxnFdcList;
     private TaTxnFdc taTxnFdc;
 
+    private EnuTaTxnRtnCode enuTaTxnRtnCode = EnuTaTxnRtnCode.TXN_PROCESSED;
+
     @PostConstruct
     public void init() {
         taTxnFdc=new TaTxnFdc();
@@ -39,6 +42,9 @@ public class TaTxnFdcAction {
     }
 
     //= = = = = = = = = = = = = = =  get set = = = = = = = = = = = = = = = =
+    public EnuTaTxnRtnCode getEnuTaTxnRtnCode() {
+        return enuTaTxnRtnCode;
+    }
 
     public TaTxnFdcService getTaTxnFdcService() {
         return taTxnFdcService;

@@ -90,7 +90,7 @@
                         <h:outputLabel value="【结果】:" for="rtnReturnCodeCancl"/>
                         <h:inputText id="rtnReturnCodeCancl" readonly="true"
                                      style="background-color:gainsboro"
-                                     value="#{taPayoutAction.taTxnFdcCanclSendAndRecv.returnCode}">
+                                     value="#{taPayoutAction.enuTaTxnRtnCode.valueOfAlias(taPayoutAction.taTxnFdcCanclSendAndRecv.returnCode).title}">
                         </h:inputText>
                         <h:outputLabel value="【预售监管平台流水】:" for="rtnFdcSnCancl"/>
                         <h:inputText id="rtnFdcSnCancl" readonly="true"

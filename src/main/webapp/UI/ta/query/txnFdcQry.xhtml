@@ -137,7 +137,7 @@
                         <h:outputText value="#{record.initiator}" style="text-align: right"/>
                     </p:column>
                     <p:column headerText="结果" style="width: 120px;text-align:center">
-                        <h:outputText value="#{record.returnCode}" style="text-align: right"/>
+                        <h:outputText value="#{taTxnFdcAction.enuTaTxnRtnCode.valueOfAlias(record.returnCode).title}" style="text-align: right"/>
                     </p:column>
                     <p:column headerText="监管账号" style="width: 200px;text-align:center">
                         <h:outputText value="#{record.spvsnAccId}" style="text-align: right"/>

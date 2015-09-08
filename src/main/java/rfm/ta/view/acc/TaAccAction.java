@@ -47,6 +47,8 @@ public class TaAccAction {
     private TaRsAcc taRsAcc;
     private TaRsAcc taRsAccRecv;
 
+    private EnuTaTxnRtnCode enuTaTxnRtnCode = EnuTaTxnRtnCode.TXN_PROCESSED;
+
     @PostConstruct
     public void init() {
         taRsAcc=new TaRsAcc();
@@ -129,6 +131,9 @@ public class TaAccAction {
     }
 
     //= = = = = = = = = = = = = = =  get set = = = = = = = = = = = = = = = =
+    public EnuTaTxnRtnCode getEnuTaTxnRtnCode() {
+        return enuTaTxnRtnCode;
+    }
 
     public TaAccService getTaAccService() {
         return taAccService;

@@ -60,7 +60,7 @@
             <p:growl id="msgs" showDetail="false"/>
             <h:form id="form">
                 <p:panel id="valiSend" header="【划拨验证】发送">
-                    <h:panelGrid columns="2" cellspacing="3" style="width:100%">
+                    <h:panelGrid columns="2" cellspacing="3" style="width:100%; text-align:right;">
                         <h:panelGrid columns="4" cellspacing="3"
                                      columnClasses="col-label1,col-input1">
                             <h:outputLabel value="*【划拨申请编号】:" for="bizId"/>
@@ -151,7 +151,7 @@
                             <h:outputLabel value="【结果】:" for="rtnReturnCodeVali"/>
                             <h:inputText id="rtnReturnCodeVali" readonly="true"
                                          style="background-color:gainsboro"
-                                         value="#{taPayoutAction.taTxnFdcValiSendAndRecv.returnCode}">
+                                         value="#{taPayoutAction.enuTaTxnRtnCode.valueOfAlias(taPayoutAction.taTxnFdcValiSendAndRecv.returnCode).title}">
                             </h:inputText>
                             <h:outputLabel value="【监管账号】:" for="rtnAccIdVali"/>
                             <h:inputText  id="rtnAccIdVali" readonly="true"
@@ -207,10 +207,12 @@
                     </h:panelGrid>
                 </p:panel>
                 <p:panel id="actSend" header="【划拨记账】发送">
-                    <p:commandButton update="msgs,actRecv" style="width: 80px"
-                                     action="#{taPayoutAction.onBtnActClick()}"
-                                     id="btnActSend" value="记账">
-                    </p:commandButton>
+                    <h:panelGrid columns="2" style="width:100%; text-align:right;">
+                        <p:commandButton update="msgs,actRecv" style="width: 80px"
+                                         action="#{taPayoutAction.onBtnActClick()}"
+                                         id="btnActSend" value="记账">
+                        </p:commandButton>
+                    </h:panelGrid>
                 </p:panel>
                 <p:panel id="actRecv" header="【划拨记账】返回">
                     <h:panelGrid columns="6" cellspacing="3"
@@ -218,7 +220,7 @@
                         <h:outputLabel value="【返回结果】:" for="rtnReturnCodeAct"/>
                         <h:inputText id="rtnReturnCodeAct" readonly="true"
                                      style="background-color:gainsboro"
-                                     value="#{taPayoutAction.taTxnFdcActSendAndRecv.returnCode}">
+                                     value="#{taPayoutAction.enuTaTxnRtnCode.valueOfAlias(taPayoutAction.taTxnFdcActSendAndRecv.returnCode).title}">
                         </h:inputText>
                         <h:outputLabel value="【预售监管平台流水】:" for="rtnFdcSnAct"/>
                         <h:inputText id="rtnFdcSnAct" readonly="true"

@@ -53,6 +53,8 @@ public class TaPayoutAction {
 
     private String isDebugExec;
 
+    private EnuTaTxnRtnCode enuTaTxnRtnCode = EnuTaTxnRtnCode.TXN_PROCESSED;
+
     // ³åÕý±êÖ¾
     private EnuActCanclFlag enuActCanclFlag = EnuActCanclFlag.ACT_CANCL0;
 
@@ -267,6 +269,10 @@ public class TaPayoutAction {
     }
 
     //= = = = = = = = = = = = = = =  get set = = = = = = = = = = = = = = = =
+    public EnuTaTxnRtnCode getEnuTaTxnRtnCode() {
+        return enuTaTxnRtnCode;
+    }
+
     public EnuActCanclFlag getEnuActCanclFlag() {
         return enuActCanclFlag;
     }

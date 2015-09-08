@@ -82,7 +82,7 @@
                         <h:outputLabel value="【结果】:" for="rtnReturnCodeAct"/>
                         <h:inputText id="rtnReturnCodeAct" readonly="true"
                                      style="background-color:gainsboro"
-                                     value="#{taAccAction.taRsAccRecv.returnCode}">
+                                     value="#{taAccAction.enuTaTxnRtnCode.valueOfAlias(taAccAction.taRsAccRecv.returnCode).title}">
                         </h:inputText>
                         <h:outputLabel value="【预售监管平台流水】:" for="rtnFdcSnAct"/>
                         <h:inputText id="rtnFdcSnAct" readonly="true"

@@ -49,6 +49,8 @@ public class TaRefundAction {
     @ManagedProperty(value = "#{taSbsService}")
     private TaSbsService taSbsService;
 
+    private EnuTaTxnRtnCode enuTaTxnRtnCode = EnuTaTxnRtnCode.TXN_PROCESSED;
+
     // ³åÕý±êÖ¾
     private EnuActCanclFlag enuActCanclFlag = EnuActCanclFlag.ACT_CANCL0;
 
@@ -269,6 +271,10 @@ public class TaRefundAction {
     }
 
     //= = = = = = = = = = = = = = =  get set = = = = = = = = = = = = = = = =
+    public EnuTaTxnRtnCode getEnuTaTxnRtnCode() {
+        return enuTaTxnRtnCode;
+    }
+
     public EnuActCanclFlag getEnuActCanclFlag() {
         return enuActCanclFlag;
     }
