@@ -4,19 +4,17 @@ import common.utils.ToolUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fbi.dep.model.txn.Toa900012601;
-import org.fbi.dep.model.txn.Toa900012602;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import platform.common.utils.MessageUtil;
 import pub.platform.advance.utils.RfmMessage;
-import rfm.ta.common.enums.EnuActCanclFlag;
-import rfm.ta.common.enums.EnuTaBankId;
-import rfm.ta.common.enums.EnuTaCityId;
-import rfm.ta.common.enums.EnuTaFdcTxCode;
+import rfm.ta.common.enums.*;
 import rfm.ta.repository.model.TaRsAccDtl;
+import rfm.ta.repository.model.TaRsCheck;
 import rfm.ta.repository.model.TaTxnFdc;
 import rfm.ta.repository.model.TaTxnSbs;
 import rfm.ta.service.biz.acc.TaAccDetlService;
+import rfm.ta.service.biz.reconci.TaRsCheckService;
 import rfm.ta.service.dep.TaSbsService;
 
 import javax.annotation.PostConstruct;
@@ -26,10 +24,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import java.io.*;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Lichao.W At 2015/7/6 17:01
@@ -45,6 +40,9 @@ public class TaDayEndReconciAction implements Serializable {
 
     @ManagedProperty("#{taSbsService}")
     private TaSbsService taSbsService;
+
+    @ManagedProperty("#{taRsCheckService}")
+    private TaRsCheckService taRsCheckService;
 
     private TaTxnSbs taTxnSbs;
     // 账务交易明细
@@ -83,7 +81,7 @@ public class TaDayEndReconciAction implements Serializable {
     /**
      * 从SBS取数据
      */
-    public void onQrySbsData() {
+    public boolean onQrySbsData() {
         try {
             // 往SBS发送记账信息
             TaTxnFdc taTxnFdcPara = new TaTxnFdc();
@@ -98,16 +96,18 @@ public class TaDayEndReconciAction implements Serializable {
             // 日终对账明细查询
             taRsAccDtlSbsList = taSbsService.sendAndRecvRealTimeTxn900012602(taTxnFdcPara);
 
-            if (taRsAccDtlSbsList.size() > 0) {
+            if (taRsAccDtlSbsList != null) {
                 for(TaRsAccDtl taRsAccDtl : taRsAccDtlSbsList) {
                     taRsAccDtl.setTxAmt(df.format(Double.valueOf(taRsAccDtl.getTxAmt())));
                 }
-                MessageUtil.addInfo(RfmMessage.getProperty("DayEndReconciliation.I001"));
+                //MessageUtil.addInfo(RfmMessage.getProperty("DayEndReconciliation.I001"));
+                return true;
             }
         }catch (Exception e){
             logger.error("查询对账信息失败", e);
             MessageUtil.addError("查询对账信息失败。");
         }
+        return false;
     }
 
     private File createFile(List<TaRsAccDtl> taRsAccDtlListPara, String fileName) {
@@ -216,6 +216,17 @@ public class TaDayEndReconciAction implements Serializable {
     public void onBlnc() {
         File file = null;
         try {
+            List<TaRsCheck> taRsCheckList = taRsCheckService.selectRecords();
+            if(taRsCheckList == null || taRsCheckList.size() == 0) {
+                MessageUtil.addError(RfmMessage.getProperty("DayEndReconciliation.E002"));
+                return;
+            } else {
+                String statusFlag = taRsCheckList.get(0).getStatusFlag();
+                if(!EnuStatusFlag.STATUS_FLAG1.getCode().equals(statusFlag)) {
+                    MessageUtil.addError(RfmMessage.getProperty("DayEndReconciliation.E003"));
+                    return;
+                }
+            }
             TaRsAccDtl taRsAccDtlPara=new TaRsAccDtl();
             taRsAccDtlPara.setTxDate(ToolUtil.getNow("yyyy-MM-dd"));
             taRsAccDtlPara.setCanclFlag(EnuActCanclFlag.ACT_CANCL0.getCode());
@@ -251,49 +262,95 @@ public class TaDayEndReconciAction implements Serializable {
      * 内对_本地记账与SBS对账（比较两个List）
      */
     public void reconci(){
-        List<TaRsAccDtl> taRsAccDtlLocalListPara = taRsAccDtlLocalList;
-        List<TaRsAccDtl> taRsAccDtlSbsListPara = taRsAccDtlSbsList;
-        // List1重复项
-        List<TaRsAccDtl> taRsAccDtlList1Repeat = new ArrayList<TaRsAccDtl>();
-        // List2重复项
-        List<TaRsAccDtl> taRsAccDtlList2Repeat = new ArrayList<TaRsAccDtl>();
-        boolean isExist = false;
-        // 遍历List1
-        for(TaRsAccDtl taRsAccDtl1:taRsAccDtlLocalListPara){
-            isExist = false;
-            if(taRsAccDtl1.getTxCode().equals(EnuTaFdcTxCode.TRADE_2002.getCode()) ||
-                taRsAccDtl1.getTxCode().equals(EnuTaFdcTxCode.TRADE_2111.getCode()) ||
-                    taRsAccDtl1.getTxCode().equals(EnuTaFdcTxCode.TRADE_2211.getCode())){ // 一般账户→监管账户
-                // 遍历List2
-                for(TaRsAccDtl taRsAccDtl2:taRsAccDtlSbsListPara){
-                    if(taRsAccDtl1.getReqSn().substring(8,26).equals(taRsAccDtl2.getReqSn())
-                            &&taRsAccDtl1.getGerlAccId().equals(taRsAccDtl2.getSpvsnAccId())
-                            &&taRsAccDtl1.getSpvsnAccId().equals(taRsAccDtl2.getGerlAccId())
-                            &&taRsAccDtl1.getTxAmt().equals(taRsAccDtl2.getTxAmt())){
-                        isExist = true;
-                        taRsAccDtlList2Repeat.add(taRsAccDtl2);
-                    }
-                }
-            } else { // 监管账户→一般账户
-                // 遍历List2
-                for(TaRsAccDtl taRsAccDtl2:taRsAccDtlSbsListPara){
-                    if(taRsAccDtl1.getReqSn().substring(8,26).equals(taRsAccDtl2.getReqSn())
-                            &&taRsAccDtl1.getSpvsnAccId().equals(taRsAccDtl2.getSpvsnAccId())
-                            &&taRsAccDtl1.getGerlAccId().equals(taRsAccDtl2.getGerlAccId())
-                            &&taRsAccDtl1.getTxAmt().equals(taRsAccDtl2.getTxAmt())){
-                        isExist = true;
-                        taRsAccDtlList2Repeat.add(taRsAccDtl2);
-                    }
-                }
-            }
-
-            if(isExist){
-                taRsAccDtlList1Repeat.add(taRsAccDtl1);
-            }
+        // 获取sbs数据
+        if(!onQrySbsData()) { // 获取sbs数据失败
+            return;
         }
+        try {
+            List<TaRsAccDtl> taRsAccDtlLocalListPara = taRsAccDtlLocalList;
+            List<TaRsAccDtl> taRsAccDtlSbsListPara = taRsAccDtlSbsList;
+            // List1重复项
+            List<TaRsAccDtl> taRsAccDtlList1Repeat = new ArrayList<TaRsAccDtl>();
+            // List2重复项
+            List<TaRsAccDtl> taRsAccDtlList2Repeat = new ArrayList<TaRsAccDtl>();
+            boolean isExist = false;
+            // 遍历List1
+            for(TaRsAccDtl taRsAccDtl1:taRsAccDtlLocalListPara){
+                isExist = false;
+                if(taRsAccDtl1.getTxCode().equals(EnuTaFdcTxCode.TRADE_2002.getCode()) ||
+                    taRsAccDtl1.getTxCode().equals(EnuTaFdcTxCode.TRADE_2111.getCode()) ||
+                        taRsAccDtl1.getTxCode().equals(EnuTaFdcTxCode.TRADE_2211.getCode())){ // 一般账户→监管账户
+                    // 遍历List2
+                    for(TaRsAccDtl taRsAccDtl2:taRsAccDtlSbsListPara){
+                        if(taRsAccDtl1.getReqSn().substring(8,26).equals(taRsAccDtl2.getReqSn())
+                                &&taRsAccDtl1.getGerlAccId().equals(taRsAccDtl2.getSpvsnAccId())
+                                &&taRsAccDtl1.getSpvsnAccId().equals(taRsAccDtl2.getGerlAccId())
+                                &&taRsAccDtl1.getTxAmt().equals(taRsAccDtl2.getTxAmt())){
+                            isExist = true;
+                            taRsAccDtlList2Repeat.add(taRsAccDtl2);
+                        }
+                    }
+                } else { // 监管账户→一般账户
+                    // 遍历List2
+                    for(TaRsAccDtl taRsAccDtl2:taRsAccDtlSbsListPara){
+                        if(taRsAccDtl1.getReqSn().substring(8,26).equals(taRsAccDtl2.getReqSn())
+                                &&taRsAccDtl1.getSpvsnAccId().equals(taRsAccDtl2.getSpvsnAccId())
+                                &&taRsAccDtl1.getGerlAccId().equals(taRsAccDtl2.getGerlAccId())
+                                &&taRsAccDtl1.getTxAmt().equals(taRsAccDtl2.getTxAmt())){
+                            isExist = true;
+                            taRsAccDtlList2Repeat.add(taRsAccDtl2);
+                        }
+                    }
+                }
 
-        taRsAccDtlLocalListPara.removeAll(taRsAccDtlList1Repeat);
-        taRsAccDtlSbsListPara.removeAll(taRsAccDtlList2Repeat);
+                if(isExist){
+                    taRsAccDtlList1Repeat.add(taRsAccDtl1);
+                }
+            }
+
+            taRsAccDtlLocalListPara.removeAll(taRsAccDtlList1Repeat);
+            taRsAccDtlSbsListPara.removeAll(taRsAccDtlList2Repeat);
+
+            String statusFlag = EnuStatusFlag.STATUS_FLAG0.getCode(); // 初始
+            String statusName = EnuStatusFlag.STATUS_FLAG0.getTitle();
+            if(taRsAccDtlLocalListPara.size() == 0 && taRsAccDtlSbsListPara.size() == 0) {
+                statusFlag = EnuStatusFlag.STATUS_FLAG1.getCode();    // 完成
+                statusName = EnuStatusFlag.STATUS_FLAG1.getTitle();
+            }
+
+            // 插入或者更新对账记录表
+            List<TaRsCheck> taRsCheckList = taRsCheckService.selectRecords();
+            if(taRsCheckList == null || taRsCheckList.size() == 0) {
+                Date sysdate = new Date();
+                TaRsCheck taRsCheckTemp = new TaRsCheck();
+                taRsCheckTemp.setCheckDate(ToolUtil.getStrLastUpdDate());                   // 对账日期
+                taRsCheckTemp.setStatusFlag(statusFlag);                                    // 状态标志
+                taRsCheckTemp.setStatusName(statusName);                                    // 状态标志
+                taRsCheckTemp.setFetchFlag(EnuFetchFlag.FETCH_FLAG2.getCode());           // 取对账明细标记
+                taRsCheckTemp.setClassifyFlag(EnuClassifyFlag.CLASSIFY_FLAG2.getCode());  // 对账分类
+                taRsCheckTemp.setCheckTime(ToolUtil.getStrLastUpdDate());                   // 勾对时间
+                taRsCheckTemp.setDeletedFlag(EnuTaArchivedFlag.ARCHIVED_FLAG0.getCode()); // 记录删除标志
+                taRsCheckTemp.setCreatedDate(sysdate);                                      // 创建时间
+                taRsCheckTemp.setLastUpdDate(sysdate);                                      // 最近修改时间
+                taRsCheckTemp.setModificationNum(0);                                        // 修改次数
+                taRsCheckService.insertRecord(taRsCheckTemp);
+            } else {
+                TaRsCheck taRsCheckTemp = taRsCheckList.get(0);
+                taRsCheckTemp.setStatusFlag(statusFlag);                                 // 状态标志
+                taRsCheckTemp.setStatusName(statusName);                                 // 状态标志
+                taRsCheckTemp.setLastUpdDate(new Date());                                // 最近修改时间
+                taRsCheckTemp.setModificationNum(taRsCheckTemp.getModificationNum()+1);  // 修改次数
+                taRsCheckService.updateRecord(taRsCheckTemp);
+            }
+            if(EnuStatusFlag.STATUS_FLAG1.getCode().equals(statusFlag)) { // 对账成功
+                MessageUtil.addInfo(RfmMessage.getProperty("DayEndReconciliation.I003"));
+            } else {
+                MessageUtil.addError(RfmMessage.getProperty("DayEndReconciliation.E003"));
+            }
+        } catch (Exception e) {
+            logger.error(RfmMessage.getProperty("DayEndReconciliation.E004"), e);
+            MessageUtil.addError(RfmMessage.getProperty("DayEndReconciliation.E004"));
+        }
     }
 
     /**
@@ -310,6 +367,14 @@ public class TaDayEndReconciAction implements Serializable {
     }
 
     //= = = = = = = = = = = = get set = = = = = = = = = = = =
+    public TaRsCheckService getTaRsCheckService() {
+        return taRsCheckService;
+    }
+
+    public void setTaRsCheckService(TaRsCheckService taRsCheckService) {
+        this.taRsCheckService = taRsCheckService;
+    }
+
     public Map<String, String> getTxCodeMap() {
         return txCodeMap;
     }

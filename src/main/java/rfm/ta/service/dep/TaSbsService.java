@@ -129,7 +129,7 @@ public class TaSbsService {
     @Transactional
     public List<TaRsAccDtl> sendAndRecvRealTimeTxn900012602(TaTxnFdc taTxnFdcPara) {
         try {
-            List<TaRsAccDtl> taRsAccDtlListTemp=new ArrayList<TaRsAccDtl>();
+            List<TaRsAccDtl> taRsAccDtlListTemp = null;
 
             // 日终对账明细查询
             Tia900012602 tia900012602Temp=new Tia900012602();
@@ -152,6 +152,7 @@ public class TaSbsService {
 
             if (toa900012602Temp != null && toa900012602Temp.body != null) {
                 if (EnuTaTxnRtnCode.TXN_PROCESSED.getCode().equals(toa900012602Temp.header.RETURN_CODE)) {
+                    taRsAccDtlListTemp = new ArrayList<TaRsAccDtl>();
                     // 填充首次数据
                     taRsAccDtlListTemp.addAll(fromBodyDetailsToTaRsAccDtls(toa900012602Temp.body.DETAILS));
                     String totcnt = toa900012602Temp.body.TOTCNT;
@@ -173,6 +174,8 @@ public class TaSbsService {
                             }
                         }
                     }
+                } else if("W107".equalsIgnoreCase(toa900012602Temp.header.RETURN_CODE)) { // 未找到任何记录
+                    taRsAccDtlListTemp = new ArrayList<TaRsAccDtl>();
                 } else {
                     MessageUtil.addError(toa900012602Temp.header.RETURN_MSG);
                 }
