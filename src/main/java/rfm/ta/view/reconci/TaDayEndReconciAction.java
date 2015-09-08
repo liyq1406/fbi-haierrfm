@@ -74,7 +74,7 @@ public class TaDayEndReconciAction implements Serializable {
                 total += Double.valueOf(taRsAccDtl.getTxAmt());
                 taRsAccDtl.setTxAmt(df.format(Double.valueOf(taRsAccDtl.getTxAmt())));
             }
-            strLocalTotalAmt = ToolUtil.getMoneyString(total);
+            strLocalTotalAmt = df.format(total);
         }
     }
 
