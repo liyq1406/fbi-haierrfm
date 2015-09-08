@@ -8,11 +8,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import platform.common.utils.MessageUtil;
 import pub.platform.advance.utils.RfmMessage;
+import rfm.ta.common.enums.EnuStatusFlag;
 import rfm.ta.common.enums.EnuTaBankId;
 import rfm.ta.common.enums.EnuTaCityId;
 import rfm.ta.common.enums.EnuTaTxnRtnCode;
 import rfm.ta.repository.model.TaRsAcc;
 import rfm.ta.service.biz.acc.TaAccService;
+import rfm.ta.service.biz.reconci.TaRsCheckService;
 import rfm.ta.service.dep.TaSbsService;
 
 import javax.annotation.PostConstruct;
@@ -44,6 +46,9 @@ public class TaBlncReconciAction {
     @ManagedProperty(value = "#{taAccService}")
     private TaAccService taAccService;
 
+    @ManagedProperty("#{taRsCheckService}")
+    private TaRsCheckService taRsCheckService;
+
     private List<TaRsAcc> taRsAccList;
 
     // 账户余额
@@ -69,6 +74,9 @@ public class TaBlncReconciAction {
                 return;
             }
 
+            // 更新对账明细表状态（余额对账获取中）
+            taRsCheckService.insOrUpdTaRsCheck(EnuStatusFlag.STATUS_FLAG5.getCode());
+
             // 发送监管账号到SBS查询余额
             List<Toa900012701> toaSbs=taSbsService.sendAndRecvRealTimeTxn900012701(taRsAccList);
 
@@ -86,6 +94,9 @@ public class TaBlncReconciAction {
                         txAmtMap.put(bodyDetail.ACTNUM, bodyDetail.BOKBAL);
                     }
                 }
+
+                // 更新对账明细表状态（余额对账获取完成）
+                taRsCheckService.insOrUpdTaRsCheck(EnuStatusFlag.STATUS_FLAG6.getCode());
 
                 MessageUtil.addInfo(RfmMessage.getProperty("BalanceReconciliation.I001"));
             }
@@ -112,6 +123,8 @@ public class TaBlncReconciAction {
             if(file != null){
                 boolean result = ToolUtil.uploadFile(fileName, file);
                 if(result){
+                    // 更新对账明细表状态（余额对账发送成功）
+                    taRsCheckService.insOrUpdTaRsCheck(EnuStatusFlag.STATUS_FLAG7.getCode());
                     MessageUtil.addInfo(RfmMessage.getProperty("BalanceReconciliation.I002"));
                 } else{
                     MessageUtil.addError(RfmMessage.getProperty("BalanceReconciliation.E003"));
@@ -183,6 +196,14 @@ public class TaBlncReconciAction {
     }
 
     //= = = = = = = = = = = = = = =  get set = = = = = = = = = = = = = = = =
+    public TaRsCheckService getTaRsCheckService() {
+        return taRsCheckService;
+    }
+
+    public void setTaRsCheckService(TaRsCheckService taRsCheckService) {
+        this.taRsCheckService = taRsCheckService;
+    }
+
     public Map<String, String> getTxAmtMap() {
         return txAmtMap;
     }
