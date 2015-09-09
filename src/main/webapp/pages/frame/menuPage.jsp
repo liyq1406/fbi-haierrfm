@@ -80,6 +80,9 @@
             biztree.setImagePath("<%=contextPath%>/dhtmlx/codebase/imgs/csh_books/");
             //biztree.enableTreeLines(true);
             biztree.loadJSONObject(treeDefaultJson);
+            var ids = new Array();
+            ids = (biztree.getAllFatItems()).split(",");
+            biztree.openItem(ids[0]);
             biztree.attachEvent("onClick", function(id) {
                 var action = (biztree.getUserData(id, "url"));
                 if (action == "#") {
