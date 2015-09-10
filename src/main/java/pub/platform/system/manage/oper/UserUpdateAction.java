@@ -38,7 +38,11 @@ public class UserUpdateAction extends Action {
         operbean.setOpername(this.req.getFieldValue(i, "opername"));
         operbean.setOpertype("2");
         // operbean.setOpertype(this.req.getFieldValue(i,"opertype"));
-        operbean.setOperpasswd(MD5Helper.getMD5String(this.req.getFieldValue(i, "operpasswd")));
+        if(this.req.getFieldValue(i, "operpasswd").equals(this.req.getFieldValue(i, "hdnpasswd"))) {
+          operbean.setOperpasswd(this.req.getFieldValue(i, "operpasswd"));
+        } else {
+          operbean.setOperpasswd(MD5Helper.getMD5String(this.req.getFieldValue(i, "operpasswd")));
+        }
         operbean.setIssuper(this.req.getFieldValue(i, "issuper"));
         operbean.setSex(this.req.getFieldValue(i, "sex"));
         operbean.setEmail(this.req.getFieldValue(i, "email"));
@@ -74,7 +78,11 @@ public class UserUpdateAction extends Action {
         operbean.setOperid(this.req.getFieldValue(i, "operid"));
         operbean.setOpername(this.req.getFieldValue(i, "opername"));
         operbean.setOpertype(this.req.getFieldValue(i, "opertype"));
-        operbean.setOperpasswd(MD5Helper.getMD5String(this.req.getFieldValue(i, "operpasswd")));
+        if(this.req.getFieldValue(i, "operpasswd").equals(this.req.getFieldValue(i, "hdnpasswd"))) {
+          operbean.setOperpasswd(this.req.getFieldValue(i, "operpasswd"));
+        } else {
+          operbean.setOperpasswd(MD5Helper.getMD5String(this.req.getFieldValue(i, "operpasswd")));
+        }
         operbean.setIssuper(this.req.getFieldValue(i, "issuper"));
         operbean.setSex(this.req.getFieldValue(i, "sex"));
         operbean.setEmail(this.req.getFieldValue(i, "email"));

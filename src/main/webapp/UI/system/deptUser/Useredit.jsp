@@ -106,7 +106,16 @@
 
 			}
 			if (dbOperateType =="update"){
-
+                var hdnpasswd;
+                for (var i=0; i< feerateedit.length; i++)
+                {
+                    var obj= feerateedit.item(i);
+                    if(obj.id == "operpasswd") {
+                        hdnpasswd = obj.value;
+                    } else if(obj.id == "hdnpasswd") {
+                        obj.value = hdnpasswd;
+                    }
+                }
 				//document.all.operid.disabled=true;
 
 			}
@@ -171,7 +180,7 @@
     <tr>
       <td class="lbl_right_padding"> 操作员密码 </td>
       <td class="data_input"><input id="operpasswd" class="text" type="password" isNull="false" maxlength="20">
-        <span class="red_star" >*</span> </td>
+        <span class="red_star" >*</span> <input id="hdnpasswd" type="hidden"></td>
       <td class="lbl_right_padding"> 是否领导 </td>
       <td class="data_input"><%
                     ZtSelect zscc = new ZtSelect("issuper", "BOOLTYPE");
