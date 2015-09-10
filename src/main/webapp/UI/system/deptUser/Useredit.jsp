@@ -225,17 +225,6 @@
               %>
       </td>
     </tr>
-    <tr>
-      <td class="lbl_right_padding"><%=fillint12%> </td>
-      <td class="data_input"><input id="fillint12" class="text" type="text" onKeyUp="onKeyPressInputInteger();"  maxLength="12">
-      </td>
-      <td class="lbl_right_padding"><%=fillstr150%> </td>
-      <td class="data_input"><input id="fillstr150" class="text" type="text">
-      </td>
-      <td class="lbl_right_padding"><%=fillstr600%> </td>
-      <td class="data_input"><input id="fillstr600" class="text" type="text">
-      </td>
-    </tr>
   </table>
 </form>
 </fieldset>
