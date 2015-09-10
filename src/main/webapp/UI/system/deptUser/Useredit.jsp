@@ -216,9 +216,10 @@
       </td>
       <td class="lbl_right_padding"> 是&nbsp;否可&nbsp;用 </td>
       <td class="data_input"><%
-                    zscc = new ZtSelect("operenabled", "BOOLTYPE", "1");
+                    zscc = new ZtSelect("operenabled", "BOOLTYPE", "可用");
                     zscc.addAttr("style", "width: 100px");
-
+                    zscc.addOption("不可用", "0");
+                    zscc.addOption("可用", "1");
                     zscc.setDisplayAll(false);
                     out.print(zscc);
               %>

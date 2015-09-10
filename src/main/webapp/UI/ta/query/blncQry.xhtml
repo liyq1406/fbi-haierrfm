@@ -1,0 +1,94 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/ui.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+            .input-col-m {
+                width: 60px;
+            }
+
+            .input-col-l {
+                width: 80px;
+            }
+
+            .input-col-xxl {
+                width: 1%;
+                text-align: right;
+            }
+
+            .col-95 {
+                text-align: right;
+            }
+
+            .col-5 {
+                text-align: left;
+            }
+        </style>
+        <script type="text/javascript" language="javascript">
+            document.onkeydown = function TabReplace() {
+                if (event.keyCode == 13) {
+                    if (event.srcElement.tagName != 'BUTTON')
+                        event.keyCode = 9;
+                }
+            }
+        </script>
+    </ui:define>
+
+    <ui:define name="content">
+        <div style="margin:5px;" id="div">
+            <h:form id="form">
+                <p:growl id="msgs" showDetail="true"/>
+                <p:tabView>
+                    <p:tab title="【监管账号余额查询】">
+                        <p:menubar>
+                            <p:menuitem type="push" value="获取sbs数据" icon="ui-icon ui-icon-plus"
+                                        action="#{taBlncReconciAction.onQryLocaldata}" update="pdt,:form:msgs"
+                                        ajax="true"/>
+                        </p:menubar>
+                        <p:ajaxStatus style="width:16px;height:16px;">
+                            <f:facet name="start">
+                                <h:graphicImage value="/images/ajaxloading.gif"/>
+                            </f:facet>
+                            <f:facet name="complete">
+                                <h:outputText value=""/>
+                            </f:facet>
+                        </p:ajaxStatus>
+                        <p:panelGrid id="pdts" columns="2">
+                            <p:dataTable id="pdt"  var="record"
+                                         value="#{taBlncReconciAction.taRsAccList}"
+                                         paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         paginator="true" rows="15" paginatorPosition="bottom"
+                                         rowsPerPageTemplate="100,50,30,15,5"
+                                         rowIndexVar="row"
+                                         emptyMessage="数据记录为空...">
+
+                                <p:column headerText="序号" style="width:40px">
+                                    <h:outputText value="#{row + 1}"/>
+                                </p:column>
+                                <p:column headerText="监管账号" style="width:210px;text-align:center">
+                                    <h:outputText value="#{record.spvsnAccId}"/>
+                                </p:column>
+                                <p:column headerText="监管账户名" style="width:300px;text-align:center">
+                                    <h:outputText value="#{record.spvsnAccName}"/>
+                                </p:column>
+                                <p:column headerText="账户余额" style="width:200px;text-align:center">
+                                    <h:outputText value="#{taBlncReconciAction.txAmtMap.get(record.spvsnAccId)}" style="float: right">
+                                        <f:convertNumber type="number" pattern="#,###,###,###,##0.00"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="日期" style="text-align:center">
+                                    <h:outputText value="#{taBlncReconciAction.sysdate}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </p:panelGrid>
+                    </p:tab>
+                </p:tabView>
+            </h:form>
+        </div>
+    </ui:define>
+
+</ui:composition>
