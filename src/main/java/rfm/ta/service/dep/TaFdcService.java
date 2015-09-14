@@ -58,6 +58,7 @@ public class TaFdcService {
             tia9901001Temp.body.BRANCH_ID=ToolUtil.getOperatorManager().getOperator().getDeptid();// 10   网点号         30
             tia9901001Temp.header.USER_ID=ToolUtil.getOperatorManager().getOperatorId();          // 11   柜员号         30
             tia9901001Temp.body.INITIATOR=EnuTaInitiatorId.INITIATOR.getCode() ;                 // 12   发起方         1   1_监管银行
+
             //通过MQ发送信息到DEP
             String strMsgid= depMsgSendAndRecv.sendDepMessage(tia9901001Temp);
             Toa9901001 toaPara=(Toa9901001) depMsgSendAndRecv.recvDepMessage(strMsgid);
@@ -67,7 +68,7 @@ public class TaFdcService {
                 taRsAccPara.setPreSaleProAddr(toaPara.body.PRE_SALE_PRO_ADDR);
                 taRsAccPara.setPreSaleProName(toaPara.body.PRE_SALE_PRO_NAME);
                 taRsAccPara.setStatusFlag(EnuTaAccStatus.ACC_SUPV.getCode());
-                taAccService.insertRecord(taRsAccPara);
+                taAccService.updateRecord(taRsAccPara);
             }else{
                  /*01	返回结果	    4
                   02	错误原因描述	60

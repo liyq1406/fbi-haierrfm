@@ -14,7 +14,7 @@ public enum EnuTaBankId {
     BANK_09("", ""),
     BANK_10("", ""),
     BANK_11("", ""),
-    BANK_HAIER("12", "º£¶û");
+    BANK_HAIER("13", "º£¶û");
 
     private String code = null;
     private String title = null;

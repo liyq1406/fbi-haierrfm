@@ -1,5 +1,6 @@
 package rfm.ta.view.acc;
 
+import common.utils.ToolUtil;
 import org.fbi.dep.model.base.TOA;
 import org.fbi.dep.model.txn.Toa9901001;
 import org.slf4j.Logger;
@@ -8,8 +9,7 @@ import platform.common.utils.MessageUtil;
 import platform.service.PtenudetailService;
 import pub.platform.advance.utils.RfmMessage;
 import rfm.qd.service.RsSysctlService;
-import rfm.ta.common.enums.EnuTaAccStatus;
-import rfm.ta.common.enums.EnuTaTxnRtnCode;
+import rfm.ta.common.enums.*;
 import rfm.ta.repository.model.TaRsAcc;
 import rfm.ta.service.biz.acc.TaAccService;
 import rfm.ta.service.dep.TaFdcService;
@@ -72,22 +72,35 @@ public class TaAccAction {
                 return;
             }
 
-            TOA toaTa = taFdcService.sendAndRecvRealTimeTxn9901001(taRsAcc);
-            if(toaTa !=null) {
-                Toa9901001 toa9901001 = (Toa9901001)toaTa;
-                if ((EnuTaTxnRtnCode.TXN_PROCESSED.getCode()).equals(toaTa.getHeader().RETURN_CODE)) { // TA成功的处理
-                    taRsAccRecv.setReturnCode(toa9901001.header.RETURN_CODE);
-                    taRsAccRecv.setFdcSn(toa9901001.header.REQ_SN);
-                    taRsAccRecv.setPreSalePerName(toa9901001.body.PRE_SALE_PER_NAME);
-                    taRsAccRecv.setPreSaleProAddr(toa9901001.body.PRE_SALE_PRO_ADDR);
-                    taRsAccRecv.setPreSaleProName(toa9901001.body.PRE_SALE_PRO_NAME);
-                    taRsAccRecv.setReturnMsg(toa9901001.header.RETURN_MSG);
-                    MessageUtil.addInfo(RfmMessage.getProperty("AccountOpening.I001"));
-                }else{
-                    MessageUtil.addError(toaTa.getHeader().RETURN_MSG);
+            List<TaRsAcc> taRsAccsQry = taAccService.selectRecords(taRsAcc);
+            if(taRsAccsQry.size() == 1){
+                String actFlag = taRsAccsQry.get(0).getStatusFlag();
+                if(actFlag.equals(EnuTaAccStatus.ACC_SUPV.getCode())){
+                    MessageUtil.addError(RfmMessage.getProperty("AccountOpening.E002"));
+                } else if(actFlag.equals(EnuTaAccStatus.ACC_INIT.getCode())){
+                    MessageUtil.addError(RfmMessage.getProperty("AccountOpening.E003"));
                 }
-            }else{
-                MessageUtil.addInfo("启用监管失败!");
+            }else {
+                taRsAcc.setStatusFlag(EnuTaAccStatus.ACC_INIT.getCode());
+                taAccService.insertRecord(taRsAcc);
+
+                TOA toaTa = taFdcService.sendAndRecvRealTimeTxn9901001(taRsAcc);
+                if (toaTa != null) {
+                    Toa9901001 toa9901001 = (Toa9901001) toaTa;
+                    if ((EnuTaTxnRtnCode.TXN_PROCESSED.getCode()).equals(toaTa.getHeader().RETURN_CODE)) { // TA成功的处理
+                        taRsAccRecv.setReturnCode(toa9901001.header.RETURN_CODE);
+                        taRsAccRecv.setFdcSn(toa9901001.header.REQ_SN);
+                        taRsAccRecv.setPreSalePerName(toa9901001.body.PRE_SALE_PER_NAME);
+                        taRsAccRecv.setPreSaleProAddr(toa9901001.body.PRE_SALE_PRO_ADDR);
+                        taRsAccRecv.setPreSaleProName(toa9901001.body.PRE_SALE_PRO_NAME);
+                        taRsAccRecv.setReturnMsg(toa9901001.header.RETURN_MSG);
+                        MessageUtil.addInfo(RfmMessage.getProperty("AccountOpening.I001"));
+                    } else {
+                        MessageUtil.addError(toaTa.getHeader().RETURN_MSG);
+                    }
+                } else {
+                    MessageUtil.addInfo("启用监管失败!");
+                }
             }
         } catch (Exception e) {
             logger.error("启用监管失败，", e);
@@ -101,11 +114,17 @@ public class TaAccAction {
             if(taRsAccListTemp.size() == 0){
                 MessageUtil.addError(RfmMessage.getProperty("AccountCancel.E001"));
                 return;
-            } else {
-                if(!taRsAccListTemp.get(0).getStatusFlag().equals(EnuTaAccStatus.ACC_SUPV.getCode())) {
-                    MessageUtil.addError(RfmMessage.getProperty("AccountCancel.E002"));
-                    return;
-                }
+            }
+            String strAccStatusFlag=taRsAccListTemp.get(0).getStatusFlag();
+            if(!EnuTaAccStatus.ACC_SUPV.getCode().equals(strAccStatusFlag)) {
+                MessageUtil.addError(RfmMessage.getProperty("AccountCancel.E002"));
+                return;
+            }else if(!EnuTaAccStatus.ACC_INIT.getCode().equals(strAccStatusFlag)) {
+                MessageUtil.addError(RfmMessage.getProperty("AccountCancel.E003"));
+                return;
+            }else if(!EnuTaAccStatus.ACC_CANCL.getCode().equals(strAccStatusFlag)) {
+                MessageUtil.addError(RfmMessage.getProperty("AccountCancel.E004"));
+                return;
             }
 
             TaRsAcc taRsAccTemp=taRsAccListTemp.get(0);
@@ -122,10 +141,43 @@ public class TaAccAction {
                     MessageUtil.addError(toaTa.getHeader().RETURN_MSG);
                 }
             }else{
-                MessageUtil.addInfo("启用监管失败!");
+                MessageUtil.addInfo("解除监管失败!");
             }
         } catch (Exception e) {
             logger.error("解除监管失败，", e);
+            MessageUtil.addError(e.getMessage());
+        }
+    }
+
+    /*记账*/
+    public void onClick_Enable(TaRsAcc taRsAccPara){
+        try {
+            if(EnuTaFdcTxCode.TRADE_1001.getCode().equals(taRsAccPara.getTxCode())) {
+                TOA toaTaTemp = taFdcService.sendAndRecvRealTimeTxn9901001(taRsAccPara);
+                if (toaTaTemp != null) {
+                    if ((EnuTaTxnRtnCode.TXN_PROCESSED.getCode()).equals(toaTaTemp.getHeader().RETURN_CODE)) { // TA成功的处理
+                        MessageUtil.addInfo(RfmMessage.getProperty("AccountOpening.I001"));
+                    } else {
+                        MessageUtil.addError(toaTaTemp.getHeader().RETURN_MSG);
+                    }
+                } else {
+                    MessageUtil.addInfo("启用监管失败!");
+                }
+            }else if(EnuTaFdcTxCode.TRADE_1002.getCode().equals(taRsAccPara.getTxCode())) {
+                TOA toaTaTemp = taFdcService.sendAndRecvRealTimeTxn9901002(taRsAccPara);
+                if (toaTaTemp != null) {
+                    if ((EnuTaTxnRtnCode.TXN_PROCESSED.getCode()).equals(toaTaTemp.getHeader().RETURN_CODE)) { // TA成功的处理
+                        MessageUtil.addInfo(RfmMessage.getProperty("AccountCancel.I001"));
+                    } else {
+                        MessageUtil.addError(toaTaTemp.getHeader().RETURN_MSG);
+                    }
+                } else {
+                    MessageUtil.addInfo("解除监管失败!");
+                }
+            }
+            onBtnQueryClick();
+        } catch (Exception e) {
+            logger.error("", e);
             MessageUtil.addError(e.getMessage());
         }
     }
