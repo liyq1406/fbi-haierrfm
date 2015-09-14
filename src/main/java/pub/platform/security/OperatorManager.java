@@ -90,6 +90,73 @@ public class OperatorManager implements Serializable {
 		createImgSign();
 	}
 
+    /**
+     * 单点登录入口 不检查pwd
+     * @param operid
+     * @return
+     */
+    public boolean login4sso(String operid) {
+
+        ConnectionManager cm = ConnectionManager.getInstance();
+        DatabaseConnection dc = cm.get();
+        try {
+            String loginWhere = "where operid='" + operid
+                    + "' and operenabled='1'";
+            this.operatorid = operid;
+            operator = new PtOperBean();
+            operator = (PtOperBean) operator.findFirstByWhere(loginWhere);
+            if (operator == null) {
+                isLogin = false;
+                return false;
+            }
+
+            String sss = "登录时间 :" + loginTime + " IP: " + remoteAddr
+                    + " 机器名称 : " + remoteHost;
+
+            operator.setFillstr600(sss);
+
+            PtDeptBean ptpdet = new PtDeptBean();
+
+            operator.setPtDeptBean((PtDeptBean) ptpdet
+                    .findFirstByWhere("where deptid='" + operator.getDeptid()
+                            + "'"));
+
+            this.operatorname = operator.getOpername();
+            isLogin = true;
+
+            // 初始化资源列表。
+            resources = new Resources(operid);
+            // 初始化菜单。
+            try {
+                mb = new MenuBean();
+
+                //this.xmlString = mb.generateStream(operid);
+                //this.jsonString = mb.generateJsonStream(operid);
+                String aDefault = mb.generateJsonStream(operid, "default");
+                this.jsonMap.put("default", aDefault);
+                String system = mb.generateJsonStream(operid, "system");
+                this.jsonMap.put("system", system);
+
+                if ((aDefault+system).length() <=100) {
+                    return false;
+                }
+
+            } catch (Exception ex3) {
+                ex3.printStackTrace();
+                System.err.println("Wrong when getting menus of operator: [ "
+                        + ex3 + "]");
+            }
+
+            return isLogin;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            cm.release();
+        }
+
+    }
+
 	/**
 	 * 
 	 * @return
