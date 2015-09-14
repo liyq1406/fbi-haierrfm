@@ -75,10 +75,13 @@ public class TaFdcService {
                 */
                 taRsAccPara.setReturnCode(toaPara.header.RETURN_CODE);
                 taRsAccPara.setReturnMsg(toaPara.header.RETURN_MSG);
+                // 已建立监管
                 if("1501".equals(taRsAccPara.getReturnCode())){
                     taRsAccPara.setStatusFlag(EnuTaAccStatus.ACC_SUPV.getCode());
+                    taAccService.updateRecord(taRsAccPara);
+                }else{
+                    taAccService.deleteRecord(taRsAccPara);
                 }
-                taAccService.updateRecord(taRsAccPara);
             }
             return toaPara;
         } catch (Exception e) {
@@ -122,10 +125,13 @@ public class TaFdcService {
                 */
                 taRsAccPara.setReturnCode(toaPara.header.RETURN_CODE);
                 taRsAccPara.setReturnMsg(toaPara.header.RETURN_MSG);
+                // 已申请监管
                 if("1501".equals(taRsAccPara.getReturnCode())){
                     taRsAccPara.setStatusFlag(EnuTaAccStatus.ACC_SUPV.getCode());
+                    taAccService.updateRecord(taRsAccPara);
+                }else{
+                    taAccService.deleteRecord(taRsAccPara);
                 }
-                taAccService.updateRecord(taRsAccPara);
             }
             return toaPara;
         } catch (Exception e) {
