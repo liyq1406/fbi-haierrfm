@@ -66,12 +66,6 @@ public class TaAccAction {
     /*启用*/
     public void onClick_Enable(){
         try {
-            String strRtn=taAccService.isExistInDb(taRsAcc);
-            if(strRtn!=null){
-                MessageUtil.addError(strRtn);
-                return;
-            }
-
             List<TaRsAcc> taRsAccsQry = taAccService.selectRecords(taRsAcc);
             if(taRsAccsQry.size() == 1){
                 String actFlag = taRsAccsQry.get(0).getStatusFlag();
@@ -81,6 +75,12 @@ public class TaAccAction {
                     MessageUtil.addError(RfmMessage.getProperty("AccountOpening.E003"));
                 }
             }else {
+                String strRtn=taAccService.isExistInDb(taRsAcc);
+                if(strRtn!=null){
+                    MessageUtil.addError(strRtn);
+                    return;
+                }
+
                 taRsAcc.setStatusFlag(EnuTaAccStatus.ACC_INIT.getCode());
                 taRsAcc.setTxCode(EnuTaFdcTxCode.TRADE_1001.getCode());                    // 01   交易代码       4   1001
                 taRsAcc.setSpvsnBankId(EnuTaBankId.BANK_HAIER.getCode());                  // 02   监管银行代码   2

@@ -3,7 +3,7 @@ package rfm.ta.common.enums;
 import java.util.Hashtable;
 
 public enum EnuTaAccStatus {
-    ACC_INIT("0", "初始"),
+    ACC_INIT("0", "不明原因"),
     ACC_SUPV("1", "监管中"),
     ACC_CANCL("2", "撤销监管");
 
