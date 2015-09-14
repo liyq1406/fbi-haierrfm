@@ -116,14 +116,11 @@ public class TaAccAction {
                 return;
             }
             String strAccStatusFlag=taRsAccListTemp.get(0).getStatusFlag();
-            if(!EnuTaAccStatus.ACC_SUPV.getCode().equals(strAccStatusFlag)) {
+            if(EnuTaAccStatus.ACC_CANCL.getCode().equals(strAccStatusFlag)) {
                 MessageUtil.addError(RfmMessage.getProperty("AccountCancel.E002"));
                 return;
-            }else if(!EnuTaAccStatus.ACC_INIT.getCode().equals(strAccStatusFlag)) {
+            }else if(EnuTaAccStatus.ACC_INIT.getCode().equals(strAccStatusFlag)) {
                 MessageUtil.addError(RfmMessage.getProperty("AccountCancel.E003"));
-                return;
-            }else if(!EnuTaAccStatus.ACC_CANCL.getCode().equals(strAccStatusFlag)) {
-                MessageUtil.addError(RfmMessage.getProperty("AccountCancel.E004"));
                 return;
             }
 
