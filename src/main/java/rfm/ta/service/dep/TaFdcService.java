@@ -46,18 +46,18 @@ public class TaFdcService {
             taRsAccPara.setReqSn(ToolUtil.getStrAppReqSn_Back());
             Tia9901001 tia9901001Temp=new Tia9901001();
             tia9901001Temp.header.CHANNEL_ID=ToolUtil.DEP_CHANNEL_ID_RFM;
-            tia9901001Temp.header.TX_CODE= EnuTaFdcTxCode.TRADE_1001.getCode();                 // 01   交易代码       4   1001
-            tia9901001Temp.body.SPVSN_BANK_ID= EnuTaBankId.BANK_HAIER.getCode();               // 02   监管银行代码   2
-            tia9901001Temp.body.CITY_ID= EnuTaCityId.CITY_TAIAN.getCode();                      // 03   城市代码       6
-            tia9901001Temp.header.BIZ_ID=taRsAccPara.getBizId();                                  // 04   监管申请编号   14
-            tia9901001Temp.body.SPVSN_ACC_TYPE=taRsAccPara.getSpvsnAccType();                    // 05   帐户类别       1   0：预售监管户
-            tia9901001Temp.body.SPVSN_ACC_ID=taRsAccPara.getSpvsnAccId();                        // 06   监管专户账号    30
-            tia9901001Temp.body.SPVSN_ACC_NAME=taRsAccPara.getSpvsnAccName();                    // 07   监管专户户名   150
-            tia9901001Temp.header.REQ_SN=taRsAccPara.getReqSn();                                  // 08   流水号         30
-            tia9901001Temp.body.TX_DATE=ToolUtil.getStrLastUpdDate() ;                            // 09   日期           10  送系统日期即可
-            tia9901001Temp.body.BRANCH_ID=ToolUtil.getOperatorManager().getOperator().getDeptid();// 10   网点号         30
-            tia9901001Temp.header.USER_ID=ToolUtil.getOperatorManager().getOperatorId();          // 11   柜员号         30
-            tia9901001Temp.body.INITIATOR=EnuTaInitiatorId.INITIATOR.getCode() ;                 // 12   发起方         1   1_监管银行
+            tia9901001Temp.header.TX_CODE= taRsAccPara.getTxCode();                    // 01   交易代码       4   1001
+            tia9901001Temp.body.SPVSN_BANK_ID= taRsAccPara.getSpvsnBankId();          // 02   监管银行代码   2
+            tia9901001Temp.body.CITY_ID= taRsAccPara.getCityId();                      // 03   城市代码       6
+            tia9901001Temp.header.BIZ_ID=taRsAccPara.getBizId();                       // 04   监管申请编号   14
+            tia9901001Temp.body.SPVSN_ACC_TYPE=taRsAccPara.getSpvsnAccType();         // 05   帐户类别       1   0：预售监管户
+            tia9901001Temp.body.SPVSN_ACC_ID=taRsAccPara.getSpvsnAccId();             // 06   监管专户账号    30
+            tia9901001Temp.body.SPVSN_ACC_NAME=taRsAccPara.getSpvsnAccName();         // 07   监管专户户名   150
+            tia9901001Temp.header.REQ_SN=taRsAccPara.getReqSn();                       // 08   流水号         30
+            tia9901001Temp.body.TX_DATE=taRsAccPara.getTxDate();                       // 09   日期           10  送系统日期即可
+            tia9901001Temp.body.BRANCH_ID=taRsAccPara.getBranchId();                   // 10   网点号         30
+            tia9901001Temp.header.USER_ID=taRsAccPara.getUserId();                     // 11   柜员号         30
+            tia9901001Temp.body.INITIATOR=taRsAccPara.getInitiator();                  // 12   发起方         1   1_监管银行
 
             //通过MQ发送信息到DEP
             String strMsgid= depMsgSendAndRecv.sendDepMessage(tia9901001Temp);
@@ -95,17 +95,17 @@ public class TaFdcService {
             taRsAccPara.setReqSn(ToolUtil.getStrAppReqSn_Back());
             Tia9901002 tia9901002Temp=new Tia9901002() ;
             tia9901002Temp.header.CHANNEL_ID=ToolUtil.DEP_CHANNEL_ID_RFM;
-            tia9901002Temp.header.TX_CODE= EnuTaFdcTxCode.TRADE_1002.getCode();                // 01   交易代码       4   1002
-            tia9901002Temp.body.SPVSN_BANK_ID= EnuTaBankId.BANK_HAIER.getCode();               // 02   监管银行代码   2
-            tia9901002Temp.body.CITY_ID= EnuTaCityId.CITY_TAIAN.getCode();                      // 03   城市代码       6
-            tia9901002Temp.header.BIZ_ID=taRsAccPara.getBizId();                                  // 04   终止证明编号  14
-            tia9901002Temp.body.SPVSN_ACC_ID=taRsAccPara.getSpvsnAccId();                        // 05   监管专户账号  30
-            tia9901002Temp.body.SPVSN_ACC_NAME=taRsAccPara.getSpvsnAccName();                    // 06   监管专户户名  150
-            tia9901002Temp.header.REQ_SN=taRsAccPara.getReqSn();                                  // 07   流水号        30
-            tia9901002Temp.body.TX_DATE=ToolUtil.getStrLastUpdDate() ;                            // 08   日期          10  送系统日期即可
-            tia9901002Temp.body.BRANCH_ID=ToolUtil.getOperatorManager().getOperator().getDeptid();// 09   网点号        30
-            tia9901002Temp.header.USER_ID=ToolUtil.getOperatorManager().getOperatorId();          // 10   柜员号        30
-            tia9901002Temp.body.INITIATOR=EnuTaInitiatorId.INITIATOR.getCode() ;                 // 11   发起方        1   1_监管银行
+            tia9901002Temp.header.TX_CODE= taRsAccPara.getTxCode();            // 01   交易代码       4   1002
+            tia9901002Temp.body.SPVSN_BANK_ID= taRsAccPara.getSpvsnBankId();  // 02   监管银行代码   2
+            tia9901002Temp.body.CITY_ID= taRsAccPara.getCityId();              // 03   城市代码       6
+            tia9901002Temp.header.BIZ_ID=taRsAccPara.getBizId();               // 04   终止证明编号  14
+            tia9901002Temp.body.SPVSN_ACC_ID=taRsAccPara.getSpvsnAccId();     // 05   监管专户账号  30
+            tia9901002Temp.body.SPVSN_ACC_NAME=taRsAccPara.getSpvsnAccName(); // 06   监管专户户名  150
+            tia9901002Temp.header.REQ_SN=taRsAccPara.getReqSn();               // 07   流水号        30
+            tia9901002Temp.body.TX_DATE=taRsAccPara.getTxDate();               // 08   日期          10  送系统日期即可
+            tia9901002Temp.body.BRANCH_ID=taRsAccPara.getBranchId();           // 09   网点号        30
+            tia9901002Temp.header.USER_ID=taRsAccPara.getUserId();             // 10   柜员号        30
+            tia9901002Temp.body.INITIATOR=taRsAccPara.getInitiator() ;         // 11   发起方        1   1_监管银行
             //通过MQ发送信息到DEP
             String strMsgid= depMsgSendAndRecv.sendDepMessage(tia9901002Temp);
             Toa9901002 toaPara=(Toa9901002) depMsgSendAndRecv.recvDepMessage(strMsgid);

@@ -82,6 +82,13 @@ public class TaAccAction {
                 }
             }else {
                 taRsAcc.setStatusFlag(EnuTaAccStatus.ACC_INIT.getCode());
+                taRsAcc.setTxCode(EnuTaFdcTxCode.TRADE_1001.getCode());                    // 01   交易代码       4   1001
+                taRsAcc.setSpvsnBankId(EnuTaBankId.BANK_HAIER.getCode());                  // 02   监管银行代码   2
+                taRsAcc.setCityId(EnuTaCityId.CITY_TAIAN.getCode());                       // 03   城市代码       6
+                taRsAcc.setBranchId(ToolUtil.getOperatorManager().getOperator().getDeptid());
+                taRsAcc.setUserId(ToolUtil.getOperatorManager().getOperatorId());
+                taRsAcc.setTxDate(ToolUtil.getStrLastUpdDate());
+                taRsAcc.setInitiator(EnuTaInitiatorId.INITIATOR.getCode());
                 taAccService.insertRecord(taRsAcc);
 
                 TOA toaTa = taFdcService.sendAndRecvRealTimeTxn9901001(taRsAcc);
@@ -126,6 +133,15 @@ public class TaAccAction {
 
             TaRsAcc taRsAccTemp=taRsAccListTemp.get(0);
             taRsAccTemp.setBizId(taRsAcc.getBizId());
+
+            taRsAccTemp.setStatusFlag(EnuTaAccStatus.ACC_INIT.getCode());
+            taRsAccTemp.setTxCode(EnuTaFdcTxCode.TRADE_1002.getCode());                     // 01   交易代码       4   1001
+            taRsAccTemp.setSpvsnBankId(EnuTaBankId.BANK_HAIER.getCode());                   // 02   监管银行代码   2
+            taRsAccTemp.setCityId(EnuTaCityId.CITY_TAIAN.getCode());                        // 03   城市代码       6
+            taRsAccTemp.setBranchId(ToolUtil.getOperatorManager().getOperator().getDeptid());
+            taRsAccTemp.setUserId(ToolUtil.getOperatorManager().getOperatorId());
+            taRsAccTemp.setTxDate(ToolUtil.getStrLastUpdDate());
+            taRsAccTemp.setInitiator(EnuTaInitiatorId.INITIATOR.getCode());
 
             TOA toaTa = taFdcService.sendAndRecvRealTimeTxn9901002(taRsAccTemp);
             if(toaTa !=null) {
