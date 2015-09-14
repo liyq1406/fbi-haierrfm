@@ -75,6 +75,10 @@ public class TaFdcService {
                 */
                 taRsAccPara.setReturnCode(toaPara.header.RETURN_CODE);
                 taRsAccPara.setReturnMsg(toaPara.header.RETURN_MSG);
+                if("1501".equals(taRsAccPara.getReturnCode())){
+                    taRsAccPara.setStatusFlag(EnuTaAccStatus.ACC_SUPV.getCode());
+                }
+                taAccService.updateRecord(taRsAccPara);
             }
             return toaPara;
         } catch (Exception e) {
@@ -118,6 +122,9 @@ public class TaFdcService {
                 */
                 taRsAccPara.setReturnCode(toaPara.header.RETURN_CODE);
                 taRsAccPara.setReturnMsg(toaPara.header.RETURN_MSG);
+                if("1501".equals(taRsAccPara.getReturnCode())){
+                    taRsAccPara.setStatusFlag(EnuTaAccStatus.ACC_SUPV.getCode());
+                }
                 taAccService.updateRecord(taRsAccPara);
             }
             return toaPara;
