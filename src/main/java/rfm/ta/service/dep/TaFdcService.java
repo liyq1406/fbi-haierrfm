@@ -125,12 +125,10 @@ public class TaFdcService {
                 */
                 taRsAccPara.setReturnCode(toaPara.header.RETURN_CODE);
                 taRsAccPara.setReturnMsg(toaPara.header.RETURN_MSG);
-                // 已申请监管
-                if("1501".equals(taRsAccPara.getReturnCode())){
+                // 已撤销监管TODO
+                if("2003".equals(taRsAccPara.getReturnCode())){
                     taRsAccPara.setStatusFlag(EnuTaAccStatus.ACC_SUPV.getCode());
                     taAccService.updateRecord(taRsAccPara);
-                }else{
-                    taAccService.deleteRecord(taRsAccPara);
                 }
             }
             return toaPara;

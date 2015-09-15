@@ -86,9 +86,10 @@
                              emptyMessage="数据记录为空...">
 
                     <p:column headerText="操作" style="width:50px;text-align:center">
-                        <p:commandLink  value="再次发送" immediate="true" ajax="false"
+                        <p:commandLink  value="再次发送"
                                         action="#{taAccAction.onClick_Enable(record)}"
                                         rendered="#{record.statusFlag eq '0'?'true':'false'}"
+                                        update="pdt"
                                         style="color: blue">
                         </p:commandLink>
                     </p:column>
