@@ -68,7 +68,7 @@
                             </h:selectOneMenu>
 
                             <h:outputLabel value="*【专户账号】:" for="accId"/>
-                            <h:inputText autocomplete="off" id="accId" required="true"
+                            <h:inputText autocomplete="off" id="accId" required="true" maxlength="30"
                                          requiredMessage="必须输入专户账号！"
                                          value="#{taAccAction.taRsAcc.spvsnAccId}">
                             </h:inputText>
@@ -79,7 +79,7 @@
                                          value="#{taAccAction.taRsAcc.bizId}"/>
 
                             <h:outputLabel value="*【专户名称】:" for="accName"/>
-                            <h:inputText id="accName" required="true"
+                            <h:inputText id="accName" required="true" maxlength="150"
                                          requiredMessage="必须输入专户名称！"
                                          value="#{taAccAction.taRsAcc.spvsnAccName}"/>
                         </h:panelGrid>

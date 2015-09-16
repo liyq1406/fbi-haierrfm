@@ -66,6 +66,10 @@ public class TaAccAction {
     /*ÆôÓÃ*/
     public void onClick_Enable(){
         try {
+            if(ToolUtil.length(taRsAcc.getSpvsnAccName()) > 150) {
+                MessageUtil.addError(RfmMessage.getProperty("AccountOpening.E004"));
+                return;
+            }
             List<TaRsAcc> taRsAccsQry = taAccService.selectRecords(taRsAcc);
             if(taRsAccsQry.size() == 1){
                 String actFlag = taRsAccsQry.get(0).getStatusFlag();
