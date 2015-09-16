@@ -77,6 +77,8 @@ public class TaAccAction {
                     MessageUtil.addError(RfmMessage.getProperty("AccountOpening.E002"));
                 } else if(actFlag.equals(EnuTaAccStatus.ACC_INIT.getCode())){
                     MessageUtil.addError(RfmMessage.getProperty("AccountOpening.E003"));
+                } else if(actFlag.equals(EnuTaAccStatus.ACC_CANCL.getCode())) {
+                    MessageUtil.addError(RfmMessage.getProperty("AccountOpening.E005"));
                 }
             }else {
                 String strRtn=taAccService.isExistInDb(taRsAccView);
