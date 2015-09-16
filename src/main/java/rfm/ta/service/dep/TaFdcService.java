@@ -125,9 +125,9 @@ public class TaFdcService {
                 */
                 taRsAccPara.setReturnCode(toaPara.header.RETURN_CODE);
                 taRsAccPara.setReturnMsg(toaPara.header.RETURN_MSG);
-                // 已撤销监管TODO
-                if("2003".equals(taRsAccPara.getReturnCode())){
-                    taRsAccPara.setStatusFlag(EnuTaAccStatus.ACC_SUPV.getCode());
+                // 已撤销监管
+                if("2004".equals(taRsAccPara.getReturnCode())){
+                    taRsAccPara.setStatusFlag(EnuTaAccStatus.ACC_CANCL.getCode());
                     taAccService.updateRecord(taRsAccPara);
                 }
             }

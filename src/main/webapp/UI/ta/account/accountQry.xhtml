@@ -89,7 +89,7 @@
                         <p:commandLink  value="再次发送"
                                         action="#{taAccAction.onClick_Enable(record)}"
                                         rendered="#{record.statusFlag eq '0'?'true':'false'}"
-                                        update="pdt"
+                                        update="msgs,pdt"
                                         style="color: blue">
                         </p:commandLink>
                     </p:column>

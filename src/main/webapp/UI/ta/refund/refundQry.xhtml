@@ -86,6 +86,7 @@
                         <p:commandLink  value="记账" immediate="true" ajax="false"
                                         action="#{taRefundAction.onClick_Enable(record)}"
                                         rendered="#{record.actFlag eq '1'?'true':'false'}"
+                                        update="msgs,pdt"
                                         style="color: blue">
                         </p:commandLink>
                     </p:column>
