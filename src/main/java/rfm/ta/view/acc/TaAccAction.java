@@ -44,33 +44,33 @@ public class TaAccAction {
 
     private List<TaRsAcc> taRsAccList;
 
-    private TaRsAcc taRsAcc;
+    private TaRsAcc taRsAccView;
     private TaRsAcc taRsAccRecv;
 
     private EnuTaTxnRtnCode enuTaTxnRtnCode = EnuTaTxnRtnCode.TXN_PROCESSED;
 
     @PostConstruct
     public void init() {
-        taRsAcc=new TaRsAcc();
+        taRsAccView=new TaRsAcc();
         taRsAccRecv=new TaRsAcc();
     }
 
     /*画面查询用*/
     public void onBtnQueryClick() {
         taRsAccList = taAccService.selectedRecordsByCondition(
-                taRsAcc.getSpvsnAccType(),
-                taRsAcc.getSpvsnAccId(),
-                taRsAcc.getSpvsnAccName());
+                taRsAccView.getSpvsnAccType(),
+                taRsAccView.getSpvsnAccId(),
+                taRsAccView.getSpvsnAccName());
     }
 
     /*启用*/
     public void onClick_Enable(){
         try {
-            if(ToolUtil.length(taRsAcc.getSpvsnAccName()) > 150) {
+            if(ToolUtil.length(taRsAccView.getSpvsnAccName()) > 150) {
                 MessageUtil.addError(RfmMessage.getProperty("AccountOpening.E004"));
                 return;
             }
-            List<TaRsAcc> taRsAccsQry = taAccService.selectRecords(taRsAcc);
+            List<TaRsAcc> taRsAccsQry = taAccService.selectRecords(taRsAccView);
             if(taRsAccsQry.size() == 1){
                 String actFlag = taRsAccsQry.get(0).getStatusFlag();
                 if(actFlag.equals(EnuTaAccStatus.ACC_SUPV.getCode())){
@@ -79,23 +79,28 @@ public class TaAccAction {
                     MessageUtil.addError(RfmMessage.getProperty("AccountOpening.E003"));
                 }
             }else {
-                String strRtn=taAccService.isExistInDb(taRsAcc);
+                String strRtn=taAccService.isExistInDb(taRsAccView);
                 if(strRtn!=null){
                     MessageUtil.addError(strRtn);
                     return;
                 }
 
-                taRsAcc.setStatusFlag(EnuTaAccStatus.ACC_INIT.getCode());
-                taRsAcc.setTxCode(EnuTaFdcTxCode.TRADE_1001.getCode());                    // 01   交易代码       4   1001
-                taRsAcc.setSpvsnBankId(EnuTaBankId.BANK_HAIER.getCode());                  // 02   监管银行代码   2
-                taRsAcc.setCityId(EnuTaCityId.CITY_TAIAN.getCode());                       // 03   城市代码       6
-                taRsAcc.setBranchId(ToolUtil.getOperatorManager().getOperator().getDeptid());
-                taRsAcc.setUserId(ToolUtil.getOperatorManager().getOperatorId());
-                taRsAcc.setTxDate(ToolUtil.getStrLastUpdDate());
-                taRsAcc.setInitiator(EnuTaInitiatorId.INITIATOR.getCode());
-                taAccService.insertRecord(taRsAcc);
+                TaRsAcc taRsAccInsert = new TaRsAcc();
+                taRsAccInsert.setStatusFlag(EnuTaAccStatus.ACC_INIT.getCode());
+                taRsAccInsert.setTxCode(EnuTaFdcTxCode.TRADE_1001.getCode());                    // 01   交易代码       4   1001
+                taRsAccInsert.setSpvsnBankId(EnuTaBankId.BANK_HAIER.getCode());                  // 02   监管银行代码   2
+                taRsAccInsert.setCityId(EnuTaCityId.CITY_TAIAN.getCode());                       // 03   城市代码       6
+                taRsAccInsert.setBizId(taRsAccView.getBizId());                                  // 04   监管申请编号   14
+                taRsAccInsert.setSpvsnAccType(taRsAccView.getSpvsnAccType());                    // 05   帐户类别       1   0：预售监管户
+                taRsAccInsert.setSpvsnAccId(taRsAccView.getSpvsnAccId());                        // 06   监管专户账号    30
+                taRsAccInsert.setSpvsnAccName(taRsAccView.getSpvsnAccName());                    // 07   监管专户户名   150
+                taRsAccInsert.setBranchId(ToolUtil.getOperatorManager().getOperator().getDeptid());
+                taRsAccInsert.setUserId(ToolUtil.getOperatorManager().getOperatorId());
+                taRsAccInsert.setTxDate(ToolUtil.getStrLastUpdDate());
+                taRsAccInsert.setInitiator(EnuTaInitiatorId.INITIATOR.getCode());
+                taAccService.insertRecord(taRsAccInsert);
 
-                TOA toaTa = taFdcService.sendAndRecvRealTimeTxn9901001(taRsAcc);
+                TOA toaTa = taFdcService.sendAndRecvRealTimeTxn9901001(taRsAccInsert);
                 if (toaTa != null) {
                     Toa9901001 toa9901001 = (Toa9901001) toaTa;
                     if ((EnuTaTxnRtnCode.TXN_PROCESSED.getCode()).equals(toaTa.getHeader().RETURN_CODE)) { // TA成功的处理
@@ -121,7 +126,7 @@ public class TaAccAction {
     /*撤销*/
     public void onClick_Unable(){
         try {
-            List<TaRsAcc> taRsAccListTemp = taAccService.selectRecords(taRsAcc);
+            List<TaRsAcc> taRsAccListTemp = taAccService.selectRecords(taRsAccView);
             if(taRsAccListTemp.size() == 0){
                 MessageUtil.addError(RfmMessage.getProperty("AccountCancel.E001"));
                 return;
@@ -136,7 +141,7 @@ public class TaAccAction {
             }
 
             TaRsAcc taRsAccTemp=taRsAccListTemp.get(0);
-            taRsAccTemp.setBizId(taRsAcc.getBizId());
+            taRsAccTemp.setBizId(taRsAccView.getBizId());
 
             taRsAccTemp.setStatusFlag(EnuTaAccStatus.ACC_INIT.getCode());
             taRsAccTemp.setTxCode(EnuTaFdcTxCode.TRADE_1002.getCode());                     // 01   交易代码       4   1001
@@ -228,12 +233,12 @@ public class TaAccAction {
         this.taRsAccList = taRsAccList;
     }
 
-    public TaRsAcc getTaRsAcc() {
-        return taRsAcc;
+    public TaRsAcc getTaRsAccView() {
+        return taRsAccView;
     }
 
-    public void setTaRsAcc(TaRsAcc taRsAcc) {
-        this.taRsAcc = taRsAcc;
+    public void setTaRsAccView(TaRsAcc taRsAccView) {
+        this.taRsAccView = taRsAccView;
     }
 
     public PtenudetailService getPtenudetailService() {

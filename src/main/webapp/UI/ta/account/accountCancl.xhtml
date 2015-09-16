@@ -49,12 +49,12 @@
                             <h:outputLabel value="*【申请编号】:" for="originId"/>
                             <h:inputText id="originId" required="true" maxlength="14"
                                          requiredMessage="必须输入申请编号！"
-                                         value="#{taAccAction.taRsAcc.bizId}"/>
+                                         value="#{taAccAction.taRsAccView.bizId}"/>
 
                             <h:outputLabel value="*【专户账号】:" for="accId"/>
                             <h:inputText id="accId" required="true" maxlength="30"
                                          requiredMessage="必须输入专户账号！"
-                                         value="#{taAccAction.taRsAcc.spvsnAccId}">
+                                         value="#{taAccAction.taRsAccView.spvsnAccId}">
                             </h:inputText>
                         </h:panelGrid>
                         <h:panelGrid columns="2" >

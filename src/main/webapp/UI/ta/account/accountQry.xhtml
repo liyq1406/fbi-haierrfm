@@ -48,15 +48,15 @@
                                      columnClasses="col-95,col-5,col-95,col-5">
 
                             <h:outputLabel value="【账户类别】:" for="accType"/>
-                            <h:selectOneMenu id="accType" value="#{taAccAction.taRsAcc.spvsnAccType}">
+                            <h:selectOneMenu id="accType" value="#{taAccAction.taRsAccView.spvsnAccType}">
                                 <f:selectItems value="#{ptenudetailAction.taAccTypeList}"/>
                             </h:selectOneMenu>
                             <h:outputLabel value="【账号】:" for="accId"/>
                             <h:inputText autocomplete="off" id="accId"
-                                         value="#{taAccAction.taRsAcc.spvsnAccId}">
+                                         value="#{taAccAction.taRsAccView.spvsnAccId}">
                             </h:inputText>
                             <h:outputLabel value="【名称】:" for="accName"/>
-                            <h:inputText id="accName" value="#{taAccAction.taRsAcc.spvsnAccName}"/>
+                            <h:inputText id="accName" value="#{taAccAction.taRsAccView.spvsnAccName}"/>
                         </h:panelGrid>
                         <p:commandButton update="msgs,pdt" style="width: 80px"
                                          action="#{taAccAction.onBtnQueryClick}" id="btnQuery" value="查询">
