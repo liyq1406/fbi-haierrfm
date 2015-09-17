@@ -85,8 +85,8 @@ public class TaFdcService {
             }
             return toaPara;
         } catch (Exception e) {
-            logger.error("建立监管失败", e);
-            throw new RuntimeException("建立监管失败", e);
+            logger.error("建立监管失败！", e);
+            throw new RuntimeException("建立监管失败！", e);
         }
     }
 
@@ -117,6 +117,8 @@ public class TaFdcService {
             String strMsgid= depMsgSendAndRecv.sendDepMessage(tia9901002Temp);
             Toa9901002 toaPara=(Toa9901002) depMsgSendAndRecv.recvDepMessage(strMsgid);
             if(EnuTaTxnRtnCode.TXN_PROCESSED.getCode().equals(toaPara.header.RETURN_CODE)){
+                taRsAccPara.setReturnCode(toaPara.header.RETURN_CODE);
+                taRsAccPara.setReturnMsg(toaPara.header.RETURN_MSG);
                 taRsAccPara.setStatusFlag(EnuTaAccStatus.ACC_CANCL.getCode());
                 taAccService.updateRecord(taRsAccPara);
             }else{
@@ -128,8 +130,8 @@ public class TaFdcService {
                 // 已撤销监管
                 if("2004".equals(taRsAccPara.getReturnCode())){
                     taRsAccPara.setStatusFlag(EnuTaAccStatus.ACC_CANCL.getCode());
-                    taAccService.updateRecord(taRsAccPara);
                 }
+                taAccService.updateRecord(taRsAccPara);
             }
             return toaPara;
         } catch (Exception e) {

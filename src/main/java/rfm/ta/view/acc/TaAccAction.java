@@ -114,15 +114,17 @@ public class TaAccAction {
                         taRsAccRecv.setReturnMsg(toa9901001.header.RETURN_MSG);
                         MessageUtil.addInfo(RfmMessage.getProperty("AccountOpening.I001"));
                     } else {
-                        MessageUtil.addError(toaTa.getHeader().RETURN_MSG);
+                        taRsAccRecv.setReturnCode(toa9901001.header.RETURN_CODE);
+                        taRsAccRecv.setReturnMsg(toa9901001.header.RETURN_MSG);
+                        MessageUtil.addError(taRsAccRecv.getReturnMsg());
                     }
                 } else {
-                    MessageUtil.addInfo("启用监管失败!");
+                    MessageUtil.addInfo("建立监管失败!");
                 }
             }
         } catch (Exception e) {
-            logger.error("启用监管失败，", e);
-            MessageUtil.addError(taRsAccRecv.getReturnMsg()+e.getMessage());
+            logger.error("建立监管失败，", e);
+            MessageUtil.addError(ToolUtil.getStrIgnoreNull(taRsAccRecv.getReturnMsg())+e.getMessage());
         }
     }
     /*撤销*/
@@ -162,14 +164,16 @@ public class TaAccAction {
                     taRsAccRecv.setReturnMsg(toaTa.getHeader().RETURN_MSG);
                     MessageUtil.addInfo(RfmMessage.getProperty("AccountCancel.I001"));
                 }else{
-                    MessageUtil.addError(toaTa.getHeader().RETURN_MSG);
+                    taRsAccRecv.setReturnCode(toaTa.getHeader().RETURN_CODE);
+                    taRsAccRecv.setReturnMsg(toaTa.getHeader().RETURN_MSG);
+                    MessageUtil.addError(taRsAccRecv.getReturnMsg());
                 }
             }else{
                 MessageUtil.addInfo("解除监管失败!");
             }
         } catch (Exception e) {
             logger.error("解除监管失败，", e);
-            MessageUtil.addError(e.getMessage());
+            MessageUtil.addError(ToolUtil.getStrIgnoreNull(taRsAccRecv.getReturnMsg())+e.getMessage());
         }
     }
 
@@ -185,7 +189,7 @@ public class TaAccAction {
                         MessageUtil.addError(toaTaTemp.getHeader().RETURN_MSG);
                     }
                 } else {
-                    MessageUtil.addInfo("启用监管失败!");
+                    MessageUtil.addError("建立监管失败!");
                 }
             }else if(EnuTaFdcTxCode.TRADE_1002.getCode().equals(taRsAccPara.getTxCode())) {
                 TOA toaTaTemp = taFdcService.sendAndRecvRealTimeTxn9901002(taRsAccPara);
@@ -196,7 +200,7 @@ public class TaAccAction {
                         MessageUtil.addError(toaTaTemp.getHeader().RETURN_MSG);
                     }
                 } else {
-                    MessageUtil.addInfo("解除监管失败!");
+                    MessageUtil.addError("解除监管失败!");
                 }
             }
             onBtnQueryClick();
