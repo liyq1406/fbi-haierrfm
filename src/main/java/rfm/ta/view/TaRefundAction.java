@@ -195,7 +195,7 @@ public class TaRefundAction {
                     MessageUtil.addInfo(toaSbs.getHeader().RETURN_MSG);
                 } else { // SBS记账失败的处理
                     taAccDetlService.deleteRecord(taRsAccDtlPara.getPkId());
-                    MessageUtil.addInfo(toaSbs.getHeader().RETURN_MSG);
+                    MessageUtil.addError(toaSbs.getHeader().RETURN_MSG);
                     return false;
                 }
             }

@@ -164,7 +164,7 @@ public class TaBlncReconciAction {
                 for(TaRsAcc taRsAcc : taRsAccList){
                     line.append(StringUtils.rightPad(taRsAcc.getSpvsnAccId(), 30, ' '));
                     line.append("|");
-                    line.append(StringUtils.rightPad(taRsAcc.getTxAmt(), 20, ' '));
+                    line.append(StringUtils.rightPad(txAmtMap.get(taRsAcc.getSpvsnAccId()), 20, ' '));
                     line.append("|");
                     line.append(taRsAcc.getTxDate());
                     line.append("|");

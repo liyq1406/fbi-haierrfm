@@ -259,10 +259,6 @@ public class TaDayEndReconciAction implements Serializable {
      * 内对_本地记账与SBS对账（比较两个List）
      */
     public void reconci(){
-        // 获取sbs数据
-        if(!onQrySbsData()) { // 获取sbs数据失败
-            return;
-        }
         try {
             List<TaRsAccDtl> taRsAccDtlLocalListPara = taRsAccDtlLocalList;
             List<TaRsAccDtl> taRsAccDtlSbsListPara = taRsAccDtlSbsList;

@@ -45,6 +45,9 @@
                 <p:tabView>
                     <p:tab title="【日终对账明细】">
                         <p:menubar>
+                            <p:menuitem type="push" value="获取sbs数据" icon="ui-icon ui-icon-plus"
+                                        action="#{taDayEndReconciAction.onQrySbsData}" update="sbspdt,:form:msgs"
+                                        ajax="true"/>
                             <p:menuitem type="push" value="内部对账" icon="ui-icon ui-icon-copy"
                                         action="#{taDayEndReconciAction.reconci}" update="pdt,sbspdt,:form:msgs"
                                         ajax="true"/>
