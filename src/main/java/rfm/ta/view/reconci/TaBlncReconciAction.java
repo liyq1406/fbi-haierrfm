@@ -69,13 +69,15 @@ public class TaBlncReconciAction {
      */
     public void onQryLocaldata() {
         try {
+            // 更新对账明细表状态（余额对账获取中）
+            taRsCheckService.insOrUpdTaRsCheck(EnuStatusFlag.STATUS_FLAG5.getCode());
+
             if(taRsAccList.size() <=0) {
+                // 更新对账明细表状态（余额对账获取完成）
+                taRsCheckService.insOrUpdTaRsCheck(EnuStatusFlag.STATUS_FLAG6.getCode());
                 MessageUtil.addError(RfmMessage.getProperty("BalanceReconciliation.E001"));
                 return;
             }
-
-            // 更新对账明细表状态（余额对账获取中）
-            taRsCheckService.insOrUpdTaRsCheck(EnuStatusFlag.STATUS_FLAG5.getCode());
 
             // 发送监管账号到SBS查询余额
             List<Toa900012701> toaSbs=taSbsService.sendAndRecvRealTimeTxn900012701(taRsAccList);
@@ -113,6 +115,8 @@ public class TaBlncReconciAction {
         File file = null;
         try {
             if(taRsAccList.size() <=0) {
+                // 更新对账明细表状态（余额对账发送成功）
+                taRsCheckService.insOrUpdTaRsCheck(EnuStatusFlag.STATUS_FLAG7.getCode());
                 MessageUtil.addError(RfmMessage.getProperty("BalanceReconciliation.E002"));
                 return;
             }
