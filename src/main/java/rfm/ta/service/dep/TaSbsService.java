@@ -127,7 +127,7 @@ public class TaSbsService {
      * @param taTxnFdcPara
      */
     @Transactional
-    public List<TaRsAccDtl> sendAndRecvRealTimeTxn900012602(TaTxnFdc taTxnFdcPara) {
+    public List<TaRsAccDtl> sendAndRecvRealTimeTxn900012602(TaTxnFdc taTxnFdcPara, List errMsg) {
         try {
             List<TaRsAccDtl> taRsAccDtlListTemp = null;
 
@@ -181,6 +181,7 @@ public class TaSbsService {
                         MessageUtil.addError(toa900012602Temp.header.RETURN_MSG);
                     } catch (Exception e) {
                         logger.error(toa900012602Temp.header.RETURN_MSG);
+                        errMsg.add(toa900012602Temp.header.RETURN_MSG);
                     }
                 }
             }

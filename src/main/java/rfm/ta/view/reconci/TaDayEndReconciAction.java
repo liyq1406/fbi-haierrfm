@@ -97,7 +97,8 @@ public class TaDayEndReconciAction implements Serializable {
             strSbsTotalAmt = toa900012601Temp.body.DRAMT;
 
             // 日终对账明细查询
-            taRsAccDtlSbsList = taSbsService.sendAndRecvRealTimeTxn900012602(taTxnFdcPara);
+            List errMsg = new ArrayList();
+            taRsAccDtlSbsList = taSbsService.sendAndRecvRealTimeTxn900012602(taTxnFdcPara, errMsg);
 
             if (taRsAccDtlSbsList != null) {
                 // 更新对账明细表状态（日间对账获取完成）
@@ -119,7 +120,7 @@ public class TaDayEndReconciAction implements Serializable {
     private File createFile(List<TaRsAccDtl> taRsAccDtlListPara, String fileName) {
         String sysdate = ToolUtil.getStrLastUpdDate();
         File file;
-        String filePath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/upload/reconci");
+        String filePath = "/upload/reconci";
         StringBuffer line = new StringBuffer();
         FileWriter fw = null;
         BufferedWriter bw = null;
@@ -245,7 +246,7 @@ public class TaDayEndReconciAction implements Serializable {
         } finally {
             if(file != null && file.exists()) {
                 try {
-                    String filePath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/backup/reconci");
+                    String filePath = "/backup/reconci";
                     File destDir = ToolUtil.createFile(filePath, file.getName());
                     FileUtils.copyFile(file, destDir);
                     file.delete();

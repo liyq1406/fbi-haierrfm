@@ -140,7 +140,7 @@ public class TaBlncReconciAction {
         } finally {
             if(file != null && file.exists()){
                 try {
-                    String filePath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/backup/reconci");
+                    String filePath = "/backup/reconci";
                     File destDir = ToolUtil.createFile(filePath, file.getName());
                     FileUtils.copyFile(file, destDir);
                     file.delete();
@@ -157,7 +157,7 @@ public class TaBlncReconciAction {
      */
     private File createFile(String fileName) {
         File file = null;
-        String filePath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/upload/reconci");
+        String filePath = "/upload/reconci";
         String newLineCh = "\r\n";
         StringBuffer line = new StringBuffer();
         FileWriter fw = null;
