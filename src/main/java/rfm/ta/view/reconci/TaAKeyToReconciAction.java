@@ -31,8 +31,8 @@ import java.util.Map;
  */
 @ManagedBean
 @ViewScoped
-public class AKeyToReconciAction implements Serializable {
-    private static Logger logger = LoggerFactory.getLogger(AKeyToReconciAction.class);
+public class TaAKeyToReconciAction implements Serializable {
+    private static Logger logger = LoggerFactory.getLogger(TaAKeyToReconciAction.class);
 
     @ManagedProperty("#{taAccDetlService}")
     private TaAccDetlService taAccDetlService;
@@ -59,7 +59,7 @@ public class AKeyToReconciAction implements Serializable {
      * 一键对账
      * @return
      */
-    public boolean aKeyToReconci() {
+    public String aKeyToReconci() {
         try {
             txAmtMap = new HashMap<String, String>();
 
@@ -70,33 +70,33 @@ public class AKeyToReconciAction implements Serializable {
 
             // 日终对账从sbs获取数据
             if(!getSbsDataDayEnd()) {
-                return false;
+                return "9000";
             }
 
             // 日终对账内部对账
             if(!reconciDayEnd()) {
-                return false;
+                return "9000";
             }
 
             // 日终对账ftp发送
             if(!sendDayEnd()) {
-                return false;
+                return "9000";
             }
 
             // 余额对账获取sbs数据
             if(!getSbsDataBlncReconci()) {
-                return false;
+                return "9000";
             }
 
             // 余额对账ftp发送
             if(!sendBlncReconci()) {
-                return false;
+                return "9000";
             }
-            return true;
+            return "0000";
         } catch (Exception e) {
             logger.error("一键对账失败", e);
+            return e.getMessage();
         }
-        return false;
     }
 
     /**
