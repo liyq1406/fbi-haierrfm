@@ -177,7 +177,11 @@ public class TaSbsService {
                 } else if("W107".equalsIgnoreCase(toa900012602Temp.header.RETURN_CODE)) { // 未找到任何记录
                     taRsAccDtlListTemp = new ArrayList<TaRsAccDtl>();
                 } else {
-                    MessageUtil.addError(toa900012602Temp.header.RETURN_MSG);
+                    try {
+                        MessageUtil.addError(toa900012602Temp.header.RETURN_MSG);
+                    } catch (Exception e) {
+                        logger.error(toa900012602Temp.header.RETURN_MSG);
+                    }
                 }
             }
             return taRsAccDtlListTemp;
