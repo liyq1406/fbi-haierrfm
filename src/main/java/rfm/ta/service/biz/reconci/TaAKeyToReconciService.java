@@ -1,4 +1,4 @@
-package rfm.ta.view.reconci;
+package rfm.ta.service.biz.reconci;
 
 import common.utils.ToolUtil;
 import org.apache.commons.io.FileUtils;
@@ -6,18 +6,16 @@ import org.apache.commons.lang.StringUtils;
 import org.fbi.dep.model.txn.Toa900012701;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import rfm.ta.common.enums.*;
 import rfm.ta.repository.model.TaRsAcc;
 import rfm.ta.repository.model.TaRsAccDtl;
 import rfm.ta.repository.model.TaTxnFdc;
 import rfm.ta.service.biz.acc.TaAccDetlService;
 import rfm.ta.service.biz.acc.TaAccService;
-import rfm.ta.service.biz.reconci.TaRsCheckService;
 import rfm.ta.service.dep.TaSbsService;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import java.io.*;
 import java.text.DecimalFormat;
@@ -29,21 +27,20 @@ import java.util.Map;
 /**
  * “ªº¸∂‘’À”√Action
  */
-@ManagedBean
-@ViewScoped
-public class TaAKeyToReconciAction implements Serializable {
-    private static Logger logger = LoggerFactory.getLogger(TaAKeyToReconciAction.class);
+@Service
+public class TaAKeyToReconciService {
+    private static Logger logger = LoggerFactory.getLogger(TaAKeyToReconciService.class);
 
-    @ManagedProperty("#{taAccDetlService}")
+    @Autowired
     private TaAccDetlService taAccDetlService;
 
-    @ManagedProperty("#{taRsCheckService}")
+    @Autowired
     private TaRsCheckService taRsCheckService;
 
-    @ManagedProperty("#{taSbsService}")
+    @Autowired
     private TaSbsService taSbsService;
 
-    @ManagedProperty("#{taAccService}")
+    @Autowired
     private TaAccService taAccService;
 
     private List<TaRsAccDtl> taRsAccDtlLocalList;

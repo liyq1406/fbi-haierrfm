@@ -16,7 +16,7 @@ import rfm.ta.common.enums.*;
 import rfm.ta.repository.model.TaRsAccDtl;
 import rfm.ta.repository.model.TaTxnFdc;
 import rfm.ta.service.biz.acc.TaAccDetlService;
-import rfm.ta.view.reconci.TaAKeyToReconciAction;
+import rfm.ta.service.biz.reconci.TaAKeyToReconciService;
 
 import javax.jms.Message;
 import javax.jms.MessageListener;
@@ -30,6 +30,9 @@ public class DepMsgListener implements MessageListener {
     private static Logger logger = LoggerFactory.getLogger(DepMsgListener.class);
     @Autowired
     private JmsTemplate jmsRfmOutTemplate;
+
+    @Autowired
+    private TaAKeyToReconciService taAKeyToReconciService;
 
     @Autowired
     private TaSbsService taSbsService;
@@ -56,8 +59,7 @@ public class DepMsgListener implements MessageListener {
                 TiaXml9100001 tiaTmp = (TiaXml9100001) objMsg.getObject();
                 TOA toaFdc;
                 String txnCode = tiaTmp.INFO.getTXNCODE();
-                TaAKeyToReconciAction taAKeyToReconciAction=new TaAKeyToReconciAction();
-                String strRtnMsg=taAKeyToReconciAction.aKeyToReconci();
+                String strRtnMsg= taAKeyToReconciService.aKeyToReconci();
                 ToaXml9100001 toaTmp=new ToaXml9100001();
                 toaTmp.getINFO().setREQSN(ToolUtil.getStrAppReqSn_Back());
                 toaTmp.getINFO().setRTNCODE("0000");
@@ -253,6 +255,14 @@ public class DepMsgListener implements MessageListener {
             MessageUtil.addError(e.getMessage());
             return false;
         }
+    }
+
+    public TaAKeyToReconciService getTaAKeyToReconciService() {
+        return taAKeyToReconciService;
+    }
+
+    public void setTaAKeyToReconciService(TaAKeyToReconciService taAKeyToReconciService) {
+        this.taAKeyToReconciService = taAKeyToReconciService;
     }
 
     public TaFdcService getTaFdcService() {
