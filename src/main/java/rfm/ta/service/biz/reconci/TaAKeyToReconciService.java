@@ -58,6 +58,7 @@ public class TaAKeyToReconciService {
      */
     public String aKeyToReconci() {
         try {
+            String result = null;
             txAmtMap = new HashMap<String, String>();
 
             // 日终对账获取本地对账数据
@@ -66,30 +67,36 @@ public class TaAKeyToReconciService {
             taRsAccDtlLocalList = taAccDetlService.selectedRecords(taRsAccDtlPara);
 
             // 日终对账从sbs获取数据
-            if(!getSbsDataDayEnd()) {
-                return "9000";
+            result = getSbsDataDayEnd();
+            if(result != null) {
+                return result;
             }
 
             // 日终对账内部对账
-            if(!reconciDayEnd()) {
-                return "9000";
+            result = reconciDayEnd();
+            if(result != null) {
+                return result;
             }
 
             // 日终对账ftp发送
-            if(!sendDayEnd()) {
-                return "9000";
+            result = sendDayEnd();
+            if(result != null) {
+                return result;
             }
 
             // 余额对账获取sbs数据
-            if(!getSbsDataBlncReconci()) {
-                return "9000";
+            result = getSbsDataBlncReconci();
+            if(result != null) {
+                return result;
             }
 
             // 余额对账ftp发送
-            if(!sendBlncReconci()) {
-                return "9000";
+            result = sendBlncReconci();
+            if(result != null) {
+                return result;
             }
-            return "0000";
+
+            return "一键对账成功";
         } catch (Exception e) {
             logger.error("一键对账失败", e);
             return e.getMessage();
@@ -99,7 +106,7 @@ public class TaAKeyToReconciService {
     /**
      * 从SBS取数据
      */
-    private boolean getSbsDataDayEnd() {
+    private String getSbsDataDayEnd() {
         try {
             // 更新对账明细表状态（日间对账获取中）
             taRsCheckService.insOrUpdTaRsCheck(EnuStatusFlag.STATUS_FLAG0.getCode());
@@ -110,7 +117,8 @@ public class TaAKeyToReconciService {
             taTxnFdcPara.setReqSn(ToolUtil.getStrReqSn_Back());
 
             // 日终对账明细查询
-            taRsAccDtlSbsList = taSbsService.sendAndRecvRealTimeTxn900012602(taTxnFdcPara);
+            List errMsg = new ArrayList();
+            taRsAccDtlSbsList = taSbsService.sendAndRecvRealTimeTxn900012602(taTxnFdcPara, errMsg);
 
             if (taRsAccDtlSbsList != null) {
                 // 更新对账明细表状态（日间对账获取完成）
@@ -120,19 +128,21 @@ public class TaAKeyToReconciService {
                     taRsAccDtl.setTxAmt(df.format(Double.valueOf(taRsAccDtl.getTxAmt())));
                 }
                 //MessageUtil.addInfo(RfmMessage.getProperty("DayEndReconciliation.I001"));
-                return true;
+                return null;
+            } else {
+                return errMsg.get(0).toString();
             }
         }catch (Exception e){
             logger.error("一键对账日终对账查询sbs数据失败", e);
             //MessageUtil.addError("查询对账信息失败。");
+            return "一键对账日终对账查询sbs数据失败。";
         }
-        return false;
     }
 
     /**
      * 内对_本地记账与SBS对账（比较两个List）
      */
-    private boolean reconciDayEnd(){
+    private String reconciDayEnd(){
         try {
             List<TaRsAccDtl> taRsAccDtlLocalListPara = taRsAccDtlLocalList;
             List<TaRsAccDtl> taRsAccDtlSbsListPara = taRsAccDtlSbsList;
@@ -182,24 +192,24 @@ public class TaAKeyToReconciService {
                 // 更新对账明细表状态（日间对账平）
                 taRsCheckService.insOrUpdTaRsCheck(EnuStatusFlag.STATUS_FLAG3.getCode());
                 //MessageUtil.addInfo(RfmMessage.getProperty("DayEndReconciliation.I003"));
-                return true;
+                return null;
             } else {
                 // 更新对账明细表状态（日间对账不平）
                 taRsCheckService.insOrUpdTaRsCheck(EnuStatusFlag.STATUS_FLAG2.getCode());
                 //MessageUtil.addError(RfmMessage.getProperty("DayEndReconciliation.E003"));
+                return "一键对账日终对账内部对账不平";
             }
         } catch (Exception e) {
             logger.error("一键对账日终对账内部对账失败", e);
             //MessageUtil.addError(RfmMessage.getProperty("DayEndReconciliation.E004"));
+            return "一键对账日终对账内部对账失败";
         }
-
-        return false;
     }
 
     /**
      * 数据发送
      */
-    private boolean sendDayEnd() {
+    private String sendDayEnd() {
         File file = null;
         try {
             TaRsAccDtl taRsAccDtlPara=new TaRsAccDtl();
@@ -216,18 +226,22 @@ public class TaAKeyToReconciService {
                     // 更新对账明细表状态（日间对账发送成功）
                     taRsCheckService.insOrUpdTaRsCheck(EnuStatusFlag.STATUS_FLAG4.getCode());
                     //MessageUtil.addInfo(RfmMessage.getProperty("DayEndReconciliation.I002"));
-                    return true;
+                    return null;
                 } else{
                     //MessageUtil.addError(RfmMessage.getProperty("DayEndReconciliation.E001"));
+                    return "一键对账日终对账发送ftp失败";
                 }
+            } else {
+                return "一键对账日终对账创建文件失败";
             }
         } catch (Exception e) {
             logger.error("一键对账日终对账发送ftp失败", e);
             //MessageUtil.addError("日间对账发送失败！");
+            return "一键对账日终对账发送ftp失败";
         } finally {
             if(file != null && file.exists()) {
                 try {
-                    String filePath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/backup/reconci");
+                    String filePath = "/backup/reconci";
                     File destDir = ToolUtil.createFile(filePath, file.getName());
                     FileUtils.copyFile(file, destDir);
                     file.delete();
@@ -235,14 +249,12 @@ public class TaAKeyToReconciService {
                 }
             }
         }
-
-        return false;
     }
 
     private File createDayEndFile(List<TaRsAccDtl> taRsAccDtlListPara, String fileName) {
         String sysdate = ToolUtil.getStrLastUpdDate();
         File file;
-        String filePath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/upload/reconci");
+        String filePath = "/upload/reconci";
         StringBuffer line = new StringBuffer();
         FileWriter fw = null;
         BufferedWriter bw = null;
@@ -342,7 +354,7 @@ public class TaAKeyToReconciService {
     /**
      * 余额对账获取sbs数据
      */
-    private boolean getSbsDataBlncReconci() {
+    private String getSbsDataBlncReconci() {
         try {
             // 更新对账明细表状态（余额对账获取中）
             taRsCheckService.insOrUpdTaRsCheck(EnuStatusFlag.STATUS_FLAG5.getCode());
@@ -359,7 +371,7 @@ public class TaAKeyToReconciService {
                     for(Toa900012701 toa900012701:toaSbs) {
                         if (!EnuTaTxnRtnCode.TXN_PROCESSED.getCode().equals(toa900012701.header.RETURN_CODE)) {
                             //MessageUtil.addError(toa900012701.header.RETURN_MSG);
-                            return false;
+                            return toa900012701.header.RETURN_MSG;
                         }
                     }
 
@@ -373,25 +385,26 @@ public class TaAKeyToReconciService {
                     taRsCheckService.insOrUpdTaRsCheck(EnuStatusFlag.STATUS_FLAG6.getCode());
 
                     //MessageUtil.addInfo(RfmMessage.getProperty("BalanceReconciliation.I001"));
-                    return true;
+                    return null;
+                } else {
+                    return "一键对账余额对账获取sbs数据失败";
                 }
             } else {
                 // 更新对账明细表状态（余额对账获取完成）
                 taRsCheckService.insOrUpdTaRsCheck(EnuStatusFlag.STATUS_FLAG6.getCode());
-                return true;
+                return null;
             }
         }catch (Exception e){
             logger.error("一键对账余额对账获取sbs数据失败", e);
             //MessageUtil.addError(e.getMessage());
+            return "一键对账余额对账获取sbs数据失败";
         }
-
-        return false;
     }
 
     /**
      * 余额对账ftp发送
      */
-    private boolean sendBlncReconci(){
+    private String sendBlncReconci(){
         File file = null;
         try {
             if(taRsAccList.size() > 0) {
@@ -405,23 +418,27 @@ public class TaAKeyToReconciService {
                         // 更新对账明细表状态（余额对账发送成功）
                         taRsCheckService.insOrUpdTaRsCheck(EnuStatusFlag.STATUS_FLAG7.getCode());
                         //MessageUtil.addInfo(RfmMessage.getProperty("BalanceReconciliation.I002"));
-                        return true;
+                        return null;
                     } else{
                         //MessageUtil.addError(RfmMessage.getProperty("BalanceReconciliation.E003"));
+                        return "一键对账余额对账发送ftp失败";
                     }
+                } else {
+                    return "一键对账余额对账创建文件失败";
                 }
             } else {
                 // 更新对账明细表状态（余额对账发送成功）
                 taRsCheckService.insOrUpdTaRsCheck(EnuStatusFlag.STATUS_FLAG7.getCode());
-                return true;
+                return null;
             }
         } catch (Exception e) {
             logger.error("一键对账余额对账发送ftp失败，", e);
             //MessageUtil.addError(e.getMessage());
+            return "一键对账余额对账发送ftp失败";
         } finally {
             if(file != null && file.exists()){
                 try {
-                    String filePath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/backup/reconci");
+                    String filePath = "/backup/reconci";
                     File destDir = ToolUtil.createFile(filePath, file.getName());
                     FileUtils.copyFile(file, destDir);
                     file.delete();
@@ -429,8 +446,6 @@ public class TaAKeyToReconciService {
                 }
             }
         }
-
-        return false;
     }
 
     /**
@@ -440,7 +455,7 @@ public class TaAKeyToReconciService {
      */
     private File createBlncReconciFile(String fileName) {
         File file = null;
-        String filePath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/upload/reconci");
+        String filePath = "/upload/reconci";
         String newLineCh = "\r\n";
         StringBuffer line = new StringBuffer();
         FileWriter fw = null;
