@@ -170,7 +170,7 @@ public class TaBlncReconciAction {
                     line.append("|");
                     line.append(StringUtils.rightPad(txAmtMap.get(taRsAcc.getSpvsnAccId()), 20, ' '));
                     line.append("|");
-                    line.append(taRsAcc.getTxDate());
+                    line.append(sysdate);
                     line.append("|");
                     line.append(newLineCh);
                 }

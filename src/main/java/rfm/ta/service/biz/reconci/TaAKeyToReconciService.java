@@ -461,6 +461,7 @@ public class TaAKeyToReconciService {
         FileWriter fw = null;
         BufferedWriter bw = null;
         try {
+            String sysdate = ToolUtil.getStrLastUpdDate();
             file = ToolUtil.createFile(filePath, fileName);
             if(file != null){
                 for(TaRsAcc taRsAcc : taRsAccList){
@@ -468,7 +469,7 @@ public class TaAKeyToReconciService {
                     line.append("|");
                     line.append(StringUtils.rightPad(txAmtMap.get(taRsAcc.getSpvsnAccId()), 20, ' '));
                     line.append("|");
-                    line.append(taRsAcc.getTxDate());
+                    line.append(sysdate);
                     line.append("|");
                     line.append(newLineCh);
                 }
