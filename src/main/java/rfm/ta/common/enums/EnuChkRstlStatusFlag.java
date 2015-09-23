@@ -6,7 +6,7 @@ import java.util.Hashtable;
  * 状态标志：[0]-日间对账获取中;[1]-日间对账获取完成；[2]日间对账不平；[3]日间对账平；[4]日间对账发送成功；
  *          [5]余额对账获取中；[6]余额对账获取完成；[7]余额对账发送成功；
  */
-public enum EnuStatusFlag {
+public enum EnuChkRstlStatusFlag {
     STATUS_FLAG0("0","日间对账获取中"),
     STATUS_FLAG1("1","日间对账获取完成"),
     STATUS_FLAG2("2","日间对账不平"),
@@ -18,9 +18,9 @@ public enum EnuStatusFlag {
 
     private String code = null;
     private String title = null;
-    private static Hashtable<String, EnuStatusFlag> aliasEnums;
+    private static Hashtable<String, EnuChkRstlStatusFlag> aliasEnums;
 
-    EnuStatusFlag(String code, String title){
+    EnuChkRstlStatusFlag(String code, String title){
         this.init(code, title);
     }
 
@@ -37,7 +37,7 @@ public enum EnuStatusFlag {
         aliasEnums.put(title, this);
     }
 
-    public static EnuStatusFlag getValueByKey(String alias) {
+    public static EnuChkRstlStatusFlag getValueByKey(String alias) {
         return aliasEnums.get(alias);
     }
 

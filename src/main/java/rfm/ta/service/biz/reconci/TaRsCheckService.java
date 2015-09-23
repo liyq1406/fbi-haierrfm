@@ -30,7 +30,7 @@ public class TaRsCheckService {
      */
     public void insOrUpdTaRsCheck(String statusFlag) {
         // 插入或者更新对账记录表
-        List<TaRsCheck> taRsCheckList = selectRecords();
+        List<TaRsCheck> taRsCheckList = getTodayCheckRecords();
         if(taRsCheckList == null || taRsCheckList.size() == 0) {
             Date sysdate = new Date();
             TaRsCheck taRsCheckTemp = new TaRsCheck();
@@ -57,7 +57,7 @@ public class TaRsCheckService {
      * 查询
      * @return
      */
-    public List<TaRsCheck> selectRecords() {
+    public List<TaRsCheck> getTodayCheckRecords() {
         TaRsCheckExample example = new TaRsCheckExample();
         TaRsCheckExample.Criteria rsActCrit = example.createCriteria();
         rsActCrit.andDeletedFlagEqualTo("0");

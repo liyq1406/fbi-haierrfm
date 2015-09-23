@@ -8,15 +8,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pub.platform.advance.utils.RfmMessage;
 import rfm.ta.common.enums.*;
 import rfm.ta.repository.model.TaRsAcc;
 import rfm.ta.repository.model.TaRsAccDtl;
+import rfm.ta.repository.model.TaRsCheck;
 import rfm.ta.repository.model.TaTxnFdc;
 import rfm.ta.service.biz.acc.TaAccDetlService;
 import rfm.ta.service.biz.acc.TaAccService;
 import rfm.ta.service.dep.TaSbsService;
 
-import javax.faces.context.FacesContext;
 import java.io.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -109,7 +110,7 @@ public class TaAKeyToReconciService {
     private String getSbsDataDayEnd() {
         try {
             // 更新对账明细表状态（日间对账获取中）
-            taRsCheckService.insOrUpdTaRsCheck(EnuStatusFlag.STATUS_FLAG0.getCode());
+            taRsCheckService.insOrUpdTaRsCheck(EnuChkRstlStatusFlag.STATUS_FLAG0.getCode());
 
             // 往SBS发送记账信息
             TaTxnFdc taTxnFdcPara = new TaTxnFdc();
@@ -122,7 +123,7 @@ public class TaAKeyToReconciService {
 
             if (taRsAccDtlSbsList != null) {
                 // 更新对账明细表状态（日间对账获取完成）
-                taRsCheckService.insOrUpdTaRsCheck(EnuStatusFlag.STATUS_FLAG1.getCode());
+                taRsCheckService.insOrUpdTaRsCheck(EnuChkRstlStatusFlag.STATUS_FLAG1.getCode());
 
                 for(TaRsAccDtl taRsAccDtl : taRsAccDtlSbsList) {
                     taRsAccDtl.setTxAmt(df.format(Double.valueOf(taRsAccDtl.getTxAmt())));
@@ -190,12 +191,12 @@ public class TaAKeyToReconciService {
 
             if(taRsAccDtlLocalListPara.size() == 0 && taRsAccDtlSbsListPara.size() == 0) {
                 // 更新对账明细表状态（日间对账平）
-                taRsCheckService.insOrUpdTaRsCheck(EnuStatusFlag.STATUS_FLAG3.getCode());
+                taRsCheckService.insOrUpdTaRsCheck(EnuChkRstlStatusFlag.STATUS_FLAG3.getCode());
                 //MessageUtil.addInfo(RfmMessage.getProperty("DayEndReconciliation.I003"));
                 return null;
             } else {
                 // 更新对账明细表状态（日间对账不平）
-                taRsCheckService.insOrUpdTaRsCheck(EnuStatusFlag.STATUS_FLAG2.getCode());
+                taRsCheckService.insOrUpdTaRsCheck(EnuChkRstlStatusFlag.STATUS_FLAG2.getCode());
                 //MessageUtil.addError(RfmMessage.getProperty("DayEndReconciliation.E003"));
                 return "一键对账日终对账内部对账不平";
             }
@@ -224,7 +225,7 @@ public class TaAKeyToReconciService {
                 boolean result = ToolUtil.uploadFile(fileName, file);
                 if(result){
                     // 更新对账明细表状态（日间对账发送成功）
-                    taRsCheckService.insOrUpdTaRsCheck(EnuStatusFlag.STATUS_FLAG4.getCode());
+                    taRsCheckService.insOrUpdTaRsCheck(EnuChkRstlStatusFlag.STATUS_FLAG4.getCode());
                     //MessageUtil.addInfo(RfmMessage.getProperty("DayEndReconciliation.I002"));
                     return null;
                 } else{
@@ -357,7 +358,7 @@ public class TaAKeyToReconciService {
     private String getSbsDataBlncReconci() {
         try {
             // 更新对账明细表状态（余额对账获取中）
-            taRsCheckService.insOrUpdTaRsCheck(EnuStatusFlag.STATUS_FLAG5.getCode());
+            taRsCheckService.insOrUpdTaRsCheck(EnuChkRstlStatusFlag.STATUS_FLAG5.getCode());
 
             // 取得所有监管中的监管账号数据
             taRsAccList = taAccService.qryAllMonitRecords();
@@ -382,7 +383,7 @@ public class TaAKeyToReconciService {
                     }
 
                     // 更新对账明细表状态（余额对账获取完成）
-                    taRsCheckService.insOrUpdTaRsCheck(EnuStatusFlag.STATUS_FLAG6.getCode());
+                    taRsCheckService.insOrUpdTaRsCheck(EnuChkRstlStatusFlag.STATUS_FLAG6.getCode());
 
                     //MessageUtil.addInfo(RfmMessage.getProperty("BalanceReconciliation.I001"));
                     return null;
@@ -391,7 +392,7 @@ public class TaAKeyToReconciService {
                 }
             } else {
                 // 更新对账明细表状态（余额对账获取完成）
-                taRsCheckService.insOrUpdTaRsCheck(EnuStatusFlag.STATUS_FLAG6.getCode());
+                taRsCheckService.insOrUpdTaRsCheck(EnuChkRstlStatusFlag.STATUS_FLAG6.getCode());
                 return null;
             }
         }catch (Exception e){
@@ -416,7 +417,7 @@ public class TaAKeyToReconciService {
                     boolean result = ToolUtil.uploadFile(fileName, file);
                     if(result){
                         // 更新对账明细表状态（余额对账发送成功）
-                        taRsCheckService.insOrUpdTaRsCheck(EnuStatusFlag.STATUS_FLAG7.getCode());
+                        taRsCheckService.insOrUpdTaRsCheck(EnuChkRstlStatusFlag.STATUS_FLAG7.getCode());
                         //MessageUtil.addInfo(RfmMessage.getProperty("BalanceReconciliation.I002"));
                         return null;
                     } else{
@@ -428,7 +429,7 @@ public class TaAKeyToReconciService {
                 }
             } else {
                 // 更新对账明细表状态（余额对账发送成功）
-                taRsCheckService.insOrUpdTaRsCheck(EnuStatusFlag.STATUS_FLAG7.getCode());
+                taRsCheckService.insOrUpdTaRsCheck(EnuChkRstlStatusFlag.STATUS_FLAG7.getCode());
                 return null;
             }
         } catch (Exception e) {
@@ -498,6 +499,15 @@ public class TaAKeyToReconciService {
         }
     }
 
+    public String getCheckRslt(){
+        List<TaRsCheck> taRsCheckListTmp=taRsCheckService.getTodayCheckRecords();
+        if(taRsCheckListTmp.size()>0) {
+            TaRsCheck taRsCheckTmp = taRsCheckListTmp.get(0);
+            return EnuChkRstlStatusFlag.getValueByKey(taRsCheckTmp.getStatusFlag()).getTitle();
+        }else{
+            return RfmMessage.getProperty("ReconciliationResults.E001");
+        }
+    }
     //= = = = = = = = = = = = get set = = = = = = = = = = = =
     public TaAccService getTaAccService() {
         return taAccService;

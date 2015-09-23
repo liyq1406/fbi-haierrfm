@@ -55,12 +55,24 @@ public class DepMsgListener implements MessageListener {
             ObjectMessage objMsg = (ObjectMessage) message;
 
             // 一键对账
-            if("1001".equals(objMsg.getStringProperty("JMSX_BIZID"))){
+            if("1001".equals(objMsg.getStringProperty("JMSX_BIZID"))) {
                 TiaXml9100001 tiaTmp = (TiaXml9100001) objMsg.getObject();
                 TOA toaFdc;
                 String txnCode = tiaTmp.INFO.getTXNCODE();
-                String strRtnMsg= taAKeyToReconciService.aKeyToReconci();
-                ToaXml9100001 toaTmp=new ToaXml9100001();
+                String strRtnMsg = taAKeyToReconciService.aKeyToReconci();
+                ToaXml9100001 toaTmp = new ToaXml9100001();
+                toaTmp.getINFO().setREQSN(ToolUtil.getStrAppReqSn_Back());
+                toaTmp.getINFO().setRTNCODE("0000");
+                toaTmp.getINFO().setRTNMSG(strRtnMsg);
+                toaTmp.getINFO().setTXNCODE(txnCode);
+                toaTmp.getINFO().setVERSION("");
+                jmsRfmOutTemplate.send(new ObjectMessageCreator(toaTmp, correlationID, propertyMap));
+            }if("1002".equals(objMsg.getStringProperty("JMSX_BIZID"))){
+                TiaXml9100002 tiaTmp = (TiaXml9100002) objMsg.getObject();
+                TOA toaFdc;
+                String txnCode = tiaTmp.INFO.getTXNCODE();
+                String strRtnMsg= taAKeyToReconciService.getCheckRslt();
+                ToaXml9100002 toaTmp=new ToaXml9100002();
                 toaTmp.getINFO().setREQSN(ToolUtil.getStrAppReqSn_Back());
                 toaTmp.getINFO().setRTNCODE("0000");
                 toaTmp.getINFO().setRTNMSG(strRtnMsg);
@@ -86,8 +98,8 @@ public class DepMsgListener implements MessageListener {
                     tia9902001.header.CHANNEL_ID = ToolUtil.DEP_CHANNEL_ID_RFM;
                     tia9902001.body.SPVSN_BANK_ID = EnuTaBankId.BANK_HAIER.getCode(); // 02   监管银行代码   2
                     tia9902001.body.CITY_ID = EnuTaCityId.CITY_TAIAN.getCode();        // 03   城市代码       6
-                    tia9902001.body.TX_DATE = ToolUtil.getStrLastUpdDate();               // 06   验证日期       10  送系统日期即可
-                    tia9902001.body.INITIATOR = EnuTaInitiatorId.INITIATOR.getCode();   // 09   发起方         1   1_监管银行
+                    tia9902001.body.TX_DATE = ToolUtil.getStrLastUpdDate();              // 06   验证日期       10  送系统日期即可
+                    tia9902001.body.INITIATOR = EnuTaInitiatorId.INITIATOR.getCode();  // 09   发起方         1   1_监管银行
                     toaFdc = taFdcService.sendAndRecvRealTimeTxn9902001(tia9902001);
                     jmsRfmOutTemplate.send(new ObjectMessageCreator(toaFdc, correlationID, propertyMap));
                 } else if (EnuTaFdcTxCode.TRADE_2002.getCode().equals(txnCode)) {// 记账

@@ -10,7 +10,6 @@ import platform.common.utils.MessageUtil;
 import pub.platform.advance.utils.RfmMessage;
 import rfm.ta.common.enums.*;
 import rfm.ta.repository.model.TaRsAccDtl;
-import rfm.ta.repository.model.TaRsCheck;
 import rfm.ta.repository.model.TaTxnFdc;
 import rfm.ta.repository.model.TaTxnSbs;
 import rfm.ta.service.biz.acc.TaAccDetlService;
@@ -21,7 +20,6 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
 import java.io.*;
 import java.text.DecimalFormat;
 import java.util.*;
@@ -84,7 +82,7 @@ public class TaDayEndReconciAction implements Serializable {
     public boolean onQrySbsData() {
         try {
             // 更新对账明细表状态（日间对账获取中）
-            taRsCheckService.insOrUpdTaRsCheck(EnuStatusFlag.STATUS_FLAG0.getCode());
+            taRsCheckService.insOrUpdTaRsCheck(EnuChkRstlStatusFlag.STATUS_FLAG0.getCode());
 
             // 往SBS发送记账信息
             TaTxnFdc taTxnFdcPara = new TaTxnFdc();
@@ -102,7 +100,7 @@ public class TaDayEndReconciAction implements Serializable {
 
             if (taRsAccDtlSbsList != null) {
                 // 更新对账明细表状态（日间对账获取完成）
-                taRsCheckService.insOrUpdTaRsCheck(EnuStatusFlag.STATUS_FLAG1.getCode());
+                taRsCheckService.insOrUpdTaRsCheck(EnuChkRstlStatusFlag.STATUS_FLAG1.getCode());
 
                 for(TaRsAccDtl taRsAccDtl : taRsAccDtlSbsList) {
                     taRsAccDtl.setTxAmt(df.format(Double.valueOf(taRsAccDtl.getTxAmt())));
@@ -235,7 +233,7 @@ public class TaDayEndReconciAction implements Serializable {
                 boolean result = ToolUtil.uploadFile(fileName, file);
                 if(result){
                     // 更新对账明细表状态（日间对账发送成功）
-                    taRsCheckService.insOrUpdTaRsCheck(EnuStatusFlag.STATUS_FLAG4.getCode());
+                    taRsCheckService.insOrUpdTaRsCheck(EnuChkRstlStatusFlag.STATUS_FLAG4.getCode());
                     MessageUtil.addInfo(RfmMessage.getProperty("DayEndReconciliation.I002"));
                 } else{
                     MessageUtil.addError(RfmMessage.getProperty("DayEndReconciliation.E001"));
@@ -307,11 +305,11 @@ public class TaDayEndReconciAction implements Serializable {
 
             if(taRsAccDtlLocalListPara.size() == 0 && taRsAccDtlSbsListPara.size() == 0) {
                 // 更新对账明细表状态（日间对账平）
-                taRsCheckService.insOrUpdTaRsCheck(EnuStatusFlag.STATUS_FLAG3.getCode());
+                taRsCheckService.insOrUpdTaRsCheck(EnuChkRstlStatusFlag.STATUS_FLAG3.getCode());
                 MessageUtil.addInfo(RfmMessage.getProperty("DayEndReconciliation.I003"));
             } else {
                 // 更新对账明细表状态（日间对账不平）
-                taRsCheckService.insOrUpdTaRsCheck(EnuStatusFlag.STATUS_FLAG2.getCode());
+                taRsCheckService.insOrUpdTaRsCheck(EnuChkRstlStatusFlag.STATUS_FLAG2.getCode());
                 MessageUtil.addError(RfmMessage.getProperty("DayEndReconciliation.E003"));
             }
         } catch (Exception e) {

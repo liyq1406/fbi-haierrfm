@@ -8,6 +8,8 @@ import com.thoughtworks.xstream.io.xml.XmlFriendlyReplacer;
 import com.thoughtworks.xstream.io.xml.XppDriver;
 import org.fbi.dep.model.base.ToaXml;
 
+import java.io.Serializable;
+
 /**
  * Created by hanjianlong on 2015-9-8.
  * FEB发起的对账结果查询
@@ -34,7 +36,7 @@ public class ToaXml9100002 extends ToaXml {
         this.BODY = BODY;
     }
 
-    public static class Info{
+    public static class Info implements Serializable {
         private String TXNCODE;
         private String VERSION;
         private String REQSN;
@@ -82,7 +84,7 @@ public class ToaXml9100002 extends ToaXml {
         }
     }
 
-    public static class Body{
+    public static class Body implements Serializable {
 
     }
 

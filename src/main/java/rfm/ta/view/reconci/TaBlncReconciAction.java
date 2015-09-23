@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import platform.common.utils.MessageUtil;
 import pub.platform.advance.utils.RfmMessage;
-import rfm.ta.common.enums.EnuStatusFlag;
+import rfm.ta.common.enums.EnuChkRstlStatusFlag;
 import rfm.ta.common.enums.EnuTaBankId;
 import rfm.ta.common.enums.EnuTaCityId;
 import rfm.ta.common.enums.EnuTaTxnRtnCode;
@@ -21,12 +21,10 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,11 +68,11 @@ public class TaBlncReconciAction {
     public void onQryLocaldata() {
         try {
             // 更新对账明细表状态（余额对账获取中）
-            taRsCheckService.insOrUpdTaRsCheck(EnuStatusFlag.STATUS_FLAG5.getCode());
+            taRsCheckService.insOrUpdTaRsCheck(EnuChkRstlStatusFlag.STATUS_FLAG5.getCode());
 
             if(taRsAccList.size() <=0) {
                 // 更新对账明细表状态（余额对账获取完成）
-                taRsCheckService.insOrUpdTaRsCheck(EnuStatusFlag.STATUS_FLAG6.getCode());
+                taRsCheckService.insOrUpdTaRsCheck(EnuChkRstlStatusFlag.STATUS_FLAG6.getCode());
                 MessageUtil.addError(RfmMessage.getProperty("BalanceReconciliation.E001"));
                 return;
             }
@@ -98,7 +96,7 @@ public class TaBlncReconciAction {
                 }
 
                 // 更新对账明细表状态（余额对账获取完成）
-                taRsCheckService.insOrUpdTaRsCheck(EnuStatusFlag.STATUS_FLAG6.getCode());
+                taRsCheckService.insOrUpdTaRsCheck(EnuChkRstlStatusFlag.STATUS_FLAG6.getCode());
 
                 MessageUtil.addInfo(RfmMessage.getProperty("BalanceReconciliation.I001"));
             }
@@ -116,7 +114,7 @@ public class TaBlncReconciAction {
         try {
             if(taRsAccList.size() <=0) {
                 // 更新对账明细表状态（余额对账发送成功）
-                taRsCheckService.insOrUpdTaRsCheck(EnuStatusFlag.STATUS_FLAG7.getCode());
+                taRsCheckService.insOrUpdTaRsCheck(EnuChkRstlStatusFlag.STATUS_FLAG7.getCode());
                 MessageUtil.addError(RfmMessage.getProperty("BalanceReconciliation.E002"));
                 return;
             }
@@ -128,7 +126,7 @@ public class TaBlncReconciAction {
                 boolean result = ToolUtil.uploadFile(fileName, file);
                 if(result){
                     // 更新对账明细表状态（余额对账发送成功）
-                    taRsCheckService.insOrUpdTaRsCheck(EnuStatusFlag.STATUS_FLAG7.getCode());
+                    taRsCheckService.insOrUpdTaRsCheck(EnuChkRstlStatusFlag.STATUS_FLAG7.getCode());
                     MessageUtil.addInfo(RfmMessage.getProperty("BalanceReconciliation.I002"));
                 } else{
                     MessageUtil.addError(RfmMessage.getProperty("BalanceReconciliation.E003"));
