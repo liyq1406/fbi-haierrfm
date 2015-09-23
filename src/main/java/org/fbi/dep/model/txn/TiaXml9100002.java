@@ -3,7 +3,6 @@ package org.fbi.dep.model.txn;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.io.xml.DomDriver;
-import org.fbi.dep.model.base.HttpXmlMsg;
 import org.fbi.dep.model.base.TiaXml;
 
 import java.io.Serializable;
@@ -14,7 +13,7 @@ import java.io.Serializable;
  */
 
 @XStreamAlias("ROOT")
-public class TiaXml9100002 extends HttpXmlMsg {
+public class TiaXml9100002 extends TiaXml {
     public Info INFO;
     public Body BODY;
 
@@ -74,5 +73,12 @@ public class TiaXml9100002 extends HttpXmlMsg {
         public void setCHANNEL(String CHANNEL) {
             this.CHANNEL = CHANNEL;
         }
+    }
+
+    @Override
+    public TiaXml getTia(String xml) {
+        XStream xs = new XStream(new DomDriver());
+        xs.processAnnotations(TiaXml9100002.class);
+        return (TiaXml9100002) xs.fromXML(xml);
     }
 }

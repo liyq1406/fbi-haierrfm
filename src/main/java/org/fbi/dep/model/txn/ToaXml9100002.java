@@ -90,6 +90,7 @@ public class ToaXml9100002 extends ToaXml {
 
     @Override
     public String toString() {
+        this.INFO.setTXNCODE("1002");
         XmlFriendlyReplacer replacer = new XmlFriendlyReplacer("$", "_");
         HierarchicalStreamDriver hierarchicalStreamDriver = new XppDriver(replacer);
         XStream xs = new XStream(hierarchicalStreamDriver);

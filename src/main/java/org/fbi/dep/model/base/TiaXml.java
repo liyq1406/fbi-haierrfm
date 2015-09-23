@@ -1,6 +1,5 @@
 package org.fbi.dep.model.base;
 
-
 import common.Enums.TxnRtnCode;
 
 import java.io.Serializable;

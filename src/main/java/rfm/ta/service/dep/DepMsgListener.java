@@ -54,8 +54,10 @@ public class DepMsgListener implements MessageListener {
 
             ObjectMessage objMsg = (ObjectMessage) message;
 
+            String strJmsxBizid=objMsg.getStringProperty("JMSX_BIZID");
+
             // Ò»¼ü¶ÔÕË
-            if("1001".equals(objMsg.getStringProperty("JMSX_BIZID"))) {
+            if("1001".equals(strJmsxBizid)) {
                 TiaXml9100001 tiaTmp = (TiaXml9100001) objMsg.getObject();
                 TOA toaFdc;
                 String txnCode = tiaTmp.INFO.getTXNCODE();
@@ -67,7 +69,7 @@ public class DepMsgListener implements MessageListener {
                 toaTmp.getINFO().setTXNCODE(txnCode);
                 toaTmp.getINFO().setVERSION("");
                 jmsRfmOutTemplate.send(new ObjectMessageCreator(toaTmp, correlationID, propertyMap));
-            }if("1002".equals(objMsg.getStringProperty("JMSX_BIZID"))){
+            }else if("1002".equals(strJmsxBizid)){
                 TiaXml9100002 tiaTmp = (TiaXml9100002) objMsg.getObject();
                 TOA toaFdc;
                 String txnCode = tiaTmp.INFO.getTXNCODE();
