@@ -37,7 +37,7 @@ public class TaRsCheckService {
             taRsCheckTemp.setCheckDate(ToolUtil.getStrLastUpdDate());                   // 对账日期
             taRsCheckTemp.setStatusFlag(statusFlag);                                    // 状态标志
             taRsCheckTemp.setClassifyFlag(EnuClassifyFlag.CLASSIFY_FLAG2.getCode());  // 对账分类
-            taRsCheckTemp.setCheckTime(ToolUtil.getStrLastUpdDate());                   // 勾对时间
+            taRsCheckTemp.setCheckTime(ToolUtil.getStrNowTime());                       // 勾对时间
             taRsCheckTemp.setDeletedFlag(EnuTaArchivedFlag.ARCHIVED_FLAG0.getCode()); // 记录删除标志
             taRsCheckTemp.setCreatedDate(sysdate);                                      // 创建时间
             taRsCheckTemp.setLastUpdDate(sysdate);                                      // 最近修改时间
@@ -46,6 +46,7 @@ public class TaRsCheckService {
         } else {
             TaRsCheck taRsCheckTemp = taRsCheckList.get(0);
             taRsCheckTemp.setStatusFlag(statusFlag);                                 // 状态标志
+            taRsCheckTemp.setCheckTime(ToolUtil.getStrNowTime());                    // 勾对时间
             taRsCheckTemp.setLastUpdDate(new Date());                                // 最近修改时间
             taRsCheckTemp.setModificationNum(taRsCheckTemp.getModificationNum()+1);  // 修改次数
             updateRecord(taRsCheckTemp);

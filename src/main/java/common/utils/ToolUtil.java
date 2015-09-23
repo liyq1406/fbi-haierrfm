@@ -131,6 +131,11 @@ public class ToolUtil {
         return dateFormat(date, "yyyy-MM-dd HH:mm:ss");
     }
 
+    public static String getStrNowTime() {
+        Date date =new Date();
+        return dateFormat(date, "HH:mm:ss");
+    }
+
     public static String getNow(String strPara) {
         Date date =new Date();
         return dateFormat(date, strPara);
