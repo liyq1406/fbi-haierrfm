@@ -53,8 +53,6 @@ public class TaAKeyToReconciService {
 
     private DecimalFormat df = new DecimalFormat("#0.00");
 
-    private EnuChkRstlStatusFlag enuChkRstlStatusFlag = EnuChkRstlStatusFlag.STATUS_FLAG0;
-
     /**
      * 一键对账
      * @return
@@ -67,7 +65,7 @@ public class TaAKeyToReconciService {
             // 验证重复对账
             List<TaRsCheck> taRsCheckList = taRsCheckService.getTodayCheckRecords();
             if(taRsCheckList != null && taRsCheckList.size() > 0) {
-                return enuChkRstlStatusFlag.getValueByKey(taRsCheckList.get(0).getStatusFlag()).getTitle();
+                return EnuChkRstlStatusFlag.getValueByKey(taRsCheckList.get(0).getStatusFlag()).getTitle();
             }
 
             // 日终对账获取本地对账数据
