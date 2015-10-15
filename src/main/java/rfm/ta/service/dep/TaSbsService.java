@@ -164,7 +164,7 @@ public class TaSbsService {
                         if(n!=0){
                             m=m+1;
                         }
-                        for (int j = 1; j <= m; j++) {
+                        for (int j = 1; j < m; j++) {
                             tia900012602Temp.body.BEGNUM= j * Integer.parseInt(curcnt) + 1 + "";
                             strMsgid= depMsgSendAndRecv.sendDepMessage(tia900012602Temp);
                             toa900012602Temp = (Toa900012602) depMsgSendAndRecv.recvDepMessage(strMsgid);
